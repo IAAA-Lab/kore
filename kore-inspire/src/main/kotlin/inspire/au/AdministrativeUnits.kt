@@ -103,34 +103,6 @@ val au =
             rule(`general rule CodeList Types`, mapOf("description" to false))
             rule(`voidable properties have a min cardinality of 0`)
 
-            patch<KoreClass>(predicate = {
-                name == "LocalisedCharacterString"
-            }) {
-                attribute {
-                    name = "text"
-                    type = TextType()
-                    lowerBound = 1
-                }
-            }
-            patch<KoreReference>(predicate = { type?.name == "PT_Locale" && upperBound == 1 }) {
-                toAttribute()
-            }
-            patch<KoreAttribute>(predicate = { type?.name == "PT_Locale" && upperBound == 1 }) {
-                val parent = containingClass!!
-                val atts = parent.attributes
-                atts.forEach { it.containingClass = null }
-                atts.forEach { att ->
-                    if (att == this) {
-                        (att.type as KoreClass).allAttributes().forEach { toBeCopiedAtt ->
-                            val addedAtt = toBeCopiedAtt.copy(parent)
-                            addedAtt.name = "${att.name}_${toBeCopiedAtt.name}"
-                            addedAtt.lowerBound = kotlin.math.min(toBeCopiedAtt.lowerBound, att.lowerBound)
-                        }
-                    } else {
-                        att.containingClass = parent
-                    }
-                }
-            }
 
             patch<KoreAttribute>(predicate = { type?.metaClass == AttributesTable }) {
                 toReference()

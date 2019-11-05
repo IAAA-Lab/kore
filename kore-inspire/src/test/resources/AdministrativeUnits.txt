@@ -221,10 +221,10 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
   Attributes "GMD_LocalisedCharacterString" {
     identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
     tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
     id INTEGER NOT NULL PRIMARY KEY
-    locale_characterSetCode TEXT CHECK(MD_CharacterSetCode)
-    locale_country TEXT CHECK(GMD_CountryCode)
-    locale_languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
     text TEXT NOT NULL
   }
   Attributes "GN_SpellingOfName" {
