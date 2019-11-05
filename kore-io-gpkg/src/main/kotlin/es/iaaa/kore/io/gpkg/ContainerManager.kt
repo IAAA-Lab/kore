@@ -47,10 +47,10 @@ import mil.nga.geopackage.metadata.Metadata as GpkgMetadata
  * Manager used to create and open GeoPackages.
  */
 object ContainerManager {
-    fun create(pkg: KorePackage, base: String, overwrite: Boolean): Boolean {
+    fun create(pkg: KorePackage, base: String = "", overwrite: Boolean = false): Boolean {
         val path = location(pkg, base) ?: return false
         val file = path.toFile()
-        val effectiveFile = file.resolveSibling(file.name+".gpkg")
+        val effectiveFile = file.resolveSibling(file.name + ".gpkg")
         if (effectiveFile.exists() && overwrite) {
             effectiveFile.delete()
         }
@@ -102,7 +102,6 @@ object ContainerManager {
             GeometryExtensions(this).getOrCreate(feature.tableName, geoColumnName, geoColumnType)
         }
     }
-
 
     private fun createFeatureColumn(): (index: Int, KoreAttribute) -> FeatureColumn {
         return { index, column ->
@@ -156,7 +155,6 @@ object ContainerManager {
         z = 2
         m = 2
     }
-
 
     private fun GeoPackage.createDataColumns(
         contents: Contents,
@@ -319,7 +317,6 @@ object ContainerManager {
         dataColumnConstraintsDao.create(constraints)
     }
 
-
     private fun GeoPackage.createRelation(relation: KoreClass) {
         val mappingTable = UserMappingTable.create(
             relation.tableName,
@@ -339,11 +336,12 @@ object ContainerManager {
         }
         if (relatedReference != null) {
             execSQL(
-            """
+                """
                 CREATE VIEW '${relation.tableName}' (base_id, related_id) AS 
                 SELECT id, ${relatedReference.columnName} FROM ${relatedReference.containingClass?.tableName}
                 WHERE ${relatedReference.columnName} IS NOT NULL 
-            """.trimIndent())
+            """.trimIndent()
+            )
         } else {
             with(relation) {
                 metaClass = AttributesTable
@@ -351,13 +349,15 @@ object ContainerManager {
                     name = "id"; columnName = "id"; title = "Id"; description = "Id"; lowerBound = 1; type =
                     IntegerType(); geoPackageSpec().add(PrimaryKey)
                 }
-                references.forEach { it.toAttribute().apply {
-                    metaClass = Column
-                    columnName = name
-                    type = IntegerType()
-                    lowerBound = 1
-                    upperBound = 1
-                } }
+                references.forEach {
+                    it.toAttribute().apply {
+                        metaClass = Column
+                        columnName = name
+                        type = IntegerType()
+                        lowerBound = 1
+                        upperBound = 1
+                    }
+                }
             }
             createAttribute(relation)
         }
@@ -368,7 +368,6 @@ object ContainerManager {
         }
         createExtendedRelationsTable()
         extendedRelationsDao.create(extendedRelation)
-
     }
 
     private fun GeoPackage.createMetadata(md: KoreClass) {
@@ -400,12 +399,12 @@ object ContainerManager {
         .filterIsInstance<KoreClass>()
         .forEach(process)
 
-    fun open(pkg: KorePackage, base: String): GeoPackage? {
+    fun open(pkg: KorePackage, base: String = ""): GeoPackage? {
         val path = location(pkg, base) ?: return null
         return open(path.toFile())
     }
 
-    private fun location(pkg: KorePackage, base: String): Path? {
+    private fun location(pkg: KorePackage, base: String = ""): Path? {
         val path = pkg.fileName ?: return null
         return Paths.get(base, path).toAbsolutePath()
     }
