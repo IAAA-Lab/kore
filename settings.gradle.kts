@@ -1,0 +1,9 @@
+include(
+    ":kore-api",
+    ":kore-impl",
+    ":kore-resource",
+    ":kore-io-gpkg",
+    ":kore-model-gpkg",
+    ":kore-transform",
+    ":kore-inspire"
+)

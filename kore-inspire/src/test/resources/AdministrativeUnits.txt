@@ -1,0 +1,455 @@
+Container <<applicationSchema>>  "AdministrativeUnits" {
+  Constraint Enum "AU_TechnicalStatusValue" {
+    edgeMatched
+    notEdgeMatched
+  }
+  Feature "AU_AdministrativeBoundary" {
+    description = "A line of demarcation between administrative units."
+    identifier = "AdministrativeUnits::AdministrativeBoundary"
+    tableName = "AU_AdministrativeBoundary"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+  }
+  Feature "AU_AdministrativeUnit" {
+    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    identifier = "AdministrativeUnits::AdministrativeUnit"
+    tableName = "AU_AdministrativeUnit"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    nationalCode TEXT NOT NULL
+    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+    upperLevelUnit INTEGER
+  }
+  Constraint Enum "AU_AdministrativeHierarchyLevel" {
+    1stOrder
+    2ndOrder
+    3rdOrder
+    4thOrder
+    5thOrder
+    6thOrder
+  }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Feature "AU_ResidenceOfAuthority" {
+    description = "Data type representing the name and position of a residence of authority."
+    identifier = "AdministrativeUnits::ResidenceOfAuthority"
+    tableName = "AU_ResidenceOfAuthority"
+    geometry POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    name INTEGER
+  }
+  Constraint Enum "AU_LegalStatusValue" {
+    agreed
+    notAgreed
+  }
+  Attributes "AU_AdministrativeHierarchyLevel" {
+    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    tableName = "AU_AdministrativeHierarchyLevel"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+  }
+  Relation "AU_admUnit_boundary" {
+    profile = "features"
+    tableName = "AU_admUnit_boundary"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeBoundary#inspireId"
+    tableName = "AU_AdministrativeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeBoundary_nationalLevel" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeBoundary_nationalLevel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
+  }
+  Relation "AU_administeredBy_coAdminister" {
+    profile = "features"
+    tableName = "AU_administeredBy_coAdminister"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_Condominium(id)
+  }
+  Relation "AU_lowerLevelUnit_upperLevelUnit" {
+    profile = "features"
+    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
+    tableName = "AU_lowerLevelUnit_upperLevelUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeUnit#inspireId"
+    tableName = "AU_AdministrativeUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeUnit_name" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_AdministrativeUnit_nationalLevelName" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_nationalLevelName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
+  }
+  Relation "AU_Condominium_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_Condominium#inspireId"
+    tableName = "AU_Condominium_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_Condominium_name" {
+    profile = "attributes"
+    tableName = "AU_Condominium_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_ResidenceOfAuthority_name" {
+    profile = "attributes"
+    relatedReference = "AU_ResidenceOfAuthority#name"
+    tableName = "AU_ResidenceOfAuthority_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Constraint Enum "BASE2_CountryCode" {
+    AT
+    BE
+    BG
+    CY
+    CZ
+    DE
+    DK
+    EE
+    EL
+    ES
+    FI
+    FR
+    HR
+    HU
+    IE
+    IT
+    LT
+    LU
+    LV
+    MT
+    NL
+    PL
+    PT
+    RO
+    SE
+    SI
+    SK
+    TR
+    UK
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GMD_LocalisedCharacterString" {
+    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    tableName = "GMD_LocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale_characterSetCode TEXT CHECK(MD_CharacterSetCode)
+    locale_country TEXT CHECK(GMD_CountryCode)
+    locale_languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "GN_NativenessValue" {
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {}
+  Constraint Enum "MD_CharacterSetCode" {
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Metadata "Unknown" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://inspire.ec.europa.eu/codelist_register/codelist/item"
+           xsi:schemaLocation="http://inspire.ec.europa.eu/codelist_register/codelist/item http://inspire.ec.europa.eu/draft-schemas/registry/1.3/CodeListValue.xsd"
+           id="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown">
+       <thisversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown:1</thisversion>
+       <latestversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown</latestversion>
+       <language>en</language>
+       <label xml:lang="en">Unknown</label>
+       <definition xml:lang="en">The correct value for the specific spatial object is not known to, and not computable by, the data provider. However, a correct value may exist.</definition>
+       <description xml:lang="en">EXAMPLE When the "elevation of the water body above the sea level" of a certain lake has not been measured, then the reason for a void value of this property would be 'Unknown'.\n \nNOTE 'Unknown' is applied on an object-by-object basis in a spatial data set.</description>
+       <governance-level id="http://inspire.ec.europa.eu/registry/governance-level/eu-technical">
+          <label>eu-technical</label>
+       </governance-level>
+       <applicationschema id="http://inspire.ec.europa.eu/applicationschema/base">
+          <label xml:lang="en">Base Types</label>
+       </applicationschema>
+       <codelist id="http://inspire.ec.europa.eu/codelist/VoidReasonValue">
+          <label xml:lang="en">Void Reason Value</label>
+       </codelist>
+       <itemclass uriname="CodeListValue">
+          <label xml:lang="en">Code list value</label>
+       </itemclass>
+       <status id="http://inspire.ec.europa.eu/registry/status/valid">
+          <label xml:lang="en">Valid</label>
+       </status>
+       <register id="http://inspire.ec.europa.eu/codelist">
+          <label xml:lang="en">INSPIRE code list register</label>
+          <registry id="http://inspire.ec.europa.eu/registry">
+             <label xml:lang="en">INSPIRE registry</label>
+          </registry>
+       </register>
+    </value>"
+    mimeType = "application/xml"
+    scope = "dataset"
+    standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
+  }
+  Metadata "Unpopulated" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://inspire.ec.europa.eu/codelist_register/codelist/item"
+           xsi:schemaLocation="http://inspire.ec.europa.eu/codelist_register/codelist/item http://inspire.ec.europa.eu/draft-schemas/registry/1.3/CodeListValue.xsd"
+           id="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated">
+       <thisversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated:1</thisversion>
+       <latestversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated</latestversion>
+       <language>en</language>
+       <label xml:lang="en">Unpopulated</label>
+       <definition xml:lang="en">The characteristic is not part of the dataset maintained by the data provider. However, the characteristic may exist in the real world.</definition>
+       <description xml:lang="en">EXAMPLE When the &amp;quot;elevation of the water body above the sea level” has not been included in a dataset containing lake spatial objects, then the reason for a void value of this property would be &amp;apos;Unpopulated’.\n \nNOTE The characteristic receives this value for all objects in the spatial data set.</description>
+       <governance-level id="http://inspire.ec.europa.eu/registry/governance-level/eu-technical">
+          <label>eu-technical</label>
+       </governance-level>
+       <applicationschema id="http://inspire.ec.europa.eu/applicationschema/base">
+          <label xml:lang="en">Base Types</label>
+       </applicationschema>
+       <codelist id="http://inspire.ec.europa.eu/codelist/VoidReasonValue">
+          <label xml:lang="en">Void Reason Value</label>
+       </codelist>
+       <itemclass uriname="CodeListValue">
+          <label xml:lang="en">Code list value</label>
+       </itemclass>
+       <status id="http://inspire.ec.europa.eu/registry/status/valid">
+          <label xml:lang="en">Valid</label>
+       </status>
+       <register id="http://inspire.ec.europa.eu/codelist">
+          <label xml:lang="en">INSPIRE code list register</label>
+          <registry id="http://inspire.ec.europa.eu/registry">
+             <label xml:lang="en">INSPIRE registry</label>
+          </registry>
+       </register>
+    </value>"
+    mimeType = "application/xml"
+    scope = "dataset"
+    standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
+  }
+  Metadata "Withheld" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://inspire.ec.europa.eu/codelist_register/codelist/item"
+           xsi:schemaLocation="http://inspire.ec.europa.eu/codelist_register/codelist/item http://inspire.ec.europa.eu/draft-schemas/registry/1.3/CodeListValue.xsd"
+           id="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld">
+       <thisversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld:1</thisversion>
+       <latestversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld</latestversion>
+       <language>en</language>
+       <label xml:lang="en">Withheld</label>
+       <definition xml:lang="en">The characteristic may exist, but is confidential and not divulged by the data provider.</definition>
+       <governance-level id="http://inspire.ec.europa.eu/registry/governance-level/eu-technical">
+          <label>eu-technical</label>
+       </governance-level>
+       <applicationschema id="http://inspire.ec.europa.eu/applicationschema/base">
+          <label xml:lang="en">Base Types</label>
+       </applicationschema>
+       <codelist id="http://inspire.ec.europa.eu/codelist/VoidReasonValue">
+          <label xml:lang="en">Void Reason Value</label>
+       </codelist>
+       <itemclass uriname="CodeListValue">
+          <label xml:lang="en">Code list value</label>
+       </itemclass>
+       <status id="http://inspire.ec.europa.eu/registry/status/valid">
+          <label xml:lang="en">Valid</label>
+       </status>
+       <register id="http://inspire.ec.europa.eu/codelist">
+          <label xml:lang="en">INSPIRE code list register</label>
+          <registry id="http://inspire.ec.europa.eu/registry">
+             <label xml:lang="en">INSPIRE registry</label>
+          </registry>
+       </register>
+    </value>"
+    mimeType = "application/xml"
+    scope = "dataset"
+    standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
+  }
+}
