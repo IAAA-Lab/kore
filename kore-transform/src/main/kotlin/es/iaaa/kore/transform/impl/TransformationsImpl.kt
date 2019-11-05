@@ -15,13 +15,18 @@
  */
 package es.iaaa.kore.transform.impl
 
+import es.iaaa.kore.KoreClass
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
 
 class TransformationsImpl(
     val transformations: MutableList<Transformation> = mutableListOf()
 ) : Transformations, List<Transformation> by transformations {
+    val shouldTrack: MutableList<KoreClass> = mutableListOf()
     override fun add(transformation: Transformation) {
         transformations.add(transformation)
+    }
+    override fun track(list: List<KoreClass>) {
+        shouldTrack.addAll(list)
     }
 }

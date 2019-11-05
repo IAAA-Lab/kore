@@ -15,6 +15,8 @@
  */
 package es.iaaa.kore.transform
 
+import es.iaaa.kore.KoreClass
+
 /**
  * A transformation is a set of rules.
  */
@@ -24,4 +26,6 @@ interface Transformations : List<Transformation> {
      * Add a rule.
      */
     fun add(transformation: Transformation)
+
+    fun track(list: List<KoreClass>)
 }

@@ -143,9 +143,49 @@ val `flatten Data Types with upper cardinality of 1`: Transformations.(Map<Strin
         })
 }
 
+val `ensure that arrays are treated as references from now`: Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreAttribute>(predicate = { type?.metaClass == AttributesTable }) {
+        toReference()
+    }
+    patch<KoreClass>(predicate = { attributes.any { it.upperBound != 1 } }) {
+        attributes.filter { it.upperBound != 1 }.forEach { it.toReference() }
+    }
+}
+
+val `create supporting Attribute tables for Enumerations and Codelists involved in arrays`: Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreReference>(predicate = {
+        findGeoPackageSpec()?.any { Constraint.isInstance(it) } == true
+    }) {
+        val from = this
+        val constraint = from.geoPackageSpec().first { Constraint.isInstance(it) } as KoreClass
+        val target = attributes(constraint.name ?: "<<missing>>") {
+            container = constraint.container
+            constraint.annotations.map { it.copy(this) }
+            attribute {
+                name = "value"
+                type = from.type
+                lowerBound = 1
+                geoPackageSpec().addAll(from.geoPackageSpec().filter { Constraint.isInstance(it) })
+            }
+        }
+        from.type = target
+        from.geoPackageSpec().removeIf { Constraint.isInstance(it) }
+    }
+}
+
+fun Transformations.manipulation(block: Transformations.(Map<String, Any>) -> Unit, options: Map<String, Any> = emptyMap()) {
+    block(this, options)
+}
+
+
 fun Transformations.rule(block: Transformations.(Map<String, Any>) -> Unit, options: Map<String, Any> = emptyMap()) {
     block(this, options)
 }
+
+fun Transformations.ruleWithTrack(block: Transformations.(Map<String, Any>) -> List<KoreClass>, options: Map<String, Any> = emptyMap()) {
+    track(block(this, options))
+}
+
 
 fun Transformations.rule(blocks: List<Transformations.(Map<String, Any>) -> Unit>, options: Map<String, Any> = emptyMap()) {
     blocks.forEach { it(this, options) }

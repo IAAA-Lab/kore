@@ -103,37 +103,9 @@ val au =
             rule(`general rule CodeList Types`, mapOf("description" to false))
             rule(`voidable properties have a min cardinality of 0`)
 
+            manipulation(`ensure that arrays are treated as references from now`)
 
-            patch<KoreAttribute>(predicate = { type?.metaClass == AttributesTable }) {
-                toReference()
-            }
-
-            /**
-             * Patch: convert remaining multivalued attributes into references
-             */
-            patch<KoreClass>(predicate = { attributes.any { it.upperBound != 1 } }) {
-                attributes.filter { it.upperBound != 1 }.forEach { it.toReference() }
-            }
-
-            patch<KoreReference>(predicate = {
-                findGeoPackageSpec()?.any { Constraint.isInstance(it) } == true
-            }) {
-                val from = this
-                val constraint = from.geoPackageSpec().first { Constraint.isInstance(it) } as KoreClass
-                val target = attributes(constraint.name ?: "<<missing>>") {
-                    container = constraint.container
-                    constraint.annotations.map { it.copy(this) }
-                    attribute {
-                        name = "value"
-                        type = from.type
-                        lowerBound = 1
-                        geoPackageSpec().addAll(from.geoPackageSpec().filter { Constraint.isInstance(it) })
-                    }
-                }
-                from.type = target
-                from.geoPackageSpec().removeIf { Constraint.isInstance(it) }
-                track(target)
-            }
+            rule(`create supporting Attribute tables for Enumerations and Codelists involved in arrays`)
 
             /**
              * Patch: create relation table from references with inverse of different types
