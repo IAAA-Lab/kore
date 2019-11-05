@@ -32,6 +32,10 @@ class Patch<T>(
     }
 }
 
-inline fun <reified T> Transformations.patch(noinline predicate: T.() -> Boolean, global: Boolean = false, noinline block: T.() -> Unit) {
-    add(Patch(T::class.java, predicate,global, block))
+inline fun <reified T> Transformations.patch(
+    noinline predicate: T.() -> Boolean,
+    global: Boolean = false,
+    noinline block: T.() -> Unit
+) {
+    add(Patch(T::class.java, predicate, global, block))
 }

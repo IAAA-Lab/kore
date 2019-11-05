@@ -66,5 +66,4 @@ class AttributeTableTest {
             container.toPrettyString()
         )
     }
-
 }

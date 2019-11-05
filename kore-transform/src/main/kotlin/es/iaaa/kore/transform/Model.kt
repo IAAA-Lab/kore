@@ -37,7 +37,6 @@ class Model(val input: Input) : Validable {
         }
     }
 
-
     fun selectedPackages(): List<KorePackage> =
         resource.allContents().filterIsInstance<KorePackage>().filter { input.selector.get()(it) }.toList()
 
@@ -68,7 +67,6 @@ fun Set<KoreObject>.typeClosure(): Set<KoreObject> {
 
     fun Set<KoreObject>.types(): List<KoreObject> =
         filterIsInstance<KoreTypedElement>().filter { it.name != null }.mapNotNull(KoreTypedElement::type)
-
 
     tailrec fun expand(base: Set<KoreObject>): Set<KoreObject> {
         val preExpanded = base + base.refinements() + base.attributes() + base.references()

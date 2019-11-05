@@ -220,6 +220,7 @@ class ClassInfoChecker {
         name = this,
         type = type
     ).also { checks.add(it) }
+
     infix fun CheckData.cardinality(cardinality: Multiplicity): CheckData {
         this.cardinality = cardinality
         return this

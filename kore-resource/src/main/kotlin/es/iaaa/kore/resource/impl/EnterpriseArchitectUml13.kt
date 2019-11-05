@@ -189,9 +189,9 @@ class EnterpriseArchitectUml13FactoryHelper(
             upperBound = tagToInt(element, "upperBound", 1, KoreTypedElement.UNSPECIFIED_MULTIPLICITY)
             type = element.getChildren("StructuralFeature.type", ns).flatMap { it.getChildren("Classifier", ns) }
                 .map {
-                        val result = KoreModel.createClassifier()
-                        result.fillClassifier(it, ns)
-                        result
+                    val result = KoreModel.createClassifier()
+                    result.fillClassifier(it, ns)
+                    result
                 }.firstOrNull()?.also {
                     if (it.isLink) {
                         missingTypes.add(Pair(this, it))
@@ -207,7 +207,7 @@ class EnterpriseArchitectUml13FactoryHelper(
             upperBound = tagToInt(element, "upperBound", 1, KoreTypedElement.UNSPECIFIED_MULTIPLICITY)
             type = element.getChildren("StructuralFeature.type", ns).flatMap { it.getChildren("Classifier", ns) }
                 .map {
-                    if ( isAttribute) {
+                    if (isAttribute) {
                         val result = KoreModel.createDataType()
                         result.fillDataType(it, ns)
                         result

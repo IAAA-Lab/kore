@@ -32,7 +32,7 @@ val Metadata = KoreModel.createClass().apply {
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.metadata(init: KoreClass.() -> Unit) =  KoreModel.createClass().apply {
+fun KorePackage.metadata(init: KoreClass.() -> Unit) = KoreModel.createClass().apply {
     metaClass = Metadata
     container = this@metadata
     init()

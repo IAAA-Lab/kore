@@ -16,8 +16,8 @@
 package es.iaaa.kore.impl
 
 import es.iaaa.kore.KoreObject
-import es.iaaa.kore.KoreParameter
 import es.iaaa.kore.KoreOperation
+import es.iaaa.kore.KoreParameter
 
 /**
  * A representation of the model object **Parameter**.

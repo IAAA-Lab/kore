@@ -57,7 +57,6 @@ fun create(parent: KoreClass, type: GeometryType): KoreDataType = KoreModel.crea
     ngaGeometryType = type
 }
 
-
 /**
  * A boolean value representing true or false.
  * Stored as SQLite INTEGER with value 0 for false or 1 for true.
@@ -196,7 +195,6 @@ object BlobType : KoreClassImpl() {
 
 var KoreDataType.maxSize: Long? by KoreStorage()
 
-
 /**
  * ISO-8601 date string in the form YYYY-MM-DD encoded in either UTF-8 or UTF-16.
  * Stored as SQLite TEXT.
@@ -232,7 +230,6 @@ object GeometryType : KoreClassImpl() {
 
     operator fun invoke(): KoreDataType = create(GeometryType, GeometryType.GEOMETRY)
 }
-
 
 object PointType : KoreClassImpl() {
     init {

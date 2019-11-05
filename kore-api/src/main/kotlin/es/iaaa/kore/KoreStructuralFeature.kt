@@ -45,5 +45,4 @@ interface KoreStructuralFeature : KoreTypedElement {
      * value and never accepts a null value. False by default.
      */
     var isUnsettable: Boolean
-
 }

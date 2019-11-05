@@ -67,5 +67,4 @@ internal open class KorePackageImpl : KoreNamedElementImpl(), KorePackage {
         KorePackage::subpackages.name -> if (element is KorePackage) subpackages.remove(element) else false
         else -> super.remove(feature, element)
     }
-
 }

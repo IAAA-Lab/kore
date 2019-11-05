@@ -15,7 +15,12 @@
  */
 package es.iaaa.kore.impl
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreObject
+import es.iaaa.kore.KoreOperation
+import es.iaaa.kore.KoreReference
+import es.iaaa.kore.KoreStructuralFeature
 
 open class KoreClassImpl : KoreClassifierImpl(), KoreClass {
     override var isAbstract: Boolean = false

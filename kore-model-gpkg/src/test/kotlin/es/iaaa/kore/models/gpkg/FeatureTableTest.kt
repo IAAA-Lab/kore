@@ -91,5 +91,4 @@ class FeatureTableTest {
             container.toPrettyString()
         )
     }
-
 }

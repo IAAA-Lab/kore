@@ -18,7 +18,7 @@ package es.iaaa.kore
 /**
  * Kore model factory.
  */
-interface  KoreModelFactory : KoreFactory  {
+interface KoreModelFactory : KoreFactory {
     /**
      * Returns a new [KoreAnnotation].
      */

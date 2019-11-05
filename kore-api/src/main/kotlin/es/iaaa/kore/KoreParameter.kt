@@ -9,5 +9,4 @@ interface KoreParameter : KoreTypedElement {
      * It represents the containing operation.
      */
     var operation: KoreOperation?
-
 }

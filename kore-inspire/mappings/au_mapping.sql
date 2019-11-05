@@ -47,11 +47,13 @@ where constraint_name = 'gmd_languagecode';
 
 update gpkg_data_column_constraints
 set description = 'https://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode_' || value
-where constraint_name = 'md_charactersetcode' and value not like '(%';
+where constraint_name = 'md_charactersetcode'
+  and value not like '(%';
 
 update gpkg_data_column_constraints
 set description = 'https://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode'
-where constraint_name = 'md_charactersetcode' and value like '(%';
+where constraint_name = 'md_charactersetcode'
+  and value like '(%';
 
 --
 -- Feature "AU_AdministrativeUnit" {
@@ -67,16 +69,28 @@ where constraint_name = 'md_charactersetcode' and value like '(%';
 --
 
 update gpkg_geometry_columns
-set (geometry_type_name, srs_id, z, m) = (SELECT geometry_type_name, 0, z, m FROM src.gpkg_geometry_columns WHERE table_name = 'adminunit')
+set (geometry_type_name, srs_id, z, m) = (SELECT geometry_type_name, 0, z, m
+                                          FROM src.gpkg_geometry_columns
+                                          WHERE table_name = 'adminunit')
 where table_name = 'AU_AdministrativeUnit';
 
 update gpkg_contents
-set (min_x, min_y, max_x, max_y, srs_id) = (SELECT min_x, min_y, max_x, max_y, 0 FROM src.gpkg_contents WHERE table_name = 'adminunit')
+set (min_x, min_y, max_x, max_y, srs_id) = (SELECT min_x, min_y, max_x, max_y, 0
+                                            FROM src.gpkg_contents
+                                            WHERE table_name = 'adminunit')
 where table_name = 'AU_AdministrativeUnit';
 
-insert into AU_AdministrativeUnit(
-    id, country, geometry, nationalCode, nationalLevel, inspireId, beginLifespanVersion, endLifespanVersion
-) select fid, country, the_geom, nationalcode, nationallevel, null, null, null from src.adminunit;
+insert into AU_AdministrativeUnit(id, country, geometry, nationalCode, nationalLevel, inspireId, beginLifespanVersion,
+                                  endLifespanVersion)
+select fid,
+       country,
+       the_geom,
+       nationalcode,
+       nationallevel,
+       null,
+       null,
+       null
+from src.adminunit;
 
 update AU_AdministrativeUnit
 set nationalLevel = '1stOrder'
@@ -96,11 +110,15 @@ where nationalLevel = 'http://inspire.ec.europa.eu/codelist/AdministrativeHierar
 
 update AU_AdministrativeUnit
 set upperLevelUnit = (select upper.id
-from src.upperlevelunit, AU_AdministrativeUnit upper
-where AU_AdministrativeUnit.nationalCode = upperlevelunit.nationalcode and upper.nationalCode = upperlevelunit.upperlevelunit)
-where exists (select upper.id
-              from src.upperlevelunit, AU_AdministrativeUnit upper
-              where AU_AdministrativeUnit.nationalCode = upperlevelunit.nationalcode and upper.nationalCode = upperlevelunit.upperlevelunit);
+                      from src.upperlevelunit,
+                           AU_AdministrativeUnit upper
+                      where AU_AdministrativeUnit.nationalCode = upperlevelunit.nationalcode
+                        and upper.nationalCode = upperlevelunit.upperlevelunit)
+where exists(select upper.id
+             from src.upperlevelunit,
+                  AU_AdministrativeUnit upper
+             where AU_AdministrativeUnit.nationalCode = upperlevelunit.nationalcode
+               and upper.nationalCode = upperlevelunit.upperlevelunit);
 
 -- unpopulated columns of AU_AdministrativeUnit
 insert into main.gpkg_metadata_reference(reference_scope, table_name, column_name, md_file_id)
@@ -122,16 +140,28 @@ values ('column', 'AU_AdministrativeUnit', 'endLifespanVersion', 2);
 --
 
 update gpkg_geometry_columns
-set (geometry_type_name, srs_id, z, m) = (SELECT geometry_type_name, 0, z, m FROM src.gpkg_geometry_columns WHERE table_name = 'adminboundary')
+set (geometry_type_name, srs_id, z, m) = (SELECT geometry_type_name, 0, z, m
+                                          FROM src.gpkg_geometry_columns
+                                          WHERE table_name = 'adminboundary')
 where table_name = 'AU_AdministrativeBoundary';
 
 update gpkg_contents
-set (min_x, min_y, max_x, max_y, srs_id) = (SELECT min_x, min_y, max_x, max_y, 0 FROM src.gpkg_contents WHERE table_name = 'adminboundary')
+set (min_x, min_y, max_x, max_y, srs_id) = (SELECT min_x, min_y, max_x, max_y, 0
+                                            FROM src.gpkg_contents
+                                            WHERE table_name = 'adminboundary')
 where table_name = 'AU_AdministrativeBoundary';
 
-insert into AU_AdministrativeBoundary(
-    id, country, geometry, inspireId, beginLifespanVersion, endLifespanVersion, legalStatus, technicalStatus
-) select fid, country, the_geom, null, date_boundary, null, legalstatus, null from src.adminboundary;
+insert into AU_AdministrativeBoundary(id, country, geometry, inspireId, beginLifespanVersion, endLifespanVersion,
+                                      legalStatus, technicalStatus)
+select fid,
+       country,
+       the_geom,
+       null,
+       date_boundary,
+       null,
+       legalstatus,
+       null
+from src.adminboundary;
 
 -- unpopulated columns of AU_AdministrativeUnit
 insert into main.gpkg_metadata_reference(reference_scope, table_name, column_name, md_file_id)
@@ -191,7 +221,9 @@ values ('table', 'AU_ResidenceOfAuthority', 2);
 -- }
 
 insert into AU_AdministrativeHierarchyLevel(value)
-select value from gpkg_data_column_constraints where constraint_name = 'au_administrativehierarchylevel';
+select value
+from gpkg_data_column_constraints
+where constraint_name = 'au_administrativehierarchylevel';
 
 -- Relation "AU_admUnit_boundary" {
 --     profile = "features"
@@ -202,7 +234,9 @@ select value from gpkg_data_column_constraints where constraint_name = 'au_admin
 
 insert into AU_admUnit_boundary(base_id, related_id)
 select distinct adminunit.fid, adminboundary.fid
-from src.adminunit, src.adminboundary, src.boundary_admunit
+from src.adminunit,
+     src.adminboundary,
+     src.boundary_admunit
 where adminunit.nationalCode = boundary_admunit.admunit
   and adminboundary.nationalcode = boundary_admunit.boundary;
 
@@ -215,18 +249,25 @@ where adminunit.nationalCode = boundary_admunit.admunit
 --   }
 
 insert into BASE_Identifier(namespace, localId, versionId)
-select 'ES.IGN.BDLJE.', nationalCode, '2014' from src.adminunit;
+select 'ES.IGN.BDLJE.', nationalCode, '2014'
+from src.adminunit;
 
 insert into BASE_Identifier(namespace, localId, versionId)
-select 'ES.IGN.BDLJE.', nationalCode, '2014' from src.adminboundary;
+select 'ES.IGN.BDLJE.', nationalCode, '2014'
+from src.adminboundary;
 
-create index idx_localId on BASE_Identifier(localId);
+create index idx_localId on BASE_Identifier (localId);
 update AU_AdministrativeBoundary
-set inspireId = (select id from BASE_Identifier, src.adminboundary
-where localId = src.adminboundary.nationalCode and
-      src.adminboundary.fid = AU_AdministrativeBoundary.id)
-where exists(select id from BASE_Identifier, src.adminboundary
-             where localId = src.adminboundary.nationalCode and src.adminboundary.fid = AU_AdministrativeBoundary.id);
+set inspireId = (select id
+                 from BASE_Identifier,
+                      src.adminboundary
+                 where localId = src.adminboundary.nationalCode
+                   and src.adminboundary.fid = AU_AdministrativeBoundary.id)
+where exists(select id
+             from BASE_Identifier,
+                  src.adminboundary
+             where localId = src.adminboundary.nationalCode
+               and src.adminboundary.fid = AU_AdministrativeBoundary.id);
 drop index idx_localId;
 
 update AU_AdministrativeUnit
@@ -242,7 +283,8 @@ where exists(select id from BASE_Identifier where localId = AU_AdministrativeUni
 
 insert into AU_AdministrativeBoundary_nationalLevel(base_id, related_id)
 select adminboundary.fid, AU_AdministrativeHierarchyLevel.id
-from src.adminboundary, AU_AdministrativeHierarchyLevel
+from src.adminboundary,
+     AU_AdministrativeHierarchyLevel
 where substr(adminboundary.nationallevel, 67) = AU_AdministrativeHierarchyLevel.value;
 
 --   Relation "AU_administeredBy_coAdminister" {
@@ -270,7 +312,8 @@ where substr(adminboundary.nationallevel, 67) = AU_AdministrativeHierarchyLevel.
 --   }
 
 insert into GMD_LocalisedCharacterString(value)
-select distinct nationallevelname from src.adminunit;
+select distinct nationallevelname
+from src.adminunit;
 
 -- unpopulated columns of GMD_LocalisedCharacterString
 insert into main.gpkg_metadata_reference(reference_scope, table_name, column_name, md_file_id)
@@ -285,7 +328,8 @@ values ('columns', 'GMD_LocalisedCharacterString', 'locale', 2);
 
 insert into AU_AdministrativeUnit_nationalLevelName(base_id, related_id)
 select adminunit.fid, GMD_LocalisedCharacterString.id
-from src.adminunit, GMD_LocalisedCharacterString
+from src.adminunit,
+     GMD_LocalisedCharacterString
 where adminunit.nationallevelname = GMD_LocalisedCharacterString.value;
 
 --   Relation "AU_AdministrativeUnit_residenceOfAuthority" {
@@ -312,7 +356,8 @@ where adminunit.nationallevelname = GMD_LocalisedCharacterString.value;
 --   }
 
 insert into GN_GeographicalName_spelling(base_id, related_id)
-select fid, fid from src.adminunit;
+select fid, fid
+from src.adminunit;
 
 --   Attributes "GN_GeographicalName" {
 --     tableName = "GN_GeographicalName"
@@ -330,7 +375,16 @@ select fid, fid from src.adminunit;
 insert into GN_GeographicalName(id, language, nameStatus, nativeness, sourceOfName,
                                 pronunciation_pronunciationIPA, pronunciation_pronunciationSoundLink,
                                 grammaticalGender, grammaticalNumber)
-select fid, null, 'endonym', 'official', null, null, null, null, null from src.adminunit;
+select fid,
+       null,
+       'endonym',
+       'official',
+       null,
+       null,
+       null,
+       null,
+       null
+from src.adminunit;
 
 -- unpopulated columns of AU_ResidenceOfAuthority
 insert into main.gpkg_metadata_reference(reference_scope, table_name, column_name, md_file_id)
@@ -354,7 +408,8 @@ values ('columns', 'GN_GeographicalName', 'grammaticalNumber', 2);
 --   }
 
 insert into AU_AdministrativeUnit_name(base_id, related_id)
-select fid, fid from src.adminunit;
+select fid, fid
+from src.adminunit;
 
 --   Attributes "GN_SpellingOfName" {
 --     tableName = "GN_SpellingOfName"
@@ -365,7 +420,8 @@ select fid, fid from src.adminunit;
 --   }
 
 insert into GN_SpellingOfName(id, text, script, transliterationScheme)
-select fid, nameunit, null, null from src.adminunit;
+select fid, nameunit, null, null
+from src.adminunit;
 
 -- unpopulated columns of GN_SpellingOfName
 insert into main.gpkg_metadata_reference(reference_scope, table_name, column_name, md_file_id)

@@ -36,9 +36,9 @@ internal class FlattenTypes(
                 val toFlatten = cls.attributes.filter { ref ->
                     with(ref) {
                         upperBound == 1 &&
-                        type?.let { type -> predicate(type) } == true &&
-                        (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
-                        (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
+                            type?.let { type -> predicate(type) } == true &&
+                            (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
+                            (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
                     }
                 }
                 val atts = cls.attributes
@@ -59,8 +59,10 @@ internal class FlattenTypes(
     }
 }
 
-fun Transformations.flattenTypes(predicate: (KoreNamedElement) -> Boolean,
-                                 postFlatten: (KoreTypedElement, KoreTypedElement) -> Unit,
-                                 global: Boolean = false) {
+fun Transformations.flattenTypes(
+    predicate: (KoreNamedElement) -> Boolean,
+    postFlatten: (KoreTypedElement, KoreTypedElement) -> Unit,
+    global: Boolean = false
+) {
     add(FlattenTypes(predicate, postFlatten, global))
 }

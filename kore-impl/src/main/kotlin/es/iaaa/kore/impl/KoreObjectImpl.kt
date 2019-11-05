@@ -15,7 +15,10 @@
  */
 package es.iaaa.kore.impl
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreClassifier
+import es.iaaa.kore.KoreObject
+import es.iaaa.kore.KoreStructuralFeature
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty
@@ -145,7 +148,6 @@ class ReadWriteStorage<T> : ReadWriteProperty<KoreObject, T> {
         (thisRef as KoreObjectImpl)[property.name] = value
     }
 }
-
 
 @Suppress("FunctionName")
 inline fun <reified T> KoreStorage() = ReadWriteStorage<T>()

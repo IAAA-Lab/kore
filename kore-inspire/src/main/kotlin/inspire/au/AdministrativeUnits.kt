@@ -71,7 +71,6 @@ val au =
                 findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
             }
 
-
             val prefixes = mapOf(
                 "Base Types 2" to "BASE2_",
                 "Base Types" to "BASE_",
@@ -81,7 +80,6 @@ val au =
                 "ISO 00639 Language Codes" to "GMD_",
                 "ISO 03166 Country Codes" to "GMD_"
             )
-
 
             /**
              * Patch: convert inspireId attribute o references
@@ -101,8 +99,8 @@ val au =
             rule(`Data Type stereotype to GeoPackage Attribute`)
             rule(`simple feature-like Data Type stereotype to GeoPackage Feature`)
 
-            rule(`general rule Enumeration Types`, mapOf( "description" to false))
-            rule(`general rule CodeList Types`, mapOf( "description" to false))
+            rule(`general rule Enumeration Types`, mapOf("description" to false))
+            rule(`general rule CodeList Types`, mapOf("description" to false))
             rule(`voidable properties have a min cardinality of 0`)
 
             patch<KoreClass>(predicate = {
@@ -114,10 +112,10 @@ val au =
                     lowerBound = 1
                 }
             }
-            patch<KoreReference>(predicate = { type?.name == "PT_Locale" && upperBound == 1}) {
+            patch<KoreReference>(predicate = { type?.name == "PT_Locale" && upperBound == 1 }) {
                 toAttribute()
             }
-            patch<KoreAttribute>(predicate = { type?.name == "PT_Locale" && upperBound == 1}) {
+            patch<KoreAttribute>(predicate = { type?.name == "PT_Locale" && upperBound == 1 }) {
                 val parent = containingClass!!
                 val atts = parent.attributes
                 atts.forEach { it.containingClass = null }
@@ -164,9 +162,6 @@ val au =
                 from.geoPackageSpec().removeIf { Constraint.isInstance(it) }
                 track(target)
             }
-
-
-
 
             /**
              * Patch: create relation table from references with inverse of different types
@@ -381,8 +376,8 @@ val au =
                 fileName = name
                 model.allRelevantContent().filterIsInstance<KoreClass>().filter {
                     it.metaClass == AttributesTable || it.metaClass == FeaturesTable ||
-                            it.metaClass == RelationTable ||
-                            it.metaClass == EnumConstraint
+                        it.metaClass == RelationTable ||
+                        it.metaClass == EnumConstraint
                 }.forEach {
                     it.container = this
                 }
@@ -410,10 +405,12 @@ val au =
         }
         output {
             add(Console)
-            add(GeoPackageWriter(
-                overwrite = true,
-                base = "templates"
-            ))
+            add(
+                GeoPackageWriter(
+                    overwrite = true,
+                    base = "templates"
+                )
+            )
         }
     }
 
@@ -436,7 +433,6 @@ private fun hasRefinement(name: String, source: String? = null): (KoreObject) ->
 private fun isColumn(): (KoreObject) -> Boolean = { obj ->
     obj is KoreAttribute && obj.container?.metaClass in listOf(FeaturesTable, AttributesTable)
 }
-
 
 fun main() {
     au.convert()

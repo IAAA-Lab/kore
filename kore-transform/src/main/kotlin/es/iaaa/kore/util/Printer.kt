@@ -48,7 +48,6 @@ fun KoreModelElement.prettyPrintAnnotations(): String =
         it.details.map { (key, value) -> "$key = \"$value\"" }.sorted()
     }.joinToString(separator = "\n")
 
-
 /**
  * Formatted as a pretty string.
  */

@@ -6,18 +6,17 @@ import es.iaaa.kore.KoreObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalArgumentException
 
 class KoreNamedElementImplTest {
 
     @Test
     fun `access to inherited property metaClass`() {
-        createNamedElement().testPropertySingleValueUnsettable( "metaClass", KoreModel.createClass())
+        createNamedElement().testPropertySingleValueUnsettable("metaClass", KoreModel.createClass())
     }
 
     @Test
     fun `access to local property name`() {
-        createNamedElement().testPropertySingleValueUnsettable( "name", "test")
+        createNamedElement().testPropertySingleValueUnsettable("name", "test")
     }
 
     @Test
@@ -28,10 +27,9 @@ class KoreNamedElementImplTest {
         assertEquals("The feature 'store' is not allowed for this object", exception.message)
     }
 
-    private fun createNamedElement(): KoreNamedElement = object: KoreNamedElementImpl() {
+    private fun createNamedElement(): KoreNamedElement = object : KoreNamedElementImpl() {
         override val container: KoreObject? get() = null
         override val contents: List<KoreObject> = emptyList()
     }
-
 }
 

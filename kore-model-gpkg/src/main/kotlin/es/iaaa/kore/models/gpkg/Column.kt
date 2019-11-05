@@ -21,11 +21,11 @@ import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KoreObject
 
 val Column = KoreModel.createClass().apply {
-        name = "Column"
-        attribute { name = "description" }
-        attribute { name = "title" }
-        attribute { name = "mimeType" }
-        attribute { name = "columnName" }
+    name = "Column"
+    attribute { name = "description" }
+    attribute { name = "title" }
+    attribute { name = "mimeType" }
+    attribute { name = "columnName" }
     toString = prettyPrint()
 }
 
@@ -33,7 +33,6 @@ fun column(init: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttr
     metaClass = Column
     init()
 }
-
 
 fun KoreClass.column(init: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {
     metaClass = Column
@@ -45,7 +44,6 @@ fun KoreClass.attribute(init: KoreAttribute.() -> Unit) = KoreModel.createAttrib
     init()
     containingClass = this@attribute
 }
-
 
 fun prettyPrint(): (KoreObject) -> String = { it ->
     with(it as KoreAttribute) {

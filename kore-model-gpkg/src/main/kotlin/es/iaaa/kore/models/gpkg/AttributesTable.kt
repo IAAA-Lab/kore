@@ -25,11 +25,11 @@ import es.iaaa.kore.KorePackage
  * property.
  */
 val AttributesTable = KoreModel.createClass().apply {
-        name = "Attributes"
-        attribute { name = "tableName" }
-        attribute { name = "description" }
-        attribute { name = "identifier" }
-    }
+    name = "Attributes"
+    attribute { name = "tableName" }
+    attribute { name = "description" }
+    attribute { name = "identifier" }
+}
 
 /**
  * A short hand factory function.
@@ -45,7 +45,7 @@ fun attributes(tableName: String, init: KoreClass.() -> Unit) = KoreModel.create
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.attributes(tableName: String, init: KoreClass.() -> Unit) =  KoreModel.createClass().apply {
+fun KorePackage.attributes(tableName: String, init: KoreClass.() -> Unit) = KoreModel.createClass().apply {
     metaClass = AttributesTable
     name = tableName
     this.tableName = tableName

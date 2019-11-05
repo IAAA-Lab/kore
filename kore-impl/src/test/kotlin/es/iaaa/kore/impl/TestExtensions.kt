@@ -1,7 +1,11 @@
 package es.iaaa.kore.impl
 
 import es.iaaa.kore.KoreObject
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.assertThrows
 import kotlin.reflect.full.memberProperties
 
@@ -10,7 +14,6 @@ import kotlin.reflect.full.memberProperties
  */
 fun KoreObject.getKProperty(name: String) = this::class.memberProperties.find { it.name == name }
     ?: throw IllegalArgumentException("FIXME: '$name' is not a member property")
-
 
 /**
  * Reflective access to the value of a property.

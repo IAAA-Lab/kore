@@ -15,11 +15,9 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.impl.KorePackageImpl
 import es.iaaa.kore.util.toPrettyString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class ContainerTest {
     @Test
@@ -35,16 +33,5 @@ class ContainerTest {
            """.trimMargin(),
             container.toPrettyString()
         )
-    }
-
-    @Test
-    fun `filename only is available for containers`() {
-        val pkg = KorePackageImpl()
-        assertThrows<IllegalArgumentException> {
-            pkg.fileName = "some value"
-        }
-        assertThrows<IllegalArgumentException> {
-            println(pkg.fileName)
-        }
     }
 }
