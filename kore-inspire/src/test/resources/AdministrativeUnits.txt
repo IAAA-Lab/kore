@@ -341,115 +341,146 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
   }
   Metadata "Unknown" {
     metadata = "<?xml version="1.0" encoding="UTF-8"?>
-    <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns="http://inspire.ec.europa.eu/codelist_register/codelist/item"
-           xsi:schemaLocation="http://inspire.ec.europa.eu/codelist_register/codelist/item http://inspire.ec.europa.eu/draft-schemas/registry/1.3/CodeListValue.xsd"
-           id="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown">
-       <thisversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown:1</thisversion>
-       <latestversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown</latestversion>
-       <language>en</language>
-       <label xml:lang="en">Unknown</label>
-       <definition xml:lang="en">The correct value for the specific spatial object is not known to, and not computable by, the data provider. However, a correct value may exist.</definition>
-       <description xml:lang="en">EXAMPLE When the "elevation of the water body above the sea level" of a certain lake has not been measured, then the reason for a void value of this property would be 'Unknown'.\n \nNOTE 'Unknown' is applied on an object-by-object basis in a spatial data set.</description>
-       <governance-level id="http://inspire.ec.europa.eu/registry/governance-level/eu-technical">
-          <label>eu-technical</label>
-       </governance-level>
-       <applicationschema id="http://inspire.ec.europa.eu/applicationschema/base">
-          <label xml:lang="en">Base Types</label>
-       </applicationschema>
-       <codelist id="http://inspire.ec.europa.eu/codelist/VoidReasonValue">
-          <label xml:lang="en">Void Reason Value</label>
-       </codelist>
-       <itemclass uriname="CodeListValue">
-          <label xml:lang="en">Code list value</label>
-       </itemclass>
-       <status id="http://inspire.ec.europa.eu/registry/status/valid">
-          <label xml:lang="en">Valid</label>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Unknown</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
        </status>
-       <register id="http://inspire.ec.europa.eu/codelist">
-          <label xml:lang="en">INSPIRE code list register</label>
-          <registry id="http://inspire.ec.europa.eu/registry">
-             <label xml:lang="en">INSPIRE registry</label>
-          </registry>
-       </register>
-    </value>"
-    mimeType = "application/xml"
-    scope = "dataset"
-    standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
+       <definition>
+          <gco:CharacterString>The correct value for the specific spatial object is not known to, and not computable by, the data provider. However, a correct value may exist.</gco:CharacterString>
+       </definition>
+       <description>
+          <gco:CharacterString>EXAMPLE When the "elevation of the water body above the sea level" of a certain lake has not been measured, then the reason for a void value of this property would be 'Unknown'.\n \nNOTE 'Unknown' is applied on an object-by-object basis in a spatial data set.</gco:CharacterString>
+       </description>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Unpopulated" {
     metadata = "<?xml version="1.0" encoding="UTF-8"?>
-    <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns="http://inspire.ec.europa.eu/codelist_register/codelist/item"
-           xsi:schemaLocation="http://inspire.ec.europa.eu/codelist_register/codelist/item http://inspire.ec.europa.eu/draft-schemas/registry/1.3/CodeListValue.xsd"
-           id="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated">
-       <thisversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated:1</thisversion>
-       <latestversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated</latestversion>
-       <language>en</language>
-       <label xml:lang="en">Unpopulated</label>
-       <definition xml:lang="en">The characteristic is not part of the dataset maintained by the data provider. However, the characteristic may exist in the real world.</definition>
-       <description xml:lang="en">EXAMPLE When the &amp;quot;elevation of the water body above the sea level” has not been included in a dataset containing lake spatial objects, then the reason for a void value of this property would be &amp;apos;Unpopulated’.\n \nNOTE The characteristic receives this value for all objects in the spatial data set.</description>
-       <governance-level id="http://inspire.ec.europa.eu/registry/governance-level/eu-technical">
-          <label>eu-technical</label>
-       </governance-level>
-       <applicationschema id="http://inspire.ec.europa.eu/applicationschema/base">
-          <label xml:lang="en">Base Types</label>
-       </applicationschema>
-       <codelist id="http://inspire.ec.europa.eu/codelist/VoidReasonValue">
-          <label xml:lang="en">Void Reason Value</label>
-       </codelist>
-       <itemclass uriname="CodeListValue">
-          <label xml:lang="en">Code list value</label>
-       </itemclass>
-       <status id="http://inspire.ec.europa.eu/registry/status/valid">
-          <label xml:lang="en">Valid</label>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Unpopulated</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
        </status>
-       <register id="http://inspire.ec.europa.eu/codelist">
-          <label xml:lang="en">INSPIRE code list register</label>
-          <registry id="http://inspire.ec.europa.eu/registry">
-             <label xml:lang="en">INSPIRE registry</label>
-          </registry>
-       </register>
-    </value>"
-    mimeType = "application/xml"
-    scope = "dataset"
-    standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
+       <definition>
+          <gco:CharacterString>The characteristic is not part of the dataset maintained by the data provider. However, the characteristic may exist in the real world.</gco:CharacterString>
+       </definition>
+       <description>
+          <gco:CharacterString>EXAMPLE When the &amp;quot;elevation of the water body above the sea level” has not been included in a dataset containing lake spatial objects, then the reason for a void value of this property would be &amp;apos;Unpopulated’.\n \nNOTE The characteristic receives this value for all objects in the spatial data set.</gco:CharacterString>
+       </description>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
     metadata = "<?xml version="1.0" encoding="UTF-8"?>
-    <value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns="http://inspire.ec.europa.eu/codelist_register/codelist/item"
-           xsi:schemaLocation="http://inspire.ec.europa.eu/codelist_register/codelist/item http://inspire.ec.europa.eu/draft-schemas/registry/1.3/CodeListValue.xsd"
-           id="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld">
-       <thisversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld:1</thisversion>
-       <latestversion>http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld</latestversion>
-       <language>en</language>
-       <label xml:lang="en">Withheld</label>
-       <definition xml:lang="en">The characteristic may exist, but is confidential and not divulged by the data provider.</definition>
-       <governance-level id="http://inspire.ec.europa.eu/registry/governance-level/eu-technical">
-          <label>eu-technical</label>
-       </governance-level>
-       <applicationschema id="http://inspire.ec.europa.eu/applicationschema/base">
-          <label xml:lang="en">Base Types</label>
-       </applicationschema>
-       <codelist id="http://inspire.ec.europa.eu/codelist/VoidReasonValue">
-          <label xml:lang="en">Void Reason Value</label>
-       </codelist>
-       <itemclass uriname="CodeListValue">
-          <label xml:lang="en">Code list value</label>
-       </itemclass>
-       <status id="http://inspire.ec.europa.eu/registry/status/valid">
-          <label xml:lang="en">Valid</label>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Withheld</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
        </status>
-       <register id="http://inspire.ec.europa.eu/codelist">
-          <label xml:lang="en">INSPIRE code list register</label>
-          <registry id="http://inspire.ec.europa.eu/registry">
-             <label xml:lang="en">INSPIRE registry</label>
-          </registry>
-       </register>
-    </value>"
-    mimeType = "application/xml"
-    scope = "dataset"
-    standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
+       <definition>
+          <gco:CharacterString>The characteristic may exist, but is confidential and not divulged by the data provider.</gco:CharacterString>
+       </definition>
+       <description gco:nilReason="missing"/>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Withheld</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic may exist, but is confidential and not divulged by the data provider.</gco:CharacterString>
+       </definition>
+       <description gco:nilReason="missing"/>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }

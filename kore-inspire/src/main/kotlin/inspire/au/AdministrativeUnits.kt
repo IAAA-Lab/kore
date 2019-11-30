@@ -313,8 +313,6 @@ val au =
                 )
             )
 
-            var rootContainer: KorePackage? = null
-
             patch<KorePackage>(predicate = { name == "AdministrativeUnits" }) {
                 metaClass = Container
                 fileName = name
@@ -325,27 +323,10 @@ val au =
                 }.forEach {
                     it.container = this
                 }
-                rootContainer = this
             }
 
-            var globalCounter: Long = 1
-            patch<KoreClass>(predicate = { name == "VoidReasonValue" }, global = true) {
-                val parentName = name
-                attributes.forEach {
-                    rootContainer?.metadata {
-                        id = globalCounter.toString()
-                        name = it.name
-                        scope = "dataset"
-                        standardUri = "http://inspire.ec.europa.eu/codelist_register/codelist/item"
-                        mimeType = "application/xml"
-                        val url = "http://inspire.ec.europa.eu/codelist/$parentName/${it.name}/${it.name}.en.xml"
-                        metadata = URL(url)
-                            .openStream()
-                            .use { it.bufferedReader().readText() }
-                        globalCounter++
-                    }
-                }
-            }
+            rule(`load authoritative descriptions of the reasons for void values as metadata`)
+
         }
         output {
             add(Console)

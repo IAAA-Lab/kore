@@ -6,6 +6,7 @@ import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.rules.*
+import java.net.URL
 
 val `simple Feature Type stereotype to GeoPackage Feature`: Transformations.(Map<String, Any>) -> Unit = {
     setMetMetaclassWhen(FeaturesTable, predicate = canToFeature("featureType"))
@@ -170,6 +171,38 @@ val `create supporting Attribute tables for Enumerations and Codelists involved 
         }
         from.type = target
         from.geoPackageSpec().removeIf { Constraint.isInstance(it) }
+    }
+}
+
+val `load authoritative descriptions of the reasons for void values as metadata`: Transformations.(Map<String, Any>) -> Unit = {
+    val definitions = listOf(
+        Triple(1, "Unknown", "attribute"),
+        Triple(2, "Unpopulated", "attributeType"),
+        Triple(3, "Withheld", "attribute"),
+        Triple(4, "Withheld", "attributeType")
+    )
+
+    var rootContainer: KorePackage? = null
+
+    patch<KorePackage>(predicate = { name == "AdministrativeUnits" }) {
+        rootContainer = this
+    }
+
+    patch<KoreClass>(predicate = { name == "VoidReasonValue" }, global = true) {
+        val parentName = name
+        attributes.forEach { att ->
+            definitions.filter { it.second == att.name }.forEach { def ->
+                rootContainer?.metadata {
+                    id = def.first.toString()
+                    name = def.second
+                    scope = def.third
+                    standardUri = "http://www.isotc211.org/2005/gmd"
+                    mimeType = "text/xml"
+                    val url = "http://inspire.ec.europa.eu/codelist/$parentName/${def.second}/${def.second}.en.iso19135xml"
+                    metadata = URL(url).openStream().use { it.bufferedReader().readText() }
+                }
+            }
+        }
     }
 }
 
