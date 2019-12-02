@@ -13,15 +13,112 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("ObjectPropertyName")
+
 package inspire.au
 
 import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
+import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.conversion
 import es.iaaa.kore.transform.impl.Console
 import es.iaaa.kore.transform.impl.GeoPackageWriter
 import es.iaaa.kore.transform.rules.*
-import java.net.URL
+
+/**
+ * Patch: eaxmiid41 is a UML:DataType with name <undefined>
+ */
+val `remove references to undefined Data Type` : Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreTypedElement>(predicate = { type?.id == "eaxmiid41" }) { type = null }
+}
+
+/**
+ * Patch: add dataType refinement to PT_Locale (EAID_4F7072DC_5423_4978_8EA2_1DE43135931B)
+ */
+val `add Data Type tag to PT_Locale` : Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreClass>(predicate = { id == "EAID_4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
+        findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
+    }
+}
+
+/**
+ * Patch: add dataType refinement to LocalisedCharacterString (EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A)
+ */
+val `add Data Type tag to LocalisedCharacterString` : Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreClass>(predicate = { id == "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
+        findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
+    }
+}
+
+/**
+ * Patch: add dataType refinement to Identifier (EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9)
+ */
+val `add Data Type tag to Identifier` : Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreClass>(predicate = { id == "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }) {
+        findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
+    }
+}
+
+/**
+ * Patch: fix typo in edgeMatched default value
+ */
+val `standardize edgeMatched default value` : Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreAttribute>(predicate = { defaultValueLiteral == "edge-matched" }) {
+        defaultValueLiteral = "edgeMatched"
+    }
+}
+
+/**
+ * Patch: fix typo in CodeList
+ */
+val `standardize codeList` : Transformations.(Map<String, Any>) -> Unit = {
+    patch<KoreClass>(predicate = hasRefinement("CodeList")) {
+        getAnnotation()?.references?.filterIsInstance<KoreNamedElement>()
+            ?.filter { it.name == "CodeList" }
+            ?.forEach { it.name = "codeList" }
+    }
+}
+
+/**
+ * Cleanup: remove unused tags.
+ */
+val `remove unused tags` : Transformations.(Map<String, Any>) -> Unit = {
+    removeTags(
+        listOf(
+            "ea_.*", "version", "tpos", "tagged", "style", "status", "phase", "package",
+            "package_name", "date_created", "date_modified", "complexity", "author", "\\\$ea_.*", "gentype",
+            "isSpecification", "stereotype", "batchload", "batchsave", "created", "iscontrolled",
+            "isprotected", "lastloaddate", "lastsavedate", "logxml", "modified", "owner", "packageFlags",
+            "parent", "usedtd", "xmiver", "xmlpath", "documentation", "eventflags", "persistence"
+        )
+    )
+}
+
+/**
+ * Cleanup: remove stereotypes.
+ */
+val `remove stereotypes` : Transformations.(Map<String, Any>) -> Unit = {
+    removeRefinements(
+        listOf(
+            "voidable",
+            "lifeCycleInfo",
+            "dataType",
+            "enumeration",
+            "featureType",
+            "codeList"
+        )
+    )
+}
+
+val prefixes = mapOf(
+    "Base Types 2" to "BASE2_",
+    "Base Types" to "BASE_",
+    "Cultural and linguistic adapdability" to "GMD_",
+    "AdministrativeUnits" to "AU_",
+    "Geographical Names" to "GN_",
+    "ISO 00639 Language Codes" to "GMD_",
+    "ISO 03166 Country Codes" to "GMD_"
+)
 
 val au =
     conversion {
@@ -38,48 +135,12 @@ val au =
             )
         }
         transformation {
-            /**
-             * Patch: eaxmiid41 is a UML:DataType with name <undefined>
-             */
-            patch<KoreTypedElement>(predicate = { type?.id == "eaxmiid41" }) { type = null }
-
-            /**
-             * Patch: add dataType refinement to PT_Locale (EAID_4F7072DC_5423_4978_8EA2_1DE43135931B)
-             */
-            patch<KoreClass>(predicate = { id == "EAID_4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
-                findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
-            }
-
-            /**
-             * Patch: add dataType refinement to LocalisedCharacterString (EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A)
-             */
-            patch<KoreClass>(predicate = { id == "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
-                findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
-            }
-
-            patch<KoreAttribute>(predicate = { defaultValueLiteral == "edge-matched" }) {
-                defaultValueLiteral = "edgeMatched"
-            }
-
-            patch<KoreClass>(predicate = hasRefinement("CodeList")) {
-                getAnnotation()?.references?.filterIsInstance<KoreNamedElement>()
-                    ?.filter { it.name == "CodeList" }
-                    ?.forEach { it.name = "codeList" }
-            }
-
-            patch<KoreClass>(predicate = { id == "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
-                findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
-            }
-
-            val prefixes = mapOf(
-                "Base Types 2" to "BASE2_",
-                "Base Types" to "BASE_",
-                "Cultural and linguistic adapdability" to "GMD_",
-                "AdministrativeUnits" to "AU_",
-                "Geographical Names" to "GN_",
-                "ISO 00639 Language Codes" to "GMD_",
-                "ISO 03166 Country Codes" to "GMD_"
-            )
+            manipulation(`remove references to undefined Data Type`)
+            manipulation(`add Data Type tag to PT_Locale`)
+            manipulation(`add Data Type tag to LocalisedCharacterString`)
+            manipulation(`add Data Type tag to Identifier`)
+            manipulation(`standardize edgeMatched default value`)
+            manipulation(`standardize codeList`)
 
             /**
              * Patch: convert inspireId attribute o references
@@ -292,27 +353,6 @@ val au =
                 }
             }
 
-            removeTags(
-                listOf(
-                    "ea_.*", "version", "tpos", "tagged", "style", "status", "phase", "package",
-                    "package_name", "date_created", "date_modified", "complexity", "author", "\\\$ea_.*", "gentype",
-                    "isSpecification", "stereotype", "batchload", "batchsave", "created", "iscontrolled",
-                    "isprotected", "lastloaddate", "lastsavedate", "logxml", "modified", "owner", "packageFlags",
-                    "parent", "usedtd", "xmiver", "xmlpath", "documentation", "eventflags", "persistence"
-                )
-            )
-            removeRefinements(
-                listOf(
-                    "voidable",
-                    "lifeCycleInfo",
-                    "dataType",
-                    "enumeration",
-                    "featureType",
-                    "codeList",
-                    "CodeList"
-                )
-            )
-
             patch<KorePackage>(predicate = { name == "AdministrativeUnits" }) {
                 metaClass = Container
                 fileName = name
@@ -326,7 +366,8 @@ val au =
             }
 
             rule(`load authoritative descriptions of the reasons for void values as metadata`)
-
+            manipulation(`remove unused tags`)
+            manipulation(`remove stereotypes`)
         }
         output {
             add(Console)
