@@ -26,11 +26,10 @@ import es.iaaa.kore.transform.impl.TransformationsImpl
 /**
  * Conversion
  */
-class Conversion(
-    val input: Input = InputImpl(),
-    val transformations: Transformations = TransformationsImpl(),
+class Conversion: Validable {
+    val input: Input = InputImpl()
     val output: Output = OutputImpl()
-) : Validable {
+    val transformations: Transformations = TransformationsImpl(parent = this)
 
     lateinit var model: Model
 

@@ -19,7 +19,6 @@ package inspire.au
 
 import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
-import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.conversion
 import es.iaaa.kore.transform.impl.Console
 import es.iaaa.kore.transform.impl.GeoPackageWriter
@@ -28,14 +27,14 @@ import es.iaaa.kore.transform.rules.*
 /**
  * Patch: eaxmiid41 is a UML:DataType with name <undefined>
  */
-val `remove references to undefined Data Type` : Transformations.(Map<String, Any>) -> Unit = {
+val `remove references to undefined Data Type` : Transform = { _, _ ->
     patch<KoreTypedElement>(predicate = { type?.id == "eaxmiid41" }) { type = null }
 }
 
 /**
  * Patch: add dataType refinement to PT_Locale (EAID_4F7072DC_5423_4978_8EA2_1DE43135931B)
  */
-val `add Data Type tag to PT_Locale` : Transformations.(Map<String, Any>) -> Unit = {
+val `add Data Type tag to PT_Locale` : Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "EAID_4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
@@ -44,7 +43,7 @@ val `add Data Type tag to PT_Locale` : Transformations.(Map<String, Any>) -> Uni
 /**
  * Patch: add dataType refinement to LocalisedCharacterString (EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A)
  */
-val `add Data Type tag to LocalisedCharacterString` : Transformations.(Map<String, Any>) -> Unit = {
+val `add Data Type tag to LocalisedCharacterString` : Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
@@ -53,7 +52,7 @@ val `add Data Type tag to LocalisedCharacterString` : Transformations.(Map<Strin
 /**
  * Patch: add dataType refinement to Identifier (EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9)
  */
-val `add Data Type tag to Identifier` : Transformations.(Map<String, Any>) -> Unit = {
+val `add Data Type tag to Identifier` : Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
@@ -62,7 +61,7 @@ val `add Data Type tag to Identifier` : Transformations.(Map<String, Any>) -> Un
 /**
  * Patch: fix typo in edgeMatched default value
  */
-val `standardize edgeMatched default value` : Transformations.(Map<String, Any>) -> Unit = {
+val `standardize edgeMatched default value` : Transform = { _, _ ->
     patch<KoreAttribute>(predicate = { defaultValueLiteral == "edge-matched" }) {
         defaultValueLiteral = "edgeMatched"
     }
@@ -71,18 +70,24 @@ val `standardize edgeMatched default value` : Transformations.(Map<String, Any>)
 /**
  * Patch: fix typo in CodeList
  */
-val `standardize codeList` : Transformations.(Map<String, Any>) -> Unit = {
-    patch<KoreClass>(predicate = hasRefinement("CodeList")) {
-        getAnnotation()?.references?.filterIsInstance<KoreNamedElement>()
-            ?.filter { it.name == "CodeList" }
-            ?.forEach { it.name = "codeList" }
+val `standardize codeList` : Transform = { _, _ ->
+    patch<KoreClass>(predicate = { getAnnotation()
+        ?.references
+        ?.filterIsInstance<KoreNamedElement>()
+        ?.any { it.name == "CodeList" }
+        ?: false
+    }) { getAnnotation()
+        ?.references
+        ?.filterIsInstance<KoreNamedElement>()
+        ?.filter { it.name == "CodeList" }
+        ?.forEach { it.name = "codeList" }
     }
 }
 
 /**
  * Cleanup: remove unused tags.
  */
-val `remove unused tags` : Transformations.(Map<String, Any>) -> Unit = {
+val `remove unused tags` : Transform = { _, _ ->
     removeTags(
         listOf(
             "ea_.*", "version", "tpos", "tagged", "style", "status", "phase", "package",
@@ -97,7 +102,7 @@ val `remove unused tags` : Transformations.(Map<String, Any>) -> Unit = {
 /**
  * Cleanup: remove stereotypes.
  */
-val `remove stereotypes` : Transformations.(Map<String, Any>) -> Unit = {
+val `remove stereotypes` : Transform = { _, _ ->
     removeRefinements(
         listOf(
             "voidable",
@@ -262,41 +267,17 @@ val au =
                 }
             }
 
-            //
-            // Remove dangling references.
-            //
-            patch<KoreClass>(predicate = { references.isNotEmpty() }) {
-                references.filter { it.name == null }.forEach {
-                    it.containingClass = null
-                    it.opposite?.containingClass = null
-                }
-            }
-
-            setMetMetaclassWhen(Column, predicate = isColumn())
+            setMetMetaclassWhen(Column, predicate = { obj ->
+                obj is KoreAttribute && obj.container?.metaClass in listOf(FeaturesTable, AttributesTable)
+            })
 
             forEachAttribute(predicate = { it.metaClass == Column && it.columnName == null }) {
                 it.columnName = it.name
             }
 
-            patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
-                findTaggedValue("package_name")?.let {
-                    identifier = "$it::$name"
-                }
-            }
+            rule(`load authoritative descriptions of the reasons for void values as metadata`)
 
-            patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
-                findTaggedValue("documentation")?.let { text ->
-                    val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
-                    val idx = tokens.indexOf("-- Name --")
-                    description = tokens.mapIndexed { pos, str ->
-                        when {
-                            str.startsWith("--") -> ""
-                            pos == idx + 1 && idx >= 0 -> ""
-                            else -> str
-                        }
-                    }.filter { it.isNotBlank() }.joinToString("\n\n")
-                }
-            }
+            manipulation(`add qualified name to features and attributes`)
 
             patch<KoreClass>(predicate = { metaClass == FeaturesTable }) {
                 tableName = prefixes.getOrDefault(container?.name, "") + name
@@ -306,59 +287,15 @@ val au =
                 tableName = prefixes.getOrDefault(container?.name, "") + name
                 name = tableName
             }
-
-
             patch<KoreClass>(predicate = { metaClass == EnumConstraint }) {
                 name = prefixes.getOrDefault(container?.name, "") + name
             }
 
-            addAttributeWhen(idColumn()) { it.metaClass in listOf(FeaturesTable, AttributesTable) }
-
-            patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
-                val owner = this
-                val sorted = attributes.sortedWith(GpkgAttributeComparator)
-                sorted.forEach { it.containingClass = null }
-                sorted.forEach { it.containingClass = owner }
-            }
-
-
-            patch<KoreAttribute>(predicate = { metaClass == Column && title == null }) {
-                findTaggedValue("description")?.let { text ->
-                    val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
-                    val idx = tokens.indexOf("-- Name --")
-                    if (idx >= 0) {
-                        title = tokens[idx + 1]
-                    }
-                }
-            }
-
-            patch<KoreAttribute>(predicate = { metaClass == Column && description == null }) {
-                findTaggedValue("description")?.let { text ->
-                    val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
-                    val idx = tokens.indexOf("-- Name --")
-                    description = tokens.mapIndexed { pos, str ->
-                        when {
-                            str.startsWith("--") -> ""
-                            pos == idx + 1 && idx >= 0 -> ""
-                            else -> str
-                        }
-                    }.filter { it.isNotBlank() }.joinToString("\n\n")
-                }
-            }
-
-            patch<KorePackage>(predicate = { name == "AdministrativeUnits" }) {
-                metaClass = Container
-                fileName = name
-                model.allRelevantContent().filterIsInstance<KoreClass>().filter {
-                    it.metaClass == AttributesTable || it.metaClass == FeaturesTable ||
-                        it.metaClass == RelationTable ||
-                        it.metaClass == EnumConstraint
-                }.forEach {
-                    it.container = this
-                }
-            }
-
-            rule(`load authoritative descriptions of the reasons for void values as metadata`)
+            manipulation(`add geopackage primary column`)
+            manipulation(`copy documentation to column description`)
+            manipulation(`copy documentation to table description`)
+            manipulation(`move to the selected package`)
+            manipulation(`remove dangling references`)
             manipulation(`remove unused tags`)
             manipulation(`remove stereotypes`)
         }
@@ -373,49 +310,7 @@ val au =
         }
     }
 
-private fun idColumn(): () -> KoreAttribute {
-    return {
-        column {
-            name = "id"; columnName = "id"; title = "Id"; description = "Id"; lowerBound = 1; type =
-            IntegerType(); geoPackageSpec().add(PrimaryKey)
-        }
-    }
-}
-
-private fun hasRefinement(name: String, source: String? = null): (KoreObject) -> Boolean = { obj ->
-    if (obj is KoreModelElement) {
-        obj.getAnnotation(source)?.references?.filterIsInstance<KoreNamedElement>()?.any { it.name == name }
-            ?: false
-    } else false
-}
-
-private fun isColumn(): (KoreObject) -> Boolean = { obj ->
-    obj is KoreAttribute && obj.container?.metaClass in listOf(FeaturesTable, AttributesTable)
-}
-
 fun main() {
     au.convert()
 }
 
-fun schemaName(name: String): (KoreObject) -> Boolean = { it ->
-    if (it is KorePackage) {
-        it.name == name && hasRefinement("applicationSchema")(it)
-    } else {
-        false
-    }
-}
-
-object GpkgAttributeComparator : Comparator<KoreAttribute> {
-    override fun compare(o1: KoreAttribute, o2: KoreAttribute): Int {
-        val r1 = o1.findDefaultNamedReferences()
-        val r2 = o2.findDefaultNamedReferences()
-        return when {
-            o1.isPrimaryKey() -> -1
-            o1.name == null -> 1
-            o2.name == null -> -1
-            r1.size == r2.size -> 0
-            r1.isEmpty() || r2.isEmpty() -> r1.size - r2.size
-            else -> r2.size - r1.size
-        }
-    }
-}

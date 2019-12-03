@@ -16,11 +16,14 @@
 package es.iaaa.kore.transform.impl
 
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.transform.Conversion
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
+import javax.security.auth.login.Configuration
 
 class TransformationsImpl(
-    val transformations: MutableList<Transformation> = mutableListOf()
+    val transformations: MutableList<Transformation> = mutableListOf(),
+    val parent: Conversion
 ) : Transformations, List<Transformation> by transformations {
     val shouldTrack: MutableList<KoreClass> = mutableListOf()
     override fun add(transformation: Transformation) {
@@ -29,4 +32,5 @@ class TransformationsImpl(
     override fun track(list: List<KoreClass>) {
         shouldTrack.addAll(list)
     }
+    override fun owner(): Conversion = parent
 }

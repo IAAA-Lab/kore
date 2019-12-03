@@ -28,4 +28,6 @@ interface Transformations : List<Transformation> {
     fun add(transformation: Transformation)
 
     fun track(list: List<KoreClass>)
+
+    fun owner(): Conversion
 }
