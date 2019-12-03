@@ -31,7 +31,7 @@ internal class FlattenTypes(
         var iterations = 0
         do {
             var changes = 0
-            var content = if (global) target.allContent() else target.allRelevantContent()
+            val content = if (global) target.allContent() else target.allRelevantContent()
             content.filterIsInstance<KoreClass>().forEach { cls ->
                 val toFlatten = cls.attributes.filter { ref ->
                     with(ref) {

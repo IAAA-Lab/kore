@@ -136,8 +136,8 @@ val `voidable properties have a min cardinality of 0`: Transformations.(Map<Stri
     setLowerBoundWhen(0) { it.findDefaultNamedReferences().any { ref -> ref.name == "voidable" } }
 }
 
-val `flatten Data Types with upper cardinality of 1`: Transformations.(Map<String, Any>) -> Unit = {
-    flattenTypes(predicate = hasRefinement("dataType"),
+val `flatten Data Types with upper cardinality of 1 but Identifier`: Transformations.(Map<String, Any>) -> Unit = {
+    flattenTypes(predicate = { obj-> obj.hasRefinement("dataType") && !obj.hasName("Identifier") },
         postFlatten = { old, new ->
             new.name = "${old.name}_${new.name}"
             new.lowerBound = kotlin.math.min(old.lowerBound, new.lowerBound)
@@ -229,6 +229,7 @@ private fun hasRefinement(name: String, source: String? = null): (KoreObject) ->
     obj.hasRefinement(name, source)
 }
 
+
 private fun canToFeature(name: String): (KoreObject) -> Boolean = { obj ->
     if (obj.hasRefinement(name)) {
         obj as KoreClass
@@ -255,3 +256,4 @@ private fun KoreObject.hasRefinement(name: String, source: String? = null): Bool
     } else false
 }
 
+private fun KoreObject.hasName(name: String): Boolean = this is KoreNamedElement && this.name == name

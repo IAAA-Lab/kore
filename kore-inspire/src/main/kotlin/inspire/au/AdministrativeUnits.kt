@@ -142,18 +142,11 @@ val au =
             manipulation(`standardize edgeMatched default value`)
             manipulation(`standardize codeList`)
 
-            /**
-             * Patch: convert inspireId attribute o references
-             */
-            patch<KoreClass>(predicate = { attributes.any { it.name == "inspireId" } }) {
-                attributes.filter { it.name == "inspireId" }.forEach { it.toReference() }
-            }
-
             rule(`general rule ISO-19103 Basic Types`)
             rule(`general rule ISO-19107 Geometry Types`)
             rule(`general rule ISO-19139 Metadata XML Implementation Types`)
 
-            rule(`flatten Data Types with upper cardinality of 1`)
+            rule(`flatten Data Types with upper cardinality of 1 but Identifier`)
 
             rule(`simple Feature Type stereotype to GeoPackage Feature`)
             rule(`Feature Type stereotype without geometry to GeoPackage Attribute`)
