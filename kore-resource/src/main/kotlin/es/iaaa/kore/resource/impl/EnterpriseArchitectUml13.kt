@@ -15,7 +15,22 @@
  */
 package es.iaaa.kore.resource.impl
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAnnotation
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreClassifier
+import es.iaaa.kore.KoreDataType
+import es.iaaa.kore.KoreModel
+import es.iaaa.kore.KoreModelElement
+import es.iaaa.kore.KoreNamedElement
+import es.iaaa.kore.KoreObject
+import es.iaaa.kore.KoreOperation
+import es.iaaa.kore.KorePackage
+import es.iaaa.kore.KoreParameter
+import es.iaaa.kore.KoreReference
+import es.iaaa.kore.KoreStructuralFeature
+import es.iaaa.kore.KoreTypedElement
+import es.iaaa.kore.findTaggedValue
 import es.iaaa.kore.resource.Factory
 import es.iaaa.kore.resource.Resource
 import org.jdom2.Document

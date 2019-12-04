@@ -15,11 +15,9 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KorePackage
-import es.iaaa.kore.impl.KoreClassImpl
 
 val Metadata = KoreModel.createClass().apply {
     name = "Metadata"

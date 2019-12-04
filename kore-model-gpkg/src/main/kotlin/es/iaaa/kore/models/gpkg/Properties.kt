@@ -17,7 +17,6 @@ package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreReference
 import es.iaaa.kore.KoreStructuralFeature
 import es.iaaa.kore.impl.KoreStorage
 import java.math.BigDecimal

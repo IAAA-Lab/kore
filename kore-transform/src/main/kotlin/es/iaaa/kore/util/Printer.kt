@@ -15,7 +15,16 @@
  */
 package es.iaaa.kore.util
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAnnotation
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreDataType
+import es.iaaa.kore.KoreModelElement
+import es.iaaa.kore.KoreNamedElement
+import es.iaaa.kore.KoreObject
+import es.iaaa.kore.KorePackage
+import es.iaaa.kore.KoreReference
+import es.iaaa.kore.findDefaultNamedReferences
 
 /**
  * Pretty print package name

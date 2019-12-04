@@ -356,7 +356,8 @@ val `remove dangling references`: Transform = { _, _ ->
 val `properties with maximum cardinality 1 to columns`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = {
         container?.metaClass in listOf(FeaturesTable, AttributesTable) &&
-        !isMany}) {
+            !isMany
+    }) {
         metaClass = Column
         columnName = name
     }
@@ -409,7 +410,6 @@ val `general rule for association roles and arrays`: Transform = { conversion, _
     }
 }
 
-
 private fun KoreReference?.copyAsRefAttribute(): KoreAttribute? = this?.toAttribute(remove = false)?.apply {
     type = IntegerType()
     lowerBound = 0
@@ -446,7 +446,6 @@ private fun KorePackage.toRelation(
         findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
     }
 }
-
 
 fun Transformations.manipulation(block: Transform, options: Map<String, Any> = emptyMap()) {
     block(this, owner(), options)

@@ -18,15 +18,15 @@ package es.iaaa.kore.transform
 import es.iaaa.kore.KoreObject
 import es.iaaa.kore.impl.Validable
 import es.iaaa.kore.impl.Violations
-import es.iaaa.kore.transform.impl.StringConsole
 import es.iaaa.kore.transform.impl.InputImpl
 import es.iaaa.kore.transform.impl.OutputImpl
+import es.iaaa.kore.transform.impl.StringConsole
 import es.iaaa.kore.transform.impl.TransformationsImpl
 
 /**
  * Conversion
  */
-class Conversion: Validable {
+class Conversion : Validable {
     val input: Input = InputImpl()
     val output: Output = OutputImpl()
     val transformations: Transformations = TransformationsImpl(parent = this)

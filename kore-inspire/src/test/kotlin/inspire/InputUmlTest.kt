@@ -16,13 +16,17 @@
 package inspire
 
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreOperation
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.KoreStructuralFeature
 import es.iaaa.kore.findDefaultNamedReferences
-import es.iaaa.kore.KoreOperation
 import es.iaaa.kore.resource.ResourceFactory
 import es.iaaa.kore.util.toPrettyString
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.File

@@ -15,8 +15,12 @@
  */
 package es.iaaa.kore.io.gpkg
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreDataType
+import es.iaaa.kore.KorePackage
 import es.iaaa.kore.models.gpkg.*
+import es.iaaa.kore.toAttribute
 import mil.nga.geopackage.GeoPackage
 import mil.nga.geopackage.attributes.AttributesColumn
 import mil.nga.geopackage.attributes.AttributesTable

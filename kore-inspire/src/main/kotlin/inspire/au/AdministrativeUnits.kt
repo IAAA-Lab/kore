@@ -19,31 +19,15 @@ package inspire.au
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreClassifier
 import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KoreNamedElement
-import es.iaaa.kore.KorePackage
-import es.iaaa.kore.KoreReference
 import es.iaaa.kore.KoreTypedElement
-import es.iaaa.kore.models.gpkg.AttributesTable
-import es.iaaa.kore.models.gpkg.BaseTable
-import es.iaaa.kore.models.gpkg.FeaturesTable
-import es.iaaa.kore.models.gpkg.GeoPackageSpec
-import es.iaaa.kore.models.gpkg.IntegerType
-import es.iaaa.kore.models.gpkg.RelatedTable
-import es.iaaa.kore.models.gpkg.columnName
-import es.iaaa.kore.models.gpkg.profile
-import es.iaaa.kore.models.gpkg.reference
-import es.iaaa.kore.models.gpkg.relatedReference
-import es.iaaa.kore.models.gpkg.relation
-import es.iaaa.kore.toAttribute
 import es.iaaa.kore.transform.conversion
 import es.iaaa.kore.transform.impl.Console
 import es.iaaa.kore.transform.impl.GeoPackageWriter
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.removeRefinements
 import es.iaaa.kore.transform.rules.removeTags
-
 
 val au = {
     conversion {
@@ -78,8 +62,8 @@ val au = {
             rule(`Data Type stereotype to GeoPackage Attribute`)
             rule(`simple feature-like Data Type stereotype to GeoPackage Feature`)
 
-            rule(`general rule Enumeration Types`, mapOf("description" to false))
-            rule(`general rule CodeList Types`, mapOf("description" to false))
+            rule(`general rule Enumeration Types`, mapOf("description" to true))
+            rule(`general rule CodeList Types`, mapOf("description" to true))
             rule(`voidable properties have a min cardinality of 0`)
 
             manipulation(`ensure that arrays are treated as references from now`)

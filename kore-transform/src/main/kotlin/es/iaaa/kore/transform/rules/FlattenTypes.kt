@@ -15,7 +15,10 @@
  */
 package es.iaaa.kore.transform.rules
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreNamedElement
+import es.iaaa.kore.KoreTypedElement
+import es.iaaa.kore.copy
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations

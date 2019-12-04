@@ -15,7 +15,11 @@
  */
 package es.iaaa.kore.transform
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreModelElement
+import es.iaaa.kore.KoreObject
+import es.iaaa.kore.KorePackage
+import es.iaaa.kore.KoreTypedElement
 import es.iaaa.kore.impl.Validable
 import es.iaaa.kore.impl.Violations
 import es.iaaa.kore.resource.Resource

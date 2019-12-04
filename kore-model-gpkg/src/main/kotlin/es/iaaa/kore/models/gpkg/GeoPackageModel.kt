@@ -15,7 +15,11 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreNamedElement
+import es.iaaa.kore.KoreReference
+import es.iaaa.kore.KoreStructuralFeature
 
 object GeoPackageSpec {
     const val SOURCE = "http://www.geopackage.org/spec/"
