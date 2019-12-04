@@ -18,17 +18,20 @@ package es.iaaa.kore.models.gpkg
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KorePackage
+import es.iaaa.kore.impl.KoreClassImpl
 
 /**
  * A representation of the model object Attribute Table.
  * Non-spatial attribute data are sets (or tuples or rows) of observations that may not have an explicit geometry
  * property.
  */
-val AttributesTable = KoreModel.createClass().apply {
-    name = "Attributes"
-    attribute { name = "tableName" }
-    attribute { name = "description" }
-    attribute { name = "identifier" }
+object AttributesTable : KoreClassImpl() {
+    init {
+        name = "Attributes"
+        attribute { name = "tableName" }
+        attribute { name = "description" }
+        attribute { name = "identifier" }
+    }
 }
 
 /**

@@ -69,9 +69,9 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
-  Relation "AU_admUnit_boundary" {
+  Relation "AU_AdministrativeBoundary_admUnit" {
     profile = "features"
-    tableName = "AU_admUnit_boundary"
+    tableName = "AU_AdministrativeBoundary_admUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
@@ -88,22 +88,22 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
   }
-  Relation "AU_administeredBy_coAdminister" {
+  Relation "AU_AdministrativeUnit_administeredBy" {
     profile = "features"
-    tableName = "AU_administeredBy_coAdminister"
+    tableName = "AU_AdministrativeUnit_administeredBy"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
-  Relation "AU_condominium_admUnit" {
+  Relation "AU_AdministrativeUnit_condominium" {
     profile = "features"
-    tableName = "AU_condominium_admUnit"
+    tableName = "AU_AdministrativeUnit_condominium"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_Condominium(id)
   }
-  Relation "AU_lowerLevelUnit_upperLevelUnit" {
+  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
     profile = "features"
     relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
-    tableName = "AU_lowerLevelUnit_upperLevelUnit"
+    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }

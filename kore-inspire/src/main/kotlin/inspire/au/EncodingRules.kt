@@ -44,6 +44,7 @@ import es.iaaa.kore.models.gpkg.metadata
 import es.iaaa.kore.models.gpkg.mimeType
 import es.iaaa.kore.models.gpkg.scope
 import es.iaaa.kore.models.gpkg.standardUri
+import es.iaaa.kore.models.gpkg.tableName
 import es.iaaa.kore.models.gpkg.title
 import es.iaaa.kore.toAttribute
 import es.iaaa.kore.toReference
@@ -351,6 +352,25 @@ val `properties with maximum cardinality 1 to columns`: Transform = { _, _ ->
         !isMany}) {
         metaClass = Column
         columnName = name
+    }
+}
+
+val `default package prefixes`: Transform = { _, options ->
+    val prefixes = options.getOrDefault("prefixes", emptyMap<String, String>()) as Map<*, *>
+    patch<KoreClass>(predicate = { metaClass == FeaturesTable }) {
+        tableName = prefixes.getOrDefault(container?.name, "").toString() + name
+        name = tableName
+    }
+    patch<KoreClass>(predicate = { metaClass == AttributesTable }) {
+        tableName = prefixes.getOrDefault(container?.name, "").toString() + name
+        name = tableName
+    }
+    patch<KoreClass>(predicate = { metaClass == EnumConstraint }) {
+        name = prefixes.getOrDefault(container?.name, "").toString() + name
+    }
+    patch<KoreClass>(predicate = { metaClass == RelationTable }) {
+        tableName = prefixes.getOrDefault(container?.name, "").toString() + tableName
+        name = tableName
     }
 }
 

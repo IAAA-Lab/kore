@@ -28,12 +28,12 @@ class Patch<T>(
 
     override fun process(target: Model) {
         val from = if (global) target.allContent() else target.allRelevantContent()
-        from.filterIsInstance(klass).filter { predicate(it) }.forEach { block(it) }
+        from.filterIsInstance(klass).asSequence().filter { predicate(it) }.forEach { block(it) }
     }
 }
 
 inline fun <reified T> Transformations.patch(
-    noinline predicate: T.() -> Boolean,
+    noinline predicate: T.() -> Boolean = { true },
     global: Boolean = false,
     noinline block: T.() -> Unit
 ) {

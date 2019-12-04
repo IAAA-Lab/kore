@@ -4,9 +4,11 @@ import es.iaaa.kore.impl.KoreInstanceInternal
 
 object KoreModel : KoreModelFactory by KoreInstanceInternal()
 
-fun KoreReference.toAttribute(): KoreAttribute {
+fun KoreReference.toAttribute(remove: Boolean = true): KoreAttribute {
     val cls = containingClass
-    containingClass = null
+    if (remove) {
+        containingClass = null
+    }
     return KoreModel.createAttribute().apply {
         metaClass = this@toAttribute.metaClass
         isChangeable = this@toAttribute.isChangeable

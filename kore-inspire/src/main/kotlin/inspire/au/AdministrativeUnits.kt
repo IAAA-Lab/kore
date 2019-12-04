@@ -17,24 +17,47 @@
 
 package inspire.au
 
-import es.iaaa.kore.*
-import es.iaaa.kore.models.gpkg.*
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreClassifier
+import es.iaaa.kore.KoreModel
+import es.iaaa.kore.KoreNamedElement
+import es.iaaa.kore.KorePackage
+import es.iaaa.kore.KoreReference
+import es.iaaa.kore.KoreTypedElement
+import es.iaaa.kore.models.gpkg.AttributesTable
+import es.iaaa.kore.models.gpkg.BaseTable
+import es.iaaa.kore.models.gpkg.EnumConstraint
+import es.iaaa.kore.models.gpkg.FeaturesTable
+import es.iaaa.kore.models.gpkg.GeoPackageSpec
+import es.iaaa.kore.models.gpkg.IntegerType
+import es.iaaa.kore.models.gpkg.RelatedTable
+import es.iaaa.kore.models.gpkg.RelationTable
+import es.iaaa.kore.models.gpkg.columnName
+import es.iaaa.kore.models.gpkg.profile
+import es.iaaa.kore.models.gpkg.reference
+import es.iaaa.kore.models.gpkg.relatedReference
+import es.iaaa.kore.models.gpkg.relation
+import es.iaaa.kore.models.gpkg.tableName
+import es.iaaa.kore.toAttribute
 import es.iaaa.kore.transform.conversion
 import es.iaaa.kore.transform.impl.Console
 import es.iaaa.kore.transform.impl.GeoPackageWriter
-import es.iaaa.kore.transform.rules.*
+import es.iaaa.kore.transform.rules.patch
+import es.iaaa.kore.transform.rules.removeRefinements
+import es.iaaa.kore.transform.rules.removeTags
 
 /**
  * Patch: eaxmiid41 is a UML:DataType with name <undefined>
  */
-val `remove references to undefined Data Type` : Transform = { _, _ ->
+val `remove references to undefined Data Type`: Transform = { _, _ ->
     patch<KoreTypedElement>(predicate = { type?.id == "eaxmiid41" }) { type = null }
 }
 
 /**
  * Patch: add dataType refinement to PT_Locale (EAID_4F7072DC_5423_4978_8EA2_1DE43135931B)
  */
-val `add Data Type tag to PT_Locale` : Transform = { _, _ ->
+val `add Data Type tag to PT_Locale`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "EAID_4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
@@ -43,7 +66,7 @@ val `add Data Type tag to PT_Locale` : Transform = { _, _ ->
 /**
  * Patch: add dataType refinement to LocalisedCharacterString (EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A)
  */
-val `add Data Type tag to LocalisedCharacterString` : Transform = { _, _ ->
+val `add Data Type tag to LocalisedCharacterString`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
@@ -52,7 +75,7 @@ val `add Data Type tag to LocalisedCharacterString` : Transform = { _, _ ->
 /**
  * Patch: add dataType refinement to Identifier (EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9)
  */
-val `add Data Type tag to Identifier` : Transform = { _, _ ->
+val `add Data Type tag to Identifier`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
@@ -61,7 +84,7 @@ val `add Data Type tag to Identifier` : Transform = { _, _ ->
 /**
  * Patch: fix typo in edgeMatched default value
  */
-val `standardize edgeMatched default value` : Transform = { _, _ ->
+val `standardize edgeMatched default value`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = { defaultValueLiteral == "edge-matched" }) {
         defaultValueLiteral = "edgeMatched"
     }
@@ -70,24 +93,26 @@ val `standardize edgeMatched default value` : Transform = { _, _ ->
 /**
  * Patch: fix typo in CodeList
  */
-val `standardize codeList` : Transform = { _, _ ->
-    patch<KoreClass>(predicate = { getAnnotation()
-        ?.references
-        ?.filterIsInstance<KoreNamedElement>()
-        ?.any { it.name == "CodeList" }
-        ?: false
-    }) { getAnnotation()
-        ?.references
-        ?.filterIsInstance<KoreNamedElement>()
-        ?.filter { it.name == "CodeList" }
-        ?.forEach { it.name = "codeList" }
+val `standardize codeList`: Transform = { _, _ ->
+    patch<KoreClass>(predicate = {
+        getAnnotation()
+            ?.references
+            ?.filterIsInstance<KoreNamedElement>()
+            ?.any { it.name == "CodeList" }
+            ?: false
+    }) {
+        getAnnotation()
+            ?.references
+            ?.filterIsInstance<KoreNamedElement>()
+            ?.filter { it.name == "CodeList" }
+            ?.forEach { it.name = "codeList" }
     }
 }
 
 /**
  * Cleanup: remove unused tags.
  */
-val `remove unused tags` : Transform = { _, _ ->
+val `remove unused tags`: Transform = { _, _ ->
     removeTags(
         listOf(
             "ea_.*", "version", "tpos", "tagged", "style", "status", "phase", "package",
@@ -102,7 +127,7 @@ val `remove unused tags` : Transform = { _, _ ->
 /**
  * Cleanup: remove stereotypes.
  */
-val `remove stereotypes` : Transform = { _, _ ->
+val `remove stereotypes`: Transform = { _, _ ->
     removeRefinements(
         listOf(
             "voidable",
@@ -169,102 +194,30 @@ val au =
             /**
              * Patch: create relation table from references with inverse of different types
              */
-            patch<KoreClass>(predicate = { references.isNotEmpty() }) {
-                references.forEach {
-                    val base = it.containingClass
-                    val related = it.type
-                    val baseName = it.name
-                    val relatedName = it.opposite?.name
-                    if (base != null && related != null && baseName != null &&
-                        (base.metaClass in listOf(AttributesTable, FeaturesTable)) &&
-                        (related.metaClass in listOf(AttributesTable, FeaturesTable))
-                    ) {
-
-                        if (it.isMany && it.opposite?.isMany == true) {
-                            val container = base.container
-                            val tableName = prefixes.getOrDefault(
-                                container?.name,
-                                ""
-                            ) + if (relatedName != null) baseName + "_" + relatedName else base.name + "_" + baseName
-
-                            val relationProfile = if (related.metaClass == AttributesTable) "attributes" else "features"
-
-                            container?.relation(tableName) {
-                                profile = relationProfile
-                                reference {
-                                    name = "base_id"; columnName = "base_id"; type = base
-                                    findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
-                                }
-                                reference {
-                                    name = "related_id"; columnName = "related_id"; type = related
-                                    findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
-                                }
-                            }?.also { rel ->
-                                track(rel)
-                            }
-                            it.containingClass = null
-                            it.opposite?.containingClass = null
-                        } else if (it.isMany) {
-                            val container = base.container
-                            val tableName = prefixes.getOrDefault(
-                                container?.name,
-                                ""
-                            ) + if (relatedName != null) baseName + "_" + relatedName else base.name + "_" + baseName
-                            val newAttribute = it.opposite?.toAttribute()?.apply {
-                                type = IntegerType()
-                                lowerBound = 0
-                                upperBound = 1
-                            }
-                            val relationProfile =
-                                if (related.metaClass == AttributesTable) "attributes" else "features"
-                            container?.relation(tableName) {
-                                profile = relationProfile
-                                relatedReference = newAttribute
-                                reference {
-                                    name = "base_id"; columnName = "base_id"; type = base
-                                    findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
-                                }
-                                reference {
-                                    name = "related_id"; columnName = "related_id"; type = related
-                                    findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
-                                }
-                            }?.also { rel ->
-                                track(rel)
-                            }
-                            it.containingClass = null
-                        } else {
-                            val container = base.container
-                            val tableName = prefixes.getOrDefault(
-                                container?.name,
-                                ""
-                            ) + if (relatedName != null) baseName + "_" + relatedName else base.name + "_" + baseName
-
-                            val relationProfile =
-                                if (related.metaClass == AttributesTable) "attributes" else "features"
-                            val newAttribute = it.toAttribute().apply {
-                                type = IntegerType()
-                                lowerBound = 0
-                                upperBound = 1
-                            }
-
-                            container?.relation(tableName) {
-                                profile = relationProfile
-                                relatedReference = newAttribute
-                                reference {
-                                    name = "base_id"; columnName = "base_id"; type = base
-                                    findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
-                                }
-                                reference {
-                                    name = "related_id"; columnName = "related_id"; type = related
-                                    findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
-                                }
-                            }?.also { rel ->
-                                track(rel)
-                            }
-                            it.opposite?.containingClass = null
-                        }
-                    }
+            patch<KoreReference>(
+                predicate = {
+                    name != null &&
+                        containingClass?.metaClass in listOf(AttributesTable, FeaturesTable) &&
+                        type?.metaClass in listOf(AttributesTable, FeaturesTable)
                 }
+            ) {
+                val tableName = "${containingClass?.name}_$name"
+                val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
+
+                val manyToOne = isMany && opposite?.isMany != true
+                val oneToOne = !isMany
+
+                toRelation(tableName, relationProfile)?.let {
+                    it.relatedReference = when {
+                        manyToOne -> opposite?.copyAsRefAttribute()
+                        oneToOne -> copyAsRefAttribute()
+                        else -> null
+                    }
+                    track(it)
+                }
+
+                containingClass = null
+                opposite?.containingClass = null
             }
 
             rule(`properties with maximum cardinality 1 to columns`)
@@ -272,17 +225,7 @@ val au =
 
             manipulation(`add qualified name to features and attributes`)
 
-            patch<KoreClass>(predicate = { metaClass == FeaturesTable }) {
-                tableName = prefixes.getOrDefault(container?.name, "") + name
-                name = tableName
-            }
-            patch<KoreClass>(predicate = { metaClass == AttributesTable }) {
-                tableName = prefixes.getOrDefault(container?.name, "") + name
-                name = tableName
-            }
-            patch<KoreClass>(predicate = { metaClass == EnumConstraint }) {
-                name = prefixes.getOrDefault(container?.name, "") + name
-            }
+            rule(`default package prefixes`, mapOf("prefixes" to prefixes))
 
             manipulation(`add geopackage primary column`)
             manipulation(`copy documentation to column description`)
@@ -307,3 +250,39 @@ fun main() {
     au.convert()
 }
 
+private fun KoreReference?.copyAsRefAttribute(): KoreAttribute? = this?.toAttribute(remove = false)?.apply {
+    type = IntegerType()
+    lowerBound = 0
+    upperBound = 1
+}
+
+private fun KoreReference.toRelation(
+    tableName: String,
+    relationProfile: String
+): KoreClass? = type?.let { t ->
+    containingClass?.let {
+        val pkg = it.container
+        pkg?.toRelation(tableName, relationProfile, it, t)
+    }
+}
+
+private fun KorePackage.toRelation(
+    tableName: String,
+    relationProfile: String,
+    base: KoreClass,
+    related: KoreClassifier
+): KoreClass = relation(tableName) {
+    profile = relationProfile
+    reference {
+        name = "base_id"
+        columnName = "base_id"
+        type = base
+        findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
+    }
+    reference {
+        name = "related_id"
+        columnName = "related_id"
+        type = related
+        findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
+    }
+}
