@@ -51,6 +51,7 @@ import es.iaaa.kore.transform.Conversion
 import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.rules.addAttributeWhen
 import es.iaaa.kore.transform.rules.flattenTypes
+import es.iaaa.kore.transform.rules.forEachAttribute
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.setLowerBoundWhen
 import es.iaaa.kore.transform.rules.setMetMetaclassWhen
@@ -341,6 +342,15 @@ val `remove dangling references`: Transform = { _, _ ->
             it.containingClass = null
             it.opposite?.containingClass = null
         }
+    }
+}
+
+val `properties with maximum cardinality 1 to columns`: Transform = { _, _ ->
+    patch<KoreAttribute>(predicate = {
+        container?.metaClass in listOf(FeaturesTable, AttributesTable) &&
+        !isMany}) {
+        metaClass = Column
+        columnName = name
     }
 }
 

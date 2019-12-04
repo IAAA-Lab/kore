@@ -267,14 +267,7 @@ val au =
                 }
             }
 
-            setMetMetaclassWhen(Column, predicate = { obj ->
-                obj is KoreAttribute && obj.container?.metaClass in listOf(FeaturesTable, AttributesTable)
-            })
-
-            forEachAttribute(predicate = { it.metaClass == Column && it.columnName == null }) {
-                it.columnName = it.name
-            }
-
+            rule(`properties with maximum cardinality 1 to columns`)
             rule(`load authoritative descriptions of the reasons for void values as metadata`)
 
             manipulation(`add qualified name to features and attributes`)
