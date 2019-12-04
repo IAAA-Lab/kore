@@ -24,9 +24,10 @@ class DryRunTest {
 
     @Test
     fun `test current configuration`() {
-        au.convert(true)
+        val run = au()
+        run.convert(true)
         val expected = File("src/test/resources/AdministrativeUnits.txt").readText().split("\n")
-        val dryRun = au.lastDryRunOutput.toString()
+        val dryRun = run.lastDryRunOutput.toString()
         val output = File("build/test/resources/AdministrativeUnits.txt")
         output.parentFile.mkdirs()
         output.writeText(dryRun)

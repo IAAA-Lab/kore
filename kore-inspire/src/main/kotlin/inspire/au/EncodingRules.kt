@@ -4,6 +4,7 @@ package inspire.au
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreClassifier
 import es.iaaa.kore.KoreModelElement
 import es.iaaa.kore.KoreNamedElement
 import es.iaaa.kore.KoreObject
@@ -13,6 +14,7 @@ import es.iaaa.kore.copy
 import es.iaaa.kore.findDefaultNamedReferences
 import es.iaaa.kore.findTaggedValue
 import es.iaaa.kore.models.gpkg.AttributesTable
+import es.iaaa.kore.models.gpkg.BaseTable
 import es.iaaa.kore.models.gpkg.BooleanType
 import es.iaaa.kore.models.gpkg.Column
 import es.iaaa.kore.models.gpkg.Constraint
@@ -24,11 +26,13 @@ import es.iaaa.kore.models.gpkg.DoubleType
 import es.iaaa.kore.models.gpkg.EnumConstraint
 import es.iaaa.kore.models.gpkg.EnumConstraintValue
 import es.iaaa.kore.models.gpkg.FeaturesTable
+import es.iaaa.kore.models.gpkg.GeoPackageSpec
 import es.iaaa.kore.models.gpkg.GeometryType
 import es.iaaa.kore.models.gpkg.IntegerType
 import es.iaaa.kore.models.gpkg.MultiSurfaceType
 import es.iaaa.kore.models.gpkg.PointType
 import es.iaaa.kore.models.gpkg.PrimaryKey
+import es.iaaa.kore.models.gpkg.RelatedTable
 import es.iaaa.kore.models.gpkg.RelationTable
 import es.iaaa.kore.models.gpkg.TextType
 import es.iaaa.kore.models.gpkg.attribute
@@ -42,6 +46,10 @@ import es.iaaa.kore.models.gpkg.geoPackageSpec
 import es.iaaa.kore.models.gpkg.identifier
 import es.iaaa.kore.models.gpkg.metadata
 import es.iaaa.kore.models.gpkg.mimeType
+import es.iaaa.kore.models.gpkg.profile
+import es.iaaa.kore.models.gpkg.reference
+import es.iaaa.kore.models.gpkg.relatedReference
+import es.iaaa.kore.models.gpkg.relation
 import es.iaaa.kore.models.gpkg.scope
 import es.iaaa.kore.models.gpkg.standardUri
 import es.iaaa.kore.models.gpkg.tableName
@@ -52,7 +60,6 @@ import es.iaaa.kore.transform.Conversion
 import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.rules.addAttributeWhen
 import es.iaaa.kore.transform.rules.flattenTypes
-import es.iaaa.kore.transform.rules.forEachAttribute
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.setLowerBoundWhen
 import es.iaaa.kore.transform.rules.setMetMetaclassWhen
@@ -373,6 +380,73 @@ val `default package prefixes`: Transform = { _, options ->
         name = tableName
     }
 }
+
+val `general rule for association roles and arrays`: Transform = { conversion, _ ->
+    patch<KoreReference>(
+        predicate = {
+            name != null &&
+                containingClass?.metaClass in listOf(AttributesTable, FeaturesTable) &&
+                type?.metaClass in listOf(AttributesTable, FeaturesTable)
+        }
+    ) {
+        val tableName = "${containingClass?.name}_$name"
+        val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
+
+        val manyToOne = isMany && opposite?.isMany != true
+        val oneToOne = !isMany
+
+        toRelation(tableName, relationProfile)?.let {
+            it.relatedReference = when {
+                manyToOne -> opposite?.copyAsRefAttribute()
+                oneToOne -> copyAsRefAttribute()
+                else -> null
+            }
+            conversion.track(it)
+        }
+
+        containingClass = null
+        opposite?.containingClass = null
+    }
+}
+
+
+private fun KoreReference?.copyAsRefAttribute(): KoreAttribute? = this?.toAttribute(remove = false)?.apply {
+    type = IntegerType()
+    lowerBound = 0
+    upperBound = 1
+}
+
+private fun KoreReference.toRelation(
+    tableName: String,
+    relationProfile: String
+): KoreClass? = type?.let { t ->
+    containingClass?.let {
+        val pkg = it.container
+        pkg?.toRelation(tableName, relationProfile, it, t)
+    }
+}
+
+private fun KorePackage.toRelation(
+    tableName: String,
+    relationProfile: String,
+    base: KoreClass,
+    related: KoreClassifier
+): KoreClass = relation(tableName) {
+    profile = relationProfile
+    reference {
+        name = "base_id"
+        columnName = "base_id"
+        type = base
+        findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
+    }
+    reference {
+        name = "related_id"
+        columnName = "related_id"
+        type = related
+        findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
+    }
+}
+
 
 fun Transformations.manipulation(block: Transform, options: Map<String, Any> = emptyMap()) {
     block(this, owner(), options)

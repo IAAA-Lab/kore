@@ -27,18 +27,15 @@ import es.iaaa.kore.KoreReference
 import es.iaaa.kore.KoreTypedElement
 import es.iaaa.kore.models.gpkg.AttributesTable
 import es.iaaa.kore.models.gpkg.BaseTable
-import es.iaaa.kore.models.gpkg.EnumConstraint
 import es.iaaa.kore.models.gpkg.FeaturesTable
 import es.iaaa.kore.models.gpkg.GeoPackageSpec
 import es.iaaa.kore.models.gpkg.IntegerType
 import es.iaaa.kore.models.gpkg.RelatedTable
-import es.iaaa.kore.models.gpkg.RelationTable
 import es.iaaa.kore.models.gpkg.columnName
 import es.iaaa.kore.models.gpkg.profile
 import es.iaaa.kore.models.gpkg.reference
 import es.iaaa.kore.models.gpkg.relatedReference
 import es.iaaa.kore.models.gpkg.relation
-import es.iaaa.kore.models.gpkg.tableName
 import es.iaaa.kore.toAttribute
 import es.iaaa.kore.transform.conversion
 import es.iaaa.kore.transform.impl.Console
@@ -46,6 +43,81 @@ import es.iaaa.kore.transform.impl.GeoPackageWriter
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.removeRefinements
 import es.iaaa.kore.transform.rules.removeTags
+
+
+val au = {
+    conversion {
+        input {
+            type.set("EA-UML1.3")
+            file.set("src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
+            selector.set(schemaName("AdministrativeUnits"))
+            alias.set(
+                mapOf(
+                    "eaxmiid189" to "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
+                    "eaxmiid190" to "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9", // Identifier
+                    "eaxmiid197" to "EAID_F8A23D50_CB8F_4c91_BD7F_C2082467D81A"  // PT_FreeText
+                )
+            )
+        }
+        transformation {
+            manipulation(`remove references to undefined Data Type`)
+            manipulation(`add Data Type tag to PT_Locale`)
+            manipulation(`add Data Type tag to LocalisedCharacterString`)
+            manipulation(`add Data Type tag to Identifier`)
+            manipulation(`standardize edgeMatched default value`)
+            manipulation(`standardize codeList`)
+
+            rule(`general rule ISO-19103 Basic Types`)
+            rule(`general rule ISO-19107 Geometry Types`)
+            rule(`general rule ISO-19139 Metadata XML Implementation Types`)
+
+            rule(`flatten Data Types with upper cardinality of 1 but Identifier`)
+
+            rule(`simple Feature Type stereotype to GeoPackage Feature`)
+            rule(`Feature Type stereotype without geometry to GeoPackage Attribute`)
+            rule(`Data Type stereotype to GeoPackage Attribute`)
+            rule(`simple feature-like Data Type stereotype to GeoPackage Feature`)
+
+            rule(`general rule Enumeration Types`, mapOf("description" to false))
+            rule(`general rule CodeList Types`, mapOf("description" to false))
+            rule(`voidable properties have a min cardinality of 0`)
+
+            manipulation(`ensure that arrays are treated as references from now`)
+
+            rule(`create supporting Attribute tables for Enumerations and Codelists involved in arrays`)
+            rule(`general rule for association roles and arrays`)
+
+
+            rule(`properties with maximum cardinality 1 to columns`)
+            rule(`load authoritative descriptions of the reasons for void values as metadata`)
+
+            manipulation(`add qualified name to features and attributes`)
+
+            rule(`default package prefixes`, mapOf("prefixes" to prefixes))
+
+            manipulation(`add geopackage primary column`)
+            manipulation(`copy documentation to column description`)
+            manipulation(`copy documentation to table description`)
+            manipulation(`move to the selected package`)
+            manipulation(`remove dangling references`)
+            manipulation(`remove unused tags`)
+            manipulation(`remove stereotypes`)
+        }
+        output {
+            add(Console)
+            add(
+                GeoPackageWriter(
+                    overwrite = true,
+                    base = "templates"
+                )
+            )
+        }
+    }
+}
+
+fun main() {
+    au().convert()
+}
 
 /**
  * Patch: eaxmiid41 is a UML:DataType with name <undefined>
@@ -149,140 +221,3 @@ val prefixes = mapOf(
     "ISO 00639 Language Codes" to "GMD_",
     "ISO 03166 Country Codes" to "GMD_"
 )
-
-val au =
-    conversion {
-        input {
-            type.set("EA-UML1.3")
-            file.set("src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
-            selector.set(schemaName("AdministrativeUnits"))
-            alias.set(
-                mapOf(
-                    "eaxmiid189" to "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
-                    "eaxmiid190" to "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9", // Identifier
-                    "eaxmiid197" to "EAID_F8A23D50_CB8F_4c91_BD7F_C2082467D81A"  // PT_FreeText
-                )
-            )
-        }
-        transformation {
-            manipulation(`remove references to undefined Data Type`)
-            manipulation(`add Data Type tag to PT_Locale`)
-            manipulation(`add Data Type tag to LocalisedCharacterString`)
-            manipulation(`add Data Type tag to Identifier`)
-            manipulation(`standardize edgeMatched default value`)
-            manipulation(`standardize codeList`)
-
-            rule(`general rule ISO-19103 Basic Types`)
-            rule(`general rule ISO-19107 Geometry Types`)
-            rule(`general rule ISO-19139 Metadata XML Implementation Types`)
-
-            rule(`flatten Data Types with upper cardinality of 1 but Identifier`)
-
-            rule(`simple Feature Type stereotype to GeoPackage Feature`)
-            rule(`Feature Type stereotype without geometry to GeoPackage Attribute`)
-            rule(`Data Type stereotype to GeoPackage Attribute`)
-            rule(`simple feature-like Data Type stereotype to GeoPackage Feature`)
-
-            rule(`general rule Enumeration Types`, mapOf("description" to false))
-            rule(`general rule CodeList Types`, mapOf("description" to false))
-            rule(`voidable properties have a min cardinality of 0`)
-
-            manipulation(`ensure that arrays are treated as references from now`)
-
-            rule(`create supporting Attribute tables for Enumerations and Codelists involved in arrays`)
-
-            /**
-             * Patch: create relation table from references with inverse of different types
-             */
-            patch<KoreReference>(
-                predicate = {
-                    name != null &&
-                        containingClass?.metaClass in listOf(AttributesTable, FeaturesTable) &&
-                        type?.metaClass in listOf(AttributesTable, FeaturesTable)
-                }
-            ) {
-                val tableName = "${containingClass?.name}_$name"
-                val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
-
-                val manyToOne = isMany && opposite?.isMany != true
-                val oneToOne = !isMany
-
-                toRelation(tableName, relationProfile)?.let {
-                    it.relatedReference = when {
-                        manyToOne -> opposite?.copyAsRefAttribute()
-                        oneToOne -> copyAsRefAttribute()
-                        else -> null
-                    }
-                    track(it)
-                }
-
-                containingClass = null
-                opposite?.containingClass = null
-            }
-
-            rule(`properties with maximum cardinality 1 to columns`)
-            rule(`load authoritative descriptions of the reasons for void values as metadata`)
-
-            manipulation(`add qualified name to features and attributes`)
-
-            rule(`default package prefixes`, mapOf("prefixes" to prefixes))
-
-            manipulation(`add geopackage primary column`)
-            manipulation(`copy documentation to column description`)
-            manipulation(`copy documentation to table description`)
-            manipulation(`move to the selected package`)
-            manipulation(`remove dangling references`)
-            manipulation(`remove unused tags`)
-            manipulation(`remove stereotypes`)
-        }
-        output {
-            add(Console)
-            add(
-                GeoPackageWriter(
-                    overwrite = true,
-                    base = "templates"
-                )
-            )
-        }
-    }
-
-fun main() {
-    au.convert()
-}
-
-private fun KoreReference?.copyAsRefAttribute(): KoreAttribute? = this?.toAttribute(remove = false)?.apply {
-    type = IntegerType()
-    lowerBound = 0
-    upperBound = 1
-}
-
-private fun KoreReference.toRelation(
-    tableName: String,
-    relationProfile: String
-): KoreClass? = type?.let { t ->
-    containingClass?.let {
-        val pkg = it.container
-        pkg?.toRelation(tableName, relationProfile, it, t)
-    }
-}
-
-private fun KorePackage.toRelation(
-    tableName: String,
-    relationProfile: String,
-    base: KoreClass,
-    related: KoreClassifier
-): KoreClass = relation(tableName) {
-    profile = relationProfile
-    reference {
-        name = "base_id"
-        columnName = "base_id"
-        type = base
-        findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
-    }
-    reference {
-        name = "related_id"
-        columnName = "related_id"
-        type = related
-        findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
-    }
-}
