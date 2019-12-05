@@ -15,7 +15,7 @@
  */
 @file:Suppress("ObjectPropertyName")
 
-package inspire.au
+package inspire
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
@@ -29,12 +29,10 @@ import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.removeRefinements
 import es.iaaa.kore.transform.rules.removeTags
 
-val au = {
+val base = {
     conversion {
         input {
             type.set("EA-UML1.3")
-            file.set("src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
-            selector.set(schemaName("AdministrativeUnits"))
             alias.set(
                 mapOf(
                     "eaxmiid189" to "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
@@ -62,8 +60,8 @@ val au = {
             rule(`Data Type stereotype to GeoPackage Attribute`)
             rule(`simple feature-like Data Type stereotype to GeoPackage Feature`)
 
-            rule(`general rule Enumeration Types`, mapOf("description" to true))
-            rule(`general rule CodeList Types`, mapOf("description" to true))
+            rule(`general rule Enumeration Types`, mapOf("description" to false))
+            rule(`general rule CodeList Types`, mapOf("description" to false))
             rule(`voidable properties have a min cardinality of 0`)
 
             manipulation(`ensure that arrays are treated as references from now`)

@@ -1,6 +1,6 @@
 @file:Suppress("ObjectPropertyName")
 
-package inspire.au
+package inspire
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass

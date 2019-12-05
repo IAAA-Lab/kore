@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package inspire.au
+package inspire
 
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KorePackage
