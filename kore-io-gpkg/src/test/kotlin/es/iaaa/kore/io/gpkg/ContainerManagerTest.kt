@@ -18,6 +18,7 @@ package es.iaaa.kore.io.gpkg
 import es.iaaa.kore.models.gpkg.BaseTable
 import es.iaaa.kore.models.gpkg.BlobType
 import es.iaaa.kore.models.gpkg.BooleanType
+import es.iaaa.kore.models.gpkg.CurvePolygonType
 import es.iaaa.kore.models.gpkg.DateTimeType
 import es.iaaa.kore.models.gpkg.DateType
 import es.iaaa.kore.models.gpkg.DoubleType
@@ -56,7 +57,13 @@ import es.iaaa.kore.models.gpkg.reference
 import es.iaaa.kore.models.gpkg.relation
 import es.iaaa.kore.models.gpkg.srsId
 import es.iaaa.kore.models.gpkg.title
+import mil.nga.geopackage.extension.CrsWktExtension
+import mil.nga.geopackage.extension.GeometryExtensions
+import mil.nga.geopackage.extension.MetadataExtension
+import mil.nga.geopackage.extension.SchemaExtension
+import mil.nga.geopackage.extension.related.RelatedTablesExtension
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.fail
@@ -83,6 +90,89 @@ class ContainerManagerTest {
         assertTrue(File("${containerFile.path}.gpkg").exists(), "Database does not exist")
 
         val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
+        geoPackage.close()
+    }
+
+    @Test
+    fun `verify metadata extension is installed`() {
+        val containerFile = folder.resolve("test").toFile()
+        val sut = container {
+            fileName = containerFile.path
+        }
+        ContainerManager.create(sut)
+        val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
+        assertTrue(MetadataExtension(geoPackage).has())
+        geoPackage.close()
+    }
+
+    @Test
+    fun `verify non-linear types extension is installed`() {
+        val containerFile = folder.resolve("test").toFile()
+        val sut = container {
+            fileName = containerFile.path
+            feature("the_feature") {
+                identifier = "test contents"
+                description = "some description"
+                minX = -180.0
+                maxX = 180.0
+                minY = -90.0
+                maxY = 90.0
+                srsId = 0
+                column {
+                    columnName = "id"; lowerBound = 1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
+                }
+                column { columnName = "the_geom"; lowerBound = 1; type = CurvePolygonType() }
+            }
+        }
+        ContainerManager.create(sut)
+        val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
+        assertFalse(geoPackage.extensionsDao.queryByExtension(GeometryExtensions.getExtensionName(mil.nga.sf.GeometryType.CURVEPOLYGON)).isEmpty())
+        geoPackage.close()
+    }
+
+    @Test
+    fun `verify schema extension is installed`() {
+        val containerFile = folder.resolve("test").toFile()
+        val sut = container {
+            fileName = containerFile.path
+        }
+        ContainerManager.create(sut)
+        val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
+        assertTrue(SchemaExtension(geoPackage).has())
+        geoPackage.close()
+    }
+
+    @Test
+    fun `verify related tables extension is installed`() {
+        val containerFile = folder.resolve("test").toFile()
+        val sut = container {
+            fileName = containerFile.path
+            val attribute1 = attributes("test_contents_1") {
+                column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
+            }
+            val attribute2 = attributes("test_contents_2") {
+                column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
+            }
+            relation("test_relations") {
+                reference { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
+                reference { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
+            }
+        }
+        ContainerManager.create(sut)
+        val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
+        assertTrue(RelatedTablesExtension(geoPackage).has())
+        geoPackage.close()
+    }
+
+    @Test
+    fun `verify CRS WKT extension is installed`() {
+        val containerFile = folder.resolve("test").toFile()
+        val sut = container {
+            fileName = containerFile.path
+        }
+        ContainerManager.create(sut)
+        val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
+        assertTrue(CrsWktExtension(geoPackage).has())
         geoPackage.close()
     }
 

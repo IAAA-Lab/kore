@@ -90,7 +90,7 @@ val base = {
             add(
                 GeoPackageWriter(
                     overwrite = true,
-                    base = "templates"
+                    base = "kore-inspire/templates"
                 )
             )
         }

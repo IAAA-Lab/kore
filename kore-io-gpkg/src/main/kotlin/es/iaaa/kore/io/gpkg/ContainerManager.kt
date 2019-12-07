@@ -26,6 +26,7 @@ import mil.nga.geopackage.attributes.AttributesColumn
 import mil.nga.geopackage.attributes.AttributesTable
 import mil.nga.geopackage.core.contents.Contents
 import mil.nga.geopackage.core.contents.ContentsDataType
+import mil.nga.geopackage.extension.CrsWktExtension
 import mil.nga.geopackage.extension.GeometryExtensions
 import mil.nga.geopackage.extension.MetadataExtension
 import mil.nga.geopackage.extension.SchemaExtension
@@ -60,6 +61,17 @@ object ContainerManager {
         }
         return if (create(file)) {
             open(path.toFile()).use { geoPackage ->
+
+                MetadataExtension(geoPackage).orCreate
+                geoPackage.createMetadataTable()
+                geoPackage.createMetadataReferenceTable()
+
+                SchemaExtension(geoPackage).orCreate
+                geoPackage.createDataColumnsTable()
+                geoPackage.createDataColumnConstraintsTable()
+
+                CrsWktExtension(geoPackage).orCreate
+
                 pkg.constraints { constraint -> geoPackage.createConstraint(constraint) }
                 pkg.features { feature -> geoPackage.createFeature(feature) }
                 pkg.attributes { attribute -> geoPackage.createAttribute(attribute) }
@@ -97,8 +109,8 @@ object ContainerManager {
             maxY = feature.maxY
             srs = (feature.srsId ?: 0).let { spatialReferenceSystemDao.queryForId(it) }
         }
-        val geometryColumns = createGeometryColumn(contents, geoColumnName, geoColumnType)
         createGeometryColumnsTable()
+        val geometryColumns = createGeometryColumn(contents, geoColumnName, geoColumnType)
         createFeatureTable(FeatureTable(feature.tableName, geoColumnName, columns))
         createDataColumns(contents, feature)
         geometryColumnsDao.create(geometryColumns)
@@ -164,7 +176,6 @@ object ContainerManager {
         contents: Contents,
         table: KoreClass
     ) {
-        createDataColumnsTable()
         contentsDao.create(contents)
         val dataColumns = table.attributes.map { column ->
             DataColumns().apply {
@@ -189,7 +200,6 @@ object ContainerManager {
                 identifier = attributes.identifier
                 description = attributes.description
             }
-            createGeometryColumnsTable()
             createAttributesTable(AttributesTable(tableName, columns))
             createDataColumns(contents, attributes)
         }
@@ -289,8 +299,6 @@ object ContainerManager {
             minIsInclusive = rangeConstraint.minIsInclusive
             maxIsInclusive = rangeConstraint.maxIsInclusive
         }
-        SchemaExtension(this).orCreate
-        createDataColumnConstraintsTable()
         dataColumnConstraintsDao.create(constraint)
     }
 
@@ -301,8 +309,6 @@ object ContainerManager {
             description = globConstraint.description
             value = globConstraint.globValue
         }
-        SchemaExtension(this).orCreate
-        createDataColumnConstraintsTable()
         dataColumnConstraintsDao.create(constraint)
     }
 
@@ -315,9 +321,6 @@ object ContainerManager {
                 value = attribute.name
             }
         }
-        SchemaExtension(this).orCreate
-        createDataColumnsTable()
-        createDataColumnConstraintsTable()
         dataColumnConstraintsDao.create(constraints)
     }
 
@@ -375,9 +378,6 @@ object ContainerManager {
     }
 
     private fun GeoPackage.createMetadata(md: KoreClass) {
-        MetadataExtension(this).orCreate
-        createMetadataTable()
-        createMetadataReferenceTable()
         val gpkgmd = GpkgMetadata().apply {
             id = md.id?.toLong() ?: 0
             metadata = md.metadata

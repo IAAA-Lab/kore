@@ -32,13 +32,13 @@ import es.iaaa.kore.transform.rules.removeTags
 val au = {
     val au = base()
     au.input.selector.set(schemaName("AdministrativeUnits"))
-    au.input.file.set("src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
+    au.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     au
 }
 
 fun main() {
     val au = au()
-    au.convert(dryRun = true)
+    au.convert(dryRun = false)
     println(au.lastDryRunOutput)
 }
 
