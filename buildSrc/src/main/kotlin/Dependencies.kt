@@ -18,7 +18,7 @@ object Versions {
 }
 
 object Libs {
-    const val geopackage = "mil.nga.geopackage:geopackage:3.3.0"
+    const val geopackage = "mil.nga.geopackage:geopackage:3.4.0"
     const val unitJupiterApi = "org.junit.jupiter:junit-jupiter-api:5.5.1"
     const val unitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:5.5.1"
 }
