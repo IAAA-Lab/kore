@@ -5,10 +5,6 @@ plugins {
 
 kotlinProject()
 
-application {
-    mainClassName = "inspire.au.AdministrativeUnitsKt"
-}
-
 dependencies {
     implementation(project(":kore-impl"))
     implementation(project(":kore-transform"))

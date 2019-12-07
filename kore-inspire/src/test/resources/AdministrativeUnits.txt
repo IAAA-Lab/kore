@@ -69,9 +69,9 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
-  Relation "AU_AdministrativeBoundary_admUnit" {
+  Relation "AU_boundary_admUnit" {
     profile = "features"
-    tableName = "AU_AdministrativeBoundary_admUnit"
+    tableName = "AU_boundary_admUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
@@ -93,12 +93,6 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     tableName = "AU_AdministrativeUnit_administeredBy"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_condominium" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_condominium"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_Condominium(id)
   }
   Relation "AU_AdministrativeUnit_lowerLevelUnit" {
     profile = "features"
@@ -131,6 +125,12 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     tableName = "AU_AdministrativeUnit_residenceOfAuthority"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
+  }
+  Relation "AU_Condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_Condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
   Relation "AU_Condominium_inspireId" {
     profile = "attributes"

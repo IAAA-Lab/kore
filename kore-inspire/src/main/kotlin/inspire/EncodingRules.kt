@@ -390,23 +390,26 @@ val `general rule for association roles and arrays`: Transform = { conversion, _
                 type?.metaClass in listOf(AttributesTable, FeaturesTable)
         }
     ) {
-        val tableName = "${containingClass?.name}_$name"
-        val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
+        val managedByOther = !required && (opposite?.required == true)
+        if (!managedByOther) {
+            val manyToOne = isMany && opposite?.isMany != true
+            val oneToOne = !isMany
 
-        val manyToOne = isMany && opposite?.isMany != true
-        val oneToOne = !isMany
+            val tableName = if (opposite?.required == true) "${opposite?.name}_$name" else "${containingClass?.name}_$name"
+            val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
 
-        toRelation(tableName, relationProfile)?.let {
-            it.relatedReference = when {
-                manyToOne -> opposite?.copyAsRefAttribute()
-                oneToOne -> copyAsRefAttribute()
-                else -> null
+            toRelation(tableName, relationProfile)?.let {
+                it.relatedReference = when {
+                    manyToOne -> opposite?.copyAsRefAttribute()
+                    oneToOne -> copyAsRefAttribute()
+                    else -> null
+                }
+                conversion.track(it)
             }
-            conversion.track(it)
-        }
 
-        containingClass = null
-        opposite?.containingClass = null
+            containingClass = null
+            opposite?.containingClass = null
+        }
     }
 }
 

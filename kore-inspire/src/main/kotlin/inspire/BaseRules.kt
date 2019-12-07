@@ -62,13 +62,12 @@ val base = {
 
             rule(`general rule Enumeration Types`, mapOf("description" to false))
             rule(`general rule CodeList Types`, mapOf("description" to false))
-            rule(`voidable properties have a min cardinality of 0`)
 
             manipulation(`ensure that arrays are treated as references from now`)
 
             rule(`create supporting Attribute tables for Enumerations and Codelists involved in arrays`)
             rule(`general rule for association roles and arrays`)
-
+            rule(`voidable properties have a min cardinality of 0`)
 
             rule(`properties with maximum cardinality 1 to columns`)
             rule(`load authoritative descriptions of the reasons for void values as metadata`)

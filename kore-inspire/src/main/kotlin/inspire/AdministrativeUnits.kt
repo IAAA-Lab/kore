@@ -17,22 +17,10 @@
 
 package inspire
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
-import es.iaaa.kore.KoreNamedElement
-import es.iaaa.kore.KoreTypedElement
-import es.iaaa.kore.transform.conversion
-import es.iaaa.kore.transform.impl.Console
-import es.iaaa.kore.transform.impl.GeoPackageWriter
-import es.iaaa.kore.transform.rules.patch
-import es.iaaa.kore.transform.rules.removeRefinements
-import es.iaaa.kore.transform.rules.removeTags
-
 val au = {
     val au = base()
     au.input.selector.set(schemaName("AdministrativeUnits"))
-    au.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
+    au.input.file.set("src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     au
 }
 
