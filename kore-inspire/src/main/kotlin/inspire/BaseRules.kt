@@ -29,7 +29,7 @@ import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.removeRefinements
 import es.iaaa.kore.transform.rules.removeTags
 
-val base = {
+val base = { options: Map<String, Any> ->
     conversion {
         input {
             type.set("EA-UML1.3")
@@ -60,8 +60,8 @@ val base = {
             rule(`Data Type stereotype to GeoPackage Attribute`)
             rule(`simple feature-like Data Type stereotype to GeoPackage Feature`)
 
-            rule(`general rule Enumeration Types`, mapOf("description" to false))
-            rule(`general rule CodeList Types`, mapOf("description" to false))
+            rule(`general rule Enumeration Types`, options)
+            rule(`general rule CodeList Types`, options)
 
             manipulation(`ensure that arrays are treated as references from now`)
 

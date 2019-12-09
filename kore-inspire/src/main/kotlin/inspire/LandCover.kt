@@ -18,7 +18,7 @@
 package inspire
 
 val lc = {
-    val lc = base()
+    val lc = base(mapOf("description" to false))
     lc.input.selector.set(schemaName("LandCoverVector"))
     lc.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     lc

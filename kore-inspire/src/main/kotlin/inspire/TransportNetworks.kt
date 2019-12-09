@@ -18,7 +18,7 @@
 package inspire
 
 val tn = {
-    val tn = base()
+    val tn = base(mapOf("description" to false))
     tn.input.selector.set(schemaName("Road Transport Network"))
     tn.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     tn

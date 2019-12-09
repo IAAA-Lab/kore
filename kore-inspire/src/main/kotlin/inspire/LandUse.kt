@@ -18,7 +18,7 @@
 package inspire
 
 val lu = {
-    val lu = base()
+    val lu = base(mapOf("description" to false))
     lu.input.selector.set(schemaName("Existing Land Use"))
     lu.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     lu

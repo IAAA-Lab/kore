@@ -18,7 +18,7 @@
 package inspire
 
 val hy = {
-    val hy = base()
+    val hy = base(mapOf("description" to false))
     hy.input.selector.set(schemaName("Hydro - Physical Waters"))
     hy.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     hy

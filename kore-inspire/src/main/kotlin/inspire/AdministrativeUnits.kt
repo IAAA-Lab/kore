@@ -18,9 +18,9 @@
 package inspire
 
 val au = {
-    val au = base()
+    val au = base(mapOf("description" to true))
     au.input.selector.set(schemaName("AdministrativeUnits"))
-    au.input.file.set("src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
+    au.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     au
 }
 

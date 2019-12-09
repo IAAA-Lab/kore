@@ -18,7 +18,7 @@
 package inspire
 
 val am = {
-    val am = base()
+    val am = base(mapOf("description" to false))
     am.input.selector.set(schemaName("Controlled Activities"))
     am.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     am

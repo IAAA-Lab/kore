@@ -15,12 +15,8 @@
  */
 package es.iaaa.kore.io.gpkg
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreDataType
-import es.iaaa.kore.KorePackage
+import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
-import es.iaaa.kore.toAttribute
 import mil.nga.geopackage.GeoPackage
 import mil.nga.geopackage.attributes.AttributesColumn
 import mil.nga.geopackage.attributes.AttributesTable
@@ -341,32 +337,42 @@ object ContainerManager {
                 (if (FeaturesTable.isInstance(related)) RelationType.FEATURES else RelationType.ATTRIBUTES).name
             mappingTableName = relation.tableName
         }
-        if (relatedReference != null) {
-            execSQL(
-                """
-                CREATE VIEW '${relation.tableName}' (base_id, related_id) AS 
-                SELECT id, ${relatedReference.columnName} FROM ${relatedReference.containingClass?.tableName}
-                WHERE ${relatedReference.columnName} IS NOT NULL 
-            """.trimIndent()
-            )
-        } else {
-            with(relation) {
-                metaClass = AttributesTable
-                column {
-                    name = "id"; columnName = "id"; title = "Id"; description = "Id"; lowerBound = 1; type =
-                    IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
-                references.forEach {
-                    it.toAttribute().apply {
-                        metaClass = Column
-                        columnName = name
-                        type = IntegerType()
-                        lowerBound = 1
-                        upperBound = 1
-                    }
+        when {
+            relatedReference != null -> {
+                with(relatedReference) {
+                    val selfRelation = extendedRelation.baseTableName == extendedRelation.relatedTableName
+                    val createView = if (selfRelation)
+                        """
+                    CREATE VIEW '${relation.tableName}' (base_id, related_id) AS
+                    SELECT $columnName, id FROM ${containingClass?.tableName}
+                    WHERE $columnName IS NOT NULL""".trimIndent()
+                    else
+                        """
+                    CREATE VIEW '${relation.tableName}' (base_id, related_id) AS 
+                    SELECT id, $columnName FROM ${containingClass?.tableName}
+                    WHERE $columnName IS NOT NULL""".trimIndent()
+                    execSQL(createView)
                 }
             }
-            createAttribute(relation)
+            else -> {
+                with(relation) {
+                    metaClass = AttributesTable
+                    column {
+                        name = "id"; columnName = "id"; title = "Id"; description = "Id"; lowerBound = 1; type =
+                        IntegerType(); geoPackageSpec().add(PrimaryKey)
+                    }
+                    references.forEach {
+                        it.toAttribute().apply {
+                            metaClass = Column
+                            columnName = name
+                            type = IntegerType()
+                            lowerBound = 1
+                            upperBound = 1
+                        }
+                    }
+                }
+                createAttribute(relation)
+            }
         }
         with(RelatedTablesExtension(this)) {
             kotlin.runCatching {

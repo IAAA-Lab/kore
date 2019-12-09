@@ -18,7 +18,7 @@
 package inspire
 
 val gn = {
-    val gn = base()
+    val gn = base(mapOf("description" to false))
     gn.input.selector.set(schemaName("Geographical Names"))
     gn.input.file.set("kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml")
     gn
