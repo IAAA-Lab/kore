@@ -95,6 +95,7 @@ val `general rule ISO-19103 Basic Types`: Transform = { _, _ ->
 }
 
 val `general rule ISO-19107 Geometry Types`: Transform = { _, _ ->
+    setTypeWhen(GeometryType(), predicate = { it.type?.name == "GM_Object" })
     setTypeWhen(CurveType(), predicate = { it.type?.name == "GM_Curve" })
     setTypeWhen(MultiSurfaceType(), predicate = { it.type?.name == "GM_MultiSurface" })
     setTypeWhen(PointType(), predicate = { it.type?.name == "GM_Point" })
@@ -363,21 +364,50 @@ val `properties with maximum cardinality 1 to columns`: Transform = { _, _ ->
     }
 }
 
-val `default package prefixes`: Transform = { _, options ->
-    val prefixes = options.getOrDefault("prefixes", emptyMap<String, String>()) as Map<*, *>
+val `default package prefixes`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { metaClass == FeaturesTable }) {
-        tableName = prefixes.getOrDefault(container?.name, "").toString() + name
+        tableName = "$prefix$name"
         name = tableName
     }
     patch<KoreClass>(predicate = { metaClass == AttributesTable }) {
-        tableName = prefixes.getOrDefault(container?.name, "").toString() + name
+        kotlin.runCatching {
+            tableName = "$prefix$name"
+        }.onFailure {
+            tableName = when(container?.name) {
+                "Cultural and linguistic adapdability" -> "GMD_$name"
+                "Citation and responsible party information" -> name
+                else -> throw Exception("Missing prefix for package '${container?.name}'")
+            }
+        }
         name = tableName
     }
     patch<KoreClass>(predicate = { metaClass == EnumConstraint }) {
-        name = prefixes.getOrDefault(container?.name, "").toString() + name
+        kotlin.runCatching {
+            name = "$prefix$name"
+        }.onFailure {
+            name = when(container?.name) {
+                "Cultural and linguistic adapdability" -> "GMD_$name"           // ISO 19139 freeText.xsd
+                "ISO 00639 Language Codes" -> "GMD_$name"                       // ISO 19139 freeText.xsd
+                "ISO 03166 Country Codes" -> "GMD_$name"                        // ISO 19139 freeText.xsd
+                "Identification information" -> "GMD_$name"                     // ISO 19139 identification.xsd
+                "Citation and responsible party information" -> "GMD_$name"     // ISO 19139 citation.xsd
+                "Units of Measure" -> "UM_$name"
+                "Data quality information" -> "GMD_$name"                       // ISO 19139 dataQuality.xsd
+                "Enumerations" -> "GCO_$name"
+                "Geometric primitive" -> name
+                else -> throw Exception("Missing prefix for package '${container?.name}'")
+            }
+        }
     }
     patch<KoreClass>(predicate = { metaClass == RelationTable }) {
-        tableName = prefixes.getOrDefault(container?.name, "").toString() + tableName
+        kotlin.runCatching {
+            tableName = "$prefix$tableName"
+        }.onFailure {
+            tableName = when(container?.name) {
+                "Cultural and linguistic adapdability" -> "GMD_$tableName"
+                else -> throw Exception("Missing prefix for package '${container?.name}'")
+            }
+        }
         name = tableName
     }
 }
@@ -501,3 +531,20 @@ fun schemaName(name: String): (KoreObject) -> Boolean = { it ->
         false
     }
 }
+
+/**
+ * The prefix is the first occurrence of the tagged value xmlns in the hierarchy.
+ */
+val KoreObject?.prefix: String
+    get() {
+        return when(this) {
+            is KorePackage -> findTaggedValue("xmlns")
+                ?.takeWhile { it != '#' }
+                ?.toUpperCase()
+                ?.replace("-", "_")
+                ?.plus("_")
+                ?: container.prefix
+            is KoreObject -> container.prefix
+            else -> throw Exception()
+        }
+    }

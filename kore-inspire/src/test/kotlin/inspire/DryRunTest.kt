@@ -24,7 +24,7 @@ class DryRunTest {
 
     @Test
     fun `test current configuration`() {
-        val run = au()
+        val run = au("src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL")
         run.convert(true)
         val expected = File("src/test/resources/AdministrativeUnits.txt").readText().split("\n")
         val dryRun = run.lastDryRunOutput.toString()
@@ -40,5 +40,10 @@ class DryRunTest {
                 assertEquals(it.first, it.second)
             }
         }
+    }
+
+    companion  object {
+        private const val INSPIRE_CONSOLIDATED_UML_MODEL =
+            "INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml"
     }
 }

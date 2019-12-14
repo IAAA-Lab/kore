@@ -18,6 +18,7 @@ package es.iaaa.kore.io.gpkg
 import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
 import mil.nga.geopackage.GeoPackage
+import mil.nga.geopackage.GeoPackageException
 import mil.nga.geopackage.attributes.AttributesColumn
 import mil.nga.geopackage.attributes.AttributesTable
 import mil.nga.geopackage.core.contents.Contents
@@ -93,7 +94,20 @@ object ContainerManager {
         val geoColumn = feature.attributes.find { gt.isInstance(it.type) } ?: return
         val geoColumnName = geoColumn.columnName ?: return
         val geoColumnType = (geoColumn.type as? KoreDataType)?.ngaGeometryType ?: return
-        val columns = feature.attributes.mapIndexed(createFeatureColumn())
+
+        var idx = 0
+        val creator = createFeatureColumn()
+        val columns = feature.attributes.mapNotNull {
+            // TODO: This should create a log info
+            kotlin.runCatching {
+                creator(idx, it)?.also {
+                    idx += 1
+                }
+            }.getOrElse {
+                println("${feature.tableName}: ${it.message}")
+                null
+            }
+        }
         val contents = Contents().apply {
             tableName = feature.tableName
             dataType = ContentsDataType.FEATURES
@@ -108,24 +122,32 @@ object ContainerManager {
         createGeometryColumnsTable()
         val geometryColumns = createGeometryColumn(contents, geoColumnName, geoColumnType)
         createFeatureTable(FeatureTable(feature.tableName, geoColumnName, columns))
-        createDataColumns(contents, feature)
+        kotlin.runCatching {
+            createDataColumns(contents, feature)
+        }.getOrElse {
+            println("${feature.tableName}: ${it.message}")
+        }
         geometryColumnsDao.create(geometryColumns)
         if (GeometryExtensions.isExtension(geoColumnType)) {
             GeometryExtensions(this).getOrCreate(feature.tableName, geoColumnName, geoColumnType)
         }
     }
 
-    private fun createFeatureColumn(): (index: Int, KoreAttribute) -> FeatureColumn {
+    private fun createFeatureColumn(): (index: Int, KoreAttribute) -> FeatureColumn? {
         return { index, column ->
             val columnName = column.columnName as String
-            val type = column.type as KoreDataType
+            val type = column.type as? KoreDataType
+            if (type == null) {
+                println("${column.columnName}:${column.type?.name} is undefined")
+            }
             val nonNull = column.lowerBound == 1
             val defaultValue = column.defaultValueLiteral
             val primaryKey = column.isPrimaryKey()
             val geometry = GeometryType.isInstance(type)
-            val contrainedBlob = BlobType.isInstance(type) && type.isSet("maxSize")
-            val contrainedText = TextType.isInstance(type) && type.isSet("maxCharCount")
+            val contrainedBlob = BlobType.isInstance(type) && type?.isSet("maxSize") == true
+            val contrainedText = TextType.isInstance(type) && type?.isSet("maxCharCount") == true
             when {
+                type == null -> null
                 primaryKey -> FeatureColumn.createPrimaryKeyColumn(index, columnName)
                 geometry -> FeatureColumn.createGeometryColumn(
                     index,
@@ -196,21 +218,29 @@ object ContainerManager {
                 identifier = attributes.identifier
                 description = attributes.description
             }
-            createAttributesTable(AttributesTable(tableName, columns))
-            createDataColumns(contents, attributes)
+            try {
+                createAttributesTable(AttributesTable(tableName, columns))
+                createDataColumns(contents, attributes)
+            } catch (e: Exception) {
+                println("$tableName: ${e.message}")
+            }
         }
     }
 
-    private fun KoreClass.createAttributesColumns(withIndex: Boolean = true): List<AttributesColumn> =
+    private fun KoreClass.createAttributesColumns(withIndex: Boolean = true): List<AttributesColumn?> =
         attributes.mapIndexed { index, column ->
             val columnName = column.columnName
-            val type = column.type as KoreDataType
+            val type = column.type as? KoreDataType
+            if (type == null) {
+                println("${column.columnName}:${column.type?.name} is undefined")
+            }
             val nonNull = column.lowerBound == 1
             val defaultValue = column.defaultValueLiteral
             val primaryKey = column.isPrimaryKey() && withIndex
-            val contrainedBlob = BlobType.isInstance(type) && type.isSet("maxSize")
-            val contrainedText = TextType.isInstance(type) && type.isSet("maxCharCount")
+            val contrainedBlob = BlobType.isInstance(type) && type?.isSet("maxSize") == true
+            val contrainedText = TextType.isInstance(type) && type?.isSet("maxCharCount") == true
             when {
+                type == null -> null
                 primaryKey -> AttributesColumn.createPrimaryKeyColumn(index, columnName)
                 contrainedBlob -> AttributesColumn.createColumn(
                     index,
@@ -229,13 +259,15 @@ object ContainerManager {
                     defaultValue
                 )
                 else -> {
-                    AttributesColumn.createColumn(
-                        index,
-                        columnName,
-                        type.ngaGeoPackageDataType,
-                        nonNull,
-                        defaultValue
-                    )
+                    runCatching {
+                        AttributesColumn.createColumn(
+                            index,
+                            columnName,
+                            type.ngaGeoPackageDataType,
+                            nonNull,
+                            defaultValue
+                        )
+                    }.getOrNull()
                 }
             }
         }

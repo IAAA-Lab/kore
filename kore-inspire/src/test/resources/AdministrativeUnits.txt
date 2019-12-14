@@ -365,7 +365,7 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
   Attributes "GMD_LocalisedCharacterString" {
     identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
     tableName = "GMD_LocalisedCharacterString"
-    characterSetCode TEXT CHECK(MD_CharacterSetCode)
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
     country TEXT CHECK(GMD_CountryCode)
     id INTEGER NOT NULL PRIMARY KEY
     languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
@@ -452,7 +452,7 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     Ukranian
   }
   Constraint Enum "GMD_CountryCode" {}
-  Constraint Enum "MD_CharacterSetCode" {
+  Constraint Enum "GMD_MD_CharacterSetCode" {
     (reservedforfutureuse)
     8859part1
     8859part10

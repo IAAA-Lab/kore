@@ -35,9 +35,9 @@ val base = { options: Map<String, Any> ->
             type.set("EA-UML1.3")
             alias.set(
                 mapOf(
-                    "eaxmiid189" to "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
-                    "eaxmiid190" to "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9", // Identifier
-                    "eaxmiid197" to "EAID_F8A23D50_CB8F_4c91_BD7F_C2082467D81A"  // PT_FreeText
+                    "eaxmiid189" to "AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
+                    "eaxmiid190" to "CB20C133_5AA4_4671_80C7_8ED2879AB0D9", // Identifier
+                    "eaxmiid197" to "F8A23D50_CB8F_4c91_BD7F_C2082467D81A"  // PT_FreeText
                 )
             )
         }
@@ -74,7 +74,7 @@ val base = { options: Map<String, Any> ->
 
             manipulation(`add qualified name to features and attributes`)
 
-            rule(`default package prefixes`, mapOf("prefixes" to prefixes))
+            rule(`default package prefixes`)
 
             manipulation(`add geopackage primary column`)
             manipulation(`copy documentation to column description`)
@@ -96,10 +96,6 @@ val base = { options: Map<String, Any> ->
     }
 }
 
-fun main() {
-    au().convert()
-}
-
 /**
  * Patch: eaxmiid41 is a UML:DataType with name <undefined>
  */
@@ -108,28 +104,28 @@ val `remove references to undefined Data Type`: Transform = { _, _ ->
 }
 
 /**
- * Patch: add dataType refinement to PT_Locale (EAID_4F7072DC_5423_4978_8EA2_1DE43135931B)
+ * Patch: add dataType refinement to PT_Locale (4F7072DC_5423_4978_8EA2_1DE43135931B)
  */
 val `add Data Type tag to PT_Locale`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { id == "EAID_4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
+    patch<KoreClass>(predicate = { id == "4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
 }
 
 /**
- * Patch: add dataType refinement to LocalisedCharacterString (EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A)
+ * Patch: add dataType refinement to LocalisedCharacterString (AE1AC547_B120_4488_A63F_60A8A7441D7A)
  */
 val `add Data Type tag to LocalisedCharacterString`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { id == "EAID_AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
+    patch<KoreClass>(predicate = { id == "AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
 }
 
 /**
- * Patch: add dataType refinement to Identifier (EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9)
+ * Patch: add dataType refinement to Identifier (CB20C133_5AA4_4671_80C7_8ED2879AB0D9)
  */
 val `add Data Type tag to Identifier`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { id == "EAID_CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }) {
+    patch<KoreClass>(predicate = { id == "CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }) {
         findOrCreateAnnotation().references.add(KoreModel.createClass().apply { name = "dataType" })
     }
 }
@@ -172,7 +168,11 @@ val `remove unused tags`: Transform = { _, _ ->
             "package_name", "date_created", "date_modified", "complexity", "author", "\\\$ea_.*", "gentype",
             "isSpecification", "stereotype", "batchload", "batchsave", "created", "iscontrolled",
             "isprotected", "lastloaddate", "lastsavedate", "logxml", "modified", "owner", "packageFlags",
-            "parent", "usedtd", "xmiver", "xmlpath", "documentation", "eventflags", "persistence"
+            "parent", "usedtd", "xmiver", "xmlpath", "documentation", "eventflags", "persistence",
+            "vocabulary", "extendableByMS", "asDictionary", "codeList", "gmlProfileSchema", "xmlns", "xsdDocument",
+            "targetNamespace", "xsdEncodingRule", "byValuePropertyType", "isCollection", "noPropertyType",
+            "xsdEncodingRule", "extensibility", "inspireConcept", "codeSpace", "dictionaryIdentifier",
+            "memberIdentifierStem", "object_style", "gmlMixin"
         )
     )
 }
@@ -192,13 +192,3 @@ val `remove stereotypes`: Transform = { _, _ ->
         )
     )
 }
-
-val prefixes = mapOf(
-    "Base Types 2" to "BASE2_",
-    "Base Types" to "BASE_",
-    "Cultural and linguistic adapdability" to "GMD_",
-    "AdministrativeUnits" to "AU_",
-    "Geographical Names" to "GN_",
-    "ISO 00639 Language Codes" to "GMD_",
-    "ISO 03166 Country Codes" to "GMD_"
-)

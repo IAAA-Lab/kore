@@ -37,7 +37,7 @@ class InputUmlTest {
     fun loadedRootModel() {
         assertEquals(1, models.size)
         assertEquals("EA Model", models[0].name)
-        assertEquals("MX_EAID_854E3882_3E39_4a93_A34F_DA6FBF474080", models[0].id)
+        assertEquals("854E3882_3E39_4a93_A34F_DA6FBF474080", models[0].id)
         assertEquals(256, models[0].classifiers.size)
         assertEquals(1, models[0].subpackages.size)
         assertEquals(3270, models[0].allClassifiers().count())
@@ -75,7 +75,7 @@ class InputUmlTest {
         assertEquals(false, cls.attributes[0].isUnsettable)
         assertEquals(1, cls.attributes[0].lowerBound)
         assertEquals(1, cls.attributes[0].upperBound)
-        assertEquals("EAID_ECC8BD1C_7D88_457a_AF27_7A56AAA88506", cls.attributes[0].type?.id)
+        assertEquals("ECC8BD1C_7D88_457a_AF27_7A56AAA88506", cls.attributes[0].type?.id)
     }
 
     @Test
@@ -83,7 +83,7 @@ class InputUmlTest {
         val base = models[0]
         val pkg = base.allSubpackages().find { it.name == "Observable Properties" }
         val stereo =
-            pkg?.findDefaultNamedReferences()?.find { it.id == "EAID_9624C906_96BD_4af7_A34A_D59C7B072E90" } ?: fail()
+            pkg?.findDefaultNamedReferences()?.find { it.id == "9624C906_96BD_4af7_A34A_D59C7B072E90" } ?: fail()
         assertEquals("applicationSchema", stereo.name)
     }
 

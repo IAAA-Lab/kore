@@ -33,6 +33,7 @@ import es.iaaa.kore.KoreTypedElement
 import es.iaaa.kore.findTaggedValue
 import es.iaaa.kore.resource.Factory
 import es.iaaa.kore.resource.Resource
+import org.jdom2.Attribute
 import org.jdom2.Document
 import org.jdom2.Element
 import org.jdom2.Namespace
@@ -50,26 +51,39 @@ object EnterpriseArchitectUml13Factory : Factory {
                 errors = mutableListOf("Can't load document: ${it.message}")
             )
         }
+        val helper = EnterpriseArchitectUml13FactoryHelper(alias)
         val rootElement = document.rootElement
-        val xpath = "/XMI/XMI.content/*[local-name()='Model']"
+        val modelXPath = "/XMI/XMI.content/*[local-name()='Model']"
         val ns = Namespace.getNamespace("omg.org/UML1.3")
-        val path = XPathFactory.instance().compile(xpath, Filters.element())
-        val trf = EnterpriseArchitectUml13FactoryHelper(alias)
-        val result = path.evaluate(rootElement).map {
-            with(trf) {
-                val result = KoreModel.createPackage()
-                result.fillPackage(it, ns)
-                result
+        val modelPath = XPathFactory.instance().compile(modelXPath, Filters.element())
+        val packages = modelPath.evaluate(rootElement).map {
+            with(helper) {
+                KoreModel.createPackage().apply {
+                    fillPackage(it, ns)
+                }
             }
         }
-        trf.fixReferences()
-        trf.fixTaggedStereotypes(result)
+        helper.fixReferences()
+        helper.fixTaggedStereotypes(packages)
+
+        val taggedValueXPath = "/XMI//*[local-name()='TaggedValue' and @modelElement]"
+        val taggedValuePath = XPathFactory.instance().compile(taggedValueXPath, Filters.element())
+        taggedValuePath.evaluate(rootElement).map {
+            val target = helper.resolved[it.getAttribute("modelElement").value.takeLast(36)] as? KoreModelElement
+            val tag = it.getAttribute("tag")?.value ?: "<<missing>>"
+            val value = it.getAttribute("value")?.value ?: "<<missing>>"
+            target?.apply {
+                getAnnotation()?.details?.put(tag, value)
+            }
+        }
+
+
         return EnterpriseArchitectUml13Resource(
             document = document,
-            contents = result.toMutableList(),
+            contents = packages.toMutableList(),
             isLoaded = true,
-            errors = trf.errors,
-            warnings = trf.warnings
+            errors = helper.errors,
+            warnings = helper.warnings
         )
     }
 }
@@ -94,7 +108,7 @@ class EnterpriseArchitectUml13FactoryHelper(
         details.putAll(newDetails)
     }
 
-    private val resolved: MutableMap<String, KoreObject> = mutableMapOf()
+    val resolved: MutableMap<String, KoreObject> = mutableMapOf()
     private val missingStereotypes: MutableList<Pair<KoreModelElement, KoreClassifier>> = mutableListOf()
     private val missingTypes: MutableList<Pair<KoreTypedElement, KoreClassifier>> = mutableListOf()
     private val pendingGeneralizations: MutableList<Pair<String, String>> = mutableListOf()
@@ -104,12 +118,12 @@ class EnterpriseArchitectUml13FactoryHelper(
     val warnings: MutableList<String> = mutableListOf()
 
     private fun KoreObject.fillObject(element: Element) {
-        element.getAttribute("xmi.id")?.value?.let {
+        element.getAttribute("xmi.id")?.asId?.let {
             id = alias.getOrDefault(it, it)
             isLink = false
             resolved[it] = this
         }
-        element.getAttribute("xmi.idref")?.value?.let {
+        element.getAttribute("xmi.idref")?.asId?.let {
             id = alias.getOrDefault(it, it)
             isLink = true
         }
@@ -296,7 +310,7 @@ class EnterpriseArchitectUml13FactoryHelper(
             isNavigable = element.getAttribute("isNavigable")?.value?.toBoolean() ?: false
             lowerBound = 0
             upperBound = KoreTypedElement.UNBOUNDED_MULTIPLICITY
-            element.getAttribute("type")?.value?.let {
+            element.getAttribute("type")?.asId?.let {
                 type = KoreModel.createClass().apply {
                     id = alias.getOrDefault(it, it)
                     isLink = true
@@ -359,8 +373,8 @@ class EnterpriseArchitectUml13FactoryHelper(
             }
             "Generalization" -> {
                 pendingGeneralizations += Pair(
-                    element.getAttribute("subtype").value,
-                    element.getAttribute("supertype").value
+                    element.getAttribute("subtype").asId,
+                    element.getAttribute("supertype").asId
                 )
                 null
             }
@@ -369,8 +383,8 @@ class EnterpriseArchitectUml13FactoryHelper(
                 result.fillClass(element, ns)
                 if (result.findTaggedValue("ea_type") == "Realisation") {
                     pendingRealizations += Pair(
-                        element.getAttribute("client").value,
-                        element.getAttribute("supplier").value
+                        element.getAttribute("client").asId,
+                        element.getAttribute("supplier").asId
                     )
                 }
                 null
@@ -521,3 +535,6 @@ class EnterpriseArchitectUml13FactoryHelper(
         }
     }
 }
+
+val Attribute.asId : String
+    get() = this.value.takeLast(36)
