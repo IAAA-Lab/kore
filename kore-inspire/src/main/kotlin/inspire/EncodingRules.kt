@@ -2,71 +2,22 @@
 
 package inspire
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreClassifier
-import es.iaaa.kore.KoreModelElement
-import es.iaaa.kore.KoreNamedElement
-import es.iaaa.kore.KoreObject
-import es.iaaa.kore.KorePackage
-import es.iaaa.kore.KoreReference
-import es.iaaa.kore.copy
-import es.iaaa.kore.findDefaultNamedReferences
-import es.iaaa.kore.findTaggedValue
-import es.iaaa.kore.models.gpkg.AttributesTable
-import es.iaaa.kore.models.gpkg.BaseTable
-import es.iaaa.kore.models.gpkg.BooleanType
-import es.iaaa.kore.models.gpkg.Column
-import es.iaaa.kore.models.gpkg.Constraint
-import es.iaaa.kore.models.gpkg.Container
-import es.iaaa.kore.models.gpkg.CurveType
-import es.iaaa.kore.models.gpkg.DateTimeType
-import es.iaaa.kore.models.gpkg.DateType
-import es.iaaa.kore.models.gpkg.DoubleType
-import es.iaaa.kore.models.gpkg.EnumConstraint
-import es.iaaa.kore.models.gpkg.EnumConstraintValue
-import es.iaaa.kore.models.gpkg.FeaturesTable
-import es.iaaa.kore.models.gpkg.GeoPackageSpec
-import es.iaaa.kore.models.gpkg.GeometryType
-import es.iaaa.kore.models.gpkg.IntegerType
-import es.iaaa.kore.models.gpkg.MultiSurfaceType
-import es.iaaa.kore.models.gpkg.PointType
-import es.iaaa.kore.models.gpkg.PrimaryKey
-import es.iaaa.kore.models.gpkg.RelatedTable
-import es.iaaa.kore.models.gpkg.RelationTable
-import es.iaaa.kore.models.gpkg.TextType
-import es.iaaa.kore.models.gpkg.attribute
-import es.iaaa.kore.models.gpkg.attributes
-import es.iaaa.kore.models.gpkg.column
-import es.iaaa.kore.models.gpkg.columnName
-import es.iaaa.kore.models.gpkg.description
-import es.iaaa.kore.models.gpkg.fileName
-import es.iaaa.kore.models.gpkg.findGeoPackageSpec
-import es.iaaa.kore.models.gpkg.geoPackageSpec
-import es.iaaa.kore.models.gpkg.identifier
-import es.iaaa.kore.models.gpkg.metadata
-import es.iaaa.kore.models.gpkg.mimeType
-import es.iaaa.kore.models.gpkg.profile
-import es.iaaa.kore.models.gpkg.reference
-import es.iaaa.kore.models.gpkg.relatedReference
-import es.iaaa.kore.models.gpkg.relation
-import es.iaaa.kore.models.gpkg.scope
-import es.iaaa.kore.models.gpkg.standardUri
-import es.iaaa.kore.models.gpkg.tableName
-import es.iaaa.kore.models.gpkg.title
-import es.iaaa.kore.toAttribute
-import es.iaaa.kore.toReference
+import es.iaaa.kore.*
+import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Conversion
 import es.iaaa.kore.transform.Transformations
-import es.iaaa.kore.transform.rules.addAttributeWhen
-import es.iaaa.kore.transform.rules.flattenTypes
-import es.iaaa.kore.transform.rules.patch
-import es.iaaa.kore.transform.rules.setLowerBoundWhen
-import es.iaaa.kore.transform.rules.setMetMetaclassWhen
-import es.iaaa.kore.transform.rules.setTypeWhen
+import es.iaaa.kore.transform.rules.*
 import java.net.URL
 
 typealias Transform = Transformations.(Conversion, Map<String, Any>) -> Unit
+
+fun KoreClass?.isFeaturesTable(): Boolean = if (this != null) metaClass == FeaturesTable else false
+fun KoreClass?.isAttributesTable(): Boolean = if (this != null) metaClass == AttributesTable else false
+fun KoreClass?.isRelationTable(): Boolean = if (this != null) metaClass == RelationTable else false
+fun KoreClass?.isEnumConstraint(): Boolean = if (this != null) metaClass == EnumConstraint else false
+fun KoreClass?.hasTable(): Boolean = isFeaturesTable() || isAttributesTable() || isRelationTable()
+fun KoreClass?.isPrefixable(): Boolean = hasTable() || isEnumConstraint()
+fun KoreClass?.isMoveable(): Boolean = isFeaturesTable() || isAttributesTable() || isRelationTable() || isEnumConstraint()
 
 val `simple Feature Type stereotype to GeoPackage Feature`: Transform = { _, _ ->
     setMetMetaclassWhen(FeaturesTable, predicate = canToFeature("featureType"))
@@ -275,7 +226,7 @@ val `move to the selected package`: Transform = { conversion, _ ->
         fileName = name
         conversion.model.allRelevantContent()
             .filterIsInstance<KoreClass>()
-            .filter { it.metaClass in listOf(AttributesTable, FeaturesTable, RelationTable, EnumConstraint) }
+            .filter { it.isMoveable() }
             .forEach { it.container = this }
     }
 }
@@ -295,8 +246,8 @@ val `add geopackage primary column`: Transform = { _, _ ->
     { it.metaClass in listOf(FeaturesTable, AttributesTable) }
 }
 
-val `add qualified name to features and attributes`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
+val `add qualified name to prefixable elements`: Transform = { _, _ ->
+    patch<KoreClass>(predicate = { isPrefixable() }) {
         findTaggedValue("package_name")?.let {
             identifier = "$it::$name"
         }
@@ -304,7 +255,7 @@ val `add qualified name to features and attributes`: Transform = { _, _ ->
 }
 
 val `copy documentation to table description`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
+    patch<KoreClass>(predicate = { hasTable() }) {
         findTaggedValue("documentation")?.let { text ->
             val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
             val idx = tokens.indexOf("-- Name --")
@@ -357,7 +308,7 @@ val `remove dangling references`: Transform = { _, _ ->
 val `properties with maximum cardinality 1 to columns`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = {
         container?.metaClass in listOf(FeaturesTable, AttributesTable) &&
-            !isMany
+                !isMany
     }) {
         metaClass = Column
         columnName = name
@@ -365,59 +316,39 @@ val `properties with maximum cardinality 1 to columns`: Transform = { _, _ ->
 }
 
 val `default package prefixes`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { metaClass == FeaturesTable }) {
-        tableName = "$prefix$name"
-        name = tableName
-    }
-    patch<KoreClass>(predicate = { metaClass == AttributesTable }) {
-        kotlin.runCatching {
-            tableName = "$prefix$name"
-        }.onFailure {
-            tableName = when(container?.name) {
-                "Cultural and linguistic adapdability" -> "GMD_$name"
-                "Citation and responsible party information" -> name
-                else -> throw Exception("Missing prefix for package '${container?.name}'")
-            }
+    patch<KoreClass>(predicate = { isPrefixable() }) {
+        val term = if (isRelationTable()) tableName else name
+        requireNotNull(term) {
+            "Error found in a U2G class: we expect here a not null value in '${if (isRelationTable()) "tableName" else "name"}'"
         }
-        name = tableName
-    }
-    patch<KoreClass>(predicate = { metaClass == EnumConstraint }) {
-        kotlin.runCatching {
-            name = "$prefix$name"
-        }.onFailure {
-            name = when(container?.name) {
-                "Cultural and linguistic adapdability" -> "GMD_$name"           // ISO 19139 freeText.xsd
-                "ISO 00639 Language Codes" -> "GMD_$name"                       // ISO 19139 freeText.xsd
-                "ISO 03166 Country Codes" -> "GMD_$name"                        // ISO 19139 freeText.xsd
-                "Identification information" -> "GMD_$name"                     // ISO 19139 identification.xsd
-                "Citation and responsible party information" -> "GMD_$name"     // ISO 19139 citation.xsd
-                "Units of Measure" -> "UM_$name"
-                "Data quality information" -> "GMD_$name"                       // ISO 19139 dataQuality.xsd
-                "Enumerations" -> "GCO_$name"
-                "Geometric primitive" -> name
-                else -> throw Exception("Missing prefix for package '${container?.name}'")
-            }
+        val prefixedTerm = runCatching { lookupPrefix() }.getOrElse { assignPrefix() } + term
+        if (hasTable()) {
+            tableName = prefixedTerm
         }
+        name = prefixedTerm
     }
-    patch<KoreClass>(predicate = { metaClass == RelationTable }) {
-        kotlin.runCatching {
-            tableName = "$prefix$tableName"
-        }.onFailure {
-            tableName = when(container?.name) {
-                "Cultural and linguistic adapdability" -> "GMD_$tableName"
-                else -> throw Exception("Missing prefix for package '${container?.name}'")
-            }
-        }
-        name = tableName
-    }
+}
+
+fun KoreClass.assignPrefix(): String = when (container?.name) {
+    "Cultural and linguistic adapdability" -> "GMD_"           // ISO 19139 freeText.xsd
+    "ISO 00639 Language Codes" -> "GMD_"                       // ISO 19139 freeText.xsd
+    "ISO 03166 Country Codes" -> "GMD_"                        // ISO 19139 freeText.xsd
+    "Identification information" -> "GMD_"                     // ISO 19139 identification.xsd
+    "Citation and responsible party information" -> "GMD_"     // ISO 19139 citation.xsd
+    "Units of Measure" -> "UM_"
+    "Data quality information" -> "GMD_"                       // ISO 19139 dataQuality.xsd
+    "Enumerations" -> "GCO_"
+    "Geometric primitive" -> ""
+    null -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy for package without name")
+    else -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy for package '${container?.name}'")
 }
 
 val `general rule for association roles and arrays`: Transform = { conversion, _ ->
     patch<KoreReference>(
         predicate = {
             name != null &&
-                containingClass?.metaClass in listOf(AttributesTable, FeaturesTable) &&
-                type?.metaClass in listOf(AttributesTable, FeaturesTable)
+                    containingClass?.metaClass in listOf(AttributesTable, FeaturesTable) &&
+                    type?.metaClass in listOf(AttributesTable, FeaturesTable)
         }
     ) {
         val managedByOther = !required && (opposite?.required == true)
@@ -425,7 +356,8 @@ val `general rule for association roles and arrays`: Transform = { conversion, _
             val manyToOne = isMany && opposite?.isMany != true
             val oneToOne = !isMany
 
-            val tableName = if (opposite?.required == true) "${opposite?.name}_$name" else "${containingClass?.name}_$name"
+            val tableName =
+                if (opposite?.required == true) "${opposite?.name}_$name" else "${containingClass?.name}_$name"
             val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
 
             toRelation(tableName, relationProfile)?.let {
@@ -454,8 +386,7 @@ private fun KoreReference.toRelation(
     relationProfile: String
 ): KoreClass? = type?.let { t ->
     containingClass?.let {
-        val pkg = it.container
-        pkg?.toRelation(tableName, relationProfile, it, t)
+        it.container?.toRelation(tableName, relationProfile, it, t)
     }
 }
 
@@ -492,59 +423,59 @@ fun Transformations.rule(blocks: List<Transform>, options: Map<String, Any> = em
     blocks.forEach { it(this, owner(), options) }
 }
 
-private fun hasRefinement(name: String, source: String? = null): (KoreObject) -> Boolean = { obj ->
-    obj.hasRefinement(name, source)
+private fun hasRefinement(name: String, source: String? = null): (KoreObject) -> Boolean = {
+    it.hasRefinement(name, source)
 }
 
-private fun canToFeature(name: String): (KoreObject) -> Boolean = { obj ->
-    if (obj.hasRefinement(name)) {
-        obj as KoreClass
-        val properties = obj.attributes.filter { GeometryType.isInstance(it.type) }
-        properties.size == 1 && properties.all { it.upperBound == 1 }
-    } else {
-        false
+private fun canToFeature(name: String): (KoreObject) -> Boolean = {
+    when {
+        it.hasRefinement(name) -> (it as? KoreClass)
+            ?.attributes
+            ?.filter { att -> GeometryType.isInstance(att.type) }
+            ?.run { size == 1 && all { att -> att.upperBound == 1 } }
+            ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class")
+        else -> false
     }
 }
 
-private fun canToAttribute(name: String): (KoreObject) -> Boolean = { obj ->
-    if (obj.hasRefinement(name)) {
-        obj as KoreClass
-        obj.attributes.none { GeometryType.isInstance(it.type) }
-    } else {
-        false
+private fun canToAttribute(name: String): (KoreObject) -> Boolean = {
+    when {
+        it.hasRefinement(name) -> (it as? KoreClass)
+            ?.attributes
+            ?.none { att -> GeometryType.isInstance(att.type) }
+            ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class")
+        else -> false
     }
 }
 
-private fun KoreObject.hasRefinement(name: String, source: String? = null): Boolean {
-    return if (this is KoreModelElement) {
-        getAnnotation(source)?.references?.filterIsInstance<KoreNamedElement>()?.any { it.name == name }
-            ?: false
-    } else false
+private fun KoreObject.hasRefinement(name: String, source: String? = null): Boolean = when (this) {
+    is KoreModelElement -> getAnnotation(source)
+        ?.references
+        ?.filterIsInstance<KoreNamedElement>()
+        ?.any { it.name == name }
+        ?: false
+    else -> false
 }
 
 private fun KoreObject.hasName(name: String): Boolean = this is KoreNamedElement && this.name == name
 
-fun schemaName(name: String): (KoreObject) -> Boolean = { it ->
-    if (it is KorePackage) {
-        it.name == name && hasRefinement("applicationSchema")(it)
-    } else {
-        false
+fun schemaName(name: String): (KoreObject) -> Boolean = {
+    when (it) {
+        is KorePackage -> it.name == name && hasRefinement("applicationSchema")(it)
+        else -> false
     }
 }
 
 /**
  * The prefix is the first occurrence of the tagged value xmlns in the hierarchy.
  */
-val KoreObject?.prefix: String
-    get() {
-        return when(this) {
-            is KorePackage -> findTaggedValue("xmlns")
-                ?.takeWhile { it != '#' }
-                ?.toUpperCase()
-                ?.replace("-", "_")
-                ?.plus("_")
-                ?: container.prefix
-            is KoreObject -> container.prefix
-            else -> throw Exception()
-        }
-    }
+fun KoreObject?.lookupPrefix(): String = when (this) {
+    is KorePackage -> findTaggedValue("xmlns")
+        ?.takeWhile { it != '#' }
+        ?.toUpperCase()
+        ?.replace("-", "_")
+        ?.plus("_")
+        ?: container.lookupPrefix()
+    is KoreObject -> container.lookupPrefix()
+    else -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy")
+}

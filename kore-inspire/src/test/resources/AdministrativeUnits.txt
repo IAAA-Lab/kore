@@ -1,5 +1,6 @@
 Container <<applicationSchema>>  "AdministrativeUnits" {
   Constraint Enum "AU_TechnicalStatusValue" {
+    identifier = "AdministrativeUnits::TechnicalStatusValue"
     edgeMatched
     notEdgeMatched
   }
@@ -31,6 +32,7 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     upperLevelUnit INTEGER
   }
   Constraint Enum "AU_AdministrativeHierarchyLevel" {
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
     1stOrder
     2ndOrder
     3rdOrder
@@ -59,6 +61,7 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     name INTEGER
   }
   Constraint Enum "AU_LegalStatusValue" {
+    identifier = "AdministrativeUnits::LegalStatusValue"
     agreed
     notAgreed
   }
@@ -303,6 +306,7 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Constraint Enum "BASE2_CountryCode" {
+    identifier = "Base Types 2::CountryCode"
     AT
     BE
     BG
@@ -385,27 +389,32 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     transliterationScheme TEXT
   }
   Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
     endonym
     exonym
   }
   Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
     historical
     official
     other
     standardised
   }
   Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
     common
     feminine
     masculine
     neuter
   }
   Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
     dual
     plural
     singular
   }
   Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
     Albanian
     Arabic
@@ -451,8 +460,11 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     Turkish
     Ukranian
   }
-  Constraint Enum "GMD_CountryCode" {}
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
   Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
     (reservedforfutureuse)
     8859part1
     8859part10

@@ -30,6 +30,7 @@ object RelationTable : KoreClassImpl() {
         attribute { name = "tableName" }
         attribute { name = "profile" }
         attribute { name = "relatedReference" }
+        attribute { name = "identifier" }
     }
 
     operator fun invoke(init: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {

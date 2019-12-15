@@ -25,6 +25,7 @@ object Constraint : KoreClassImpl() {
     init {
         name = "Constraint"
         attribute { name = "description" }
+        attribute { name = "identifier" }
     }
 }
 

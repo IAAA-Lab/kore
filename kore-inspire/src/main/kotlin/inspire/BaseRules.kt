@@ -72,7 +72,7 @@ val base = { options: Map<String, Any> ->
             rule(`properties with maximum cardinality 1 to columns`)
             rule(`load authoritative descriptions of the reasons for void values as metadata`)
 
-            manipulation(`add qualified name to features and attributes`)
+            manipulation(`add qualified name to prefixable elements`)
 
             rule(`default package prefixes`)
 
