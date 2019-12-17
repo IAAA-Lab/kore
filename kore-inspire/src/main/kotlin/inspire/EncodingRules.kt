@@ -7,6 +7,7 @@ import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Conversion
 import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.rules.*
+import es.iaaa.kore.util.toPrettyString
 import java.net.URL
 
 typealias Transform = Transformations.(Conversion, Map<String, Any>) -> Unit
@@ -28,11 +29,11 @@ val `Feature Type stereotype without geometry to GeoPackage Attribute`: Transfor
 }
 
 val `Data Type stereotype to GeoPackage Attribute`: Transform = { _, _ ->
-    setMetMetaclassWhen(FeaturesTable, predicate = canToFeature("dataType"))
+    setMetMetaclassWhen(AttributesTable, predicate = canToAttribute("dataType"))
 }
 
 val `simple feature-like Data Type stereotype to GeoPackage Feature`: Transform = { _, _ ->
-    setMetMetaclassWhen(AttributesTable, predicate = canToAttribute("dataType"))
+    setMetMetaclassWhen(FeaturesTable, predicate = canToFeature("dataType"))
 }
 
 val `general rule ISO-19103 Basic Types`: Transform = { _, _ ->
@@ -440,10 +441,11 @@ private fun canToFeature(name: String): (KoreObject) -> Boolean = {
 
 private fun canToAttribute(name: String): (KoreObject) -> Boolean = {
     when {
-        it.hasRefinement(name) -> (it as? KoreClass)
-            ?.attributes
-            ?.none { att -> GeometryType.isInstance(att.type) }
-            ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class")
+        it.hasRefinement(name) ->
+            (it as? KoreClass)
+                ?.attributes
+                ?.none { att -> GeometryType.isInstance(att.type) }
+                ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class")
         else -> false
     }
 }

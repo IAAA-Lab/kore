@@ -1,0 +1,607 @@
+Container <<applicationSchema>>  "MaritimeUnits" {
+  Feature "MU_MaritimeBoundary" {
+    description = "A line depicting the separation of any type of maritime jurisdiction.
+
+    SOURCE IHO Dictionary, S-32, Fifth Edition.
+
+    NOTE 1 Maritime boundary represents either:
+
+    1) the seaward outer limits of the maritime zones of a coastal State, such as territorial sea, contiguous zone, exclusive economic zone and continental shelf;
+
+    2) the limits of the maritime zones of States with opposite or adjacent coasts.
+
+    Maritime boundaries are a politically sensitive subject, because it affects coastal State's jurisdiction concerning fishery, petroleum and other resources of the sea as well as other uses of the sea. [Source: "Maritime Boundary", S.P. Jagota]"
+    identifier = "MaritimeUnits::MaritimeBoundary"
+    tableName = "MU_MaritimeBoundary"
+    beginLifespanVersion DATETIME NOT NULL
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legalStatus TEXT CHECK(AU_LegalStatusValue)
+    technicalStatus TEXT CHECK(AU_TechnicalStatusValue)
+  }
+  Constraint Enum "MU_MaritimeZoneTypeValue" {
+    identifier = "MaritimeUnits::MaritimeZoneTypeValue"
+    contiguousZone
+    continentalShelf
+    exclusiveEconomicZone
+    internalWaters
+    territorialSea
+  }
+  Feature "MU_BaselineSegment" {
+    description = "Segment of the baseline from which the outer limits of the territorial sea and certain other outer limits are measured."
+    identifier = "MaritimeUnits::BaselineSegment"
+    tableName = "MU_BaselineSegment"
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    segmentType TEXT NOT NULL CHECK(MU_BaselineSegmentTypeValue)
+  }
+  Attributes "MU_Baseline" {
+    description = "The line from which the outer limits of the territorial sea and certain other outer limits are measured.
+
+    SOURCE IHO Dictionary, S-32, Fifth Edition.
+
+    NOTE The baseline comprises of one or more baseline segments.
+
+    According to United Nations Convention on the Law of the Sea (UNCLOS), the baseline segment can be normal, straight or archipelagic depending on the method used to determine the baseline segment.
+
+    COMMENT: For this moment there is no clearly identified use-case that would require Baseline spatial object types, therefore it is not strictly necessary to include these objects in the dataset."
+    identifier = "MaritimeUnits::Baseline"
+    tableName = "MU_Baseline"
+    beginLifespanVersion DATETIME NOT NULL
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Constraint Enum "MU_BaselineSegmentTypeValue" {
+    identifier = "MaritimeUnits::BaselineSegmentTypeValue"
+    archipelagic
+    normal
+    straight
+  }
+  Feature "MU_MaritimeZone" {
+    description = "A belt of sea defined by international treaties and conventions, where coastal State executes jurisdictional rights.
+
+    NOTE 1 The zone is established for e.g. cadastral, administrative, economic, security or safety purposes. It is not established for environmental management or regulation, which is covered by the theme Area management/restriction/regulation zones and reporting areas, or for environmental protection, which is covered by the theme Protected sites.
+
+    NOTE 2 The maritime zone can be either internal waters, territorial sea, contiguous zone, exclusive economic zone or continental shelf."
+    identifier = "MaritimeUnits::MaritimeZone"
+    tableName = "MU_MaritimeZone"
+    beginLifeSpanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifepanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    zoneType TEXT NOT NULL CHECK(MU_MaritimeZoneTypeValue)
+  }
+  Relation "MU_MaritimeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "MU_MaritimeBoundary#inspireId"
+    tableName = "MU_MaritimeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "MU_MaritimeBoundary_country" {
+    profile = "attributes"
+    tableName = "MU_MaritimeBoundary_country"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_CountryCode(id)
+  }
+  Relation "MU_Baseline_segment" {
+    profile = "features"
+    tableName = "MU_Baseline_segment"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_Baseline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_BaselineSegment(id)
+  }
+  Relation "MU_Baseline_inspireId" {
+    profile = "attributes"
+    relatedReference = "MU_Baseline#inspireId"
+    tableName = "MU_Baseline_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_Baseline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "MU_MaritimeZone_boundary" {
+    profile = "features"
+    tableName = "MU_MaritimeZone_boundary"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_MaritimeBoundary(id)
+  }
+  Relation "MU_MaritimeZone_baseline" {
+    profile = "attributes"
+    tableName = "MU_MaritimeZone_baseline"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_Baseline(id)
+  }
+  Relation "MU_MaritimeZone_baseline" {
+    profile = "attributes"
+    tableName = "MU_MaritimeZone_baseline"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_Shoreline(id)
+  }
+  Relation "MU_MaritimeZone_seaArea" {
+    profile = "attributes"
+    tableName = "MU_MaritimeZone_seaArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
+  }
+  Relation "MU_MaritimeZone_sea" {
+    profile = "features"
+    tableName = "MU_MaritimeZone_sea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_Sea(id)
+  }
+  Relation "MU_MaritimeZone_inspireId" {
+    profile = "attributes"
+    relatedReference = "MU_MaritimeZone#inspireId"
+    tableName = "MU_MaritimeZone_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "MU_MaritimeZone_name" {
+    profile = "attributes"
+    tableName = "MU_MaritimeZone_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Metadata "Unknown" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Unknown</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The correct value for the specific spatial object is not known to, and not computable by, the data provider. However, a correct value may exist.</gco:CharacterString>
+       </definition>
+       <description>
+          <gco:CharacterString>EXAMPLE When the "elevation of the water body above the sea level" of a certain lake has not been measured, then the reason for a void value of this property would be 'Unknown'.\n \nNOTE 'Unknown' is applied on an object-by-object basis in a spatial data set.</gco:CharacterString>
+       </description>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Unpopulated</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic is not part of the dataset maintained by the data provider. However, the characteristic may exist in the real world.</gco:CharacterString>
+       </definition>
+       <description>
+          <gco:CharacterString>EXAMPLE When the &amp;quot;elevation of the water body above the sea level” has not been included in a dataset containing lake spatial objects, then the reason for a void value of this property would be &amp;apos;Unpopulated’.\n \nNOTE The characteristic receives this value for all objects in the spatial data set.</gco:CharacterString>
+       </description>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Withheld</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic may exist, but is confidential and not divulged by the data provider.</gco:CharacterString>
+       </definition>
+       <description gco:nilReason="missing"/>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Withheld</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic may exist, but is confidential and not divulged by the data provider.</gco:CharacterString>
+       </definition>
+       <description gco:nilReason="missing"/>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "SR_Shoreline_segment" {
+    profile = "features"
+    tableName = "SR_Shoreline_segment"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ShoreSegment(id)
+  }
+  Relation "HY_HydroObject_relatedHydroObject" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_relatedHydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroObject(id)
+  }
+  Relation "HY_HydroObject_geographicalName" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "HY_HydroObject_hydroId" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_SeaArea_subArea" {
+    profile = "attributes"
+    tableName = "SR_SeaArea_subArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
+  }
+  Relation "SR_SeaArea_inspireId" {
+    profile = "attributes"
+    relatedReference = "SR_SeaArea#inspireId"
+    tableName = "SR_SeaArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_SeaArea_parameterValue" {
+    profile = "attributes"
+    tableName = "SR_SeaArea_parameterValue"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ParameterValuePair(id)
+  }
+  Relation "SR_SeaArea_extent" {
+    profile = "features"
+    tableName = "SR_SeaArea_extent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Constraint Enum "AU_LegalStatusValue" {
+    identifier = "AdministrativeUnits::LegalStatusValue"
+    agreed
+    notAgreed
+  }
+  Constraint Enum "AU_TechnicalStatusValue" {
+    identifier = "AdministrativeUnits::TechnicalStatusValue"
+    edgeMatched
+    notEdgeMatched
+  }
+  Constraint Enum "BASE2_CountryCode" {
+    identifier = "Base Types 2::CountryCode"
+    AT
+    BE
+    BG
+    CY
+    CZ
+    DE
+    DK
+    EE
+    EL
+    ES
+    FI
+    FR
+    HR
+    HU
+    IE
+    IT
+    LT
+    LU
+    LV
+    MT
+    NL
+    PL
+    PT
+    RO
+    SE
+    SI
+    SK
+    TR
+    UK
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "BASE2_CountryCode" {
+    description = "Country code as defined in the Interinstitutional style guide published by the Publications Office of the European Union."
+    identifier = "Base Types 2::CountryCode"
+    tableName = "BASE2_CountryCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(BASE2_CountryCode)
+  }
+  Attributes "SR_Shoreline" {
+    description = "Any Boundary between a Sea Area and land."
+    identifier = "Sea Regions::Shoreline"
+    tableName = "SR_Shoreline"
+    id INTEGER NOT NULL PRIMARY KEY
+    waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+  }
+  Attributes "SR_SeaArea" {
+    description = "An area of sea defined according to its physical and chemical characteristics. It may have multiple geometries (extent) to represent different tidal states.
+
+    A SeaArea is a type of HydroObject as described in the Annex1 theme Hydrography. It has geometry described by one or more GM_MultiSurfaces. Multiple geometries are allowed  to enable a SeaArea to be described according to different tidal states.
+
+    Typically however, specialisations of SeaArea will restrict the geometry to a particular tidal state or set of tidal states.  SeaAreas include named seas such as ‘Baltic Sea’ and also un-named areas of sea that have particular chemical and physical characteristics.  SeaAreas are 2D objects and carry no explicit information about the depth of the sea, this is specified in the INSPIRE Elevation Theme."
+    identifier = "Sea Regions::SeaArea"
+    tableName = "SR_SeaArea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
+  }
+  Feature "SR_Sea" {
+    description = "Extent of sea at High Water (meanHighWater).
+
+    An area of sea, bounded by land and adjacent sea regions.  May contain smaller scale sea regions. Has common large scale circulation patterns, in part defined by its land boundaries.  High Water is taken to be mean high water.  Applies to common names areas of sea, e.g. North Sea, Agean Sea etc. (Source: IHO S23 SeaRegion)"
+    identifier = "Sea Regions::Sea"
+    tableName = "SR_Sea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    extent_geometry MULTISURFACE NOT NULL
+    extent_waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Feature "SR_ShoreSegment" {
+    description = "A Shore Segment is a section of shore line.
+
+    Where it is possible to provide attributes about shore stability (eroding, stable etc) and/or shore type (sand, rock, harbour etc). Then the Shore Segment should be used in place of the GML LineString element to describe curve segments."
+    identifier = "Sea Regions::ShoreSegment"
+    tableName = "SR_ShoreSegment"
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    shoreClassification TEXT CHECK(SR_ShoreTypeClassificationValue)
+    shoreStability TEXT CHECK(SR_ShoreStabilityValue)
+  }
+  Attributes "HY_HydroObject" {
+    description = "An identity base for hydrographic (including man-made) objects in the real world.
+
+    NOTE Derived 'views' of real-world hydrographic objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name or hydrographic identifier."
+    identifier = "Hydro - base::HydroObject"
+    tableName = "HY_HydroObject"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "HY_HydroIdentifier" {
+    description = "A hydrographic thematic identifier.
+
+    NOTE May be used to hold a national hydrological identification code."
+    identifier = "Hydro - base::HydroIdentifier"
+    tableName = "HY_HydroIdentifier"
+    classificationScheme TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+  }
+  Attributes "SR_ParameterValuePair" {
+    description = "A parameter value pair contains a value of some observed property. e.g. Annual Mean Sea Surface Temperature."
+    identifier = "Sea Regions::ParameterValuePair"
+    tableName = "SR_ParameterValuePair"
+    id INTEGER NOT NULL PRIMARY KEY
+    parameter AbstractObservableProperty NOT NULL
+    validTime TM_Object
+    value Measure NOT NULL
+  }
+  Feature "SR_MarineExtent" {
+    description = "The extent of a sea area for a given tidal state
+
+    The expected 2D geometric extent of a SeaArea for a particular tidal state."
+    identifier = "Sea Regions::MarineExtent"
+    tableName = "SR_MarineExtent"
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "HY_P_WaterLevelValue" {
+    identifier = "Hydro - Physical Waters::WaterLevelValue"
+    equinoctialSpringLowWater
+    highWater
+    highWaterSprings
+    higherHighWater
+    higherHighWaterLargeTide
+    highestAstronomicalTide
+    highestHighWater
+    indianSpringHighWater
+    indianSpringLowWater
+    localDatum
+    lowWater
+    lowWaterDatum
+    lowWaterSprings
+    lowerLowWater
+    lowerLowWaterLargeTide
+    lowestAstronomicalTide
+    lowestLowWater
+    lowestLowWaterSprings
+    meanHighWater
+    meanHighWaterNeaps
+    meanHighWaterSprings
+    meanHigherHighWater
+    meanHigherHighWaterSprings
+    meanHigherLowWater
+    meanLowWater
+    meanLowWaterNeaps
+    meanLowWaterSprings
+    meanLowerHighWater
+    meanLowerLowWater
+    meanLowerLowWaterSprings
+    meanSeaLevel
+    meanTideLevel
+    meanWaterLevel
+    nearlyHighestHighWater
+    nearlyLowestLowWater
+    tropicHigherHighWater
+    tropicLowerLowWater
+  }
+  Constraint Enum "SR_SeaAreaTypeClassificationValue" {
+    identifier = "Sea Regions::SeaAreaTypeClassificationValue"
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "SR_ShoreTypeClassificationValue" {
+    identifier = "Sea Regions::ShoreTypeClassificationValue"
+  }
+  Constraint Enum "SR_ShoreStabilityValue" {
+    identifier = "Sea Regions::ShoreStabilityValue"
+  }
+  Constraint Enum "UM_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+}

@@ -1,0 +1,393 @@
+Container <<applicationSchema>>  "Geographical Names" {
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Attributes "GN_PronunciationOfName" {
+    description = "Proper, correct or standard (standard within the linguistic community concerned) pronunciation of a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006]."
+    identifier = "Geographical Names::PronunciationOfName"
+    tableName = "GN_PronunciationOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    pronunciationIPA TEXT
+    pronunciationSoundLink TEXT
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "GN_NamedPlaceTypeValue" {
+    identifier = "Geographical Names::NamedPlaceTypeValue"
+    administrativeUnit
+    building
+    hydrography
+    landcover
+    landform
+    other
+    populatedPlace
+    protectedSite
+    transportNetwork
+  }
+  Feature "GN_NamedPlace" {
+    description = "Any real world entity referred to by one or several proper nouns."
+    identifier = "Geographical Names::NamedPlace"
+    tableName = "GN_NamedPlace"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GEOMETRY NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    leastDetailedViewingResolution MD_Resolution
+    mostDetailedViewingResolution MD_Resolution
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GN_NamedPlaceTypeValue" {
+    description = "The type of a named place."
+    identifier = "Geographical Names::NamedPlaceTypeValue"
+    tableName = "GN_NamedPlaceTypeValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
+  }
+  Relation "GN_NamedPlace_inspireId" {
+    profile = "attributes"
+    relatedReference = "GN_NamedPlace#inspireId"
+    tableName = "GN_NamedPlace_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GN_NamedPlace_localType" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_localType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "GN_NamedPlace_name" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "GN_NamedPlace_relatedSpatialObject" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_relatedSpatialObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GN_NamedPlace_type" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_type"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Metadata "Unknown" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Unknown</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The correct value for the specific spatial object is not known to, and not computable by, the data provider. However, a correct value may exist.</gco:CharacterString>
+       </definition>
+       <description>
+          <gco:CharacterString>EXAMPLE When the "elevation of the water body above the sea level" of a certain lake has not been measured, then the reason for a void value of this property would be 'Unknown'.\n \nNOTE 'Unknown' is applied on an object-by-object basis in a spatial data set.</gco:CharacterString>
+       </description>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Unpopulated</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic is not part of the dataset maintained by the data provider. However, the characteristic may exist in the real world.</gco:CharacterString>
+       </definition>
+       <description>
+          <gco:CharacterString>EXAMPLE When the &amp;quot;elevation of the water body above the sea level” has not been included in a dataset containing lake spatial objects, then the reason for a void value of this property would be &amp;apos;Unpopulated’.\n \nNOTE The characteristic receives this value for all objects in the spatial data set.</gco:CharacterString>
+       </description>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Withheld</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic may exist, but is confidential and not divulged by the data provider.</gco:CharacterString>
+       </definition>
+       <description gco:nilReason="missing"/>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = "<?xml version="1.0" encoding="UTF-8"?>
+    <RE_RegisterItem xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.isotc211.org/2005/grg"
+                     xsi:schemaLocation="http://www.isotc211.org/2005/grg http://standards.iso.org/iso/19135/-2/reg/1.0/registration.xsd">
+       <itemIdentifier gco:nilReason="inapplicable"/>
+       <name>
+          <gco:CharacterString>Withheld</gco:CharacterString>
+       </name>
+       <status>
+          <RE_ItemStatus>valid</RE_ItemStatus>
+       </status>
+       <definition>
+          <gco:CharacterString>The characteristic may exist, but is confidential and not divulged by the data provider.</gco:CharacterString>
+       </definition>
+       <description gco:nilReason="missing"/>
+       <additionInformation xlink:href="http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"/>
+       <itemClass>
+          <RE_ItemClass>
+             <name>
+                <gco:CharacterString>CodeListValue</gco:CharacterString>
+             </name>
+             <technicalStandard gco:nilReason="inapplicable"/>
+             <alternativeNames gco:nilReason="inapplicable"/>
+             <describedItem gco:nilReason="inapplicable"/>
+          </RE_ItemClass>
+       </itemClass>
+    </RE_RegisterItem>"
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "GMD_LocalisedCharacterString" {
+    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Constraint Enum "UM_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+}

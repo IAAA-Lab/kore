@@ -15,6 +15,9 @@
  */
 package inspire
 
+import es.iaaa.kore.transform.Conversion
+import inspire.i.au.au
+import inspire.i.au.mu
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -23,16 +26,32 @@ import java.io.File
 class DryRunTest {
 
     @Test
-    fun `test current configuration`() {
-        val run = au("src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL")
+    fun `Annex I Administrative Units - administrative units`() {
+        checkSchema("i/au/au", au)
+    }
+
+    @Test
+    fun `Annex I Administrative Units - maritime units - draft`() {
+        checkSchema("i/au/mu", mu)
+    }
+
+    @Test
+    fun `test geographical names`() {
+        checkSchema("GeographicalNames", gn)
+    }
+
+    fun checkSchema(name: String, process: (String, Map<String, Any>) -> Conversion) {
+        val run = process(
+            "src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL",
+            mapOf("description" to false)
+        )
         run.convert(true)
-        val expected = File("src/test/resources/AdministrativeUnits.txt").readText().split("\n")
+        val expected = File("src/test/resources/$name.txt").readText().split("\n")
         val dryRun = run.lastDryRunOutput.toString()
-        val output = File("build/test/resources/AdministrativeUnits.txt")
+        val output = File("build/test/resources/$name.txt")
         output.parentFile.mkdirs()
         output.writeText(dryRun)
         val actual = dryRun.split("\n")
-        assertEquals(expected.size, actual.size)
         expected.zip(actual).forEach {
             if (it.first.isBlank()) {
                 assertTrue(it.second.isBlank())
@@ -40,9 +59,10 @@ class DryRunTest {
                 assertEquals(it.first, it.second)
             }
         }
+        assertEquals(expected.size, actual.size)
     }
 
-    companion  object {
+    companion object {
         private const val INSPIRE_CONSOLIDATED_UML_MODEL =
             "INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml"
     }
