@@ -21,7 +21,7 @@ import es.iaaa.kore.transform.OutputWriter
 import es.iaaa.kore.util.toPrettyString
 
 class StringConsole(private val out: StringBuffer = StringBuffer()) : OutputWriter {
-    override fun write(resource: Model) {
+    override fun write(resource: Model, context: Map<String, Any>) {
         resource.selectedPackages().forEach {
             out.appendln(it.toPrettyString())
         }

@@ -49,8 +49,8 @@ import mil.nga.geopackage.metadata.Metadata as GpkgMetadata
  * Manager used to create and open GeoPackages.
  */
 object ContainerManager {
-    fun create(pkg: KorePackage, base: String = "", overwrite: Boolean = false): Boolean {
-        val path = location(pkg, base) ?: return false
+    fun create(pkg: KorePackage, base: String = "", name: String? = null, overwrite: Boolean = false): Boolean {
+        val path = location(pkg, base, name) ?: return false
         val file = path.toFile()
         val effectiveFile = file.resolveSibling(file.name + ".gpkg")
         if (effectiveFile.exists() && overwrite) {
@@ -79,8 +79,8 @@ object ContainerManager {
         } else false
     }
 
-    fun openAndAdd(pkg: KorePackage, base: String) {
-        val path = location(pkg, base)
+    fun openAndAdd(pkg: KorePackage, base: String, name: String?) {
+        val path = location(pkg, base, name)
         open(path?.toFile()).use { geoPackage ->
             pkg.constraints { constraint -> geoPackage.createConstraint(constraint) }
             pkg.features { feature -> geoPackage.createFeature(feature) }
@@ -441,13 +441,13 @@ object ContainerManager {
         .filterIsInstance<KoreClass>()
         .forEach(process)
 
-    fun open(pkg: KorePackage, base: String = ""): GeoPackage? {
-        val path = location(pkg, base) ?: return null
+    fun open(pkg: KorePackage, base: String = "", name: String? = null): GeoPackage? {
+        val path = location(pkg, base, name) ?: return null
         return open(path.toFile())
     }
 
-    private fun location(pkg: KorePackage, base: String = ""): Path? {
-        val path = pkg.fileName ?: return null
+    private fun location(pkg: KorePackage, base: String = "", name: String? = null): Path? {
+        val path = name ?: pkg.fileName ?: return null
         return Paths.get(base, path).toAbsolutePath()
     }
 }

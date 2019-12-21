@@ -26,7 +26,7 @@ interface OutputWriter : Validable, Closeable {
     /**
      * Writes a resource.
      */
-    fun write(resource: Model) {}
+    fun write(resource: Model, context: Map<String, Any>) {}
 
     override fun close() {}
 }

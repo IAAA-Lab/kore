@@ -21,4 +21,6 @@ object Libs {
     const val geopackage = "mil.nga.geopackage:geopackage:3.4.0"
     const val unitJupiterApi = "org.junit.jupiter:junit-jupiter-api:5.5.1"
     const val unitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:5.5.1"
+    const val kotlinLogging = "io.github.microutils:kotlin-logging:1.7.7"
+    const val slf4j = "org.slf4j:slf4j-nop:1.7.26"
 }

@@ -7,7 +7,6 @@ import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Conversion
 import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.rules.*
-import es.iaaa.kore.util.toPrettyString
 import java.net.URL
 
 typealias Transform = Transformations.(Conversion, Map<String, Any>) -> Unit
@@ -41,6 +40,7 @@ val `general rule ISO-19103 Basic Types`: Transform = { _, _ ->
     setTypeWhen(BooleanType(), predicate = { it.type?.name == "Boolean" })
     setTypeWhen(IntegerType(), predicate = { it.type?.name == "Integer" })
     setTypeWhen(DoubleType(), predicate = { it.type?.name == "Real" })
+    setTypeWhen(TextType(), predicate = { it.type?.name == "Number" })
     setTypeWhen(TextType(), predicate = { it.type?.name == "Decimal" })
     setTypeWhen(DateTimeType(), predicate = { it.type?.name == "DateTime" })
     setTypeWhen(DateType(), predicate = { it.type?.name == "Date" })
@@ -96,7 +96,7 @@ val `general rule ISO-19139 Metadata XML Implementation Types`: List<Transform> 
 val `general rule Enumeration Types`: Transform = { _, options ->
     val withDescription = options["description"] == true
     val patched = mutableListOf<KoreClass>()
-    patch<KoreClass>(predicate = hasRefinement("enumeration")) {
+    patch<KoreClass>(predicate = { hasRefinement("enumeration") }) {
         metaClass = EnumConstraint
         attributes.forEach {
             it.metaClass = EnumConstraintValue
@@ -122,7 +122,7 @@ val `general rule Enumeration Types`: Transform = { _, options ->
 val `general rule CodeList Types`: Transform = { _, options ->
     val withDescription = options["description"] == true
     val patched = mutableListOf<KoreClass>()
-    patch<KoreClass>(predicate = hasRefinement("codeList")) {
+    patch<KoreClass>(predicate = { hasRefinement("codeList") }) {
         metaClass = EnumConstraint
         attributes.forEach {
             it.metaClass = EnumConstraintValue
@@ -149,8 +149,12 @@ val `voidable properties have a min cardinality of 0`: Transform = { _, _ ->
     setLowerBoundWhen(0) { it.findDefaultNamedReferences().any { ref -> ref.name == "voidable" } }
 }
 
+
 val `flatten Data Types with upper cardinality of 1 but Identifier`: Transform = { _, _ ->
-    flattenTypes(predicate = { obj -> obj.hasRefinement("dataType") && !obj.hasName("Identifier") },
+    flattenTypes(predicate = { obj ->
+        (obj.hasRefinement("dataType") || obj.hasNoRefinements())
+                && !obj.hasName("Identifier")
+    },
         postFlatten = { old, new ->
             new.name = "${old.name}_${new.name}"
             new.lowerBound = kotlin.math.min(old.lowerBound, new.lowerBound)
@@ -336,7 +340,6 @@ fun KoreClass.assignPrefix(): String = when (container?.name) {
     "ISO 03166 Country Codes" -> "GMD_"                        // ISO 19139 freeText.xsd
     "Identification information" -> "GMD_"                     // ISO 19139 identification.xsd
     "Citation and responsible party information" -> "GMD_"     // ISO 19139 citation.xsd
-    "Units of Measure" -> "UM_"
     "Data quality information" -> "GMD_"                       // ISO 19139 dataQuality.xsd
     "Enumerations" -> "GCO_"
     "Geometric primitive" -> ""
@@ -424,9 +427,9 @@ fun Transformations.rule(blocks: List<Transform>, options: Map<String, Any> = em
     blocks.forEach { it(this, owner(), options) }
 }
 
-private fun hasRefinement(name: String, source: String? = null): (KoreObject) -> Boolean = {
-    it.hasRefinement(name, source)
-}
+//fun hasRefinement(name: String, source: String? = null): (KoreObject) -> Boolean = {
+//    it.hasRefinement(name, source)
+//}
 
 private fun canToFeature(name: String): (KoreObject) -> Boolean = {
     when {
@@ -450,7 +453,7 @@ private fun canToAttribute(name: String): (KoreObject) -> Boolean = {
     }
 }
 
-private fun KoreObject.hasRefinement(name: String, source: String? = null): Boolean = when (this) {
+fun KoreObject.hasRefinement(name: String, source: String? = null): Boolean = when (this) {
     is KoreModelElement -> getAnnotation(source)
         ?.references
         ?.filterIsInstance<KoreNamedElement>()
@@ -459,11 +462,21 @@ private fun KoreObject.hasRefinement(name: String, source: String? = null): Bool
     else -> false
 }
 
+private fun KoreObject.hasNoRefinements(source: String? = null): Boolean = when (this) {
+    is KoreModelElement -> getAnnotation(source)
+        ?.references
+        ?.filterIsInstance<KoreNamedElement>()
+        ?.isEmpty()
+        ?:true
+    else -> true
+}
+
+
 private fun KoreObject.hasName(name: String): Boolean = this is KoreNamedElement && this.name == name
 
 fun schemaName(name: String): (KoreObject) -> Boolean = {
     when (it) {
-        is KorePackage -> it.name == name && hasRefinement("applicationSchema")(it)
+        is KorePackage -> it.name == name && it.hasRefinement("applicationSchema")
         else -> false
     }
 }

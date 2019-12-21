@@ -22,12 +22,14 @@ import es.iaaa.kore.copy
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
+import es.iaaa.kore.util.toPrettyString
+import mu.KotlinLogging
 
 internal class FlattenTypes(
     val predicate: (KoreNamedElement) -> Boolean,
     val postFlatten: (KoreTypedElement, KoreTypedElement) -> Unit,
     val global: Boolean,
-    private val maxIterations: Int = 3
+    private val maxIterations: Int = 4
 ) : Transformation {
 
     override fun process(target: Model) {
@@ -40,20 +42,22 @@ internal class FlattenTypes(
                     with(ref) {
                         upperBound == 1 &&
                             type?.let { type -> predicate(type) } == true &&
-                            (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
+                            // (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
                             (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
                     }
                 }
-                val atts = cls.attributes
-                atts.forEach { it.containingClass = null }
-                atts.forEach { att ->
-                    if (att in toFlatten) {
-                        (att.type as KoreClass).allAttributes().forEach { newAtt ->
-                            postFlatten(att, newAtt.copy(cls))
+                if (toFlatten.isNotEmpty()) {
+                    val atts = cls.attributes
+                    atts.forEach { it.containingClass = null }
+                    atts.forEach { att ->
+                        if (att in toFlatten) {
+                            (att.type as KoreClass).allAttributes().forEach { newAtt ->
+                                postFlatten(att, newAtt.copy(cls))
+                            }
+                            changes++
+                        } else {
+                            att.containingClass = cls
                         }
-                        changes++
-                    } else {
-                        att.containingClass = cls
                     }
                 }
             }

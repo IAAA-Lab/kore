@@ -24,7 +24,7 @@ import es.iaaa.kore.transform.OutputWriter
 import es.iaaa.kore.util.toPrettyString
 
 object Console : OutputWriter {
-    override fun write(resource: Model) {
+    override fun write(resource: Model, context: Map<String, Any>) {
         println("Selected Packages:".yellow())
         resource.selectedPackages().forEach {
             println(it.toPrettyString())

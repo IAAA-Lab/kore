@@ -16,8 +16,9 @@
 package inspire
 
 import es.iaaa.kore.transform.Conversion
-import inspire.i.au.au
-import inspire.i.au.mu
+import inspire.annex.i.au.au
+import inspire.annex.i.au.mu
+import inspire.annex.i.gn.gn
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -27,17 +28,17 @@ class DryRunTest {
 
     @Test
     fun `Annex I Administrative Units - administrative units`() {
-        checkSchema("i/au/au", au)
+        checkSchema("annex/i/au/au", au)
     }
 
     @Test
     fun `Annex I Administrative Units - maritime units - draft`() {
-        checkSchema("i/au/mu", mu)
+        checkSchema("annex/i/au/mu", mu)
     }
 
     @Test
-    fun `test geographical names`() {
-        checkSchema("GeographicalNames", gn)
+    fun `Annex I Geographical Names - geographical names - draft`() {
+        checkSchema("annex/i/gn/gn", gn)
     }
 
     fun checkSchema(name: String, process: (String, Map<String, Any>) -> Conversion) {

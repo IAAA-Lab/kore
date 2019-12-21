@@ -11,6 +11,8 @@ dependencies {
     implementation("com.andreapivetta.kolor:kolor:0.0.2") {
         exclude("org.jetbrains.kotlin")
     }
+    implementation(Libs.kotlinLogging)
+    implementation(Libs.slf4j)
 
     testImplementation(Libs.unitJupiterApi)
     testRuntimeOnly(Libs.unitJupiterEngine)

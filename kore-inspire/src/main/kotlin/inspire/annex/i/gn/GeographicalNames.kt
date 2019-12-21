@@ -15,24 +15,24 @@
  */
 @file:Suppress("ObjectPropertyName")
 
-package inspire.i.au
+package inspire.annex.i.gn
 
 import inspire.base
 import inspire.schemaName
 
-val au = { file : String, options: Map<String, Any> ->
+val gn = { file: String, options: Map<String, Any> ->
     base(options).apply {
-        input.selector.set(schemaName("AdministrativeUnits"))
+        input.selector.set(schemaName("Geographical Names"))
         input.file.set(file)
+        context.putAll(options)
     }
 }
 
 fun main() {
-    val au = au(
+    val gn = gn(
         "kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml",
         mapOf("description" to true)
     )
-    au.convert(dryRun = true)
-    println(au.lastDryRunOutput)
+    gn.convert(dryRun = true)
+    println(gn.lastDryRunOutput)
 }
-

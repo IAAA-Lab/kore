@@ -61,8 +61,12 @@ Container <<applicationSchema>>  "Geographical Names" {
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-    leastDetailedViewingResolution MD_Resolution
-    mostDetailedViewingResolution MD_Resolution
+    leastDetailedViewingResolution_distance TEXT
+    leastDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
+    leastDetailedViewingResolution_equivalentScale_denominator INTEGER
+    mostDetailedViewingResolution_distance TEXT
+    mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
+    mostDetailedViewingResolution_equivalentScale_denominator INTEGER
   }
   Constraint Enum "GN_GrammaticalGenderValue" {
     identifier = "Geographical Names::GrammaticalGenderValue"
@@ -273,6 +277,7 @@ Container <<applicationSchema>>  "Geographical Names" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
 
@@ -378,16 +383,5 @@ Container <<applicationSchema>>  "Geographical Names" {
     utf16
     utf7
     utf8
-  }
-  Constraint Enum "UM_MeasureType" {
-    identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
   }
 }

@@ -27,6 +27,7 @@ import es.iaaa.kore.transform.impl.TransformationsImpl
  * Conversion
  */
 class Conversion : Validable {
+    val context: MutableMap<String, Any> = mutableMapOf()
     val input: Input = InputImpl()
     val output: Output = OutputImpl()
     val transformations: Transformations = TransformationsImpl(parent = this)
@@ -48,9 +49,9 @@ class Conversion : Validable {
         transformations.forEach { it.process(model) }
         if (dryRun) {
             lastDryRunOutput.setLength(0)
-            StringConsole(lastDryRunOutput).write(model)
+            StringConsole(lastDryRunOutput).write(model, context)
         } else {
-            output.writers.forEach { writer -> writer.write(model) }
+            output.writers.forEach { writer -> writer.write(model, context) }
         }
     }
 

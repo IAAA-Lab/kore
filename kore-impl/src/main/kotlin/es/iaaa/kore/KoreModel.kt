@@ -54,7 +54,7 @@ fun KoreAnnotation.copy(modelElement: KoreModelElement? = this.modelElement): Ko
         annotations.map { ann -> ann.copy(it) }
     }
 
-fun KoreAttribute.copy(target: KoreClass): KoreAttribute =
+fun KoreAttribute.copy(target: KoreClass? = this.containingClass): KoreAttribute =
     KoreModel.createAttribute().apply {
         isChangeable = this@copy.isChangeable
         isUnsettable = this@copy.isUnsettable
