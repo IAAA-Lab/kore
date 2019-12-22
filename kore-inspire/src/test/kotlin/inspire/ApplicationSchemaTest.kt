@@ -19,10 +19,7 @@ import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.findDefaultNamedReferences
 import es.iaaa.kore.resource.ResourceFactory
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.fail
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.File

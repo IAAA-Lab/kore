@@ -16,9 +16,9 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.impl.KoreClassImpl
+import es.iaaa.kore.koreClass
 
 /**
  * A representation of the model object Attribute Table.
@@ -37,7 +37,7 @@ object AttributesTable : KoreClassImpl() {
 /**
  * A short hand factory function.
  */
-fun attributes(tableName: String, init: KoreClass.() -> Unit) = KoreModel.createClass().apply {
+fun attributes(tableName: String, init: KoreClass.() -> Unit) = koreClass {
     metaClass = AttributesTable
     name = tableName
     this.tableName = tableName
@@ -48,7 +48,7 @@ fun attributes(tableName: String, init: KoreClass.() -> Unit) = KoreModel.create
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.attributes(tableName: String, init: KoreClass.() -> Unit) = KoreModel.createClass().apply {
+fun KorePackage.attributes(tableName: String, init: KoreClass.() -> Unit) = koreClass {
     metaClass = AttributesTable
     name = tableName
     this.tableName = tableName

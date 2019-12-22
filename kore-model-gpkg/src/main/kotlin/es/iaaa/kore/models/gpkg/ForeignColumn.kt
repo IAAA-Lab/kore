@@ -17,9 +17,9 @@ package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KoreReference
 import es.iaaa.kore.impl.KoreClassImpl
+import es.iaaa.kore.koreReference
 
 object ForeignColumn : KoreClassImpl() {
     init {
@@ -28,7 +28,7 @@ object ForeignColumn : KoreClassImpl() {
         toString = { if (it is KoreReference) it.prettyPrint() else "" }
     }
 
-    operator fun invoke(init: KoreReference.() -> Unit): KoreReference = KoreModel.createReference().apply {
+    operator fun invoke(init: KoreReference.() -> Unit): KoreReference = koreReference {
         metaClass = ForeignColumn
         init()
     }

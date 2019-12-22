@@ -1,18 +1,6 @@
 package es.iaaa.kore.impl
 
-import es.iaaa.kore.KoreAnnotation
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreClassifier
-import es.iaaa.kore.KoreDataType
-import es.iaaa.kore.KoreEnum
-import es.iaaa.kore.KoreEnumLiteral
-import es.iaaa.kore.KoreFactory
-import es.iaaa.kore.KoreModelFactory
-import es.iaaa.kore.KoreOperation
-import es.iaaa.kore.KorePackage
-import es.iaaa.kore.KoreParameter
-import es.iaaa.kore.KoreReference
+import es.iaaa.kore.*
 
 class KoreInstanceInternal : KoreModelFactory, KoreFactory by KoreFactoryImpl() {
     override fun createAnnotation(): KoreAnnotation = KoreAnnotationImpl()

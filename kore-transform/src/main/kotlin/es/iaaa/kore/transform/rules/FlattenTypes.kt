@@ -22,8 +22,6 @@ import es.iaaa.kore.copy
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
-import es.iaaa.kore.util.toPrettyString
-import mu.KotlinLogging
 
 internal class FlattenTypes(
     val predicate: (KoreNamedElement) -> Boolean,
@@ -41,9 +39,9 @@ internal class FlattenTypes(
                 val toFlatten = cls.attributes.filter { ref ->
                     with(ref) {
                         upperBound == 1 &&
-                            type?.let { type -> predicate(type) } == true &&
-                            // (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
-                            (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
+                                type?.let { type -> predicate(type) } == true &&
+                                // (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
+                                (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
                     }
                 }
                 if (toFlatten.isNotEmpty()) {

@@ -15,10 +15,7 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
-import es.iaaa.kore.KoreObject
+import es.iaaa.kore.*
 
 val Column = KoreModel.createClass().apply {
     name = "Column"
@@ -29,18 +26,18 @@ val Column = KoreModel.createClass().apply {
     toString = prettyPrint()
 }
 
-fun column(init: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {
+fun column(init: KoreAttribute.() -> Unit): KoreAttribute = koreAttribute {
     metaClass = Column
     init()
 }
 
-fun KoreClass.column(init: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {
+fun KoreClass.column(init: KoreAttribute.() -> Unit): KoreAttribute = koreAttribute {
     metaClass = Column
     init()
     containingClass = this@column
 }
 
-fun KoreClass.attribute(init: KoreAttribute.() -> Unit) = KoreModel.createAttribute().apply {
+fun KoreClass.attribute(init: KoreAttribute.() -> Unit) = koreAttribute {
     init()
     containingClass = this@attribute
 }

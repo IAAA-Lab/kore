@@ -18,7 +18,6 @@ package es.iaaa.kore.io.gpkg
 import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
 import mil.nga.geopackage.GeoPackage
-import mil.nga.geopackage.GeoPackageException
 import mil.nga.geopackage.attributes.AttributesColumn
 import mil.nga.geopackage.attributes.AttributesTable
 import mil.nga.geopackage.core.contents.Contents

@@ -5,9 +5,9 @@ package inspire.transformation
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.copy
+import es.iaaa.kore.references
+import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
-import inspire.Transform
-import inspire.hasRefinement
 
 /**
  * Properties whose type is an union type and have a maximum multiplicity of 1 are flattened.
@@ -22,8 +22,8 @@ import inspire.hasRefinement
  * The restriction that exactly one of the properties of the type is present in any instance may be
  * may be enforced by code in applications that update GeoPackage data values.
  */
-val `flatten union types`: Transform = { _, _ ->
-    patch<KoreAttribute>(predicate = { upperBound == 1 && type?.hasRefinement("Union") == true }) {
+val `Flatten union types`: Transform = { _, _ ->
+    patch<KoreAttribute>(predicate = { upperBound == 1 && type?.references("Union") == true }) {
         val union = type as? KoreClass ?: throw Exception("Union types must be classes")
         union.attributes.forEach { attribute ->
             copy(containingClass as KoreClass).apply {

@@ -15,11 +15,7 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreNamedElement
-import es.iaaa.kore.KoreReference
-import es.iaaa.kore.KoreStructuralFeature
+import es.iaaa.kore.*
 
 object GeoPackageSpec {
     const val SOURCE = "http://www.geopackage.org/spec/"
@@ -53,3 +49,9 @@ fun KoreReference.pointsToRelatedTable(): Boolean {
     val refs = findGeoPackageSpec()
     return if (refs.isNullOrEmpty()) false else RelatedTable in refs
 }
+
+fun KoreClass?.isFeaturesTable(): Boolean = if (this != null) metaClass == FeaturesTable else false
+fun KoreClass?.isAttributesTable(): Boolean = if (this != null) metaClass == AttributesTable else false
+fun KoreClass?.isRelationTable(): Boolean = if (this != null) metaClass == RelationTable else false
+fun KoreClass?.isEnumConstraint(): Boolean = if (this != null) metaClass == EnumConstraint else false
+fun KoreClass?.hasTable(): Boolean = isFeaturesTable() || isAttributesTable() || isRelationTable()

@@ -94,3 +94,32 @@ interface KoreObject {
      */
     fun unset(feature: String)
 }
+
+/**
+ * Checks if an annotation of a [KoreObject] references to a named element.
+ */
+fun KoreObject.references(name: String, source: String? = null): Boolean = when (this) {
+    is KoreModelElement -> getAnnotation(source)
+        ?.references
+        ?.filterIsInstance<KoreNamedElement>()
+        ?.any { it.name == name }
+        ?: false
+    else -> false
+}
+
+/**
+ * Checks if an annotation of a [KoreObject] references to none.
+ */
+fun KoreObject.hasNoReferences(source: String? = null): Boolean = when (this) {
+    is KoreModelElement -> getAnnotation(source)
+        ?.references
+        ?.filterIsInstance<KoreNamedElement>()
+        ?.isEmpty()
+        ?: true
+    else -> true
+}
+
+/**
+ * Test if this object is a [KoreNamedElement] with [name] as its name.
+ */
+infix fun KoreObject.nameIs(name: String): Boolean = this is KoreNamedElement && this.name == name

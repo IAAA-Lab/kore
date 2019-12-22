@@ -15,10 +15,7 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
-import es.iaaa.kore.KorePackage
+import es.iaaa.kore.*
 import es.iaaa.kore.impl.KoreClassImpl
 
 object Constraint : KoreClassImpl() {
@@ -42,7 +39,7 @@ object RangeConstraint : KoreClassImpl() {
         attribute { name = "maxRange" }
     }
 
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {
+    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
         metaClass = RangeConstraint
         init()
     }
@@ -73,7 +70,7 @@ object GlobConstraint : KoreClassImpl() {
         attribute { name = "globValue" }
     }
 
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {
+    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
         metaClass = GlobConstraint
         init()
     }
@@ -103,7 +100,7 @@ object EnumConstraint : KoreClassImpl() {
         name = "Constraint Enum"
     }
 
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {
+    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
         metaClass = EnumConstraint
         init()
     }

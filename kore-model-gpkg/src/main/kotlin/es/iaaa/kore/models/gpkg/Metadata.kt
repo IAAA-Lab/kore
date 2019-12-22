@@ -18,6 +18,7 @@ package es.iaaa.kore.models.gpkg
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KorePackage
+import es.iaaa.kore.koreClass
 
 val Metadata = KoreModel.createClass().apply {
     name = "Metadata"
@@ -30,7 +31,7 @@ val Metadata = KoreModel.createClass().apply {
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.metadata(init: KoreClass.() -> Unit) = KoreModel.createClass().apply {
+fun KorePackage.metadata(init: KoreClass.() -> Unit) = koreClass {
     metaClass = Metadata
     container = this@metadata
     init()

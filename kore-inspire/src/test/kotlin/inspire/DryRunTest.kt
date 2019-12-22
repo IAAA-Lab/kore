@@ -15,10 +15,6 @@
  */
 package inspire
 
-import es.iaaa.kore.transform.Conversion
-import inspire.annex.i.au.au
-import inspire.annex.i.au.mu
-import inspire.annex.i.gn.gn
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -28,28 +24,30 @@ class DryRunTest {
 
     @Test
     fun `Annex I Administrative Units - administrative units`() {
-        checkSchema("annex/i/au/au", au)
+        checkSchema("AdministrativeUnits", "annex/i/au/au")
     }
 
     @Test
     fun `Annex I Administrative Units - maritime units - draft`() {
-        checkSchema("annex/i/au/mu", mu)
+        checkSchema("MaritimeUnits", "annex/i/au/mu")
     }
 
     @Test
     fun `Annex I Geographical Names - geographical names - draft`() {
-        checkSchema("annex/i/gn/gn", gn)
+        checkSchema("Geographical Names", "annex/i/gn/gn")
     }
 
-    fun checkSchema(name: String, process: (String, Map<String, Any>) -> Conversion) {
-        val run = process(
-            "src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL",
-            mapOf("description" to false)
+    fun checkSchema(schema: String, route: String) {
+        val config = Configuration(
+            file = "src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL",
+            description = false,
+            sql = false
         )
+        val run = configuration(schema, route, config)
         run.convert(true)
-        val expected = File("src/test/resources/$name.txt").readText().split("\n")
+        val expected = File("src/test/resources/$route.txt").readText().split("\n")
         val dryRun = run.lastDryRunOutput.toString()
-        val output = File("build/test/resources/$name.txt")
+        val output = File("build/test/resources/$route.txt")
         output.parentFile.mkdirs()
         output.writeText(dryRun)
         val actual = dryRun.split("\n")

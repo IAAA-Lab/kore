@@ -16,9 +16,9 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.impl.KoreClassImpl
+import es.iaaa.kore.koreClass
 
 /**
  * A representation of the model object Relation Table.
@@ -33,7 +33,7 @@ object RelationTable : KoreClassImpl() {
         attribute { name = "identifier" }
     }
 
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {
+    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
         metaClass = RelationTable
         init()
     }

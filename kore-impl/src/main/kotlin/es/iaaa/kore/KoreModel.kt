@@ -4,66 +4,49 @@ import es.iaaa.kore.impl.KoreInstanceInternal
 
 object KoreModel : KoreModelFactory by KoreInstanceInternal()
 
-fun KoreReference.toAttribute(remove: Boolean = true): KoreAttribute {
-    val cls = containingClass
-    if (remove) {
-        containingClass = null
-    }
-    return KoreModel.createAttribute().apply {
-        metaClass = this@toAttribute.metaClass
-        isChangeable = this@toAttribute.isChangeable
-        isUnsettable = this@toAttribute.isUnsettable
-        defaultValueLiteral = this@toAttribute.defaultValueLiteral
-        containingClass = cls
-        ordered = this@toAttribute.ordered
-        lowerBound = this@toAttribute.lowerBound
-        upperBound = this@toAttribute.upperBound
-        type = this@toAttribute.type
-        name = this@toAttribute.name
-        this@toAttribute.annotations.map { ann -> ann.copy(this) }
-    }
-}
+fun KoreReference.toAttribute(remove: Boolean = true): KoreAttribute =
+    koreAttribute(copyFromTo(this, containingClass, remove = remove))
 
-fun KoreAttribute.toReference(): KoreReference {
-    val cls = containingClass
-    containingClass = null
-    return KoreModel.createReference().apply {
-        metaClass = this@toReference.metaClass
-        isChangeable = this@toReference.isChangeable
-        isUnsettable = this@toReference.isUnsettable
-        defaultValueLiteral = this@toReference.defaultValueLiteral
-        containingClass = cls
-        ordered = this@toReference.ordered
-        lowerBound = this@toReference.lowerBound
-        upperBound = this@toReference.upperBound
-        type = this@toReference.type
-        name = this@toReference.name
-        this@toReference.annotations.map { ann -> ann.copy(this) }
-    }
-}
+fun KoreAttribute.toReference(remove: Boolean = true): KoreReference =
+    koreReference(copyFromTo(this, containingClass, remove = remove))
 
 /**
  * Copy an annotation.
  */
 fun KoreAnnotation.copy(modelElement: KoreModelElement? = this.modelElement): KoreAnnotation =
-    KoreModel.createAnnotation().also {
-        it.source = source
-        it.details.putAll(details)
-        it.modelElement = modelElement
-        it.references.addAll(references)
-        annotations.map { ann -> ann.copy(it) }
+    koreAnnotation {
+        source = this@copy.source
+        details.putAll(this@copy.details)
+        this.modelElement = modelElement
+        references.addAll(this@copy.references)
+        this@copy.annotations.map { ann -> ann.copy(this) }
     }
 
 fun KoreAttribute.copy(target: KoreClass? = this.containingClass): KoreAttribute =
-    KoreModel.createAttribute().apply {
-        isChangeable = this@copy.isChangeable
-        isUnsettable = this@copy.isUnsettable
-        defaultValueLiteral = this@copy.defaultValueLiteral
-        containingClass = target
-        ordered = this@copy.ordered
-        lowerBound = this@copy.lowerBound
-        upperBound = this@copy.upperBound
-        type = this@copy.type
-        name = this@copy.name
-        this@copy.annotations.map { ann -> ann.copy(this) }
+    koreAttribute(copyFromTo(this, target))
+
+fun koreClass(block: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply(block)
+fun koreAttribute(block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply(block)
+fun koreReference(block: KoreReference.() -> Unit): KoreReference = KoreModel.createReference().apply(block)
+fun koreAnnotation(block: KoreAnnotation.() -> Unit): KoreAnnotation = KoreModel.createAnnotation().apply(block)
+
+fun copyFromTo(
+    other: KoreStructuralFeature,
+    target: KoreClass?,
+    remove: Boolean = false
+): KoreStructuralFeature.() -> Unit = {
+    metaClass = other.metaClass
+    isChangeable = other.isChangeable
+    isUnsettable = other.isUnsettable
+    defaultValueLiteral = other.defaultValueLiteral
+    ordered = other.ordered
+    lowerBound = other.lowerBound
+    upperBound = other.upperBound
+    type = other.type
+    name = other.name
+    other.annotations.map { ann -> ann.copy(this) }
+    if (remove) {
+        other.containingClass = null
     }
+    containingClass = target
+}

@@ -16,11 +16,7 @@
 package es.iaaa.kore.transform
 
 import es.iaaa.kore.KorePackage
-import es.iaaa.kore.impl.Validable
-import es.iaaa.kore.impl.Violations
-import es.iaaa.kore.impl.validateFactoryExists
-import es.iaaa.kore.impl.validateFileExists
-import es.iaaa.kore.impl.validateIsInitialized
+import es.iaaa.kore.impl.*
 
 /**
  * An input consist of a file, a file type and a package selector.

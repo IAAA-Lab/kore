@@ -31,3 +31,21 @@ interface Transformations : List<Transformation> {
 
     fun owner(): Conversion
 }
+
+typealias Transform = Transformations.(Conversion, Map<String, Any>) -> Unit
+
+fun Transformations.manipulation(block: Transform, options: Map<String, Any> = emptyMap()) {
+    block(this, owner(), options)
+}
+
+fun Transformations.rule(block: Transform, options: Map<String, Any> = emptyMap()) {
+    block(this, owner(), options)
+}
+
+fun Transformations.rule(blocks: List<Transform>, options: Map<String, Any> = emptyMap()) {
+    blocks.forEach { it(this, owner(), options) }
+}
+
+fun Transformations.manipulation(blocks: List<Transform>, options: Map<String, Any> = emptyMap()) {
+    blocks.forEach { it(this, owner(), options) }
+}

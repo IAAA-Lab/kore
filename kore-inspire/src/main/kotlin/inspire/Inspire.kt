@@ -1,25 +1,52 @@
 package inspire
 
+import es.iaaa.kore.KoreObject
+import es.iaaa.kore.KorePackage
+import es.iaaa.kore.references
 import es.iaaa.kore.transform.Conversion
-import inspire.annex.i.au.au
-import inspire.annex.i.gn.gn
 
 fun main() {
-    val works = mapOf(
-        "au" to au,
-        "gn" to gn)
-
-    works.forEach { (name, conversion) -> creator(conversion, name) }
-}
-
-fun creator(conversion: (String, Map<String, Any>) -> Conversion, prefix: String) {
-    val au = conversion(
-        "kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml",
-        mapOf(
-            "description" to true,
-            "name" to prefix,
-            "sql" to true
-        )
+    val config = Configuration(
+        file = "kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml",
+        description = false,
+        sql = false
     )
-    au.convert()
+    mapOf(
+        "au" to "AdministrativeUnits",
+        // "mu" to "MaritimeUnits",
+        "gn" to "Geographical Names"
+        // "am" to "Controlled Activities",
+        // "hy" to "Hydro - Physical Waters",
+        // "lc" to "LandCoverVector"
+        // "lu" to "Existing Land Use"
+        // "tn" to "Road Transport Network"
+    ).map {
+        configuration(it.value, it.key, config).convert()
+    }
 }
+
+fun configuration(schema: String, output: String, config: Configuration): Conversion {
+    val options = mapOf<String, Any>(
+        "description" to config.description,
+        "name" to output,
+        "sql" to config.sql
+    )
+    return transformation(options).apply {
+        input.selector.set(schemaName(schema))
+        input.file.set(config.file)
+        context.putAll(options)
+    }
+}
+
+fun schemaName(name: String): (KoreObject) -> Boolean = {
+    when (it) {
+        is KorePackage -> it.name == name && it.references("applicationSchema")
+        else -> false
+    }
+}
+
+data class Configuration(
+    val file: String,
+    val description: Boolean = true,
+    val sql: Boolean = true
+)

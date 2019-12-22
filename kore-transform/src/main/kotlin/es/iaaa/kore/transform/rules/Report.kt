@@ -18,14 +18,7 @@ package es.iaaa.kore.transform.rules
 import com.andreapivetta.kolor.green
 import com.andreapivetta.kolor.lightYelllow
 import com.andreapivetta.kolor.yellow
-import es.iaaa.kore.KoreAnnotation
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreDataType
-import es.iaaa.kore.KoreNamedElement
-import es.iaaa.kore.KoreObject
-import es.iaaa.kore.KorePackage
-import es.iaaa.kore.KoreReference
+import es.iaaa.kore.*
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
