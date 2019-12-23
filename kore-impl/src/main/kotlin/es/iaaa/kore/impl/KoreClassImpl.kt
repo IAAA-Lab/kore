@@ -65,12 +65,29 @@ open class KoreClassImpl : KoreClassifierImpl(), KoreClass {
     }
 
     override fun isInstance(obj: Any?): Boolean =
-        if (obj is KoreClass) {
-            when {
-                this in obj.allSuperTypes() -> true
-                else -> super.isInstance(obj)
-            }
-        } else super.isInstance(obj)
+        when (obj) {
+            is KoreClass ->
+                when {
+                    // Obj is a subclass of this (structural or referential link)
+                    obj.allSuperTypes().contains(this) -> true
+                    obj.allSuperTypes().map { it.id }.contains(id) -> true
+                    // Obj metaclass is this or any of its supertypes is this (structural or referential link)
+                    obj.metaClass == this -> true
+                    obj.metaClass?.allSuperTypes()?.contains(this) ?: false -> true
+                    obj.metaClass?.allSuperTypes()?.map { it.id }?.contains(id) ?: false -> true
+                    else -> super.isInstance(obj)
+                }
+            is KoreDataType ->
+                when {
+                    // Obj metaclass is this or any of its supertypes is this (structural or referential link)
+                    obj.metaClass == this -> true
+                    obj.metaClass?.id == id -> true
+                    obj.metaClass?.allSuperTypes()?.contains(this) ?: false -> true
+                    obj.metaClass?.allSuperTypes()?.map { it.id }?.contains(id) ?: false -> true
+                    else -> super.isInstance(obj)
+                }
+            else -> super.isInstance(obj)
+        }
 
     // FIXME Move to KoreObjectImpl and use the storage
     override fun <T> add(feature: String, element: T): Boolean = when (feature) {

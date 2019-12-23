@@ -15,22 +15,17 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.impl.KoreClassImpl
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.koreClass
 
-object PrimaryKey : KoreClassImpl() {
-    init {
-        name = "PrimaryKey"
-    }
-}
+object PrimaryKey : KoreClass by koreClass({
+    name = "PrimaryKey"
+})
 
-object BaseTable : KoreClassImpl() {
-    init {
-        name = "BaseTable"
-    }
-}
+object BaseTable : KoreClass by koreClass({
+    name = "BaseTable"
+})
 
-object RelatedTable : KoreClassImpl() {
-    init {
-        name = "RelatedTable"
-    }
-}
+object RelatedTable : KoreClass by koreClass({
+    name = "RelatedTable"
+})

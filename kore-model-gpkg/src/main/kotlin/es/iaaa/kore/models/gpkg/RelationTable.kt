@@ -16,21 +16,18 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
-import es.iaaa.kore.impl.KoreClassImpl
 
 /**
  * A representation of the model object Relation Table.
  * A relation is a mapping between existing table types.
  */
-object RelationTable : KoreClassImpl() {
-    init {
-        name = "Relation"
-        attribute { name = "tableName" }
-        attribute { name = "profile" }
-        attribute { name = "relatedReference" }
-        attribute { name = "identifier" }
-    }
-}
+object RelationTable : KoreClass by koreClass({
+    name = "Relation"
+    attribute { name = "tableName" }
+    attribute { name = "profile" }
+    attribute { name = "relatedReference" }
+    attribute { name = "identifier" }
+})
 
 /**
  * A short hand factory function with container addition.
@@ -40,6 +37,6 @@ fun KorePackage.relation(relationName: String, init: KoreClass.() -> Unit) = kor
     container = this@relation
     init()
     verify(name == relationName) { "The name property has muted within the block" }
-    verify( container == this@relation) { "The container property has muted within the block" }
-    verify(! tableName.isNullOrBlank()) { "The table name property must not be blank" }
+    verify(container == this@relation) { "The container property has muted within the block" }
+    verify(!tableName.isNullOrBlank()) { "The table name property must not be blank" }
 }

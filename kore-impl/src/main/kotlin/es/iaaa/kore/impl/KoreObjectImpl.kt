@@ -19,6 +19,7 @@ import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KoreClassifier
 import es.iaaa.kore.KoreObject
 import es.iaaa.kore.KoreStructuralFeature
+import java.util.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty
@@ -26,9 +27,11 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 abstract class KoreObjectImpl : KoreObject {
+    private val internalId: UUID = UUID.randomUUID()
     private val store = mutableMapOf<String, Any?>()
     override var metaClass: KoreClass? = null
     override var id: String? = null
+        get() = if (field == null) "KORE_$internalId" else field
     override var isLink: Boolean = false
     override var toString: ((KoreObject) -> String)? = null
 

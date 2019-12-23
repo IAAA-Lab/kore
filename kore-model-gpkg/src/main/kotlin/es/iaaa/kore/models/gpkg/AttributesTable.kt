@@ -16,21 +16,18 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
-import es.iaaa.kore.impl.KoreClassImpl
 
 /**
  * A representation of the model object Attribute Table.
  * Non-spatial attribute data are sets (or tuples or rows) of observations that may not have an explicit geometry
  * property.
  */
-object AttributesTable : KoreClassImpl() {
-    init {
-        name = "Attributes"
-        attribute { name = "tableName" }
-        attribute { name = "description" }
-        attribute { name = "identifier" }
-    }
-}
+object AttributesTable : KoreClass by koreClass({
+    name = "Attributes"
+    attribute { name = "tableName" }
+    attribute { name = "description" }
+    attribute { name = "identifier" }
+})
 
 /**
  * A short hand factory function with container addition.
@@ -40,7 +37,7 @@ fun KorePackage.attributes(attributes: String, init: KoreClass.() -> Unit) = kor
     container = this@attributes
     init()
     verify(name == attributes) { "The name property has muted within the block" }
-    verify( container == this@attributes) { "The container property has muted within the block" }
+    verify(container == this@attributes) { "The container property has muted within the block" }
     verify(!tableName.isNullOrBlank()) { "The table name property must not be blank" }
     verify(description != null) { "The description property must have some value" }
 }

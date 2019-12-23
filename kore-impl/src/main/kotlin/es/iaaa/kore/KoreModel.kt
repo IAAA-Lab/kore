@@ -33,6 +33,7 @@ fun koreClass(meta: KoreClass, block: KoreClass.() -> Unit): KoreClass = KoreMod
     verify(metaClass == meta) { "The metaclass property has muted within the block"}
 }
 
+fun koreDataType(block: KoreDataType.() -> Unit): KoreDataType = KoreModel.createDataType().apply(block)
 
 fun koreAttribute(block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply(block)
 fun koreAttribute(meta: KoreClass, block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {

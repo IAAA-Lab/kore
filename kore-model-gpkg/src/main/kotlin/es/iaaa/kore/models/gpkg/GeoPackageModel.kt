@@ -51,7 +51,11 @@ fun KoreReference.pointsToRelatedTable(): Boolean {
 }
 
 fun KoreClass?.isFeaturesTable(): Boolean = if (this != null) metaClass == FeaturesTable else false
+
 fun KoreClass?.isAttributesTable(): Boolean = if (this != null) metaClass == AttributesTable else false
+
 fun KoreClass?.isRelationTable(): Boolean = if (this != null) metaClass == RelationTable else false
+
 fun KoreClass?.isEnumConstraint(): Boolean = if (this != null) metaClass == EnumConstraint else false
+
 fun KoreClass?.hasTable(): Boolean = isFeaturesTable() || isAttributesTable() || isRelationTable()

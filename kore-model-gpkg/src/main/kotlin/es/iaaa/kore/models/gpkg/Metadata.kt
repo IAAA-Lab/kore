@@ -17,13 +17,13 @@ package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
 
-val Metadata = KoreModel.createClass().apply {
+object Metadata : KoreClass by koreClass({
     name = "Metadata"
     attribute { name = "scope" }
     attribute { name = "standardUri" }
     attribute { name = "mimeType" }
     attribute { name = "metadata" }
-}
+})
 
 /**
  * A short hand factory function with container addition.
@@ -31,6 +31,6 @@ val Metadata = KoreModel.createClass().apply {
 fun KorePackage.metadata(init: KoreClass.() -> Unit) = koreClass(Metadata) {
     container = this@metadata
     init()
-    verify( container == this@metadata) { "The container property has muted within the block" }
+    verify(container == this@metadata) { "The container property has muted within the block" }
 }
 

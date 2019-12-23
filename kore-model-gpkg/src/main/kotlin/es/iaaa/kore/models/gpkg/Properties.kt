@@ -17,6 +17,7 @@ package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KorePackage
 import es.iaaa.kore.KoreStructuralFeature
 import es.iaaa.kore.impl.KoreStorage
 import java.math.BigDecimal
@@ -135,3 +136,9 @@ var KoreClass.metadata: String? by KoreStorage()
  * Related attribute
  */
 var KoreClass.relatedReference: KoreAttribute? by KoreStorage()
+
+/**
+ * The location of the container.
+ */
+var KorePackage.fileName: String? by KoreStorage()
+

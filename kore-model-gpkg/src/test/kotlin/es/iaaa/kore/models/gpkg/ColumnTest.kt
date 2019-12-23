@@ -23,7 +23,15 @@ class ColumnTest {
     @Test
     fun `creation of the feature and its human readable representation`() {
         container {
+            val constraint = rangeConstraint("test_range") {
+                description = "some description"
+                minRange = (-180).toBigDecimal()
+                maxRange = 180.toBigDecimal()
+                minIsInclusive = true
+                maxIsInclusive = true
+            }
             val feature = features("test_contents") {
+                tableName = "test_contents_table"
                 identifier = "test contents"
                 description = "some description"
                 minX = -180.0
@@ -50,7 +58,7 @@ class ColumnTest {
                 column { name = "blob"; columnName = "test_blob"; title = ""; description = ""; type = BlobType }
                 column {
                     name = "integer_column"; columnName = "test_integer_column"; title = ""; description = ""; type =
-                    IntegerType
+                    IntegerType; geoPackageSpec().add(constraint)
                 }
                 column {
                     name = "text_limited"; columnName = "test_text_limited"; title = ""; description = ""; type =
@@ -64,7 +72,7 @@ class ColumnTest {
                 column { name = "datetime"; columnName = "test_datetime"; type = DateTimeType }
             }
             assertEquals(FeaturesTable, feature.metaClass)
-            assertEquals("test_contents", feature.tableName)
+            assertEquals("test_contents_table", feature.tableName)
             assertEquals("test contents", feature.identifier)
             assertEquals("some description", feature.description)
             assertEquals(-180.0, feature.minX)
@@ -82,7 +90,7 @@ class ColumnTest {
            |  minX = "-180.0"
            |  minY = "-90.0"
            |  srsId = "0"
-           |  tableName = "test_contents"
+           |  tableName = "test_contents_table"
            |  test_blob BLOB
            |  test_blob_limited BLOB(7)
            |  test_boolean BOOLEAN
@@ -90,7 +98,7 @@ class ColumnTest {
            |  test_datetime DATETIME
            |  test_geom GEOMETRY NOT NULL
            |  test_id INTEGER NOT NULL PRIMARY KEY
-           |  test_integer_column INTEGER
+           |  test_integer_column INTEGER CHECK(test_range)
            |  test_real DOUBLE
            |  test_text TEXT NOT NULL DEFAULT ''
            |  test_text_limited TEXT(5)

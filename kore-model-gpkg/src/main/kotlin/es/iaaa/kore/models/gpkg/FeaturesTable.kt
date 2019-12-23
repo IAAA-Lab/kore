@@ -16,26 +16,23 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
-import es.iaaa.kore.impl.KoreClassImpl
 
 /**
  * A representation of the model object vector Feature Table.
  * Vector feature data represents geolocated entities including conceptual ones such as districts,
  * real world objects such as roads and rivers, and observations thereof.
  */
-object FeaturesTable : KoreClassImpl() {
-    init {
-        name = "Feature"
-        attribute { name = "tableName" }
-        attribute { name = "identifier" }
-        attribute { name = "description" }
-        attribute { name = "maxX" }
-        attribute { name = "maxY" }
-        attribute { name = "minX" }
-        attribute { name = "minY" }
-        attribute { name = "srsId" }
-    }
-}
+object FeaturesTable : KoreClass by koreClass({
+    name = "Feature"
+    attribute { name = "tableName" }
+    attribute { name = "identifier" }
+    attribute { name = "description" }
+    attribute { name = "maxX" }
+    attribute { name = "maxY" }
+    attribute { name = "minX" }
+    attribute { name = "minY" }
+    attribute { name = "srsId" }
+})
 
 /**
  * A short hand factory function with container addition.
@@ -45,7 +42,7 @@ fun KorePackage.features(features: String, init: KoreClass.() -> Unit) = koreCla
     container = this@features
     init()
     verify(name == features) { "The name property has muted within the block" }
-    verify( container == this@features) { "The container property has muted within the block" }
+    verify(container == this@features) { "The container property has muted within the block" }
     verify(!tableName.isNullOrBlank()) { "The table name property must not be blank" }
     verify(description != null) { "The description property must have some value" }
 }

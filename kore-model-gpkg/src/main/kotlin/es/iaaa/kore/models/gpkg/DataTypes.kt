@@ -15,11 +15,7 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreDataType
-import es.iaaa.kore.KoreModel
-import es.iaaa.kore.attribute
-import es.iaaa.kore.impl.KoreClassImpl
+import es.iaaa.kore.*
 import es.iaaa.kore.impl.KoreStorage
 import mil.nga.geopackage.db.GeoPackageDataType
 import mil.nga.sf.GeometryType
@@ -27,24 +23,20 @@ import mil.nga.sf.GeometryType
 /**
  * Common metaclass of GeoPackage Data types.
  */
-object GpkgDataType : KoreClassImpl() {
-    init {
-        attribute { name = "ngaGeoPackageDataType" }
-        attribute { name = "ngaGeometryType" }
-    }
-}
+object GpkgDataType : KoreClass by koreClass({
+    attribute { name = "ngaGeoPackageDataType" }
+    attribute { name = "ngaGeometryType" }
+})
 
 /**
  * Reference to the identifier in the NGA implementation.
  */
 var KoreDataType.ngaGeoPackageDataType: GeoPackageDataType? by KoreStorage()
 
-fun create(parent: KoreClass, type: GeoPackageDataType): KoreDataType {
-    return KoreModel.createDataType().apply {
-        metaClass = parent
-        name = parent.name
-        ngaGeoPackageDataType = type
-    }
+fun create(parent: KoreClass, type: GeoPackageDataType): KoreDataType = koreDataType {
+    metaClass = parent
+    name = parent.name
+    ngaGeoPackageDataType = type
 }
 
 /**
@@ -52,7 +44,7 @@ fun create(parent: KoreClass, type: GeoPackageDataType): KoreDataType {
  */
 var KoreDataType.ngaGeometryType: GeometryType? by KoreStorage()
 
-fun create(parent: KoreClass, type: GeometryType): KoreDataType = KoreModel.createDataType().apply {
+fun create(parent: KoreClass, type: GeometryType): KoreDataType = koreDataType {
     metaClass = parent
     name = parent.name
     ngaGeometryType = type
@@ -62,25 +54,21 @@ fun create(parent: KoreClass, type: GeometryType): KoreDataType = KoreModel.crea
  * A boolean value representing true or false.
  * Stored as SQLite INTEGER with value 0 for false or 1 for true.
  */
-object BooleanType : KoreClassImpl() {
-    init {
-        superTypes.add(IntegerType)
-        name = "BOOLEAN"
-    }
-
-    operator fun invoke(): KoreDataType = create(BooleanType, GeoPackageDataType.BOOLEAN)
+object BooleanType : KoreClass by koreClass({
+    superTypes.add(IntegerType)
+    name = "BOOLEAN"
+}) {
+    operator fun invoke(): KoreDataType = create(this, GeoPackageDataType.BOOLEAN)
 }
 
 /**
  * 8-bit signed two’s complement integer.
  * Stored as SQLite INTEGER with values in the range [-128, 127].
  */
-object TinyIntType : KoreClassImpl() {
-    init {
-        superTypes.add(IntegerType)
-        name = "TINYINT"
-    }
-
+object TinyIntType : KoreClass by koreClass({
+    superTypes.add(IntegerType)
+    name = "TINYINT"
+}) {
     operator fun invoke(): KoreDataType = create(TinyIntType, GeoPackageDataType.TINYINT)
 }
 
@@ -88,12 +76,10 @@ object TinyIntType : KoreClassImpl() {
  * 16-bit signed two’s complement integer.
  * Stored as SQLite INTEGER with values in the range [-128, 127].
  */
-object SmallIntType : KoreClassImpl() {
-    init {
-        superTypes.add(IntegerType)
-        name = "SMALLINT"
-    }
-
+object SmallIntType : KoreClass by koreClass({
+    superTypes.add(IntegerType)
+    name = "SMALLINT"
+}) {
     operator fun invoke(): KoreDataType = create(SmallIntType, GeoPackageDataType.SMALLINT)
 }
 
@@ -101,12 +87,10 @@ object SmallIntType : KoreClassImpl() {
  * 32-bit signed two’s complement integer.
  * Stored as SQLite INTEGER with values in the range [-128, 127].
  */
-object MediumIntType : KoreClassImpl() {
-    init {
-        superTypes.add(IntegerType)
-        name = "MEDIUMINT"
-    }
-
+object MediumIntType : KoreClass by koreClass({
+    superTypes.add(IntegerType)
+    name = "MEDIUMINT"
+}) {
     operator fun invoke(): KoreDataType = create(MediumIntType, GeoPackageDataType.MEDIUMINT)
 }
 
@@ -114,24 +98,20 @@ object MediumIntType : KoreClassImpl() {
  * 64-bit signed two’s complement integer.
  * Stored as SQLite INTEGER with values in the range [-128, 127].
  */
-object IntegerType : KoreClassImpl() {
-    init {
-        superTypes.add(GpkgDataType)
-        name = "INTEGER"
-    }
-
+object IntegerType : KoreClass by koreClass({
+    superTypes.add(GpkgDataType)
+    name = "INTEGER"
+}) {
     operator fun invoke(): KoreDataType = create(IntegerType, GeoPackageDataType.INTEGER)
 }
 
 /**
  * 32-bit IEEE floating point number.
  */
-object FloatType : KoreClassImpl() {
-    init {
-        superTypes.add(DoubleType)
-        name = "FLOAT"
-    }
-
+object FloatType : KoreClass by koreClass({
+    superTypes.add(DoubleType)
+    name = "FLOAT"
+}) {
     operator fun invoke(): KoreDataType = create(FloatType, GeoPackageDataType.FLOAT)
 }
 
@@ -139,12 +119,10 @@ object FloatType : KoreClassImpl() {
  * 64-bit IEEE floating point number.
  * Stored as SQLite INTEGER with values in the range [-128, 127].
  */
-object DoubleType : KoreClassImpl() {
-    init {
-        superTypes.add(GpkgDataType)
-        name = "DOUBLE"
-    }
-
+object DoubleType : KoreClass by koreClass({
+    superTypes.add(GpkgDataType)
+    name = "DOUBLE"
+}) {
     operator fun invoke(): KoreDataType = create(DoubleType, GeoPackageDataType.DOUBLE)
 }
 
@@ -155,13 +133,11 @@ object DoubleType : KoreClassImpl() {
  * The count is provided for informational purposes, and applications MAY choose to truncate longer strings
  * if encountered.
  */
-object TextType : KoreClassImpl() {
-    init {
-        superTypes.add(GpkgDataType)
-        name = "TEXT"
-        attribute { name = "maxCharCount" }
-    }
-
+object TextType : KoreClass by koreClass({
+    superTypes.add(GpkgDataType)
+    name = "TEXT"
+    attribute { name = "maxCharCount" }
+}) {
     operator fun invoke(init: KoreDataType.() -> Unit = {}): KoreDataType =
         create(TextType, GeoPackageDataType.TEXT).apply {
             init()
@@ -178,13 +154,11 @@ var KoreDataType.maxCharCount: Long? by KoreStorage()
  * The optional `maxSize`defines the maximum number of bytes in the blob.
  * If not specified, the length is unbounded. The size is provided for informational purposes.
  */
-object BlobType : KoreClassImpl() {
-    init {
-        superTypes.add(GpkgDataType)
-        name = "BLOB"
-        attribute { name = "maxSize" }
-    }
-
+object BlobType : KoreClass by koreClass({
+    superTypes.add(GpkgDataType)
+    name = "BLOB"
+    attribute { name = "maxSize" }
+}) {
     operator fun invoke(init: KoreDataType.() -> Unit = {}): KoreDataType =
         create(BlobType, GeoPackageDataType.BLOB).apply {
             init()
@@ -200,12 +174,10 @@ var KoreDataType.maxSize: Long? by KoreStorage()
  * ISO-8601 date string in the form YYYY-MM-DD encoded in either UTF-8 or UTF-16.
  * Stored as SQLite TEXT.
  */
-object DateType : KoreClassImpl() {
-    init {
-        superTypes.add(TextType)
-        name = "DATE"
-    }
-
+object DateType : KoreClass by koreClass({
+    superTypes.add(TextType)
+    name = "DATE"
+}) {
     operator fun invoke(): KoreDataType = create(DateType, GeoPackageDataType.DATE)
 }
 
@@ -214,146 +186,114 @@ object DateType : KoreClassImpl() {
  * for coordinated universal time (UTC) encoded in either UTF-8 or UTF-16.
  * Stored as SQLite TEXT.
  */
-object DateTimeType : KoreClassImpl() {
-    init {
-        superTypes.add(TextType)
-        name = "DATETIME"
-    }
-
+object DateTimeType : KoreClass by koreClass({
+    superTypes.add(TextType)
+    name = "DATETIME"
+}) {
     operator fun invoke(): KoreDataType = create(DateTimeType, GeoPackageDataType.DATETIME)
 }
 
-object GeometryType : KoreClassImpl() {
-    init {
-        superTypes.add(BlobType)
-        name = "GEOMETRY"
-    }
-
+object GeometryType : KoreClass by koreClass({
+    superTypes.add(BlobType)
+    name = "GEOMETRY"
+}) {
     operator fun invoke(): KoreDataType = create(GeometryType, GeometryType.GEOMETRY)
 }
 
-object PointType : KoreClassImpl() {
-    init {
-        superTypes.add(GeometryType)
-        name = "POINT"
-    }
-
+object PointType : KoreClass by koreClass({
+    superTypes.add(GeometryType)
+    name = "POINT"
+}) {
     operator fun invoke(): KoreDataType = create(PointType, GeometryType.POINT)
 }
 
-object CurveType : KoreClassImpl() {
-    init {
-        superTypes.add(GeometryType)
-        name = "CURVE"
-    }
-
+object CurveType : KoreClass by koreClass({
+    superTypes.add(GeometryType)
+    name = "CURVE"
+}) {
     operator fun invoke(): KoreDataType = create(CurveType, GeometryType.CURVE)
 }
 
-object SurfaceType : KoreClassImpl() {
-    init {
-        superTypes.add(GeometryType)
-        name = "SURFACE"
-    }
-
+object SurfaceType : KoreClass by koreClass({
+    superTypes.add(GeometryType)
+    name = "SURFACE"
+}) {
     operator fun invoke(): KoreDataType = create(SurfaceType, GeometryType.SURFACE)
 }
 
-object GeomCollectionType : KoreClassImpl() {
-    init {
-        superTypes.add(GeometryType)
-        name = "GEOMETRYCOLLECTION"
-    }
-
+object GeomCollectionType : KoreClass by koreClass({
+    superTypes.add(GeometryType)
+    name = "GEOMETRYCOLLECTION"
+}) {
     operator fun invoke(): KoreDataType = create(GeomCollectionType, GeometryType.GEOMETRYCOLLECTION)
 }
 
-object LineStringType : KoreClassImpl() {
-    init {
-        superTypes.add(CurveType)
-        name = "LINESTRING"
-    }
-
+object LineStringType : KoreClass by koreClass({
+    superTypes.add(CurveType)
+    name = "LINESTRING"
+}) {
     operator fun invoke(): KoreDataType = create(LineStringType, GeometryType.LINESTRING)
 }
 
-object CircularStringType : KoreClassImpl() {
-    init {
-        superTypes.add(CurveType)
-        name = "CIRCULARSTRING"
-    }
-
+object CircularStringType : KoreClass by koreClass({
+    superTypes.add(CurveType)
+    name = "CIRCULARSTRING"
+}) {
     operator fun invoke(): KoreDataType = create(CircularStringType, GeometryType.CIRCULARSTRING)
 }
 
-object CompoundCurveType : KoreClassImpl() {
-    init {
-        superTypes.add(CurveType)
-        name = "COMPOUNDCURVE"
-    }
-
+object CompoundCurveType : KoreClass by koreClass({
+    superTypes.add(CurveType)
+    name = "COMPOUNDCURVE"
+}) {
     operator fun invoke(): KoreDataType = create(CompoundCurveType, GeometryType.COMPOUNDCURVE)
 }
 
-object CurvePolygonType : KoreClassImpl() {
-    init {
-        superTypes.add(SurfaceType)
-        name = "CURVEPOLYGON"
-    }
-
+object CurvePolygonType : KoreClass by koreClass({
+    superTypes.add(SurfaceType)
+    name = "CURVEPOLYGON"
+}) {
     operator fun invoke(): KoreDataType = create(CurvePolygonType, GeometryType.CURVEPOLYGON)
 }
 
-object PolygonType : KoreClassImpl() {
-    init {
-        superTypes.add(CurvePolygonType)
-        name = "POLYGON"
-    }
-
+object PolygonType : KoreClass by koreClass({
+    superTypes.add(CurvePolygonType)
+    name = "POLYGON"
+}) {
     operator fun invoke(): KoreDataType = create(PolygonType, GeometryType.POLYGON)
 }
 
-object MultiPointType : KoreClassImpl() {
-    init {
-        superTypes.add(GeomCollectionType)
-        name = "MULTIPOINT"
-    }
-
+object MultiPointType : KoreClass by koreClass({
+    superTypes.add(GeomCollectionType)
+    name = "MULTIPOINT"
+}) {
     operator fun invoke(): KoreDataType = create(MultiPointType, GeometryType.MULTIPOINT)
 }
 
-object MultiCurveType : KoreClassImpl() {
-    init {
-        superTypes.add(GeomCollectionType)
-        name = "MULTICURVE"
-    }
-
+object MultiCurveType : KoreClass by koreClass({
+    superTypes.add(GeomCollectionType)
+    name = "MULTICURVE"
+}) {
     operator fun invoke(): KoreDataType = create(MultiCurveType, GeometryType.MULTICURVE)
 }
 
-object MultiSurfaceType : KoreClassImpl() {
-    init {
-        superTypes.add(GeomCollectionType)
-        name = "MULTISURFACE"
-    }
-
+object MultiSurfaceType : KoreClass by koreClass({
+    superTypes.add(GeomCollectionType)
+    name = "MULTISURFACE"
+}) {
     operator fun invoke(): KoreDataType = create(MultiSurfaceType, GeometryType.MULTISURFACE)
 }
 
-object MultiLineStringType : KoreClassImpl() {
-    init {
-        superTypes.add(MultiCurveType)
-        name = "MULTILINESTRING"
-    }
-
+object MultiLineStringType : KoreClass by koreClass({
+    superTypes.add(MultiCurveType)
+    name = "MULTILINESTRING"
+}) {
     operator fun invoke(): KoreDataType = create(MultiLineStringType, GeometryType.MULTILINESTRING)
 }
 
-object MultiPolygonType : KoreClassImpl() {
-    init {
-        superTypes.add(MultiSurfaceType)
-        name = "MULTIPOLYGON"
-    }
-
+object MultiPolygonType : KoreClass by koreClass({
+    superTypes.add(MultiSurfaceType)
+    name = "MULTIPOLYGON"
+}) {
     operator fun invoke(): KoreDataType = create(MultiPolygonType, GeometryType.MULTIPOLYGON)
 }

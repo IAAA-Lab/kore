@@ -16,23 +16,15 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
-import es.iaaa.kore.impl.KoreClassImpl
 import es.iaaa.kore.impl.KoreStorage
 
 /**
  * A representation of the model object SQLite Container.
  */
-object Container : KoreClassImpl() {
-    init {
-        name = "Container"
-        attribute { name = "fileName" }
-    }
-}
-
-/**
- * The location of the container.
- */
-var KorePackage.fileName: String? by KoreStorage()
+object Container : KoreClass by koreClass({
+    name = "Container"
+    attribute { name = "fileName" }
+})
 
 /**
  * A short hand factory function.
@@ -41,6 +33,6 @@ fun container(init: KorePackage.() -> Unit) = korePackage(Container) {
     nsUri = "http://www.geopackage.org/spec"
     nsPrefix = "gpkg"
     init()
-    verify(nsUri == "http://www.geopackage.org/spec") {  "The nsUri property has muted within the block" }
-    verify( nsPrefix == "gpkg") {  "The nsPrefix property has muted within the block" }
+    verify(nsUri == "http://www.geopackage.org/spec") { "The nsUri property has muted within the block" }
+    verify(nsPrefix == "gpkg") { "The nsPrefix property has muted within the block" }
 }

@@ -16,21 +16,18 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
-import es.iaaa.kore.impl.KoreClassImpl
 
-object ForeignColumn : KoreClassImpl() {
-    init {
-        name = "Foreign Column"
-        superTypes.add(Column)
-        toString = { if (it is KoreReference) it.prettyPrint() else "" }
-    }
-}
+object ForeignColumn : KoreClass by koreClass({
+    name = "Foreign Column"
+    superTypes.add(Column)
+    toString = { if (it is KoreReference) it.prettyPrint() else "" }
+})
 
 fun KoreClass.foreignColumn(init: KoreReference.() -> Unit) = koreReference(ForeignColumn) {
-        containingClass = this@foreignColumn
-        init()
-        verify( containingClass == this@foreignColumn) { "The containing class property has muted within the block" }
-    }
+    containingClass = this@foreignColumn
+    init()
+    verify(containingClass == this@foreignColumn) { "The containing class property has muted within the block" }
+}
 
 private fun KoreReference.prettyPrint(): String =
     with(StringBuilder()) {

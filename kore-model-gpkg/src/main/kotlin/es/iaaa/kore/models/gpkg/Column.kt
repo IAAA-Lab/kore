@@ -17,14 +17,14 @@ package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
 
-val Column = KoreModel.createClass().apply {
+object Column : KoreClass by koreClass({
     name = "Column"
     attribute { name = "description" }
     attribute { name = "title" }
     attribute { name = "mimeType" }
     attribute { name = "columnName" }
     toString = prettyPrint()
-}
+})
 
 class IdColumn: KoreAttribute by koreAttribute(Column, {
         name = "id"
