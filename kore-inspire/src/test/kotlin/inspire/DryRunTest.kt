@@ -23,6 +23,11 @@ import java.io.File
 class DryRunTest {
 
     @Test
+    fun `Annex I Addresses - addresses - draft`() {
+        checkSchema("Addresses", "annex/i/ad/ad")
+    }
+
+    @Test
     fun `Annex I Administrative Units - administrative units`() {
         checkSchema("AdministrativeUnits", "annex/i/au/au")
     }

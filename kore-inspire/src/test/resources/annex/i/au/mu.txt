@@ -373,8 +373,8 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     tableName = "SR_ParameterValuePair"
     id INTEGER NOT NULL PRIMARY KEY
     parameter AbstractObservableProperty NOT NULL
-    validTime TM_Object
-    value Measure NOT NULL
+    value TEXT NOT NULL
+    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
   Feature "SR_MarineExtent" {
     description = "The extent of a sea area for a given tidal state
@@ -473,15 +473,5 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   Constraint Enum "SR_ShoreStabilityValue" {
     identifier = "Sea Regions::ShoreStabilityValue"
   }
-  Constraint Enum "UM_MeasureType" {
-    identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
+  Constraint Enum "GML_UomIdentifier" {}
 }

@@ -1,0 +1,1152 @@
+Container <<applicationSchema>>  "Addresses" {
+  isnamespace = "0"
+  Constraint Enum "AD_GeometryMethodValue" {
+    identifier = "Addresses::GeometryMethodValue"
+    byAdministrator
+    byOtherParty
+    fromFeature
+  }
+  Attributes "AD_AddressComponent" {
+    description = "Identifier or geographic name of a specific geographic area, location, or other spatial object which defines the scope of an address.
+
+    NOTE 1 Four different subclasses of address components are defined:
+
+    o    Administrative unit name, which may include name of country, name of municipality, name of district
+
+    o    Address area name like e.g. name of village or settlement
+
+    o    Thoroughfare name, most often road name
+
+    o    Postal descriptor
+
+    In order to construct an address, these subclasses are often structured hierarchically.
+
+    NOTE 2 It is the combination of the address locator and the address components, which makes a specific address spatial object readable and unambiguous for the human user.
+
+    EXAMPLE The combination of the locator "13" and the address components "Calle Mayor" (thoroughfare name), "Cortijo del Marqués" (address area name), "41037" (postal descriptor), "Écija", "Sevilla" and "España" (administrative unit names) makes this specific address spatial object readable and unambiguous."
+    identifier = "Addresses::AddressComponent"
+    tableName = "AD_AddressComponent"
+    alternativeIdentifier TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    status TEXT CHECK(AD_StatusValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Constraint Enum "AD_LocatorLevelValue" {
+    identifier = "Addresses::LocatorLevelValue"
+    accessLevel
+    postalDeliveryPoint
+    siteLevel
+    unitLevel
+  }
+  Attributes "AD_AdminUnitName" {
+    description = "An address component which represents the name of a unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    identifier = "Addresses::AdminUnitName"
+    tableName = "AD_AdminUnitName"
+    adminUnit INTEGER
+    alternativeIdentifier TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    level TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+    status TEXT CHECK(AD_StatusValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "AD_ThoroughfareName" {
+    description = "An address component which represents the name of a passage or way through from one location to another.
+
+    NOTE 1 A thoroughfare can, e.g., be a road or a waterway
+
+    NOTE 2 Thoroughfare names includes names of squares and of cul de sacs, and they can also represent the network of smaller roads or paths e.g. in a small village or settlement."
+    identifier = "Addresses::ThoroughfareName"
+    tableName = "AD_ThoroughfareName"
+    alternativeIdentifier TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    status TEXT CHECK(AD_StatusValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Constraint Enum "AD_LocatorDesignatorTypeValue" {
+    identifier = "Addresses::LocatorDesignatorTypeValue"
+    addressIdentifierGeneral
+    addressNumber
+    addressNumber2ndExtension
+    addressNumberExtension
+    buildingIdentifier
+    buildingIdentifierPrefix
+    cornerAddress1stIdentifier
+    cornerAddress2ndIdentifier
+    entranceDoorIdentifier
+    floorIdentifier
+    kilometrePoint
+    postalDeliveryIdentifier
+    staircaseIdentifier
+    unitIdentifier
+  }
+  Attributes "AD_LocatorName" {
+    description = "Proper noun applied to the real world entity identified by the locator.
+
+    NOTE The locator name could be the name of the property or complex, of the building or part of the building, or it could be the name of a room inside a building."
+    identifier = "Addresses::LocatorName"
+    tableName = "AD_LocatorName"
+    id INTEGER NOT NULL PRIMARY KEY
+    type TEXT NOT NULL CHECK(AD_LocatorNameTypeValue)
+  }
+  Attributes "AD_LocatorDesignator" {
+    description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
+
+    NOTE 1 Locator designators are often assigned according to a set of commonly known rules which enables a user or application to "parse" the information: Address numbers are most often assigned in ascending order with odd and even numbers on each side of the thoroughfare. In a building, the floor identifier represents the level according to the traditions within the area, e.g., 1, 2, 3.
+
+    NOTE 2 Several types of locator designators exist, such as: Address number, address number suffix, building identifier, building name. A locator could be composed by an ordered set of these.
+
+    EXAMPLE In Paris, France a locator could be composed by two locator designators: address number "18" and address number suffix: "BIS"."
+    identifier = "Addresses::LocatorDesignator"
+    tableName = "AD_LocatorDesignator"
+    designator TEXT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    type TEXT NOT NULL CHECK(AD_LocatorDesignatorTypeValue)
+  }
+  Attributes "AD_ThoroughfareNameValue" {
+    description = "Proper noun applied to thoroughfare optionally including a subdivision of the name into parts.
+
+    NOTE 1 The data type allows names in different languages and scripts as well as inclusion of alternative name, alternative spellings, historical name and exonyms.
+
+    NOTE 2 The data type allows optionally a representation of the thoroughfare name subdivided into separate, semantic parts e.g. "Avenue" + "de la" + "Poste"."
+    identifier = "Addresses::ThoroughfareNameValue"
+    tableName = "AD_ThoroughfareNameValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    name INTEGER
+  }
+  Constraint Enum "AD_StatusValue" {
+    identifier = "Addresses::StatusValue"
+    alternative
+    current
+    proposed
+    reserved
+    retired
+  }
+  Constraint Enum "AD_GeometrySpecificationValue" {
+    identifier = "Addresses::GeometrySpecificationValue"
+    addressArea
+    adminUnit1stOrder
+    adminUnit2ndOrder
+    adminUnit3rdOrder
+    adminUnit4thOrder
+    adminUnit5thOrder
+    adminUnit6thOrder
+    building
+    entrance
+    parcel
+    postalDelivery
+    postalDescriptor
+    segment
+    thoroughfareAccess
+    utilityService
+  }
+  Constraint Enum "AD_PartTypeValue" {
+    identifier = "Addresses::PartTypeValue"
+    name
+    namePrefix
+    qualifier
+    type
+  }
+  Constraint Enum "AD_LocatorNameTypeValue" {
+    identifier = "Addresses::LocatorNameTypeValue"
+    buildingName
+    descriptiveLocator
+    roomName
+    siteName
+  }
+  Attributes "AD_AddressLocator" {
+    description = "Human readable designator or name that allows a user or application to reference and distinguish the address from neighbour addresses, within the scope of a thoroughfare name, address area name, administrative unit name or postal designator, in which the address is situated.
+
+    NOTE 1 The most common locators are designators like an address number, building number or flat identifier as well as the name of the property, complex or building.
+
+    NOTE 2 The locator identifier(s) are most often only unambiguous and meaningful within the scope of the adjacent thoroughfare name, address area name or post code.
+
+    NOTE 3 The locator could be composed of one or more designators e.g., address number, address number suffix, building number or name, floor number, flat or room identifier. In addition to these common locator types, also narrative or descriptive locators are possible.
+
+    NOTE 4 The locators of an address could be composed as a hierarchy, where one level of locators identifies the real property or building while another level of locators identifies the flats or dwellings inside the property.
+
+    EXAMPLE 1 In a Spanish city a "site-level" locator could identify a building on the thoroughfare name "Calle Gran Vía using the address number "8". If the building has four entrance doors, the door number "3" could be the "access-level" locator. The 3rd door could, via two staircases "A" and "B", give access to a number of floors, identified by a number "1" to "5" on which a number of dwellings are situated, also identified by numbers "1" to "3"; The "unit level" locator will thus composed of staircase-, floor- and dwelling identification e.g. "staircase A, floor 5, dwelling 1". In total, the three parent-child levels of locators uniquely identify the dwelling.
+
+    EXAMPLE 2 In Copenhagen an "access level" locator could identify a specific entrance door in a building on the thoroughfare name "Wildersgade" using the address number "60A" (In Denmark the optional suffix is a part of the address number). The entrance door gives access to a number of floors, e.g, "st", "1", "2", "3", on which two dwellings are situated "tv" and "th". The "unit level" locator will thus be composed by a floor- and a door identifier: "2. th." (2nd floor, door to the right). In total, the two parent-child levels of locators uniquely identify the dwelling.
+
+    EXAMPLE 3 In The Netherlands only one level of locators exists. The individual apartment within a large complex, a dwelling, a part of other kinds of buildings (for example an office), a mooring place or a place for the permanent placing of trailers are addressable objects which must have an address. This address is the only level of the locator. This locator could be composed by three attributes the house number, plus optionally an additional house letter, plus optionally an additional housenumber suffix.
+
+    EXAMPLE 4 Sometimes the building name is an alternative identifier to the address number e.g. the house located in "Calle Santiago, 15, Elizondo-Baztán, Navarra, Spain" is also identified by the building name "Urtekoetxea""
+    identifier = "Addresses::AddressLocator"
+    tableName = "AD_AddressLocator"
+    id INTEGER NOT NULL PRIMARY KEY
+    level TEXT NOT NULL CHECK(AD_LocatorLevelValue)
+    withinScopeOf INTEGER
+  }
+  Attributes "AD_AddressAreaName" {
+    description = "An address component which represents the name of a geographic area or locality that groups a number of addressable objects for addressing purposes, without being an administrative unit.
+
+    NOTE 1 In some countries and regions an address area is a true subdivision of an administrative unit (most often a municipality), so that every address area is fully inside the municipality and so that every part of the municipality is within an address area. In other countries, the concept of address area names is less strict and based on local tradition or specific needs.
+
+    NOTE 2 In some situations an address area name is not required to obtain unambiguousness; instead the purpose is to make the complete address more informative and descriptive, adding a well known place name (e.g. of a village or community) to the address. This is particularly useful if the municipality or post code covers a large area.
+
+    EXAMPLE 1 In Sweden a "Kommundel" (en: Municipal sub division) is a type of address area names that ensures that street names are unique within the sub division.
+
+    EXAMPLE 2 In Spain an "Entidad de población" (en: population entity) has the same function. It is the general address area which depending on its characteristics can be classified as "Entidad Singular" (en: singular entity) or "Entidad Colectiva" (en: collective entity). Moreover, according to the population distribution, these areas can contain one or several "Núcleo de población" (en: population core) and/or "Población diseminada" (en: scattered population).
+
+    EXAMPLE 3 In Denmark "Supplerende bynavn" (en: Supplementary town name) is sometimes compulsory to ensure uniqueness of street names within the post code, sometimes it is just useful extra information, that makes the address more informative."
+    identifier = "Addresses::AddressAreaName"
+    tableName = "AD_AddressAreaName"
+    alternativeIdentifier TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    namedPlace INTEGER
+    status TEXT CHECK(AD_StatusValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "AD_Address" {
+    description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
+
+    NOTE 1 The spatial object, referenced by the address, is defined as the "addressable object". The addressable object is not within the application schema, but it is possible to represent the address' reference to a cadastral parcel or a building through associations. It should, however, be noted that in different countries and regions, different traditions and/or regulations determine which object types should be regarded as addressable objects.
+
+    NOTE 2 In most situations the addressable objects are current, real world objects. However, addresses may also reference objects which are planned, under construction or even historical.
+
+    NOTE 3 Apart from the identification of the addressable objects (like e.g. buildings), addresses are very often used by a large number of other applications to identify object types e.g. statistics of the citizens living in the building, for taxation of the business entities that occupy the building, and the utility installations.
+
+    NOTE 4 For different purposes, the identification of an address can be represented in different ways (see example 3).
+
+    EXAMPLE 1 A property can e.g., be a plot of land, building, part of building, way of access or other construction,
+
+    EXAMPLE 2 In the Netherlands the primary addressable objects are buildings and dwellings which may include parts of buildings, mooring places or places for the permanent placement of trailers (mobile homes), in the UK it is the lowest level of unit for the delivery of services, in the Czech Republic it is buildings and entrance doors.
+
+    EXAMPLE 3 Addresses can be represented differently. In a human readable form an address in Spain and an address in Denmark could be represented like this: "Calle Mayor, 13, Cortijo del Marqués, 41037 Écija, Sevilla, España" or "Wildersgade 60A, st. th, 1408 Copenhagen K., Denmark"."
+    identifier = "Addresses::Address"
+    tableName = "AD_Address"
+    alternativeIdentifier TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    parentAddress INTEGER
+    status TEXT CHECK(AD_StatusValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "AD_PartOfName" {
+    description = "A part of the full name resulting from the subdivision of the thoroughfare name into separate, semantic parts, using the same language and script as the full thoroughfare name.
+
+    NOTE Each part of the name must be qualified by using the type attribute."
+    identifier = "Addresses::PartOfName"
+    tableName = "AD_PartOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    part TEXT NOT NULL
+    type TEXT NOT NULL CHECK(AD_PartTypeValue)
+  }
+  Attributes "AD_PostalDescriptor" {
+    description = "An address component which represents the identification of a subdivision of addresses and postal delivery points in a country, region or city for postal purposes.
+
+    NOTE 1 The postal descriptor is specified by means of a post code and/or names of the associated post office, town or area.
+
+    NOTE 2 In some countries post codes are seen as a proper geographic subdivision of the country, in other countries the post code is regarded only as an attribute that characterizes a (usually small) number of adjacent postal delivery points and addresses.
+
+    NOTE 3 The postal descriptors are created and developed on the basis of postal requirements (e.g. efficient sorting, logistics, transport and distribution). Consequently, there is not often a tight relationship between the postal areas and administrative units in the same area.
+
+    NOTE 4 The structure schema and formats of national postal descriptor systems are different. Sometimes (for example in the UK) the post code itself is the only information required for a valid address; in other situations both the post code and the associated name of post office or town is required. Sometimes there is a simple relationship between the code and the name; in other situations a set of postcodes are associated with a single post office or town.
+
+    NOTE 5 In some countries like e.g. The Republic of Ireland, no post code system currently exists, therefore the postal descriptor is only represented by the name of the post town.
+
+    EXAMPLE 1 In the UK the post code "EC4M 7DR" is sufficient, as a postal descriptor, while the related town name "London" is informative, but not necessary in the postal address.
+
+    EXAMPLE 2 In Sweden all postcodes starting with "80" is related to the postal name "Gävle". Therefore in the postal descriptor "802 74 Gävle", the postcode "802 74" bears all postal necessary information, while the town name "Gävle" is extra information.
+
+    EXAMPLE 3 In Denmark, outside the centre of Copenhagen, each postcode has a 1:1 relationship to one post name only: Postcode "6372" relates to the village "Bylderup-Bov".
+
+    EXAMPLE 4 In Germany the lowest level of the Postal descriptor (the 5 digit Postleitzahl) often does not fall within an administrative unit (e.g. municipality). The Postleitzahl is handled completely independent from the hierarchal systematic of the addresses. In addition, some "Postleitzahlen" represent not a delivery area, but institutions with a big amount of post."
+    identifier = "Addresses::PostalDescriptor"
+    tableName = "AD_PostalDescriptor"
+    alternativeIdentifier TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    postCode TEXT
+    status TEXT CHECK(AD_StatusValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "AD_AddressRepresentation" {
+    description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
+
+    NOTE 1 The data type includes the all necessary readable address components as well as the address locator(s), which allows the identification of the address spatial objects, e.g., country, region, municipality, address area, post code, street name and address number. It also includes an optional reference to the full address spatial object.
+
+    NOTE 2 The datatype could be used in application schemas that wish to include address information e.g. in a dataset that registers buildings or properties."
+    identifier = "Addresses::AddressRepresentation"
+    tableName = "AD_AddressRepresentation"
+    addressFeature INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    postCode TEXT
+    ref locatorDesignator: TEXT[0..*]
+  }
+  Feature "AD_GeographicPosition" {
+    description = "The position of a characteristic point which represents the location of the address according to a certain specification, including information on the origin of the position."
+    identifier = "Addresses::GeographicPosition"
+    tableName = "AD_GeographicPosition"
+    default BOOLEAN NOT NULL
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    method TEXT CHECK(AD_GeometryMethodValue)
+    specification TEXT CHECK(AD_GeometrySpecificationValue)
+  }
+  Relation "AD_AddressComponent_situatedWithin" {
+    profile = "attributes"
+    tableName = "AD_AddressComponent_situatedWithin"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressComponent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
+  }
+  Relation "AD_AddressComponent_inspireId" {
+    profile = "attributes"
+    relatedReference = "AD_AddressComponent#inspireId"
+    tableName = "AD_AddressComponent_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressComponent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AD_AdminUnitName_adminUnit" {
+    profile = "features"
+    relatedReference = "AD_AdminUnitName#adminUnit"
+    tableName = "AD_AdminUnitName_adminUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AD_AdminUnitName_name" {
+    profile = "attributes"
+    tableName = "AD_AdminUnitName_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_ThoroughfareName_transportLink" {
+    profile = "attributes"
+    tableName = "AD_ThoroughfareName_transportLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLink(id)
+  }
+  Relation "AD_ThoroughfareName_name" {
+    profile = "attributes"
+    tableName = "AD_ThoroughfareName_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_LocatorName_name" {
+    profile = "attributes"
+    tableName = "AD_LocatorName_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_LocatorName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_ThoroughfareNameValue_name" {
+    profile = "attributes"
+    relatedReference = "AD_ThoroughfareNameValue#name"
+    tableName = "AD_ThoroughfareNameValue_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareNameValue(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_ThoroughfareNameValue_nameParts" {
+    profile = "attributes"
+    tableName = "AD_ThoroughfareNameValue_nameParts"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareNameValue(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_PartOfName(id)
+  }
+  Relation "AD_AddressLocator_withinScopeOf" {
+    profile = "attributes"
+    relatedReference = "AD_AddressLocator#withinScopeOf"
+    tableName = "AD_AddressLocator_withinScopeOf"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
+  }
+  Relation "AD_AddressLocator_designator" {
+    profile = "attributes"
+    tableName = "AD_AddressLocator_designator"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_LocatorDesignator(id)
+  }
+  Relation "AD_AddressLocator_name" {
+    profile = "attributes"
+    tableName = "AD_AddressLocator_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_LocatorName(id)
+  }
+  Relation "AD_AddressAreaName_namedPlace" {
+    profile = "features"
+    relatedReference = "AD_AddressAreaName#namedPlace"
+    tableName = "AD_AddressAreaName_namedPlace"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlace(id)
+  }
+  Relation "AD_AddressAreaName_name" {
+    profile = "attributes"
+    tableName = "AD_AddressAreaName_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_Address_component" {
+    profile = "attributes"
+    tableName = "AD_Address_component"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
+  }
+  Relation "AD_Address_parentAddress" {
+    profile = "attributes"
+    relatedReference = "AD_Address#parentAddress"
+    tableName = "AD_Address_parentAddress"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_Address(id)
+  }
+  Relation "AD_Address_building" {
+    profile = "attributes"
+    tableName = "AD_Address_building"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_AbstractConstruction(id)
+  }
+  Relation "AD_Address_inspireId" {
+    profile = "attributes"
+    relatedReference = "AD_Address#inspireId"
+    tableName = "AD_Address_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AD_Address_locator" {
+    profile = "attributes"
+    tableName = "AD_Address_locator"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressLocator(id)
+  }
+  Relation "AD_Address_position" {
+    profile = "features"
+    tableName = "AD_Address_position"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_GeographicPosition(id)
+  }
+  Relation "AD_PostalDescriptor_postName" {
+    profile = "attributes"
+    tableName = "AD_PostalDescriptor_postName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_PostalDescriptor(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_addressFeature" {
+    profile = "attributes"
+    relatedReference = "AD_AddressRepresentation#addressFeature"
+    tableName = "AD_AddressRepresentation_addressFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_Address(id)
+  }
+  Relation "AD_AddressRepresentation_adminUnit" {
+    profile = "attributes"
+    tableName = "AD_AddressRepresentation_adminUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_locatorName" {
+    profile = "attributes"
+    tableName = "AD_AddressRepresentation_locatorName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_addressArea" {
+    profile = "attributes"
+    tableName = "AD_AddressRepresentation_addressArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_postName" {
+    profile = "attributes"
+    tableName = "AD_AddressRepresentation_postName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_thoroughfare" {
+    profile = "attributes"
+    tableName = "AD_AddressRepresentation_thoroughfare"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "AU_admUnit_boundary" {
+    profile = "features"
+    tableName = "AU_admUnit_boundary"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
+  }
+  Relation "AU_AdministrativeUnit_administeredBy" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_administeredBy"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
+    profile = "features"
+    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
+    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeUnit#inspireId"
+    tableName = "AU_AdministrativeUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeUnit_name" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_AdministrativeUnit_nationalLevelName" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_nationalLevelName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "NET_Link_startNode" {
+    profile = "features"
+    relatedReference = "NET_Link#startNode"
+    tableName = "NET_Link_startNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Link(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Node(id)
+  }
+  Relation "NET_Link_endNode" {
+    profile = "features"
+    relatedReference = "NET_Link#endNode"
+    tableName = "NET_Link_endNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Link(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Node(id)
+  }
+  Relation "NET_NetworkElement_inNetwork" {
+    profile = "attributes"
+    tableName = "NET_NetworkElement_inNetwork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
+  }
+  Relation "NET_NetworkElement_inspireId" {
+    profile = "attributes"
+    relatedReference = "NET_NetworkElement#inspireId"
+    tableName = "NET_NetworkElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GN_NamedPlace_inspireId" {
+    profile = "attributes"
+    relatedReference = "GN_NamedPlace#inspireId"
+    tableName = "GN_NamedPlace_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GN_NamedPlace_localType" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_localType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "GN_NamedPlace_name" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "GN_NamedPlace_relatedSpatialObject" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_relatedSpatialObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GN_NamedPlace_type" {
+    profile = "attributes"
+    tableName = "GN_NamedPlace_type"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_elevation" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_elevation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_Elevation(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_externalReference" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_externalReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_ExternalReference(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_heightAboveGround" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_heightAboveGround"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_HeightAboveGround(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_inspireId" {
+    profile = "attributes"
+    relatedReference = "BU_BASE_AbstractConstruction#inspireId"
+    tableName = "BU_BASE_AbstractConstruction_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_name" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_AdministrativeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeBoundary#inspireId"
+    tableName = "AU_AdministrativeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeBoundary_nationalLevel" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeBoundary_nationalLevel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
+  }
+  Relation "AU_Condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_Condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_Condominium_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_Condominium#inspireId"
+    tableName = "AU_Condominium_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_Condominium_name" {
+    profile = "attributes"
+    tableName = "AU_Condominium_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_ResidenceOfAuthority_name" {
+    profile = "attributes"
+    relatedReference = "AU_ResidenceOfAuthority#name"
+    tableName = "AU_ResidenceOfAuthority_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "NET_Network_geographicalName" {
+    profile = "attributes"
+    tableName = "NET_Network_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "CP_BasicPropertyUnit_administrativeUnit" {
+    profile = "features"
+    relatedReference = "CP_BasicPropertyUnit#administrativeUnit"
+    tableName = "CP_BasicPropertyUnit_administrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_BasicPropertyUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "CP_BasicPropertyUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "CP_BasicPropertyUnit#inspireId"
+    tableName = "CP_BasicPropertyUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_BasicPropertyUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Constraint Enum "AU_AdministrativeHierarchyLevel" {
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    1stOrder
+    2ndOrder
+    3rdOrder
+    4thOrder
+    5thOrder
+    6thOrder
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Feature "AU_AdministrativeUnit" {
+    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    identifier = "AdministrativeUnits::AdministrativeUnit"
+    tableName = "AU_AdministrativeUnit"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    nationalCode TEXT NOT NULL
+    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+    upperLevelUnit INTEGER
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "TN_TransportLink" {
+    description = "A linear spatial object that describes the geometry and connectivity of a transport network between two points in the network."
+    identifier = "Common Transport Elements::TransportLink"
+    tableName = "TN_TransportLink"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref LinkSet inv link[1..*]
+  }
+  Feature "GN_NamedPlace" {
+    description = "Any real world entity referred to by one or several proper nouns."
+    identifier = "Geographical Names::NamedPlace"
+    tableName = "GN_NamedPlace"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GEOMETRY NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    leastDetailedViewingResolution_distance TEXT
+    leastDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
+    leastDetailedViewingResolution_equivalentScale_denominator INTEGER
+    mostDetailedViewingResolution_distance TEXT
+    mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
+    mostDetailedViewingResolution_equivalentScale_denominator INTEGER
+  }
+  Attributes "BU_BASE_AbstractConstruction" {
+    description = "Abstract spatial object type grouping the semantic properties of  buildings, building parts and of some optional spatial object types that may be added in order to provide more information about the theme Buildings.
+
+    The optional spatial object types that may be added to core profiles are described in the extended profiles. The ones inheriting from the attributes of AbstractConstruction are Installation and OtherConstruction."
+    identifier = "BuildingsBase::AbstractConstruction"
+    tableName = "BU_BASE_AbstractConstruction"
+    beginLifespanVersion DATETIME
+    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    dateOfConstruction_anyPoint DATETIME
+    dateOfConstruction_beginning DATETIME
+    dateOfConstruction_end DATETIME
+    dateOfDemolition_anyPoint DATETIME
+    dateOfDemolition_beginning DATETIME
+    dateOfDemolition_end DATETIME
+    dateOfRenovation_anyPoint DATETIME
+    dateOfRenovation_beginning DATETIME
+    dateOfRenovation_end DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Feature "AU_AdministrativeBoundary" {
+    description = "A line of demarcation between administrative units."
+    identifier = "AdministrativeUnits::AdministrativeBoundary"
+    tableName = "AU_AdministrativeBoundary"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+  }
+  Attributes "GMD_LocalisedCharacterString" {
+    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+  Feature "AU_ResidenceOfAuthority" {
+    description = "Data type representing the name and position of a residence of authority."
+    identifier = "AdministrativeUnits::ResidenceOfAuthority"
+    tableName = "AU_ResidenceOfAuthority"
+    geometry POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    name INTEGER
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Feature "NET_Link" {
+    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
+    identifier = "Network::Link"
+    tableName = "NET_Link"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    ref LinkSet inv link[1..*]
+  }
+  Feature "NET_Node" {
+    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
+
+    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
+    identifier = "Network::Node"
+    tableName = "NET_Node"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "NET_NetworkElement" {
+    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
+    identifier = "Network::NetworkElement"
+    tableName = "NET_NetworkElement"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "NET_Network" {
+    description = "A network is a collection of network elements.
+
+    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
+    identifier = "Network::Network"
+    tableName = "NET_Network"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GN_NamedPlaceTypeValue" {
+    description = "The type of a named place."
+    identifier = "Geographical Names::NamedPlaceTypeValue"
+    tableName = "GN_NamedPlaceTypeValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
+  }
+  Attributes "BU_BASE_Elevation" {
+    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
+    identifier = "BuildingsBase::Elevation"
+    tableName = "BU_BASE_Elevation"
+    elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
+    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_dimension INTEGER NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "BU_BASE_ExternalReference" {
+    description = "Reference to an external information system containing any piece of information related to the spatial object."
+    identifier = "BuildingsBase::ExternalReference"
+    tableName = "BU_BASE_ExternalReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    informationSystem TEXT NOT NULL
+    reference TEXT NOT NULL
+  }
+  Attributes "BU_BASE_HeightAboveGround" {
+    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
+    identifier = "BuildingsBase::HeightAboveGround"
+    tableName = "BU_BASE_HeightAboveGround"
+    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    status TEXT CHECK(BU_BASE_HeightStatusValue)
+    value TEXT NOT NULL
+    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+  }
+  Attributes "AU_AdministrativeHierarchyLevel" {
+    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    tableName = "AU_AdministrativeHierarchyLevel"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+  }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "CP_BasicPropertyUnit" {
+    description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
+
+    SOURCE Adapted from UN ECE 2004.
+
+    NOTE 1 In the INSPIRE context, basic property units are to be made available by member states where unique cadastral references are given only for basic property units and not for parcels.
+
+    NOTE 2 In many (but not all) countries, the area of the basic property unit corresponds to the cadastral parcel itself.
+
+    NOTE 3 Some countries, such as Finland, may also register officially basic property units without any area. These basic property units are considered out of the INSPIRE scope.
+
+    NOTE 4 Some countries, such as Norway, may have parcels which belong to several basic property units."
+    identifier = "CadastralParcels::BasicPropertyUnit"
+    tableName = "CP_BasicPropertyUnit"
+    administrativeUnit INTEGER
+    areaValue TEXT
+    areaValue_uom TEXT CHECK(GML_UomIdentifier)
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    nationalCadastralReference TEXT NOT NULL
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "BASE2_CountryCode" {
+    identifier = "Base Types 2::CountryCode"
+    AT
+    BE
+    BG
+    CY
+    CZ
+    DE
+    DK
+    EE
+    EL
+    ES
+    FI
+    FR
+    HR
+    HU
+    IE
+    IT
+    LT
+    LU
+    LV
+    MT
+    NL
+    PL
+    PT
+    RO
+    SE
+    SI
+    SK
+    TR
+    UK
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ConditionOfConstructionValue"
+  }
+  Constraint Enum "AU_LegalStatusValue" {
+    identifier = "AdministrativeUnits::LegalStatusValue"
+    agreed
+    notAgreed
+  }
+  Constraint Enum "AU_TechnicalStatusValue" {
+    identifier = "AdministrativeUnits::TechnicalStatusValue"
+    edgeMatched
+    notEdgeMatched
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Constraint Enum "GN_NamedPlaceTypeValue" {
+    identifier = "Geographical Names::NamedPlaceTypeValue"
+    administrativeUnit
+    building
+    hydrography
+    landcover
+    landform
+    other
+    populatedPlace
+    protectedSite
+    transportNetwork
+  }
+  Constraint Enum "BU_BASE_ElevationReferenceValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ElevationReferenceValue"
+  }
+  Constraint Enum "BU_BASE_HeightStatusValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HeightStatusValue"
+  }
+  Constraint Enum "CP_CadastralZoningLevelValue" {
+    identifier = "CadastralParcels::CadastralZoningLevelValue"
+    1stOrder
+    2ndOrder
+    3rdOrder
+  }
+}
