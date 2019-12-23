@@ -15,10 +15,8 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KorePackage
+import es.iaaa.kore.*
 import es.iaaa.kore.impl.KoreClassImpl
-import es.iaaa.kore.koreClass
 
 /**
  * A representation of the model object vector Feature Table.
@@ -37,27 +35,17 @@ object FeaturesTable : KoreClassImpl() {
         attribute { name = "minY" }
         attribute { name = "srsId" }
     }
-
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
-        metaClass = FeaturesTable
-        description = ""
-        init()
-    }
-}
-
-/**
- * A short hand factory function.
- */
-fun feature(tableName: String, init: KoreClass.() -> Unit) = FeaturesTable(init).also {
-    it.name = tableName
-    it.tableName = tableName
 }
 
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.feature(tableName: String, init: KoreClass.() -> Unit) = FeaturesTable(init).also {
-    it.name = tableName
-    it.tableName = tableName
-    it.container = this
+fun KorePackage.features(features: String, init: KoreClass.() -> Unit) = koreClass(FeaturesTable) {
+    name = features
+    container = this@features
+    init()
+    verify(name == features) { "The name property has muted within the block" }
+    verify( container == this@features) { "The container property has muted within the block" }
+    verify(!tableName.isNullOrBlank()) { "The table name property must not be blank" }
+    verify(description != null) { "The description property must have some value" }
 }

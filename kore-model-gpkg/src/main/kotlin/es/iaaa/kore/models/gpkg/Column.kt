@@ -26,21 +26,22 @@ val Column = KoreModel.createClass().apply {
     toString = prettyPrint()
 }
 
-fun column(init: KoreAttribute.() -> Unit): KoreAttribute = koreAttribute {
-    metaClass = Column
-    init()
-}
+class IdColumn: KoreAttribute by koreAttribute(Column, {
+        name = "id"
+        columnName = "id"
+        title = "Id"
+        description = "Id"
+        lowerBound = 1
+        type = IntegerType()
+        geoPackageSpec().add(PrimaryKey)
+})
 
-fun KoreClass.column(init: KoreAttribute.() -> Unit): KoreAttribute = koreAttribute {
-    metaClass = Column
-    init()
+fun KoreClass.column(init: KoreAttribute.() -> Unit = {}): KoreAttribute = koreAttribute(Column) {
     containingClass = this@column
+    init()
+    verify( containingClass == this@column) { "The containing class property has muted within the block" }
 }
 
-fun KoreClass.attribute(init: KoreAttribute.() -> Unit) = koreAttribute {
-    init()
-    containingClass = this@attribute
-}
 
 fun prettyPrint(): (KoreObject) -> String = { it ->
     with(it as KoreAttribute) {

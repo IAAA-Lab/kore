@@ -15,10 +15,8 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KorePackage
+import es.iaaa.kore.*
 import es.iaaa.kore.impl.KoreClassImpl
-import es.iaaa.kore.koreClass
 
 /**
  * A representation of the model object Relation Table.
@@ -32,26 +30,16 @@ object RelationTable : KoreClassImpl() {
         attribute { name = "relatedReference" }
         attribute { name = "identifier" }
     }
-
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
-        metaClass = RelationTable
-        init()
-    }
-}
-
-/**
- * A short hand factory function.
- */
-fun relation(tableName: String, init: KoreClass.() -> Unit) = RelationTable(init).also {
-    it.name = tableName
-    it.tableName = tableName
 }
 
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.relation(tableName: String, init: KoreClass.() -> Unit) = RelationTable(init).also {
-    it.name = tableName
-    it.tableName = tableName
-    it.container = this
+fun KorePackage.relation(relationName: String, init: KoreClass.() -> Unit) = koreClass(RelationTable) {
+    name = relationName
+    container = this@relation
+    init()
+    verify(name == relationName) { "The name property has muted within the block" }
+    verify( container == this@relation) { "The container property has muted within the block" }
+    verify(! tableName.isNullOrBlank()) { "The table name property must not be blank" }
 }

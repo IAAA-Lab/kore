@@ -18,6 +18,7 @@ package es.iaaa.kore.models.gpkg
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KoreDataType
 import es.iaaa.kore.KoreModel
+import es.iaaa.kore.attribute
 import es.iaaa.kore.impl.KoreClassImpl
 import es.iaaa.kore.impl.KoreStorage
 import mil.nga.geopackage.db.GeoPackageDataType

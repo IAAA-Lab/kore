@@ -22,7 +22,8 @@ val `Voidable mapped as nullable`: Transform = { _, _ ->
     setLowerBoundWhen(0) { it.findDefaultNamedReferences().any { ref -> ref.name == "voidable" } }
 }
 
-val `load authoritative descriptions of the reasons for void values as metadata`: Transform = { conversion, _ ->
+val `load authoritative descriptions of the reasons for void values as metadata`: Transform = { conversion, options ->
+    val withMetadata = options["metadata"] == true
     val withSelector = conversion.input.selector.get()
     val definitions = listOf(
         Triple(1, "Unknown", "attribute"),
@@ -49,7 +50,7 @@ val `load authoritative descriptions of the reasons for void values as metadata`
                     mimeType = "text/xml"
                     val url =
                         "http://inspire.ec.europa.eu/codelist/$parentName/${def.second}/${def.second}.en.iso19135xml"
-                    metadata = URL(url).openStream().use { it.bufferedReader().readText() }
+                    metadata = if (withMetadata) URL(url).openStream().use { it.bufferedReader().readText() } else ""
                 }
             }
         }

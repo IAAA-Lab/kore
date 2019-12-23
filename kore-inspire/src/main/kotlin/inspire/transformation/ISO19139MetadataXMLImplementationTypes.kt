@@ -4,7 +4,6 @@ package inspire.transformation
 
 import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.TextType
-import es.iaaa.kore.models.gpkg.attribute
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.setTypeWhen

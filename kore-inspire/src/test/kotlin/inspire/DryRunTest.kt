@@ -41,7 +41,8 @@ class DryRunTest {
         val config = Configuration(
             file = "src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL",
             description = false,
-            sql = false
+            sql = false,
+            metadata = false
         )
         val run = configuration(schema, route, config)
         run.convert(true)

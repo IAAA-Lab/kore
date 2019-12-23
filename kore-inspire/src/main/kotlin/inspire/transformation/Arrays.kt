@@ -22,8 +22,10 @@ val `create supporting Attribute tables for Enumerations and Codelists involved 
     }) {
         val from = this
         val constraint = from.geoPackageSpec().first { Constraint.isInstance(it) } as KoreClass
-        val target = attributes(constraint.name ?: "<<missing>>") {
-            container = constraint.container
+        val container = constraint.container as KorePackage
+        val target = container.attributes(constraint.name ?: "<<missing>>") {
+            tableName = name
+            description = ""
             constraint.annotations.map { it.copy(this) }
             attribute {
                 name = "value"

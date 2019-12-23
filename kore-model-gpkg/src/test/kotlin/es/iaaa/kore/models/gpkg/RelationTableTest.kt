@@ -22,21 +22,22 @@ import org.junit.jupiter.api.Test
 class RelationTableTest {
     @Test
     fun `creation of the relation and its human readable representation`() {
-        val attribute1 = attributes("test_contents_1") {
-            column { columnName = "id"; type = IntegerType; geoPackageSpec().add(PrimaryKey) }
-        }
-        val attribute2 = attributes("test_contents_2") {
-            column { columnName = "id"; type = IntegerType; geoPackageSpec().add(PrimaryKey) }
-        }
-        val relation = relation("test_relations") {
-            profile = "test contents"
-            reference { columnName = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
-            reference { columnName = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
-        }
-        assertEquals(RelationTable, relation.metaClass)
-        assertEquals("test_relations", relation.tableName)
-        assertEquals(
-            """
+        container {
+            val attribute1 = attributes("test_contents_1") {
+                column { columnName = "id"; type = IntegerType; geoPackageSpec().add(PrimaryKey) }
+            }
+            val attribute2 = attributes("test_contents_2") {
+                column { columnName = "id"; type = IntegerType; geoPackageSpec().add(PrimaryKey) }
+            }
+            val relation = relation("test_relations") {
+                profile = "test contents"
+                foreignColumn { columnName = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
+                foreignColumn { columnName = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
+            }
+            assertEquals(RelationTable, relation.metaClass)
+            assertEquals("test_relations", relation.tableName)
+            assertEquals(
+                """
            |Relation "test_relations" {
            |  profile = "test contents"
            |  tableName = "test_relations"
@@ -44,7 +45,8 @@ class RelationTableTest {
            |  related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES test_contents_2(id)
            |}
            """.trimMargin(),
-            relation.toPrettyString()
-        )
+                relation.toPrettyString()
+            )
+        }
     }
 }

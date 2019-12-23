@@ -15,8 +15,7 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreModel
-import es.iaaa.kore.KorePackage
+import es.iaaa.kore.*
 import es.iaaa.kore.impl.KoreClassImpl
 import es.iaaa.kore.impl.KoreStorage
 
@@ -28,13 +27,6 @@ object Container : KoreClassImpl() {
         name = "Container"
         attribute { name = "fileName" }
     }
-
-    operator fun invoke(init: KorePackage.() -> Unit): KorePackage = KoreModel.createPackage().apply {
-        metaClass = Container
-        nsUri = "http://www.geopackage.org/spec"
-        nsPrefix = "gpkg"
-        init()
-    }
 }
 
 /**
@@ -45,4 +37,10 @@ var KorePackage.fileName: String? by KoreStorage()
 /**
  * A short hand factory function.
  */
-fun container(init: KorePackage.() -> Unit) = Container(init)
+fun container(init: KorePackage.() -> Unit) = korePackage(Container) {
+    nsUri = "http://www.geopackage.org/spec"
+    nsPrefix = "gpkg"
+    init()
+    verify(nsUri == "http://www.geopackage.org/spec") {  "The nsUri property has muted within the block" }
+    verify( nsPrefix == "gpkg") {  "The nsPrefix property has muted within the block" }
+}

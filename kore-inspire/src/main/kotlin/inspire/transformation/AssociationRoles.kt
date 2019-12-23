@@ -55,19 +55,20 @@ private fun KoreReference.toRelation(
 }
 
 private fun KorePackage.toRelation(
-    tableName: String,
+    relationName: String,
     relationProfile: String,
     base: KoreClass,
     related: KoreClassifier
-): KoreClass = relation(tableName) {
+): KoreClass = relation(relationName) {
+    tableName = relationName
     profile = relationProfile
-    reference {
+    foreignColumn {
         name = "base_id"
         columnName = "base_id"
         type = base
         findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
     }
-    reference {
+    foreignColumn {
         name = "related_id"
         columnName = "related_id"
         type = related

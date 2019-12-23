@@ -22,22 +22,23 @@ import org.junit.jupiter.api.Test
 class ConstraintsTest {
     @Test
     fun `creation of range constraint`() {
-        val constraint = rangeConstraint("test_range") {
-            description = "some description"
-            minRange = (-180).toBigDecimal()
-            maxRange = 180.toBigDecimal()
-            minIsInclusive = true
-            maxIsInclusive = true
-        }
-        assertEquals(RangeConstraint, constraint.metaClass)
-        assertEquals("test_range", constraint.name)
-        assertEquals("some description", constraint.description)
-        assertEquals((-180).toBigDecimal(), constraint.minRange)
-        assertEquals(180.toBigDecimal(), constraint.maxRange)
-        assertEquals(true, constraint.minIsInclusive)
-        assertEquals(true, constraint.maxIsInclusive)
-        assertEquals(
-            """
+        container {
+            val constraint = rangeConstraint("test_range") {
+                description = "some description"
+                minRange = (-180).toBigDecimal()
+                maxRange = 180.toBigDecimal()
+                minIsInclusive = true
+                maxIsInclusive = true
+            }
+            assertEquals(RangeConstraint, constraint.metaClass)
+            assertEquals("test_range", constraint.name)
+            assertEquals("some description", constraint.description)
+            assertEquals((-180).toBigDecimal(), constraint.minRange)
+            assertEquals(180.toBigDecimal(), constraint.maxRange)
+            assertEquals(true, constraint.minIsInclusive)
+            assertEquals(true, constraint.maxIsInclusive)
+            assertEquals(
+                """
            |Constraint Range "test_range" {
            |  description = "some description"
            |  maxIsInclusive = "true"
@@ -46,53 +47,58 @@ class ConstraintsTest {
            |  minRange = "-180"
            |}
            """.trimMargin(),
-            constraint.toPrettyString()
-        )
+                constraint.toPrettyString()
+            )
+        }
     }
 
     @Test
     fun `creation of glob constraint`() {
-        val constraint = globConstraint("test_glob") {
-            description = "some description"
-            globValue = "[0..9]*"
-        }
-        assertEquals(GlobConstraint, constraint.metaClass)
-        assertEquals("test_glob", constraint.name)
-        assertEquals("some description", constraint.description)
-        assertEquals("[0..9]*", constraint.globValue)
-        assertEquals(
-            """
+        container {
+            val constraint = globConstraint("test_glob") {
+                description = "some description"
+                globValue = "[0..9]*"
+            }
+            assertEquals(GlobConstraint, constraint.metaClass)
+            assertEquals("test_glob", constraint.name)
+            assertEquals("some description", constraint.description)
+            assertEquals("[0..9]*", constraint.globValue)
+            assertEquals(
+                """
            |Constraint Glob "test_glob" {
            |  description = "some description"
            |  globValue = "[0..9]*"
            |}
            """.trimMargin(),
-            constraint.toPrettyString()
-        )
+                constraint.toPrettyString()
+            )
+        }
     }
 
     @Test
     fun `creation of enum constraint`() {
-        val constraint = enumConstraint("test_enum") {
-            literal("a") {
-                description = "some description of a"
+        container {
+            val constraint = enumConstraint("test_enum") {
+                literal("a") {
+                    description = "some description of a"
+                }
+                literal("b") {
+                    description = "some description of b"
+                }
             }
-            literal("b") {
-                description = "some description of b"
-            }
-        }
-        assertEquals(EnumConstraint, constraint.metaClass)
-        assertEquals("test_enum", constraint.name)
-        assertEquals("some description of a", constraint.attributes[0].description)
-        assertEquals("some description of b", constraint.attributes[1].description)
-        assertEquals(
-            """
+            assertEquals(EnumConstraint, constraint.metaClass)
+            assertEquals("test_enum", constraint.name)
+            assertEquals("some description of a", constraint.attributes[0].description)
+            assertEquals("some description of b", constraint.attributes[1].description)
+            assertEquals(
+                """
            |Constraint Enum "test_enum" {
            |  a
            |  b
            |}
            """.trimMargin(),
-            constraint.toPrettyString()
-        )
+                constraint.toPrettyString()
+            )
+        }
     }
 }

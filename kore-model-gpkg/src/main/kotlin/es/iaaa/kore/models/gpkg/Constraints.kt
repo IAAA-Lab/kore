@@ -38,26 +38,17 @@ object RangeConstraint : KoreClassImpl() {
         attribute { name = "minRange" }
         attribute { name = "maxRange" }
     }
-
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
-        metaClass = RangeConstraint
-        init()
-    }
-}
-
-/**
- * A short hand factory function.
- */
-fun rangeConstraint(name: String, init: KoreClass.() -> Unit) = RangeConstraint(init).also {
-    it.name = name
 }
 
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.rangeConstraint(name: String, init: KoreClass.() -> Unit) = RangeConstraint(init).also {
-    it.name = name
-    it.container = this
+fun KorePackage.rangeConstraint(nameConstraint: String, init: KoreClass.() -> Unit = {}) = koreClass(RangeConstraint) {
+    name = nameConstraint
+    container = this@rangeConstraint
+    init()
+    verify(name == nameConstraint) {  "The name property has muted within the block" }
+    verify(container == this@rangeConstraint) {  "The container property has muted within the block" }
 }
 
 /**
@@ -69,26 +60,17 @@ object GlobConstraint : KoreClassImpl() {
         name = "Constraint Glob"
         attribute { name = "globValue" }
     }
-
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
-        metaClass = GlobConstraint
-        init()
-    }
-}
-
-/**
- * A short hand factory function.
- */
-fun globConstraint(name: String, init: KoreClass.() -> Unit) = GlobConstraint(init).also {
-    it.name = name
 }
 
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.globConstraint(name: String, init: KoreClass.() -> Unit) = GlobConstraint(init).also {
-    it.name = name
-    it.container = this
+fun KorePackage.globConstraint(nameConstraint: String, init: KoreClass.() -> Unit = {}) = koreClass(GlobConstraint) {
+    name = nameConstraint
+    container = this@globConstraint
+    init()
+    verify(name == nameConstraint) {  "The name property has muted within the block" }
+    verify(container == this@globConstraint) {  "The container property has muted within the block" }
 }
 
 /**
@@ -99,26 +81,17 @@ object EnumConstraint : KoreClassImpl() {
         superTypes.add(Constraint)
         name = "Constraint Enum"
     }
-
-    operator fun invoke(init: KoreClass.() -> Unit): KoreClass = koreClass {
-        metaClass = EnumConstraint
-        init()
-    }
-}
-
-/**
- * A short hand factory function.
- */
-fun enumConstraint(name: String, init: KoreClass.() -> Unit) = EnumConstraint(init).also {
-    it.name = name
 }
 
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.enumConstraint(name: String, init: KoreClass.() -> Unit) = EnumConstraint(init).also {
-    it.name = name
-    it.container = this
+fun KorePackage.enumConstraint(nameConstraint: String, init: KoreClass.() -> Unit = {}) = koreClass(EnumConstraint) {
+    name = nameConstraint
+    container = this@enumConstraint
+    init()
+    verify(name == nameConstraint) {  "The name property has muted within the block" }
+    verify(container == this@enumConstraint) {  "The container property has muted within the block" }
 }
 
 /**
@@ -129,19 +102,19 @@ object EnumConstraintValue : KoreClassImpl() {
         superTypes.add(Constraint)
         name = "Constraint Enum Literal"
     }
-
-    operator fun invoke(init: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {
-        metaClass = EnumConstraintValue
-        lowerBound = 1
-        upperBound = 1
-        init()
-    }
 }
 
 /**
  * A short hand factory function with container addition.
  */
-fun KoreClass.literal(name: String, init: KoreAttribute.() -> Unit) = EnumConstraintValue(init).also {
-    it.name = name
-    it.containingClass = this
+fun KoreClass.literal(literalName: String, init: KoreAttribute.() -> Unit) = koreAttribute(EnumConstraintValue) {
+    name = literalName
+    containingClass = this@literal
+    lowerBound = 1
+    upperBound = 1
+    init()
+    verify(name == literalName) {  "The name property has muted within the block" }
+    verify(container == this@literal) {  "The container property has muted within the block" }
+    verify(lowerBound == 1) {  "The lower bound property has muted within the block" }
+    verify(upperBound == 1) {  "The upper bound property has muted within the block" }
 }

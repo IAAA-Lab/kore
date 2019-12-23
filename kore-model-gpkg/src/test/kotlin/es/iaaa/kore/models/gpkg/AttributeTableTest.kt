@@ -22,24 +22,26 @@ import org.junit.jupiter.api.Test
 class AttributeTableTest {
     @Test
     fun `creation of the attribute and its human readable representation`() {
-        val attribute = attributes("test_contents") {
-            identifier = "test contents"
-            description = "some description"
-        }
-        assertEquals(AttributesTable, attribute.metaClass)
-        assertEquals("test_contents", attribute.tableName)
-        assertEquals("test contents", attribute.identifier)
-        assertEquals("some description", attribute.description)
-        assertEquals(
-            """
+        container {
+            val attribute = attributes("test_contents") {
+                identifier = "test contents"
+                description = "some description"
+            }
+            assertEquals(AttributesTable, attribute.metaClass)
+            assertEquals("test_contents", attribute.tableName)
+            assertEquals("test contents", attribute.identifier)
+            assertEquals("some description", attribute.description)
+            assertEquals(
+                """
            |Attributes "test_contents" {
            |  description = "some description"
            |  identifier = "test contents"
            |  tableName = "test_contents"
            |}
            """.trimMargin(),
-            attribute.toPrettyString()
-        )
+                attribute.toPrettyString()
+            )
+        }
     }
 
     @Test

@@ -29,7 +29,8 @@ fun configuration(schema: String, output: String, config: Configuration): Conver
     val options = mapOf<String, Any>(
         "description" to config.description,
         "name" to output,
-        "sql" to config.sql
+        "sql" to config.sql,
+        "metadata" to config.metadata
     )
     return transformation(options).apply {
         input.selector.set(schemaName(schema))
@@ -48,5 +49,6 @@ fun schemaName(name: String): (KoreObject) -> Boolean = {
 data class Configuration(
     val file: String,
     val description: Boolean = true,
-    val sql: Boolean = true
+    val sql: Boolean = true,
+    val metadata: Boolean = true
 )

@@ -15,10 +15,7 @@
  */
 package es.iaaa.kore.models.gpkg
 
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreModel
-import es.iaaa.kore.KorePackage
-import es.iaaa.kore.koreClass
+import es.iaaa.kore.*
 
 val Metadata = KoreModel.createClass().apply {
     name = "Metadata"
@@ -31,9 +28,9 @@ val Metadata = KoreModel.createClass().apply {
 /**
  * A short hand factory function with container addition.
  */
-fun KorePackage.metadata(init: KoreClass.() -> Unit) = koreClass {
-    metaClass = Metadata
+fun KorePackage.metadata(init: KoreClass.() -> Unit) = koreClass(Metadata) {
     container = this@metadata
     init()
+    verify( container == this@metadata) { "The container property has muted within the block" }
 }
 

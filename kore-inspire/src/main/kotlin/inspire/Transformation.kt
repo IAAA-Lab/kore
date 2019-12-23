@@ -52,7 +52,7 @@ val transformation = { options: Map<String, Any> ->
             rule(`Code Lists`, options)
             rule(Arrays)
             rule(`Association Roles`)
-            rule(Voidable)
+            rule(Voidable, options)
             rule(Properties)
             rule(`Naming modification`)
             manipulation(`After rules`)

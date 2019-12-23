@@ -65,7 +65,7 @@ class ContainerManagerTest {
         val containerFile = folder.resolve("test").toFile()
         val sut = container {
             fileName = containerFile.path
-            feature("the_feature") {
+            features("the_feature") {
                 identifier = "test contents"
                 description = "some description"
                 minX = -180.0
@@ -109,8 +109,8 @@ class ContainerManagerTest {
                 column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
             }
             relation("test_relations") {
-                reference { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
-                reference { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
+                foreignColumn { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
+                foreignColumn { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
             }
         }
         ContainerManager.create(sut)
@@ -136,7 +136,7 @@ class ContainerManagerTest {
         val containerFile = folder.resolve("test").toFile()
         val sut = container {
             fileName = containerFile.path
-            feature("test_contents") {
+            features("test_contents") {
                 identifier = "test contents"
                 description = "some description"
                 minX = -180.0
@@ -172,7 +172,7 @@ class ContainerManagerTest {
         val containerFile = folder.resolve("test").toFile()
         val sut = container {
             fileName = containerFile.path
-            feature("test_contents") {
+            features("test_contents") {
                 identifier = "test contents"
                 description = "some description"
                 minX = -180.0
@@ -289,7 +289,7 @@ class ContainerManagerTest {
                     "text_blob"; mimeType = "blob"; type = BlobType()
                 }
             }
-            feature("test_features") {
+            features("test_features") {
                 identifier = "test features"
                 description = "some description"
                 minX = -180.0
@@ -331,8 +331,8 @@ class ContainerManagerTest {
                 column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
             }
             relation("test_relations") {
-                reference { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
-                reference { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
+                foreignColumn { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
+                foreignColumn { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
             }
         }
         assertTrue(ContainerManager.create(sut), "Database failed to create")
