@@ -1,0 +1,937 @@
+Container <<applicationSchema>>  "Common Transport Elements" {
+  Attributes "TN_TransportArea" {
+    description = "Surface that represents the spatial extent of an element of a transport network."
+    identifier = "Common Transport Elements::TransportArea"
+    tableName = "TN_TransportArea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geographicalName INTEGER
+    geometry: GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "TN_VerticalPosition" {
+    description = "Vertical level relative to other transport network elements."
+    identifier = "Common Transport Elements::VerticalPosition"
+    tableName = "TN_VerticalPosition"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom DATETIME
+    validTo DATETIME
+    verticalPosition TEXT NOT NULL CHECK(BASE_VerticalPositionValue)
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Constraint Enum "TN_AccessRestrictionValue" {
+    identifier = "Common Transport Elements::AccessRestrictionValue"
+    forbiddenLegally
+    physicallyImpossible
+    private
+    publicAccess
+    seasonal
+    toll
+  }
+  Attributes "TN_ConditionOfFacility" {
+    description = "State of a transport network element with regards to its completion and use."
+    identifier = "Common Transport Elements::ConditionOfFacility"
+    tableName = "TN_ConditionOfFacility"
+    beginLifespanVersion: DATETIME [0..1]
+    currentStatus TEXT NOT NULL CHECK(BASE_ConditionOfFacilityValue)
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_OwnerAuthority" {
+    description = "The authority owning the transport element."
+    identifier = "Common Transport Elements::OwnerAuthority"
+    tableName = "TN_OwnerAuthority"
+    authority CI_Citation NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_TrafficFlowDirection" {
+    description = "Indicates the direction of the flow of traffic in relation to the direction of the transport link vector."
+    identifier = "Common Transport Elements::TrafficFlowDirection"
+    tableName = "TN_TrafficFlowDirection"
+    beginLifespanVersion: DATETIME [0..1]
+    direction TEXT NOT NULL CHECK(NET_LinkDirectionValue)
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_TransportLinkSequence" {
+    description = "A linear spatial object, composed of an ordered collection of transport links, which represents a continuous path in the transport network without any branches. The element has a defined beginning and end and every position on the transport link sequence is identifiable with one single parameter such as length. It describes an element of the transport network, characterized by one or more thematical identifiers and/or properties."
+    identifier = "Common Transport Elements::TransportLinkSequence"
+    tableName = "TN_TransportLinkSequence"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geographicalName INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+    ref link: NET_DirectedLink[1..*]
+  }
+  Attributes "TN_RestrictionForVehicles" {
+    description = "Restriction on vehicles on a transport element."
+    identifier = "Common Transport Elements::RestrictionForVehicles"
+    tableName = "TN_RestrictionForVehicles"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    measure Measure NOT NULL
+    restrictionType TEXT NOT NULL CHECK(TN_RestrictionTypeValue)
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_MaintenanceAuthority" {
+    description = "The authority responsible for maintenance of the transport element."
+    identifier = "Common Transport Elements::MaintenanceAuthority"
+    tableName = "TN_MaintenanceAuthority"
+    authority CI_Citation NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_MarkerPost" {
+    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
+
+    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
+    identifier = "Common Transport Elements::MarkerPost"
+    tableName = "TN_MarkerPost"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geographicalName INTEGER
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    location TEXT NOT NULL
+    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    route INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Feature "TN_TransportPoint" {
+    description = "A point spatial object - which is not a node - that represents the position of an element of a transport network."
+    identifier = "Common Transport Elements::TransportPoint"
+    tableName = "TN_TransportPoint"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geographicalName INTEGER
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "TN_TransportLinkSet" {
+    description = "A collection of transport link sequences and or individual transport links that has a specific function or significance in a transport network.
+
+    NOTE
+
+    This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
+
+    EXAMPLE
+
+    A dual carriageway road, as a collection of the two link sequences that represent each carriageway."
+    identifier = "Common Transport Elements::TransportLinkSet"
+    tableName = "TN_TransportLinkSet"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geographicalName INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "TN_TransportNode" {
+    description = "A point spatial object which is used for connectivity.
+
+    Nodes are found at either end of the TransportLink."
+    identifier = "Common Transport Elements::TransportNode"
+    tableName = "TN_TransportNode"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geographicalName INTEGER
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Attributes "TN_AccessRestriction" {
+    description = "A restriction on the access to a transport element."
+    identifier = "Common Transport Elements::AccessRestriction"
+    tableName = "TN_AccessRestriction"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    restriction TEXT NOT NULL CHECK(TN_AccessRestrictionValue)
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_TransportProperty" {
+    description = "A reference to a property that falls upon the network. This property can apply to the whole of the network element it is associated with or - for linear spatial objects - be described using linear referencing."
+    identifier = "Common Transport Elements::TransportProperty"
+    tableName = "TN_TransportProperty"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom DATETIME
+    validTo DATETIME
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Constraint Enum "TN_RestrictionTypeValue" {
+    identifier = "Common Transport Elements::RestrictionTypeValue"
+    maximumDoubleAxleWeight
+    maximumHeight
+    maximumLength
+    maximumSingleAxleWeight
+    maximumTotalWeight
+    maximumTripleAxleWeight
+    maximumWidth
+  }
+  Attributes "TN_TransportLink" {
+    description = "A linear spatial object that describes the geometry and connectivity of a transport network between two points in the network."
+    identifier = "Common Transport Elements::TransportLink"
+    tableName = "TN_TransportLink"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    geographicalName INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Constraint Enum "TN_TransportTypeValue" {
+    identifier = "Common Transport Elements::TransportTypeValue"
+    air
+    cable
+    rail
+    road
+    water
+  }
+  Attributes "TN_TransportNetwork" {
+    description = "Collection of network elements that belong to a single mode of transport.
+
+    NOTE Road, rail, water and air transport are always considered separate transport modes. Even within these four categories, multiple modes of transport can be defined, based on infrastructure, vehicle types, propulsion system, operation and/or other defining characteristics.
+
+    EXAMPLE All road transport can be considered one mode of transport for some applications. For other applications, it might be necessary to distinguish between different public road transport networks. Within water transport, marine and inland water transport can be considered to be separate modes of transport for some applications, as they use different types of ships."
+    identifier = "Common Transport Elements::TransportNetwork"
+    tableName = "TN_TransportNetwork"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    typeOfTransport TEXT NOT NULL CHECK(TN_TransportTypeValue)
+  }
+  Attributes "TN_TransportObject" {
+    description = "An identity base for transport network objects in the real world.
+
+    NOTE Derived 'views' of real-world transport objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name."
+    identifier = "Common Transport Elements::TransportObject"
+    tableName = "TN_TransportObject"
+    geographicalName INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Relation "TN_TransportObject_geographicalName" {
+    profile = "attributes"
+    relatedReference = "TN_TransportObject#geographicalName"
+    tableName = "TN_TransportObject_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TransportObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "TN_MarkerPost_route" {
+    profile = "attributes"
+    relatedReference = "TN_MarkerPost#route"
+    tableName = "TN_MarkerPost_route"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLinkSet(id)
+  }
+  Relation "TN_TransportNetwork_inspireId" {
+    profile = "attributes"
+    relatedReference = "TN_TransportNetwork#inspireId"
+    tableName = "TN_TransportNetwork_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TransportNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "NET_NetworkElement_inNetwork" {
+    profile = "attributes"
+    tableName = "NET_NetworkElement_inNetwork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
+  }
+  Relation "NET_NetworkElement_inspireId" {
+    profile = "attributes"
+    relatedReference = "NET_NetworkElement#inspireId"
+    tableName = "NET_NetworkElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NET_Node_spokeStart" {
+    profile = "features"
+    relatedReference = "NET_Link#startNode"
+    tableName = "NET_Node_spokeStart"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
+  }
+  Relation "NET_Node_spokeEnd" {
+    profile = "features"
+    relatedReference = "NET_Link#endNode"
+    tableName = "NET_Node_spokeEnd"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
+  }
+  Relation "NET_Network_geographicalName" {
+    profile = "attributes"
+    tableName = "NET_Network_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "NET_NetworkReference_involves" {
+    profile = "attributes"
+    tableName = "NET_NetworkReference_involves"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+  }
+  Relation "NET_NetworkReference_element" {
+    profile = "attributes"
+    relatedReference = "NET_NetworkReference#element"
+    tableName = "NET_NetworkReference_element"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
+  }
+  Relation "NET_DirectedLink_link" {
+    profile = "features"
+    relatedReference = "NET_DirectedLink#link"
+    tableName = "NET_DirectedLink_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
+  }
+  Relation "HH_SA_Event_additionalInformation" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#additionalInformation"
+    tableName = "HH_SA_Event_additionalInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
+  }
+  Relation "HH_SA_Event_part" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#aggregation"
+    tableName = "HH_SA_Event_part"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_Event_inspireId" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#inspireId"
+    tableName = "HH_SA_Event_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HH_SA_EventConsequence_event" {
+    profile = "attributes"
+    relatedReference = "HH_SA_EventConsequence#event"
+    tableName = "HH_SA_EventConsequence_event"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "AU_admUnit_boundary" {
+    profile = "features"
+    tableName = "AU_admUnit_boundary"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
+  }
+  Relation "AU_AdministrativeUnit_administeredBy" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_administeredBy"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
+    profile = "features"
+    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
+    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeUnit#inspireId"
+    tableName = "AU_AdministrativeUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeUnit_name" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_AdministrativeUnit_nationalLevelName" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_nationalLevelName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
+  }
+  Relation "AU_AdministrativeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeBoundary#inspireId"
+    tableName = "AU_AdministrativeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeBoundary_nationalLevel" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeBoundary_nationalLevel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
+  }
+  Relation "AU_Condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_Condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_Condominium_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_Condominium#inspireId"
+    tableName = "AU_Condominium_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_Condominium_name" {
+    profile = "attributes"
+    tableName = "AU_Condominium_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_ResidenceOfAuthority_name" {
+    profile = "attributes"
+    relatedReference = "AU_ResidenceOfAuthority#name"
+    tableName = "AU_ResidenceOfAuthority_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Constraint Enum "BASE_VerticalPositionValue" {
+    identifier = "Base Types::VerticalPositionValue"
+    onGroundSurface
+    suspendedOrElevated
+    underground
+  }
+  Constraint Enum "BASE_ConditionOfFacilityValue" {
+    identifier = "Base Types::ConditionOfFacilityValue"
+    decommissioned
+    disused
+    functional
+    projected
+    underConstruction
+  }
+  Constraint Enum "NET_LinkDirectionValue" {
+    identifier = "Network::LinkDirectionValue"
+    bothDirections
+    inDirection
+    inOppositeDirection
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "NET_NetworkReference" {
+    description = "A reference to a network element."
+    identifier = "Network::NetworkReference"
+    tableName = "NET_NetworkReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    element INTEGER
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "NET_DirectedLink" {
+    description = "A link either in its positive or negative direction."
+    identifier = "Network::DirectedLink"
+    tableName = "NET_DirectedLink"
+    direction Sign NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    link INTEGER
+  }
+  Attributes "NET_GeneralisedLink" {
+    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
+    identifier = "Network::GeneralisedLink"
+    tableName = "NET_GeneralisedLink"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "NET_NetworkElement" {
+    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
+    identifier = "Network::NetworkElement"
+    tableName = "NET_NetworkElement"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "NET_Network" {
+    description = "A network is a collection of network elements.
+
+    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
+    identifier = "Network::Network"
+    tableName = "NET_Network"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Feature "NET_Node" {
+    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
+
+    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
+    identifier = "Network::Node"
+    tableName = "NET_Node"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Feature "NET_Link" {
+    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
+    identifier = "Network::Link"
+    tableName = "NET_Link"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Attributes "HH_SA_TrafficRelatedEvent" {
+    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
+    identifier = "Safety::TrafficRelatedEvent"
+    tableName = "HH_SA_TrafficRelatedEvent"
+    additionalInformation INTEGER
+    aggregation INTEGER
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    endTime DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    isIntentional BOOLEAN
+    isMajor BOOLEAN
+    locationUnit LocationUnitType NOT NULL
+    startTime DATETIME NOT NULL
+    trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
+    ref causeOfEvent: PT_FreeText[0..*]
+    ref sourceReference: CI_Citation[0..*]
+  }
+  Attributes "HH_SA_Event" {
+    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
+    identifier = "Safety::Event"
+    tableName = "HH_SA_Event"
+    additionalInformation INTEGER
+    aggregation INTEGER
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    endTime DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    isIntentional BOOLEAN
+    isMajor BOOLEAN
+    locationUnit LocationUnitType NOT NULL
+    startTime DATETIME NOT NULL
+    ref causeOfEvent: PT_FreeText[0..*]
+    ref sourceReference: CI_Citation[0..*]
+  }
+  Attributes "HH_SA_EventInformation" {
+    description = "All available information about the  event."
+    identifier = "Safety::EventInformation"
+    tableName = "HH_SA_EventInformation"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "HH_SA_EventConsequence" {
+    description = "The harm an event caused for humans, propriety."
+    identifier = "Safety::EventConsequence"
+    tableName = "HH_SA_EventConsequence"
+    consequenceType TEXT NOT NULL CHECK(HH_SA_ConsequenceTypeValue)
+    event INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    value DOUBLE NOT NULL
+  }
+  Feature "AU_AdministrativeUnit" {
+    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    identifier = "AdministrativeUnits::AdministrativeUnit"
+    tableName = "AU_AdministrativeUnit"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    nationalCode TEXT NOT NULL
+    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+    upperLevelUnit INTEGER
+  }
+  Feature "AU_AdministrativeBoundary" {
+    description = "A line of demarcation between administrative units."
+    identifier = "AdministrativeUnits::AdministrativeBoundary"
+    tableName = "AU_AdministrativeBoundary"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+  }
+  Attributes "GMD_LocalisedCharacterString" {
+    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+  Feature "AU_ResidenceOfAuthority" {
+    description = "Data type representing the name and position of a residence of authority."
+    identifier = "AdministrativeUnits::ResidenceOfAuthority"
+    tableName = "AU_ResidenceOfAuthority"
+    geometry POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    name INTEGER
+  }
+  Attributes "AU_AdministrativeHierarchyLevel" {
+    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    tableName = "AU_AdministrativeHierarchyLevel"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+  }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "HH_SA_TrafficTypeValue" {
+    identifier = "Safety::TrafficTypeValue"
+  }
+  Constraint Enum "HH_SA_ConsequenceTypeValue" {
+    identifier = "Safety::ConsequenceTypeValue"
+  }
+  Constraint Enum "BASE2_CountryCode" {
+    identifier = "Base Types 2::CountryCode"
+    AT
+    BE
+    BG
+    CY
+    CZ
+    DE
+    DK
+    EE
+    EL
+    ES
+    FI
+    FR
+    HR
+    HU
+    IE
+    IT
+    LT
+    LU
+    LV
+    MT
+    NL
+    PL
+    PT
+    RO
+    SE
+    SI
+    SK
+    TR
+    UK
+  }
+  Constraint Enum "AU_AdministrativeHierarchyLevel" {
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    1stOrder
+    2ndOrder
+    3rdOrder
+    4thOrder
+    5thOrder
+    6thOrder
+  }
+  Constraint Enum "AU_LegalStatusValue" {
+    identifier = "AdministrativeUnits::LegalStatusValue"
+    agreed
+    notAgreed
+  }
+  Constraint Enum "AU_TechnicalStatusValue" {
+    identifier = "AdministrativeUnits::TechnicalStatusValue"
+    edgeMatched
+    notEdgeMatched
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}

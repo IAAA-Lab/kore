@@ -1,0 +1,121 @@
+Container <<applicationSchema>>  "Hydro - base" {
+  Attributes "HY_HydroIdentifier" {
+    description = "A hydrographic thematic identifier.
+
+    NOTE May be used to hold a national hydrological identification code."
+    identifier = "Hydro - base::HydroIdentifier"
+    tableName = "HY_HydroIdentifier"
+    classificationScheme TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+  }
+  Attributes "HY_HydroObject" {
+    description = "An identity base for hydrographic (including man-made) objects in the real world.
+
+    NOTE Derived 'views' of real-world hydrographic objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name or hydrographic identifier."
+    identifier = "Hydro - base::HydroObject"
+    tableName = "HY_HydroObject"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Relation "HY_HydroObject_relatedHydroObject" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_relatedHydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroObject(id)
+  }
+  Relation "HY_HydroObject_geographicalName" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "HY_HydroObject_hydroId" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+}

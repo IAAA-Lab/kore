@@ -1,0 +1,1295 @@
+Container <<applicationSchema>>  "Air Transport Network" {
+  Attributes "TN_A_DesignatedPoint" {
+    description = "A geographical location not marked by the site of a radio navigation aid, used in defining an ATS route, the flight path of an aircraft or for other navigation or ATS purposes.
+
+    SOURCE [AIXM5.0].
+
+    NOTE Examples of Designated points are compulsory and non-compulsory reporting points."
+    identifier = "Air Transport Network::DesignatedPoint"
+    tableName = "TN_A_DesignatedPoint"
+    beginLifespanVersion DATETIME
+    designator TEXT
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    significantPoint BOOLEAN NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_AirspaceArea" {
+    description = "A defined volume in the air, described as horizontal projection with vertical limits.
+
+    SOURCE [AirspaceVolume - AIXM5.0].
+
+    NOTE 1 Definition of Airspace: A defined three dimensional region of space relevant to air traffic [AIXM5.0].
+
+    NOTE 2 Airspace regions are managed by air traffic control systems to provide a safe IFR (Instrument Flight Rules) navigation for air traffic services and aircrafts."
+    identifier = "Air Transport Network::AirspaceArea"
+    tableName = "TN_A_AirspaceArea"
+    AirspaceAreaType TEXT NOT NULL CHECK(TN_A_AirspaceAreaTypeValue)
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry: GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_AirRoute" {
+    description = "A specified route designed for channelling the flow of traffic as necessary for the provision of air traffic services, from the end of the take-off and initial climb phase to the commencement of the approach and landing phase.
+
+    SOURCE [Route - AIXM5.0].
+
+    NOTE A collection of air link sequences and or individual air links that are characterized by one or more thematic identifiers and /or properties, which perform a Route."
+    identifier = "Air Transport Network::AirRoute"
+    tableName = "TN_A_AirRoute"
+    airRouteType AirRouteTypeValue
+    beginLifespanVersion DATETIME
+    designator TEXT
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_LowerAltitudeLimit" {
+    description = "Altitude that defines the lower limit of an air transport network object.
+
+    NOTE When applied to an AirRouteLink it corresponds to the Lowest Safe Altitude, which is defined in order to provide safety for navigation."
+    identifier = "Air Transport Network::LowerAltitudeLimit"
+    tableName = "TN_A_LowerAltitudeLimit"
+    altitude Measure NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Constraint Enum "TN_A_AirRouteLinkClassValue" {
+    identifier = "Air Transport Network::AirRouteLinkClassValue"
+    RNAV
+    TACAN
+    conventional
+  }
+  Attributes "TN_A_TaxiwayArea" {
+    description = "A defined path at an aerodrome/heliport established for the taxiing of aircraft/helicopters and intended to provide a link between one part of the aerodrome and another.
+
+    SOURCE [Taxiway - AIXM5.0].
+
+    NOTE This includes aircraft/helicopter stand taxilines, apron taxiways, rapid exit taxiways, air taxiways etc."
+    identifier = "Air Transport Network::TaxiwayArea"
+    tableName = "TN_A_TaxiwayArea"
+    beginLifespanVersion DATETIME
+    designator TEXT
+    endLifespanVersion DATETIME
+    geometry: GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_StandardInstrumentArrival" {
+    description = "A designated instrument flight rule (IFR) arrival route linking a significant point, normally on an ATS route, with a point from which a published instrument approach procedure can be commenced.
+
+    SOURCE [AIXM5.0].
+
+    NOTE 1 Acronym: STAR.
+
+    NOTE 2 It corresponds to the initial approach during the landing phase. Each airport/heliport could have various STAR linking significant points (usually connected to air routes) to the points designated to start the landing on a specific runway."
+    identifier = "Air Transport Network::StandardInstrumentArrival"
+    tableName = "TN_A_StandardInstrumentArrival"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    designator TEXT
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref ThoroughfareName inv transportLink[0..*]
+  }
+  Constraint Enum "TN_A_NavaidTypeValue" {
+    identifier = "Air Transport Network::NavaidTypeValue"
+    DME
+    ILS
+    ILS-DME
+    LOC
+    LOC-DME
+    MKR
+    MLS
+    MLS-DME
+    NDB
+    NDB-DME
+    NDB-MKR
+    TACAN
+    TLS
+    VOR
+    VOR-DME
+    VORTAC
+  }
+  Attributes "TN_A_RunwayCentrelinePoint" {
+    description = "An operationally significant position on the center line of a runway direction.
+
+    SOURCE [AIXM5.0].
+
+    NOTE 1 The role of the point along the runway direction centreline is indicated within the pointRole attribute.
+
+    NOTE 2 Runway centreline points are used to connect the Procedure Links that connect an airport/heliport to the rest of the air network.
+
+    EXAMPLE A typical example is the runway threshold [AIXM5.0]."
+    identifier = "Air Transport Network::RunwayCentrelinePoint"
+    tableName = "TN_A_RunwayCentrelinePoint"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    pointRole PointRoleValue NOT NULL
+    significantPoint BOOLEAN NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_AerodromeNode" {
+    description = "Node located at the aerodrome reference point of an airport/heliport, which is used to represent it in a simplified way.
+
+    DEFINITION Aerodrome Reference Point (ARP): The designated geographical location of an aerodrome, located near the initial or planned geometric centre of the aerodrome and normally remaining where originally established [AIXM3.3].
+
+    DEFINITION Airport/heliport: A defined area on land or water (including any buildings, installations and equipment) intended to be used either wholly or in part for the arrival, departure and surface movement of aircraft/helicopters [AIXM5.0].
+
+    SOURCE [AIXM5.0]."
+    identifier = "Air Transport Network::AerodromeNode"
+    tableName = "TN_A_AerodromeNode"
+    beginLifespanVersion DATETIME
+    designatorIATA TEXT
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    locationIndicatorICAO TEXT
+    significantPoint BOOLEAN NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_StandardInstrumentDeparture" {
+    description = "A designated instrument flight rule (IFR) departure route linking the aerodrome or a specific runway of the aerodrome with a specified significant point, normally on a designated ATS route, at which the en-route phase of a flight commences.
+
+    SOURCE [AIXM5.0].
+
+    NOTE 1 Acronym: SID.
+
+    NOTE 2 It corresponds to the take-off phase. Each airport/heliport could have various SID linking the different runways to one or various significant points, usually connected to air routes."
+    identifier = "Air Transport Network::StandardInstrumentDeparture"
+    tableName = "TN_A_StandardInstrumentDeparture"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    designator TEXT
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref ThoroughfareName inv transportLink[0..*]
+  }
+  Attributes "TN_A_ElementLength" {
+    description = "The physical length of the element."
+    identifier = "Air Transport Network::ElementLength"
+    tableName = "TN_A_ElementLength"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    length Measure NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_AirLink" {
+    description = "A linear spatial object that describes the geometry and connectivity of the air network between two points in the network."
+    identifier = "Air Transport Network::AirLink"
+    tableName = "TN_A_AirLink"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref ThoroughfareName inv transportLink[0..*]
+  }
+  Attributes "TN_A_AerodromeCategory" {
+    description = "Aerodrome category concerning the scope and importance of the air traffic services offered from and to it."
+    identifier = "Air Transport Network::AerodromeCategory"
+    tableName = "TN_A_AerodromeCategory"
+    aerodromeCategory TEXT NOT NULL CHECK(TN_A_AerodromeCategoryValue)
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_RunwayArea" {
+    description = "A defined rectangular area on a land aerodrome/heliport prepared for the landing and take-off of aircraft.
+
+    SOURCE [Runway - AIXM5.0].
+
+    NOTE 1 This includes the concept of Final Approach and Take-Off Area (FATO) for helicopters [Runway - AIXM5.0].
+
+    NOTE 2 The runway strip is a defined area including the runway and stopway, if provided, intended : a) to reduce the risk of damage to aircraft running off a runway; and b) to protect aircraft flying over it during take-off or landing operations [ICAO]."
+    identifier = "Air Transport Network::RunwayArea"
+    tableName = "TN_A_RunwayArea"
+    beginLifespanVersion DATETIME
+    designator TEXT
+    endLifespanVersion DATETIME
+    geometry: GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    runwayType TEXT CHECK(TN_A_RunwayTypeValue)
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Constraint Enum "TN_A_AirRouteTypeValue" {
+    identifier = "Air Transport Network::AirRouteTypeValue"
+    ATS
+    NAT
+  }
+  Attributes "TN_A_UpperAltitudeLimit" {
+    description = "Altitude that defines the upper limit of an air transport network object."
+    identifier = "Air Transport Network::UpperAltitudeLimit"
+    tableName = "TN_A_UpperAltitudeLimit"
+    altitude Measure NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_Navaid" {
+    description = "One or more Navaid Equipments providing navigation services.
+
+    DEFINITION Navaid equipment: A physical navaid equipment like VOR, DME, localizer, TACAN or etc.
+
+    SOURCE [AIXM5.0].
+
+    NOTE 1
+
+    The Navaid Equipment share business rules like paired frequencies [AIXM5.0]."
+    identifier = "Air Transport Network::Navaid"
+    tableName = "TN_A_Navaid"
+    beginLifespanVersion DATETIME
+    designator TEXT
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    navaidType TEXT CHECK(TN_A_NavaidTypeValue)
+    significantPoint BOOLEAN NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_ElementWidth" {
+    description = "The physical width of the element."
+    identifier = "Air Transport Network::ElementWidth"
+    tableName = "TN_A_ElementWidth"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    width Measure NOT NULL
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_InstrumentApproachProcedure" {
+    description = "A series of predetermined manoeuvres by reference to flight instruments with specified protection from obstacles from the initial approach fix, or where applicable, from the beginning of a defined arrival route to a point from which a landing can be completed and thereafter, if a landing is not completed, to a position at which holding or en route obstacle clearance criteria apply.
+
+    SOURCE  [AIXM5.0].
+
+    NOTE 1 Acronym: IAP.
+
+    NOTE 2 It corresponds to the final approach and arrival during the landing phase.
+
+    NOTE 3 A specific runway of an airport/heliport usually has more than one IAP, depending on the landing direction on it."
+    identifier = "Air Transport Network::InstrumentApproachProcedure"
+    tableName = "TN_A_InstrumentApproachProcedure"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref ThoroughfareName inv transportLink[0..*]
+  }
+  Constraint Enum "TN_A_AirUseRestrictionValue" {
+    identifier = "Air Transport Network::AirUseRestrictionValue"
+    reservedForMilitary
+    temporalRestrictions
+  }
+  Attributes "TN_A_TouchDownLiftOff" {
+    description = "A load bearing area on which a helicopter may touch down or lift-off.
+
+    SOURCE [AIXM5.0]."
+    identifier = "Air Transport Network::TouchDownLiftOff"
+    tableName = "TN_A_TouchDownLiftOff"
+    beginLifespanVersion DATETIME
+    designator TEXT
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    significantPoint BOOLEAN NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_ProcedureLink" {
+    description = "A series of predetermined manoeuvres with specified protection from obstacles.
+
+    SOURCE [Procedure - AIXM5.0].
+
+    NOTE 1 A defined airway connector designed for channelling the flow of traffic as necessary for the provision of air traffic services during the take-off or landing phase, which links an airport/heliport to a significant point, usually connected to one or more air routes.
+
+    NOTE 2 When a airport/heliport is not connected with a standardized airway connector to the rest of the air network, this object can be used as a fictitious connector between the airport/heliport and a significant point on one or more ATS routes - for example for VFR (Visual Flight Rules) flights.
+
+    NOTE 3 Nevertheless, three main types of standardized Procedures are usually defined for IFR (Instrument Flight Rules) flights:
+
+    - Standard Instrument Departure (SID), corresponding to the take-off phase.
+
+    - Standard Instrument Arrival (STAR), corresponding to the initial approach during the landing phase.
+
+    - Instrument Approach Procedure (IAP), corresponding to the final approach and arrival during the landing phase."
+    identifier = "Air Transport Network::ProcedureLink"
+    tableName = "TN_A_ProcedureLink"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref ThoroughfareName inv transportLink[0..*]
+  }
+  Attributes "TN_A_ApronArea" {
+    description = "A defined area, on a land aerodrome/heliport, intended to accommodate aircraft/helicopters for purposes of loading and unloading passengers, mail or cargo, and for fuelling, parking or maintenance.
+
+    SOURCE [Apron - AIXM5.0]."
+    identifier = "Air Transport Network::ApronArea"
+    tableName = "TN_A_ApronArea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry: GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_AerodromeArea" {
+    description = "A defined area on land or water (including any buildings, installations and equipment) intended to be used either wholly or in part for the arrival, departure and surface movement of aircraft and/or helicopters.
+
+    SOURCE [AIXM5.0].
+
+    NOTE An area spatial object which is used to represent the physical limits of all the facilities which form part of an inland aerodrome."
+    identifier = "Air Transport Network::AerodromeArea"
+    tableName = "TN_A_AerodromeArea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry: GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Constraint Enum "TN_A_RunwayTypeValue" {
+    identifier = "Air Transport Network::RunwayTypeValue"
+    FATO
+    runway
+  }
+  Constraint Enum "TN_A_SurfaceCompositionValue" {
+    identifier = "Air Transport Network::SurfaceCompositionValue"
+    asphalt
+    concrete
+    grass
+  }
+  Attributes "TN_A_FieldElevation" {
+    description = "The aerodrome elevation as the vertical distance between the highest point of the landing area of an aerodrome and mean sea level.
+
+    SOURCE [AIXM5.0].
+
+    NOTE This might be different from the elevation of the Aerodrome Reference Point."
+    identifier = "Air Transport Network::FieldElevation"
+    tableName = "TN_A_FieldElevation"
+    altitude Measure NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Constraint Enum "TN_A_AerodromeTypeValue" {
+    identifier = "Air Transport Network::AerodromeTypeValue"
+    aerodromeHeliport
+    aerodromeOnly
+    heliportOnly
+    landingSite
+  }
+  Attributes "TN_A_AirRouteLink" {
+    description = "A portion of a route to be flown usually without an intermediate stop, as defined by two consecutive significant points.
+
+    SOURCE [AirRouteSegment - AIXM5.0].
+
+    NOTE The presence of air nodes (normally defining Significant Points) is not mandated."
+    identifier = "Air Transport Network::AirRouteLink"
+    tableName = "TN_A_AirRouteLink"
+    airRouteLinkClass TEXT CHECK(TN_A_AirRouteLinkClassValue)
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref ThoroughfareName inv transportLink[0..*]
+  }
+  Attributes "TN_A_UseRestriction" {
+    description = "The restrictions to the use of an air network object."
+    identifier = "Air Transport Network::UseRestriction"
+    tableName = "TN_A_UseRestriction"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    restriction TEXT NOT NULL CHECK(TN_A_AirUseRestrictionValue)
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_ConditionOfAirFacility" {
+    description = "State of an air transport network element with regards to its completion and use."
+    identifier = "Air Transport Network::ConditionOfAirFacility"
+    tableName = "TN_A_ConditionOfAirFacility"
+    beginLifespanVersion: DATETIME [0..1]
+    currentStatus: TEXT
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Constraint Enum "TN_A_PointRoleValue" {
+    identifier = "Air Transport Network::PointRoleValue"
+    end
+    mid
+    start
+    threshold
+  }
+  Constraint Enum "TN_A_AerodromeCategoryValue" {
+    identifier = "Air Transport Network::AerodromeCategoryValue"
+    domesticNational
+    domesticRegional
+    international
+  }
+  Attributes "TN_A_SurfaceComposition" {
+    description = "The composition of an aerodrome/heliport related surface."
+    identifier = "Air Transport Network::SurfaceComposition"
+    tableName = "TN_A_SurfaceComposition"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    surfaceComposition TEXT NOT NULL CHECK(TN_A_SurfaceCompositionValue)
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_AirNode" {
+    description = "A node which occurs in a air network."
+    identifier = "Air Transport Network::AirNode"
+    tableName = "TN_A_AirNode"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    significantPoint BOOLEAN NOT NULL
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_A_AerodromeType" {
+    description = "A code specifying the type of aerodrome.
+
+    SOURCE [AIXM5.0].
+
+    EXAMPLE Aerodrome only, combined aerodrome/heliport or simple landing site."
+    identifier = "Air Transport Network::AerodromeType"
+    tableName = "TN_A_AerodromeType"
+    aerodromeType TEXT NOT NULL CHECK(TN_A_AerodromeTypeValue)
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
+  }
+  Attributes "TN_A_AirLinkSequence" {
+    description = "A linear spatial object, composed of an ordered collection of air links, which represents a continuous path in the air network without any branches.
+
+    NOTE 1 The element has a defined beginning and end and every position on the air link sequence is identifiable with one single parameter such as length. It describes an element of the air network, which could be characterized by one or more thematical identifiers and/or properties.
+
+    NOTE 2 This collection of air links is equivalent to RoutePortion feature in AIXM5.0. RoutePortion: A group of two or more consecutive segments of the same route, which have the usage and/or the same flight restrictions [AIXM5.0]."
+    identifier = "Air Transport Network::AirLinkSequence"
+    tableName = "TN_A_AirLinkSequence"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref link: NET_DirectedLink[1..*]
+  }
+  Constraint Enum "TN_A_AirspaceAreaTypeValue" {
+    identifier = "Air Transport Network::AirspaceAreaTypeValue"
+    ATZ
+    CTA
+    CTR
+    D
+    FIR
+    P
+    R
+    TMA
+    UIR
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "NET_Node_spokeStart" {
+    profile = "features"
+    relatedReference = "NET_Link#startNode"
+    tableName = "NET_Node_spokeStart"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
+  }
+  Relation "NET_Node_spokeEnd" {
+    profile = "features"
+    relatedReference = "NET_Link#endNode"
+    tableName = "NET_Node_spokeEnd"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
+  }
+  Relation "NET_NetworkElement_inNetwork" {
+    profile = "attributes"
+    tableName = "NET_NetworkElement_inNetwork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
+  }
+  Relation "NET_NetworkElement_inspireId" {
+    profile = "attributes"
+    relatedReference = "NET_NetworkElement#inspireId"
+    tableName = "NET_NetworkElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "NET_Network_geographicalName" {
+    profile = "attributes"
+    tableName = "NET_Network_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "TN_MarkerPost_route" {
+    profile = "attributes"
+    relatedReference = "TN_MarkerPost#route"
+    tableName = "TN_MarkerPost_route"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLinkSet(id)
+  }
+  Relation "NET_NetworkReference_involves" {
+    profile = "attributes"
+    tableName = "NET_NetworkReference_involves"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+  }
+  Relation "NET_NetworkReference_element" {
+    profile = "attributes"
+    relatedReference = "NET_NetworkReference#element"
+    tableName = "NET_NetworkReference_element"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
+  }
+  Relation "NET_DirectedLink_link" {
+    profile = "features"
+    relatedReference = "NET_DirectedLink#link"
+    tableName = "NET_DirectedLink_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
+  }
+  Relation "HH_SA_Event_additionalInformation" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#additionalInformation"
+    tableName = "HH_SA_Event_additionalInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
+  }
+  Relation "HH_SA_Event_part" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#aggregation"
+    tableName = "HH_SA_Event_part"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_Event_inspireId" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#inspireId"
+    tableName = "HH_SA_Event_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HH_SA_EventConsequence_event" {
+    profile = "attributes"
+    relatedReference = "HH_SA_EventConsequence#event"
+    tableName = "HH_SA_EventConsequence_event"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "AU_admUnit_boundary" {
+    profile = "features"
+    tableName = "AU_admUnit_boundary"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
+  }
+  Relation "AU_AdministrativeUnit_administeredBy" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_administeredBy"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
+    profile = "features"
+    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
+    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeUnit#inspireId"
+    tableName = "AU_AdministrativeUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeUnit_name" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_AdministrativeUnit_nationalLevelName" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_nationalLevelName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
+  }
+  Relation "AU_AdministrativeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeBoundary#inspireId"
+    tableName = "AU_AdministrativeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeBoundary_nationalLevel" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeBoundary_nationalLevel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
+  }
+  Relation "AU_Condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_Condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_Condominium_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_Condominium#inspireId"
+    tableName = "AU_Condominium_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_Condominium_name" {
+    profile = "attributes"
+    tableName = "AU_Condominium_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_ResidenceOfAuthority_name" {
+    profile = "attributes"
+    relatedReference = "AU_ResidenceOfAuthority#name"
+    tableName = "AU_ResidenceOfAuthority_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Constraint Enum "BASE_ConditionOfFacilityValue" {
+    identifier = "Base Types::ConditionOfFacilityValue"
+    decommissioned
+    disused
+    functional
+    projected
+    underConstruction
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "NET_GeneralisedLink" {
+    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
+    identifier = "Network::GeneralisedLink"
+    tableName = "NET_GeneralisedLink"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "NET_NetworkReference" {
+    description = "A reference to a network element."
+    identifier = "Network::NetworkReference"
+    tableName = "NET_NetworkReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    element INTEGER
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "NET_DirectedLink" {
+    description = "A link either in its positive or negative direction."
+    identifier = "Network::DirectedLink"
+    tableName = "NET_DirectedLink"
+    direction Sign NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    link INTEGER
+  }
+  Feature "NET_Node" {
+    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
+
+    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
+    identifier = "Network::Node"
+    tableName = "NET_Node"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Feature "NET_Link" {
+    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
+    identifier = "Network::Link"
+    tableName = "NET_Link"
+    beginLifespanVersion DATETIME
+    centrelineGeometry CURVE NOT NULL
+    endLifespanVersion DATETIME
+    endNode INTEGER
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    startNode INTEGER
+  }
+  Attributes "NET_NetworkElement" {
+    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
+    identifier = "Network::NetworkElement"
+    tableName = "NET_NetworkElement"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "NET_Network" {
+    description = "A network is a collection of network elements.
+
+    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
+    identifier = "Network::Network"
+    tableName = "NET_Network"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Attributes "TN_MarkerPost" {
+    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
+
+    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
+    identifier = "Common Transport Elements::MarkerPost"
+    tableName = "TN_MarkerPost"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry: POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    location TEXT NOT NULL
+    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    route INTEGER
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "TN_TransportLinkSet" {
+    description = "A collection of transport link sequences and or individual transport links that has a specific function or significance in a transport network.
+
+    NOTE
+
+    This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
+
+    EXAMPLE
+
+    A dual carriageway road, as a collection of the two link sequences that represent each carriageway."
+    identifier = "Common Transport Elements::TransportLinkSet"
+    tableName = "TN_TransportLinkSet"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    validFrom DATETIME
+    validTo DATETIME
+    ref geographicalName: GN_GeographicalName[0..1]
+  }
+  Attributes "HH_SA_TrafficRelatedEvent" {
+    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
+    identifier = "Safety::TrafficRelatedEvent"
+    tableName = "HH_SA_TrafficRelatedEvent"
+    additionalInformation INTEGER
+    aggregation INTEGER
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    endTime DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    isIntentional BOOLEAN
+    isMajor BOOLEAN
+    locationUnit LocationUnitType NOT NULL
+    startTime DATETIME NOT NULL
+    trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
+    ref causeOfEvent: PT_FreeText[0..*]
+    ref sourceReference: CI_Citation[0..*]
+  }
+  Attributes "HH_SA_Event" {
+    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
+    identifier = "Safety::Event"
+    tableName = "HH_SA_Event"
+    additionalInformation INTEGER
+    aggregation INTEGER
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    endTime DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    isIntentional BOOLEAN
+    isMajor BOOLEAN
+    locationUnit LocationUnitType NOT NULL
+    startTime DATETIME NOT NULL
+    ref causeOfEvent: PT_FreeText[0..*]
+    ref sourceReference: CI_Citation[0..*]
+  }
+  Attributes "HH_SA_EventInformation" {
+    description = "All available information about the  event."
+    identifier = "Safety::EventInformation"
+    tableName = "HH_SA_EventInformation"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "HH_SA_EventConsequence" {
+    description = "The harm an event caused for humans, propriety."
+    identifier = "Safety::EventConsequence"
+    tableName = "HH_SA_EventConsequence"
+    consequenceType TEXT NOT NULL CHECK(HH_SA_ConsequenceTypeValue)
+    event INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    value DOUBLE NOT NULL
+  }
+  Feature "AU_AdministrativeUnit" {
+    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    identifier = "AdministrativeUnits::AdministrativeUnit"
+    tableName = "AU_AdministrativeUnit"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    nationalCode TEXT NOT NULL
+    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+    upperLevelUnit INTEGER
+  }
+  Feature "AU_AdministrativeBoundary" {
+    description = "A line of demarcation between administrative units."
+    identifier = "AdministrativeUnits::AdministrativeBoundary"
+    tableName = "AU_AdministrativeBoundary"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+  }
+  Attributes "GMD_LocalisedCharacterString" {
+    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+  Feature "AU_ResidenceOfAuthority" {
+    description = "Data type representing the name and position of a residence of authority."
+    identifier = "AdministrativeUnits::ResidenceOfAuthority"
+    tableName = "AU_ResidenceOfAuthority"
+    geometry POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    name INTEGER
+  }
+  Attributes "AU_AdministrativeHierarchyLevel" {
+    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    tableName = "AU_AdministrativeHierarchyLevel"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+  }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "HH_SA_TrafficTypeValue" {
+    identifier = "Safety::TrafficTypeValue"
+  }
+  Constraint Enum "HH_SA_ConsequenceTypeValue" {
+    identifier = "Safety::ConsequenceTypeValue"
+  }
+  Constraint Enum "BASE2_CountryCode" {
+    identifier = "Base Types 2::CountryCode"
+    AT
+    BE
+    BG
+    CY
+    CZ
+    DE
+    DK
+    EE
+    EL
+    ES
+    FI
+    FR
+    HR
+    HU
+    IE
+    IT
+    LT
+    LU
+    LV
+    MT
+    NL
+    PL
+    PT
+    RO
+    SE
+    SI
+    SK
+    TR
+    UK
+  }
+  Constraint Enum "AU_AdministrativeHierarchyLevel" {
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    1stOrder
+    2ndOrder
+    3rdOrder
+    4thOrder
+    5thOrder
+    6thOrder
+  }
+  Constraint Enum "AU_LegalStatusValue" {
+    identifier = "AdministrativeUnits::LegalStatusValue"
+    agreed
+    notAgreed
+  }
+  Constraint Enum "AU_TechnicalStatusValue" {
+    identifier = "AdministrativeUnits::TechnicalStatusValue"
+    edgeMatched
+    notEdgeMatched
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}

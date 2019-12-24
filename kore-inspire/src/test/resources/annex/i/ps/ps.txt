@@ -1,0 +1,281 @@
+Container <<applicationSchema>>  "Protected Sites Simple" {
+  Constraint Enum "PS_RamsarDesignationValue" {
+    identifier = "Protected Sites Simple::RamsarDesignationValue"
+    ramsar
+  }
+  Constraint Enum "PS_IUCNDesignationValue" {
+    identifier = "Protected Sites Simple::IUCNDesignationValue"
+    habitatSpeciesManagementArea
+    managedResourceProtectedArea
+    nationalPark
+    naturalMonument
+    protectedLandscapeOrSeascape
+    strictNatureReserve
+    wildernessArea
+  }
+  Constraint Enum "PS_UNESCOManAndBiosphereProgrammeDesignationValue" {
+    identifier = "Protected Sites Simple::UNESCOManAndBiosphereProgrammeDesignationValue"
+    BiosphereReserve
+  }
+  Constraint Enum "PS_UNESCOWorldHeritageDesignationValue" {
+    identifier = "Protected Sites Simple::UNESCOWorldHeritageDesignationValue"
+    cultural
+    mixed
+    natural
+  }
+  Constraint Enum "PS_DesignationSchemeValue" {
+    identifier = "Protected Sites Simple::DesignationSchemeValue"
+    IUCN
+    UNESCOManAndBiosphereProgramme
+    UNESCOWorldHeritage
+    emeraldNetwork
+    nationalMonumentsRecord
+    natura2000
+    ramsar
+  }
+  Constraint Enum "PS_ProtectionClassificationValue" {
+    identifier = "Protected Sites Simple::ProtectionClassificationValue"
+    <<enum>> archaeological
+    <<enum>> cultural
+    <<enum>> ecological
+    <<enum>> environment
+    <<enum>> geological
+    <<enum>> landscape
+    <<enum>> natureConservation
+  }
+  Constraint Enum "PS_DesignationValue" {
+    identifier = "Protected Sites Simple::DesignationValue"
+  }
+  Constraint Enum "PS_NationalMonumentsRecordDesignationValue" {
+    identifier = "Protected Sites Simple::NationalMonumentsRecordDesignationValue"
+    agricultureAndSubsistence
+    civil
+    commemorative
+    commercial
+    communications
+    defence
+    domestic
+    education
+    gardensParksAndUrbanSpaces
+    healthAndWelfare
+    industrial
+    maritime
+    monument
+    recreational
+    religiousRitualAndFunerary
+    settlement
+    transport
+    waterSupplyAndDrainage
+  }
+  Feature "PS_ProtectedSite" {
+    description = "An area designated or managed within a framework of international, Community and Member States' legislation to achieve specific conservation objectives.
+
+    Each protected site has a boundary defined through formal, legal or administrative agreements or decisions. The establishment of a protected site is normally underpinned by legislation and thus given weight in decisions about land use change and spatial planning. Each Site is normally selected as a representative example of a wider resource and selected through a formal criterion based approach. A protected site can be a contiguous extent of land/sea or a collection of discrete areas that together represent a single formal Protected Site.  This class has the attributes, constraints and associations that are part of the Simple application schema."
+    identifier = "Protected Sites Simple::ProtectedSite"
+    tableName = "PS_ProtectedSite"
+    geometry GEOMETRY NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireID INTEGER
+    legalFoundationDate DATETIME
+    legalFoundationDocument CI_Citation
+  }
+  Class <<type>>  "Percentage" {}
+  Attributes "PS_DesignationType" {
+    description = "A data type designed to contain a designation for the Protected Site, including the designation scheme used and the value within that scheme."
+    identifier = "Protected Sites Simple::DesignationType"
+    tableName = "PS_DesignationType"
+    designation TEXT NOT NULL CHECK(PS_DesignationValue)
+    designationScheme TEXT NOT NULL CHECK(PS_DesignationSchemeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    percentageUnderDesignation Percentage
+  }
+  Constraint Enum "PS_Natura2000DesignationValue" {
+    identifier = "Protected Sites Simple::Natura2000DesignationValue"
+    proposedSiteOfCommunityImportance
+    proposedSpecialProtectionArea
+    siteOfCommunityImportance
+    specialAreaOfConservation
+    specialProtectionArea
+  }
+  Attributes "PS_ProtectionClassificationValue" {
+    description = "The protected site classification based on the purpose of protection."
+    identifier = "Protected Sites Simple::ProtectionClassificationValue"
+    tableName = "PS_ProtectionClassificationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(PS_ProtectionClassificationValue)
+  }
+  Relation "PS_ProtectedSite_inspireID" {
+    profile = "attributes"
+    relatedReference = "PS_ProtectedSite#inspireID"
+    tableName = "PS_ProtectedSite_inspireID"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PS_ProtectedSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PS_ProtectedSite_siteDesignation" {
+    profile = "attributes"
+    tableName = "PS_ProtectedSite_siteDesignation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PS_ProtectedSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PS_DesignationType(id)
+  }
+  Relation "PS_ProtectedSite_siteName" {
+    profile = "attributes"
+    tableName = "PS_ProtectedSite_siteName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PS_ProtectedSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "PS_ProtectedSite_siteProtectionClassification" {
+    profile = "attributes"
+    tableName = "PS_ProtectedSite_siteProtectionClassification"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PS_ProtectedSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PS_ProtectionClassificationValue(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}

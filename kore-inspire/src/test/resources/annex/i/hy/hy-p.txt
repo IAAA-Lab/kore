@@ -1,0 +1,863 @@
+Container <<applicationSchema>>  "Hydro - Physical Waters" {
+  Feature "HY_P_Shore" {
+    description = "The narrow strip of land in immediate contact with any body of water including the area between high and low water lines.
+
+    SOURCE [IHO S-32].
+
+    NOTE Regarded as a candidate spatial object in Annex II theme 'Land cover' due to unconsolidated shore inclusion in coastal land-cover classificaction schemes."
+    identifier = "Hydro - Physical Waters::Shore"
+    tableName = "HY_P_Shore"
+    beginLifespanVersion DATETIME
+    composition TEXT CHECK(HY_P_ShoreTypeValue)
+    delineationKnown BOOLEAN
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "HY_P_WidthRange" {
+    description = "The range of a watercourse's horizontal width along its length."
+    identifier = "Hydro - Physical Waters::WidthRange"
+    tableName = "HY_P_WidthRange"
+    id INTEGER NOT NULL PRIMARY KEY
+    lower TEXT NOT NULL
+    lower_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    upper TEXT NOT NULL
+    upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+  }
+  Attributes "HY_P_HydroPointOfInterest" {
+    description = "A natural place where water appears, disappears or changes its flow.
+
+    EXAMPLE Fluvial points (waterfall, cascade, rapids, breaker), spring/water hole (spring, source, geyser, thermal spring, natural fountain, well, also fumarole, artesian), sinkhole (sinkhole, drainage loss).
+
+    NOTE A hydro point of interest may create a flow constriction in the network."
+    identifier = "Hydro - Physical Waters::HydroPointOfInterest"
+    tableName = "HY_P_HydroPointOfInterest"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_Crossing" {
+    description = "A man-made object allowing the passage of water above or below an obstacle.
+
+    EXAMPLE Aqueduct, bridge, culvert, siphon."
+    identifier = "Hydro - Physical Waters::Crossing"
+    tableName = "HY_P_Crossing"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    type TEXT CHECK(HY_P_CrossingTypeValue)
+  }
+  Attributes "HY_P_Lock" {
+    description = "An enclosure with a pair or series of gates used for raising or lowering vessels as they pass from one water level to another.
+
+    SOURCE [DFDD]."
+    identifier = "Hydro - Physical Waters::Lock"
+    tableName = "HY_P_Lock"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_ShorelineConstruction" {
+    description = "An artificial structure attached to land bordering a body of water and fixed in position.
+
+    SOURCE [DFDD].
+
+    NOTE 1 It is usually fixed to the waterbody bottom (for example: a mole) but may occasionally be fixed in position (for example: attached to the shore at one end and held between pilings at the other) but floating. Shoreline constructions are normally used for berthing and/or protection.
+
+    NOTE 2 Includes breakwater/groyne/wharf; but has more flexibility - also applies to inland waters."
+    identifier = "Hydro - Physical Waters::ShorelineConstruction"
+    tableName = "HY_P_ShorelineConstruction"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_SurfaceWater" {
+    description = "Any known inland waterway body.
+
+    SOURCE [Based on DFDD].
+
+    EXAMPLE Lake/pond, reservoir, river/stream, etc.
+
+    NOTE May include islands, represented as 'holes' in its geometry. Islands may be surrounded by a shore and / or land-ware boundary."
+    identifier = "Hydro - Physical Waters::SurfaceWater"
+    tableName = "HY_P_SurfaceWater"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Primitive NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
+    localType_text TEXT
+    origin TEXT CHECK(HY_P_OriginValue)
+    persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
+    tidal BOOLEAN
+  }
+  Feature "HY_P_LandWaterBoundary" {
+    description = "The line where a land mass is in contact with a body of water.
+
+    SOURCE [DFDD].
+
+    NOTE The plane of reference for the land-water boundary should be a high water datum, such as 'Mean High Water Springs', 'High Water' or 'Mean Higher High Water'. Where there is little appreciable change in waterlevels / tide at the adjacent shore, then 'Mean Sea Level' or 'Local Datum' may be used."
+    identifier = "Hydro - Physical Waters::LandWaterBoundary"
+    tableName = "HY_P_LandWaterBoundary"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    origin TEXT CHECK(HY_P_OriginValue)
+    waterLevelCategory TEXT CHECK(HY_P_WaterLevelValue)
+  }
+  Attributes "HY_P_Watercourse" {
+    description = "A natural or man-made flowing watercourse or stream.
+
+    SOURCE [EuroRegionalMap]."
+    identifier = "Hydro - Physical Waters::Watercourse"
+    tableName = "HY_P_Watercourse"
+    beginLifespanVersion DATETIME
+    condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    delineationKnown BOOLEAN
+    endLifespanVersion DATETIME
+    geometry GM_Primitive NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    length TEXT
+    length_uom TEXT CHECK(GML_UomIdentifier)
+    level TEXT CHECK(BASE_VerticalPositionValue)
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
+    localType_text TEXT
+    origin TEXT CHECK(HY_P_OriginValue)
+    persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
+    streamOrder_order TEXT
+    streamOrder_orderScheme TEXT
+    streamOrder_scope TEXT
+    tidal BOOLEAN
+    width_lower TEXT NOT NULL
+    width_lower_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    width_upper TEXT NOT NULL
+    width_upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+  }
+  Constraint Enum "HY_P_ShoreTypeValue" {
+    identifier = "Hydro - Physical Waters::ShoreTypeValue"
+    boulders
+    clay
+    gravel
+    mud
+    rock
+    sand
+    shingle
+    stone
+  }
+  Attributes "HY_P_RiverBasin" {
+    description = "The area of land from which all surface run-off flows through a sequence of streams, rivers and, possibly, lakes into the sea at a single river mouth, estuary or delta.
+
+    SOURCE [2000/60/EC Art. 2(13)]."
+    identifier = "Hydro - Physical Waters::RiverBasin"
+    tableName = "HY_P_RiverBasin"
+    area TEXT
+    area_uom TEXT CHECK(GML_UomIdentifier)
+    basinOrder_order TEXT
+    basinOrder_orderScheme TEXT
+    basinOrder_scope TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Surface NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    origin TEXT CHECK(HY_P_OriginValue)
+  }
+  Attributes "HY_P_Wetland" {
+    description = "A poorly drained or periodically flooded area where the soil is saturated with water, and vegetation is supported.
+
+    SOURCE [EuroRegionalMap].
+
+    EXAMPLE Marsh/swamp, bog/moor.
+
+    NOTE Regarded as a candidate spatial object in Annex II theme 'Land cover' due to explicit mention in 2007/2/EC Ann. II 2."
+    identifier = "Hydro - Physical Waters::Wetland"
+    tableName = "HY_P_Wetland"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Surface NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
+    localType_text TEXT
+    tidal BOOLEAN
+  }
+  Attributes "HY_P_Sluice" {
+    description = "An open, inclined conduit fitted with a gate for regulating water flow.
+
+    SOURCE [DFDD]."
+    identifier = "Hydro - Physical Waters::Sluice"
+    tableName = "HY_P_Sluice"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_Ford" {
+    description = "A shallow part of a watercourse used as a road crossing.
+
+    SOURCE [DFDD]."
+    identifier = "Hydro - Physical Waters::Ford"
+    tableName = "HY_P_Ford"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_FluvialPoint" {
+    description = "A hydro point of interest that affects the flow of a watercourse."
+    identifier = "Hydro - Physical Waters::FluvialPoint"
+    tableName = "HY_P_FluvialPoint"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_ManMadeObject" {
+    description = "An artificial object which lies inside a body of water and has one of the following types of function:
+
+    - Retains the water;
+
+    - Regulates the quantity of water;
+
+    - Alters the course of the water;
+
+    - Allows watercourses to cross each other."
+    identifier = "Hydro - Physical Waters::ManMadeObject"
+    tableName = "HY_P_ManMadeObject"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_Embankment" {
+    description = "A man-made raised long mound of earth or other material.
+
+    SOURCE [DFDD].
+
+    NOTE 1 Includes retaining walls, harbours, dikes.
+
+    NOTE 2 Regarded as a candidate spatial object in Annex III theme 'Natural risk zones' due to its role in limiting flooding."
+    identifier = "Hydro - Physical Waters::Embankment"
+    tableName = "HY_P_Embankment"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_Rapids" {
+    description = "Portions of a stream with accelerated current where it descends rapidly but without a break in the slope of the bed sufficient to form a waterfall.
+
+    SOURCE [DFDD]."
+    identifier = "Hydro - Physical Waters::Rapids"
+    tableName = "HY_P_Rapids"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Constraint Enum "HY_P_OriginValue" {
+    identifier = "Hydro - Physical Waters::OriginValue"
+    manMade
+    natural
+  }
+  Constraint Enum "HY_P_CrossingTypeValue" {
+    identifier = "Hydro - Physical Waters::CrossingTypeValue"
+    aqueduct
+    bridge
+    culvert
+    siphon
+  }
+  Attributes "HY_P_StandingWater" {
+    description = "A body of water that is entirely surrounded by land.
+
+    SOURCE [DFDD].
+
+    NOTE It may occur in a natural terrain depression in which water collects, or may be impounded by a dam, or formed by its bed being hollowed out of the soil, or formed by embanking and/or damming up a natural hollow (for example: by a beaver dam). It may be connected to inflowing / outflowing watercourses or other standing waters."
+    identifier = "Hydro - Physical Waters::StandingWater"
+    tableName = "HY_P_StandingWater"
+    beginLifespanVersion DATETIME
+    elevation TEXT
+    elevation_uom TEXT CHECK(GML_UomIdentifier)
+    endLifespanVersion DATETIME
+    geometry GM_Primitive NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
+    localType_text TEXT
+    meanDepth TEXT
+    meanDepth_uom TEXT CHECK(GML_UomIdentifier)
+    origin TEXT CHECK(HY_P_OriginValue)
+    persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
+    surfaceArea TEXT
+    surfaceArea_uom TEXT CHECK(GML_UomIdentifier)
+    tidal BOOLEAN
+  }
+  Constraint Enum "HY_P_WaterLevelValue" {
+    identifier = "Hydro - Physical Waters::WaterLevelValue"
+    equinoctialSpringLowWater
+    highWater
+    highWaterSprings
+    higherHighWater
+    higherHighWaterLargeTide
+    highestAstronomicalTide
+    highestHighWater
+    indianSpringHighWater
+    indianSpringLowWater
+    localDatum
+    lowWater
+    lowWaterDatum
+    lowWaterSprings
+    lowerLowWater
+    lowerLowWaterLargeTide
+    lowestAstronomicalTide
+    lowestLowWater
+    lowestLowWaterSprings
+    meanHighWater
+    meanHighWaterNeaps
+    meanHighWaterSprings
+    meanHigherHighWater
+    meanHigherHighWaterSprings
+    meanHigherLowWater
+    meanLowWater
+    meanLowWaterNeaps
+    meanLowWaterSprings
+    meanLowerHighWater
+    meanLowerLowWater
+    meanLowerLowWaterSprings
+    meanSeaLevel
+    meanTideLevel
+    meanWaterLevel
+    nearlyHighestHighWater
+    nearlyLowestLowWater
+    tropicHigherHighWater
+    tropicLowerLowWater
+  }
+  Attributes "HY_P_Falls" {
+    description = "A vertically descending part of a watercourse where it falls from a height.
+
+    SOURCE [Based on DFDD].
+
+    EXAMPLE Waterfalls over a rock or a precipice."
+    identifier = "Hydro - Physical Waters::Falls"
+    tableName = "HY_P_Falls"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    height TEXT
+    height_uom TEXT CHECK(GML_UomIdentifier)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_DamOrWeir" {
+    description = "A permanent barrier across a watercourse used to impound water or to control its flow.
+
+    SOURCE [EuroRegionalMap]."
+    identifier = "Hydro - Physical Waters::DamOrWeir"
+    tableName = "HY_P_DamOrWeir"
+    beginLifespanVersion DATETIME
+    condition ConditionOfFacilityValue
+    endLifespanVersion DATETIME
+    geometry GM_Primitive
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+  }
+  Attributes "HY_P_HydroOrderCode" {
+    description = "A hydrologically meaningful 'order code' for ordering hierarchies of watercourses and drainage basins."
+    identifier = "Hydro - Physical Waters::HydroOrderCode"
+    tableName = "HY_P_HydroOrderCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    order TEXT NOT NULL
+    orderScheme TEXT NOT NULL
+    scope TEXT NOT NULL
+  }
+  Attributes "HY_P_DrainageBasin" {
+    description = "Area having a common outlet for its surface runoff.
+
+    SOURCE [UNESCO/WMO International Glossary of Hydrology].
+
+    NOTE 1 Regarding the different classifications of drainage basins, no distinction is made between drainage basins / sub-basins since this will vary with application. It is possible to build basins from other basins.
+
+    NOTE 2 The outlet of a drainage basin may be a canal or a lake.
+
+    NOTE 3 Synonyms for drainage basin include: catchment; catchment area; drainage area; river basin; watershed."
+    identifier = "Hydro - Physical Waters::DrainageBasin"
+    tableName = "HY_P_DrainageBasin"
+    area TEXT
+    area_uom TEXT CHECK(GML_UomIdentifier)
+    basinOrder_order TEXT
+    basinOrder_orderScheme TEXT
+    basinOrder_scope TEXT
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Surface NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    origin TEXT CHECK(HY_P_OriginValue)
+  }
+  Constraint Enum "HY_P_HydrologicalPersistenceValue" {
+    identifier = "Hydro - Physical Waters::HydrologicalPersistenceValue"
+    dry
+    ephemeral
+    intermittent
+    perennial
+  }
+  Relation "HY_P_Shore_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_Shore#inspireId"
+    tableName = "HY_P_Shore_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Shore(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_HydroPointOfInterest_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_HydroPointOfInterest#inspireId"
+    tableName = "HY_P_HydroPointOfInterest_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_HydroPointOfInterest(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_ManMadeObject_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_ManMadeObject#inspireId"
+    tableName = "HY_P_ManMadeObject_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_ManMadeObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_SurfaceWater_bank" {
+    profile = "features"
+    tableName = "HY_P_SurfaceWater_bank"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_SurfaceWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_Shore(id)
+  }
+  Relation "HY_P_SurfaceWater_neighbour" {
+    profile = "attributes"
+    tableName = "HY_P_SurfaceWater_neighbour"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_SurfaceWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_SurfaceWater(id)
+  }
+  Relation "HY_P_outlet_drainsBasin" {
+    profile = "attributes"
+    tableName = "HY_P_outlet_drainsBasin"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_SurfaceWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
+  }
+  Relation "HY_P_SurfaceWater_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_SurfaceWater#inspireId"
+    tableName = "HY_P_SurfaceWater_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_SurfaceWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_LandWaterBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_LandWaterBoundary#inspireId"
+    tableName = "HY_P_LandWaterBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_LandWaterBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_DrainageBasin_containsBasin" {
+    profile = "attributes"
+    tableName = "HY_P_DrainageBasin_containsBasin"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
+  }
+  Relation "HY_P_DrainageBasin_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_DrainageBasin#inspireId"
+    tableName = "HY_P_DrainageBasin_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Wetland_inspireId" {
+    profile = "attributes"
+    relatedReference = "HY_P_Wetland#inspireId"
+    tableName = "HY_P_Wetland_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "HY_HydroObject_relatedHydroObject" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_relatedHydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroObject(id)
+  }
+  Relation "HY_HydroObject_geographicalName" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "HY_HydroObject_hydroId" {
+    profile = "attributes"
+    tableName = "HY_HydroObject_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Constraint Enum "BASE_ConditionOfFacilityValue" {
+    identifier = "Base Types::ConditionOfFacilityValue"
+    decommissioned
+    disused
+    functional
+    projected
+    underConstruction
+  }
+  Constraint Enum "BASE_VerticalPositionValue" {
+    identifier = "Base Types::VerticalPositionValue"
+    onGroundSurface
+    suspendedOrElevated
+    underground
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "HY_HydroObject" {
+    description = "An identity base for hydrographic (including man-made) objects in the real world.
+
+    NOTE Derived 'views' of real-world hydrographic objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name or hydrographic identifier."
+    identifier = "Hydro - base::HydroObject"
+    tableName = "HY_HydroObject"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "HY_HydroIdentifier" {
+    description = "A hydrographic thematic identifier.
+
+    NOTE May be used to hold a national hydrological identification code."
+    identifier = "Hydro - base::HydroIdentifier"
+    tableName = "HY_HydroIdentifier"
+    classificationScheme TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}
