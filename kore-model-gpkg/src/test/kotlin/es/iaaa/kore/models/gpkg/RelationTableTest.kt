@@ -24,13 +24,16 @@ class RelationTableTest {
     fun `creation of the relation and its human readable representation`() {
         container {
             val attribute1 = attributes("test_contents_1") {
-                column { columnName = "id"; type = IntegerType; geoPackageSpec().add(PrimaryKey) }
+                tableName = "test_contents_1"
+                idColumn()
             }
             val attribute2 = attributes("test_contents_2") {
-                column { columnName = "id"; type = IntegerType; geoPackageSpec().add(PrimaryKey) }
+                tableName = "test_contents_2"
+                idColumn()
             }
             val relation = relation("test_relations") {
                 profile = "test contents"
+                tableName = "test_relations"
                 foreignColumn { columnName = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
                 foreignColumn { columnName = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
             }

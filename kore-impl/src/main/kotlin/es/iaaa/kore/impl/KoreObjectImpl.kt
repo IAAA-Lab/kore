@@ -47,7 +47,7 @@ abstract class KoreObjectImpl : KoreObject {
                 else -> (property as KMutableProperty1<*, *>).setter.call(this, element)
             }
         } else {
-            val metaProperty = discoverMetaProperty(feature)
+            val metaProperty = resolveProperty(feature)
             validateValue(metaProperty, element)
             store[feature] = element
         }
@@ -58,7 +58,7 @@ abstract class KoreObjectImpl : KoreObject {
         if (property != null) {
             return property.get(this)
         } else {
-            val metaProperty = discoverMetaProperty(feature)
+            val metaProperty = resolveProperty(feature)
             val value = store.getOrDefault(feature, metaProperty.defaultValue)
             validateValue(metaProperty, value)
             @Suppress("UNCHECKED_CAST")
@@ -75,7 +75,7 @@ abstract class KoreObjectImpl : KoreObject {
         return if (property != null) {
             property.get(this) != null
         } else {
-            val metaProperty = discoverMetaProperty(feature)
+            val metaProperty = resolveProperty(feature)
             store.getOrDefault(feature, metaProperty.defaultValue) != null
         }
     }
@@ -93,7 +93,7 @@ abstract class KoreObjectImpl : KoreObject {
                 else -> (property as KMutableProperty1<*, *>).setter.call(this, null)
             }
         } else {
-            val metaProperty = discoverMetaProperty(feature)
+            val metaProperty = resolveProperty(feature)
             if (metaProperty.isUnsettable) {
                 throw IllegalArgumentException("The feature '$feature' is unsettable")
             }
@@ -124,9 +124,11 @@ abstract class KoreObjectImpl : KoreObject {
             }
         } else false
 
-    private fun discoverMetaProperty(feature: String): KoreStructuralFeature =
-        metaClass?.allContents()?.filterIsInstance<KoreStructuralFeature>()?.find { it.name == feature }
+    private fun resolveProperty(feature: String): KoreStructuralFeature {
+        val localResolution = metaClass?.findStructuralFeature(feature)
+        return localResolution
             ?: throw IllegalArgumentException("The feature '$feature' is not allowed for this object")
+    }
 
     private fun <T> discoverMutableProperty(feature: String): KMutableProperty1<Any, T>? {
         @Suppress("UNCHECKED_CAST")

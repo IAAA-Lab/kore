@@ -44,5 +44,4 @@ fun KorePackage.features(features: String, init: KoreClass.() -> Unit) = koreCla
     verify(name == features) { "The name property has muted within the block" }
     verify(container == this@features) { "The container property has muted within the block" }
     verify(!tableName.isNullOrBlank()) { "The table name property must not be blank" }
-    verify(description != null) { "The description property must have some value" }
 }

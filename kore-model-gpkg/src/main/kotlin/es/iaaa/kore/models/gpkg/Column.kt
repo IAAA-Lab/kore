@@ -26,22 +26,31 @@ object Column : KoreClass by koreClass({
     toString = prettyPrint()
 })
 
-class IdColumn: KoreAttribute by koreAttribute(Column, {
-        name = "id"
-        columnName = "id"
-        title = "Id"
-        description = "Id"
-        lowerBound = 1
-        type = IntegerType()
-        geoPackageSpec().add(PrimaryKey)
-})
-
 fun KoreClass.column(init: KoreAttribute.() -> Unit = {}): KoreAttribute = koreAttribute(Column) {
     containingClass = this@column
     init()
     verify( containingClass == this@column) { "The containing class property has muted within the block" }
 }
 
+fun KoreClass.idColumn(init: KoreAttribute.() -> Unit = {}): KoreAttribute = koreAttribute(Column) {
+    containingClass = this@idColumn
+    columnName = "id"
+    lowerBound = 1
+    upperBound = 1
+    val intType = IntegerType()
+    type = intType
+    geoPackageSpec().add(PrimaryKey)
+    name = "id"
+    title = "Id"
+    description = "Id"
+    init()
+    verify( containingClass == this@idColumn) { "The containing class property has muted within the block" }
+    verify( columnName == "id") { "The column name property has muted within the block" }
+    verify( lowerBound == 1) { "The lower bound property has muted within the block" }
+    verify( upperBound == 1) { "The upper bound property has muted within the block" }
+    verify( type == intType) { "The type property has muted within the block" }
+    verify( geoPackageSpec().contains(PrimaryKey)) { "The primary key property has muted within the block" }
+}
 
 fun prettyPrint(): (KoreObject) -> String = { it ->
     with(it as KoreAttribute) {

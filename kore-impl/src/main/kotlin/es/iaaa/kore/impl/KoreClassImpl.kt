@@ -73,6 +73,7 @@ open class KoreClassImpl : KoreClassifierImpl(), KoreClass {
                     obj.allSuperTypes().map { it.id }.contains(id) -> true
                     // Obj metaclass is this or any of its supertypes is this (structural or referential link)
                     obj.metaClass == this -> true
+                    obj.metaClass?.id == id -> true
                     obj.metaClass?.allSuperTypes()?.contains(this) ?: false -> true
                     obj.metaClass?.allSuperTypes()?.map { it.id }?.contains(id) ?: false -> true
                     else -> super.isInstance(obj)

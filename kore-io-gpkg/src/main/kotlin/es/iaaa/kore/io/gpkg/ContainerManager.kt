@@ -436,7 +436,7 @@ object ContainerManager {
     private fun KorePackage.metadata(process: (KoreClass) -> Unit) = process(Metadata, process)
 
     private fun KorePackage.process(obj: KoreClass, process: (KoreClass) -> Unit) = classifiers
-        .filter { obj.isInstance(it.metaClass) }
+        .filter { obj.isInstance(it) }
         .filterIsInstance<KoreClass>()
         .forEach(process)
 

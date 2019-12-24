@@ -39,5 +39,4 @@ fun KorePackage.attributes(attributes: String, init: KoreClass.() -> Unit) = kor
     verify(name == attributes) { "The name property has muted within the block" }
     verify(container == this@attributes) { "The container property has muted within the block" }
     verify(!tableName.isNullOrBlank()) { "The table name property must not be blank" }
-    verify(description != null) { "The description property must have some value" }
 }

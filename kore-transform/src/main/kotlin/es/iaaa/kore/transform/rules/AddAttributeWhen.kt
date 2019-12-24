@@ -22,16 +22,16 @@ import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
 
 internal class AddAttributeWhen(
-    val provider: () -> KoreAttribute,
+    val provider: (KoreClass) -> KoreAttribute,
     val predicate: (KoreClass) -> Boolean
 ) : Transformation {
 
     override fun process(target: Model) {
         target.allRelevantContent().filterIsInstance<KoreClass>().filter(predicate)
-            .forEach { provider().containingClass = it }
+            .forEach { provider(it) }
     }
 }
 
-fun Transformations.addAttributeWhen(provider: () -> KoreAttribute, predicate: (KoreClass) -> Boolean) {
+fun Transformations.addAttributeWhen(provider: (KoreClass) -> KoreAttribute, predicate: (KoreClass) -> Boolean) {
     add(AddAttributeWhen(provider, predicate))
 }

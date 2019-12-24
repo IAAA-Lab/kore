@@ -93,13 +93,14 @@ fun KorePackage.enumConstraint(nameConstraint: String, init: KoreClass.() -> Uni
  */
 object EnumConstraintValue : KoreClass by koreClass({
     name = "Constraint Enum Literal"
+    attribute { name = "description" }
 })
 
 
 /**
  * A short hand factory function with container addition.
  */
-fun KoreClass.literal(literalName: String, init: KoreAttribute.() -> Unit) = koreAttribute(EnumConstraintValue) {
+fun KoreClass.literal(literalName: String, init: KoreAttribute.() -> Unit = {}) = koreAttribute(EnumConstraintValue) {
     name = literalName
     containingClass = this@literal
     lowerBound = 1

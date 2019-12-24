@@ -115,7 +115,7 @@ class ConstraintsTest {
                 maxIsInclusive = true
             }
             assertTrue(Constraint.isInstance(constraint))
-            val feature = features("test_contents") {
+            features("test_contents") {
                 tableName = "test_contents_table"
                 identifier = "test contents"
                 description = "some description"

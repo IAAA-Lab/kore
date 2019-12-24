@@ -26,6 +26,7 @@ class FeatureTableTest {
             val feature = features("test_contents") {
                 identifier = "test contents"
                 description = "some description"
+                tableName = "test_contents"
                 minX = -180.0
                 maxX = 180.0
                 minY = -90.0
@@ -66,6 +67,7 @@ class FeatureTableTest {
             features("test_contents") {
                 identifier = "test contents"
                 description = "some description"
+                tableName = "test_contents"
                 minX = -180.0
                 maxX = 180.0
                 minY = -90.0

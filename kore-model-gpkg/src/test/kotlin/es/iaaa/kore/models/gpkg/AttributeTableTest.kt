@@ -26,6 +26,7 @@ class AttributeTableTest {
             val attribute = attributes("test_contents") {
                 identifier = "test contents"
                 description = "some description"
+                tableName = "test_contents"
             }
             assertEquals(AttributesTable, attribute.metaClass)
             assertEquals("test_contents", attribute.tableName)
@@ -51,6 +52,7 @@ class AttributeTableTest {
             attributes("test_contents") {
                 identifier = "test contents"
                 description = "some description"
+                tableName = "test_contents"
             }
         }
         assertEquals(Container, container.metaClass)

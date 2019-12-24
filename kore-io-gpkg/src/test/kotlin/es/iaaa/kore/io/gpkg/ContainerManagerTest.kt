@@ -67,15 +67,14 @@ class ContainerManagerTest {
             fileName = containerFile.path
             features("the_feature") {
                 identifier = "test contents"
+                tableName = "the_feature"
                 description = "some description"
                 minX = -180.0
                 maxX = 180.0
                 minY = -90.0
                 maxY = 90.0
                 srsId = 0
-                column {
-                    columnName = "id"; lowerBound = 1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
+                idColumn()
                 column { columnName = "the_geom"; lowerBound = 1; type = CurvePolygonType() }
             }
         }
@@ -103,12 +102,15 @@ class ContainerManagerTest {
         val sut = container {
             fileName = containerFile.path
             val attribute1 = attributes("test_contents_1") {
-                column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
+                tableName = "test_contents_1"
+                idColumn()
             }
             val attribute2 = attributes("test_contents_2") {
-                column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
+                tableName = "test_contents_2"
+                idColumn()
             }
             relation("test_relations") {
+                tableName = "test_relations"
                 foreignColumn { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
                 foreignColumn { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
             }
@@ -139,14 +141,13 @@ class ContainerManagerTest {
             features("test_contents") {
                 identifier = "test contents"
                 description = "some description"
+                tableName = "test_contents"
                 minX = -180.0
                 maxX = 180.0
                 minY = -90.0
                 maxY = 90.0
                 srsId = 0
-                column {
-                    columnName = "test_id"; lowerBound = 1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
+                idColumn()
                 column { columnName = "test_geom"; lowerBound = 1; type = GeometryType() }
                 column { columnName = "test_text"; lowerBound = 1; type = TextType(); defaultValueLiteral = "" }
                 column { columnName = "test_real"; type = DoubleType() }
@@ -175,14 +176,13 @@ class ContainerManagerTest {
             features("test_contents") {
                 identifier = "test contents"
                 description = "some description"
+                tableName = "test_contents"
                 minX = -180.0
                 maxX = 180.0
                 minY = -90.0
                 maxY = 90.0
                 srsId = 0
-                column {
-                    columnName = "test_id"; lowerBound = 1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
+                idColumn()
                 column { columnName = "test_geom"; lowerBound = 1; type = SurfaceType() }
             }
         }
@@ -207,9 +207,8 @@ class ContainerManagerTest {
             attributes("test_contents") {
                 identifier = "test contents"
                 description = "some description"
-                column {
-                    columnName = "test_id"; lowerBound = 1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
+                tableName = "test_contents"
+                idColumn()
                 column { columnName = "test_text"; lowerBound = 1; type = TextType(); defaultValueLiteral = "" }
                 column { columnName = "test_real"; type = DoubleType() }
                 column { columnName = "test_boolean"; type = BooleanType() }
@@ -275,11 +274,9 @@ class ContainerManagerTest {
             }
             attributes("test_attributes") {
                 identifier = "test attributes"
+                tableName = "test_attributes"
                 description = "some description"
-                column {
-                    name = "attributes.id"; title = "ID"; description = "the id"; columnName = "test_id"; lowerBound =
-                    1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
+                idColumn()
                 column {
                     name = "attributes.int"; title = "Integer"; description = "the int"; columnName =
                     "test_integer_column"; type = IntegerType(); geoPackageSpec().add(range)
@@ -292,15 +289,13 @@ class ContainerManagerTest {
             features("test_features") {
                 identifier = "test features"
                 description = "some description"
+                tableName = "test_features"
                 minX = -180.0
                 maxX = 180.0
                 minY = -90.0
                 maxY = 90.0
                 srsId = 0
-                column {
-                    name = "features.id"; title = "ID"; description = "the id"; columnName = "test_id"; lowerBound =
-                    1; type = IntegerType(); geoPackageSpec().add(PrimaryKey)
-                }
+                idColumn()
                 column {
                     name = "features.geom"; title = "Geom"; description = "the geom"; columnName =
                     "test_geom"; lowerBound = 1; type = GeometryType()
@@ -325,12 +320,17 @@ class ContainerManagerTest {
         val sut = container {
             fileName = containerFile.path
             val attribute1 = attributes("test_contents_1") {
-                column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
+                tableName = "test_contents_1"
+                description = ""
+                idColumn()
             }
             val attribute2 = attributes("test_contents_2") {
-                column { columnName = "id"; type = IntegerType(); geoPackageSpec().add(PrimaryKey) }
+                tableName = "test_contents_2"
+                description = ""
+                idColumn()
             }
             relation("test_relations") {
+                tableName = "test_relations"
                 foreignColumn { name = "base_id"; type = attribute1; geoPackageSpec().add(BaseTable) }
                 foreignColumn { name = "related_id"; type = attribute2; geoPackageSpec().add(RelatedTable) }
             }

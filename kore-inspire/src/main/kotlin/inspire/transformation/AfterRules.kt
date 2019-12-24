@@ -13,7 +13,7 @@ import es.iaaa.kore.transform.rules.removeRefinements
 import es.iaaa.kore.transform.rules.removeTags
 
 val `add geopackage primary column`: Transform = { _, _ ->
-    addAttributeWhen({ IdColumn() }) { it.metaClass in listOf(FeaturesTable, AttributesTable) }
+    addAttributeWhen({ it.idColumn() }) { it.metaClass in listOf(FeaturesTable, AttributesTable) }
 }
 
 val `copy documentation to column description`: Transform = { _, _ ->
