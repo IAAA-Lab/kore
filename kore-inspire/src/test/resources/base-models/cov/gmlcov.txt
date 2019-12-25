@@ -1,0 +1,80 @@
+Container <<applicationSchema>>  "Coverages (Domain and Range)" {
+  Attributes "GMLCOV_RectifiedGridCoverage" {
+    description = "Coverage whose domain consists of a rectified grid
+
+    A rectified grid is a grid for which there is an affine transformation between the grid coordinates and the coordinates of a coordinate reference system.
+
+    NOTE This type can be used for both discrete and continuous coverages."
+    identifier = "Coverages (Domain and Range)::RectifiedGridCoverage"
+    tableName = "GMLCOV_RectifiedGridCoverage"
+    coverageFunction CoverageFunction
+    domainSet Any NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    metadata: Any [0..*]
+    rangeType: RecordType
+    ref rangeSet: Any[0..*]
+  }
+  Attributes "GMLCOV_ReferenceableGridCoverage" {
+    description = "Coverage whose domain consists of a referenceable grid
+
+    A referencable grid is a grid associated with a transformation that can be used to convert grid coordinate values to values of coordinates referenced to a coordinate reference system.
+
+    NOTE This type can be used for both discrete and continuous coverages."
+    identifier = "Coverages (Domain and Range)::ReferenceableGridCoverage"
+    tableName = "GMLCOV_ReferenceableGridCoverage"
+    coverageFunction CoverageFunction
+    domainSet Any NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    metadata: Any [0..*]
+    rangeType: RecordType
+    ref rangeSet: Any[0..*]
+  }
+  Class <<union>>  "CoverageFunction" {
+    ruleDefinition: TEXT
+    ruleReference: TEXT
+    ref gridFunction: GMLCOV_GridFunction
+  }
+  Attributes "GMLCOV_CoverageByDomainAndRange" {
+    description = "Coverage which provide the domain and range as separate properties."
+    identifier = "Coverages (Domain and Range)::CoverageByDomainAndRange"
+    tableName = "GMLCOV_CoverageByDomainAndRange"
+    coverageFunction CoverageFunction
+    domainSet Any NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    metadata: Any [0..*]
+    rangeType: RecordType
+    ref rangeSet: Any[0..*]
+  }
+  Attributes "GMLCOV_GridFunction" {
+    description = "An explicit mapping rule for grid geometries"
+    identifier = "Coverages (Domain and Range)::GridFunction"
+    tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule CV_SequenceRule
+    ref startPoint: INTEGER[0..*]
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}

@@ -1,0 +1,352 @@
+Container <<applicationSchema>>  "ElevationVectorElements" {
+  Constraint Enum "EL_VEC_SpotElevationTypeValue" {
+    identifier = "ElevationVectorElements::SpotElevationTypeValue"
+  }
+  Feature "EL_VEC_ContourLine" {
+    description = "Linear spatial object composed of a set of adjoining locations characterized by having the same elevation property value. It describes, together with other contour lines present in the area, the local morphology of the Earth's surface.
+  
+    NOTE 1 The attribute propertyType is equal to 'height' in the case of contour lines and it is equal to 'depth' in the case of depth contours."
+    identifier = "ElevationVectorElements::ContourLine"
+    tableName = "EL_VEC_ContourLine"
+    beginLifespanVersion DATETIME
+    contourLineType TEXT CHECK(EL_VEC_ContourLineTypeValue)
+    downRight BOOLEAN
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    localDepthDatum ChartDatum
+    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    propertyValue_coordinate Sequence<Number> NOT NULL
+    propertyValue_dimension INTEGER NOT NULL
+  }
+  Attributes "EL_VEC_ElevationVectorObject" {
+    description = "Elevation spatial object forming part of a vector data set, which participates in the description of the elevation property of a real world surface. It consists of an identity base for all vector objects which can be included as part of an elevation data set.
+  
+    It is an abstract feature type which generically describes every possible type of elevation vector object. It includes common attributes, properties and constraints for such spatial objects."
+    identifier = "ElevationVectorElements::ElevationVectorObject"
+    tableName = "EL_VEC_ElevationVectorObject"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    localDepthDatum ChartDatum
+    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+  }
+  Attributes "EL_VEC_VoidArea" {
+    description = "Area of the Earth's surface where the elevation model is unknown because of missing input data. This area shall be excluded from a DEM.
+  
+    SOURCE "ObscureArea" [GIS4EU D3.5].
+  
+    NOTE 1 A void area may contain a number of isolated areas with elevation data. These are considered as holes of the container void area.
+  
+    NOTE 2  Void areas can be useful as masks when calculating a more appropriate or accurate DEM."
+    identifier = "ElevationVectorElements::VoidArea"
+    tableName = "EL_VEC_VoidArea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Surface NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    localDepthDatum ChartDatum
+    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+  }
+  Constraint Enum "EL_VEC_SpotElevationClassValue" {
+    identifier = "ElevationVectorElements::SpotElevationClassValue"
+  }
+  Feature "EL_VEC_BreakLine" {
+    description = "A line of a critical nature which describes the shape of an elevation surface and indicates a discontinuity in the slope of the surface (i.e. an abrupt change in gradient). Triangles included within a TIN model must never cross it.
+  
+    SOURCE Adapted from [ISO 19107:2003].
+  
+    EXAMPLE
+  
+    Breaklines represent local ridges or depressions (streams or drainage lines) in the surface, man-made structures (e.g. roads), etc.
+  
+    NOTE 1  A breakline connects points with different elevation and therefore its description using 2.5-D coordinates (using the 'geometry' attribute) is fully recommended.
+  
+    NOTE 2  No triangle in a TIN may cross a breakline (in other words, breakline segments are enforced as triangle edges), even if doing so violates the triangulation criterion.
+  
+    NOTE 3  All breaklines are located on the ground surface or on any of the artificial structures built on it.
+  
+    NOTE 4  Breaklines are useful as input data for the generation of a more appropriate or accurate digital elevation model by using interpolation methods."
+    identifier = "ElevationVectorElements::BreakLine"
+    tableName = "EL_VEC_BreakLine"
+    beginLifespanVersion DATETIME
+    breakLineType TEXT NOT NULL CHECK(EL_VEC_BreakLineTypeValue)
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    localDepthDatum ChartDatum
+    manMadeBreak BOOLEAN
+    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+  }
+  Class "ChartDatum" {
+    datumWaterLevel: TEXT
+    scope_description: TEXT [0..1]
+    ref offset: Measure[0..*]
+    ref referencePoint: POINT[1..*]
+  }
+  Constraint Enum "EL_VEC_BreakLineTypeValue" {
+    identifier = "ElevationVectorElements::BreakLineTypeValue"
+  }
+  Attributes "EL_VEC_IsolatedArea" {
+    description = "Delimitation of an area of the Earth's surface where an isolated part of the elevation model exists. Its outside surroundings have no elevation information.
+  
+    SOURCE Adapted from "IslandArea" [GIS4EU D3.5].
+  
+    NOTE 1 It includes the delimitation of any island of elevation data which are isolated from the main DEM. They may be included inside void areas.
+  
+    NOTE 2 Isolated areas can be useful as masks when calculating a more appropriate or accurate DEM."
+    identifier = "ElevationVectorElements::IsolatedArea"
+    tableName = "EL_VEC_IsolatedArea"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GM_Surface NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    localDepthDatum ChartDatum
+    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+  }
+  Feature "EL_VEC_SpotElevation" {
+    description = "Point spatial object which describes the elevation of an Earth's surface at a specific location. It provides a single elevation property value.
+  
+    NOTE 1 It often represents a singular point in the morphology of a land or water body's floor surface.
+  
+    NOTE 2 The attribute propertyType is equal to 'height' in the case of spot heights. It is equal to 'depth' in the case of spot depths."
+    identifier = "ElevationVectorElements::SpotElevation"
+    tableName = "EL_VEC_SpotElevation"
+    beginLifespanVersion DATETIME
+    classification TEXT CHECK(EL_VEC_SpotElevationClassValue)
+    endLifespanVersion DATETIME
+    geometry POINT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    localDepthDatum ChartDatum
+    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    propertyValue_coordinate Sequence<Number> NOT NULL
+    propertyValue_dimension INTEGER NOT NULL
+    spotElevationType TEXT CHECK(EL_VEC_SpotElevationTypeValue)
+  }
+  Constraint Enum "EL_VEC_ContourLineTypeValue" {
+    identifier = "ElevationVectorElements::ContourLineTypeValue"
+    auxiliary
+    master
+    ordinary
+  }
+  Relation "EL_VEC_SpotElevation_geographicalName" {
+    profile = "attributes"
+    tableName = "EL_VEC_SpotElevation_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_VEC_SpotElevation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Constraint Enum "EL_BAS_ElevationPropertyTypeValue" {
+    identifier = "ElevationBaseTypes::ElevationPropertyTypeValue"
+    depth
+    height
+  }
+  Constraint Enum "HY_P_WaterLevelValue" {
+    identifier = "Hydro - Physical Waters::WaterLevelValue"
+    equinoctialSpringLowWater
+    highWater
+    highWaterSprings
+    higherHighWater
+    higherHighWaterLargeTide
+    highestAstronomicalTide
+    highestHighWater
+    indianSpringHighWater
+    indianSpringLowWater
+    localDatum
+    lowWater
+    lowWaterDatum
+    lowWaterSprings
+    lowerLowWater
+    lowerLowWaterLargeTide
+    lowestAstronomicalTide
+    lowestLowWater
+    lowestLowWaterSprings
+    meanHighWater
+    meanHighWaterNeaps
+    meanHighWaterSprings
+    meanHigherHighWater
+    meanHigherHighWaterSprings
+    meanHigherLowWater
+    meanLowWater
+    meanLowWaterNeaps
+    meanLowWaterSprings
+    meanLowerHighWater
+    meanLowerLowWater
+    meanLowerLowWaterSprings
+    meanSeaLevel
+    meanTideLevel
+    meanWaterLevel
+    nearlyHighestHighWater
+    nearlyLowestLowWater
+    tropicHigherHighWater
+    tropicLowerLowWater
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+  
+    SOURCE Adapted from [UNGEGN Manual 2006].
+  
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "UM_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}

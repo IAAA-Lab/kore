@@ -1,0 +1,336 @@
+Container <<applicationSchema>>  "HumanHealth" {
+  Attributes "HH_BiomarkerStatisticalParameterType" {
+    description = "A set of statistical features of a biomarker measured for one specific biomarker."
+    identifier = "HumanHealth::BiomarkerStatisticalParameterType"
+    tableName = "HH_BiomarkerStatisticalParameterType"
+    CI95ofGM TEXT
+    CI95ofGM_uom TEXT CHECK(GML_UomIdentifier)
+    CI95ofP95 TEXT
+    CI95ofP95_uom TEXT CHECK(GML_UomIdentifier)
+    LOQ DOUBLE
+    P50 TEXT
+    P50_uom TEXT CHECK(GML_UomIdentifier)
+    P90 TEXT
+    P90_uom TEXT CHECK(GML_UomIdentifier)
+    P95 TEXT
+    P95_uom TEXT CHECK(GML_UomIdentifier)
+    geometricMean TEXT
+    geometricMean_uom TEXT CHECK(GML_UomIdentifier)
+    id INTEGER NOT NULL PRIMARY KEY
+    maximum TEXT
+    maximum_uom TEXT CHECK(GML_UomIdentifier)
+    numberOfPartecipants INTEGER NOT NULL
+    pinLOD DOUBLE
+  }
+  Constraint Enum "HH_GroundWaterQualityComponentTypeValue" {
+    identifier = "HumanHealth::GroundWaterQualityComponentTypeValue"
+  }
+  Constraint Enum "HH_AirQualityComponentTypeValue" {
+    identifier = "HumanHealth::AirQualityComponentTypeValue"
+  }
+  Constraint Enum "HH_ChemicalValue" {
+    identifier = "HumanHealth::ChemicalValue"
+  }
+  Constraint Enum "HH_EnvHealthDeterminantTypeValue" {
+    identifier = "HumanHealth::EnvHealthDeterminantTypeValue"
+  }
+  Attributes "HH_HealthStatisticalData" {
+    description = "Human health related data, from recorded diseases and related health problems (according to internationally accepted code lists, such as ICD-10), expressed as morbidity and mortality, to data on general health status (BMI, self perceived health, etc.), data on health care services (health care expenditure, day cases, etc.), and data on biomarkers; these are statistical indices aggregated at different statistical units, collected/reported in different population groups. Inclusion of human biomonitoring data provides an opportunity to explore potential direct or indirect links between human health and the environment."
+    identifier = "HumanHealth::HealthStatisticalData"
+    tableName = "HH_HealthStatisticalData"
+    id INTEGER NOT NULL PRIMARY KEY
+    aggregationUnit INTEGER
+  }
+  Attributes "HH_AgeRangeType" {
+    description = "Age interval of a specific subpopulation expressed as starting age and an interval, both alternatively expressed in years, months or weeks."
+    identifier = "HumanHealth::AgeRangeType"
+    tableName = "HH_AgeRangeType"
+    id INTEGER NOT NULL PRIMARY KEY
+    range Age NOT NULL
+    startAge Age NOT NULL
+  }
+  Attributes "HH_GeneralHealthStatistics" {
+    description = "Numbers about some aspects of health related to a population or an area. For the purpose of this data model, 'general health' data include issues such as self-perceived health, demographic distribution of various health problems, smokers, etc., expressed as raw numbers, rates, percentage, stratified by gender, age, and/or socio-economic, cultural, ethnic or other factors."
+    identifier = "HumanHealth::GeneralHealthStatistics"
+    tableName = "HH_GeneralHealthStatistics"
+    ageRange_range Age NOT NULL
+    ageRange_startAge Age NOT NULL
+    gender TEXT CHECK(BASE2_GenderValue)
+    generalHealthName TEXT NOT NULL CHECK(HH_GeneralHealthTypeValue)
+    generalHealthValue DOUBLE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    referencePeriod_endDate DATE NOT NULL
+    referencePeriod_startDate DATE NOT NULL
+    aggregationUnit INTEGER
+  }
+  Constraint Enum "HH_LakeWaterQuality" {
+    identifier = "HumanHealth::LakeWaterQuality"
+  }
+  Attributes "HH_Disease" {
+    description = "Statistical information related to pathologies linked directly or indirectly to the quality of environment.
+
+    Statistical information related to diseases, health-related conditions and external causes of disease and injury, as classified in the International Statistical Classification of Diseases and Related Health Problems, 10th Revision (ICD-10). For practical reasons, a short term &lsquo;disease&rsquo; is used to label all conditions covered by this definition."
+    identifier = "HumanHealth::Disease"
+    tableName = "HH_Disease"
+    COD TEXT CHECK(HH_CODValue)
+    ageRange_range Age NOT NULL
+    ageRange_startAge Age NOT NULL
+    gender TEXT CHECK(BASE2_GenderValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    pathology TEXT CHECK(HH_ICDValue)
+    referencePeriod_endDate DATE NOT NULL
+    referencePeriod_startDate DATE NOT NULL
+    aggregationUnit INTEGER
+  }
+  Constraint Enum "HH_RiverWaterQualityComponentTypeValue" {
+    identifier = "HumanHealth::RiverWaterQualityComponentTypeValue"
+  }
+  Attributes "HH_DiseaseMeasure" {
+    description = "Different ways in which data on diseases and related health problems in a population can be reported.
+
+    There is a strong agreement between the two codelists addressed in the Data Specifications Document; the &ldquo;ICD10Value&rdquo; and the &ldquo;CODValue&rdquo; codelist. Taking into account that the main source of harmonized data is Eurostat, the reporting formats of Eurostat should be promoted in the definition of DiseaseMeasureType:
+
+    &bull; Absolute numbers: the total prevalence of a disease or mortality cause, without any further weighing or processing;
+
+    &bull; Crude death rate: describes mortality in relation to the total population. Expressed in deaths per 100,000 inhabitants, it is calculated as the number of deaths recorded in the population for a given period divided by population in the same period and then multiplied by 100,000;
+
+    &bull; Standardised death rate: weighted average of age-specific mortality rates. The weighting factor is the age distribution of a standard reference population. Standardised death rates are calculated for the age group 0-64 ('premature death') and for the total of ages. As most causes of death vary significantly with people's age and sex, the use of standardised death rates improves comparability over time and between countries.
+
+    The reporting formats as presented above are regulated through the European Parliament&rsquo;s &ldquo; Regulation on Community statistics on public health and health and safety at work (EC) No 1338/2008&rdquo;."
+    identifier = "HumanHealth::DiseaseMeasure"
+    tableName = "HH_DiseaseMeasure"
+    diseaseMeasureType TEXT NOT NULL CHECK(HH_DiseaseMeasureTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    value DOUBLE NOT NULL
+  }
+  Class <<type>>  "UomNoise" {
+    formula: TEXT [0..1]
+    measureType: TEXT
+    nameStandardUnit: TEXT [0..1]
+    offsetToStandardUnit: DOUBLE [0..1]
+    scaleToStandardUnit: DOUBLE [0..1]
+    source: TEXT
+    uomName: TEXT
+    uomSymbol: TEXT
+    ref measure: Measure[0..*] inv uom
+  }
+  Constraint Enum "HH_CODValue" {
+    identifier = "HumanHealth::CODValue"
+  }
+  Constraint Enum "HH_MatrixValue" {
+    identifier = "HumanHealth::MatrixValue"
+  }
+  Constraint Enum "HH_NoiseSourceTypeValue" {
+    identifier = "HumanHealth::NoiseSourceTypeValue"
+  }
+  Constraint Enum "HH_GeneralHealthTypeValue" {
+    identifier = "HumanHealth::GeneralHealthTypeValue"
+  }
+  Attributes "HH_ReferencePeriodType" {
+    description = "The time period which the refer."
+    identifier = "HumanHealth::ReferencePeriodType"
+    tableName = "HH_ReferencePeriodType"
+    endDate DATE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    startDate DATE NOT NULL
+  }
+  Constraint Enum "HH_DiseaseMeasureTypeValue" {
+    identifier = "HumanHealth::DiseaseMeasureTypeValue"
+  }
+  Constraint Enum "HH_MediaTypeValue" {
+    identifier = "HumanHealth::MediaTypeValue"
+  }
+  Attributes "HH_BiomarkerType" {
+    description = "A biomarker is defined both by a quantified or determined chemical (e.g. cadmium, lead) or its metabolite, and a matrix (e.g. blood, urine) that is used for quantification; for example - cadmium in urine, lead in blood."
+    identifier = "HumanHealth::BiomarkerType"
+    tableName = "HH_BiomarkerType"
+    chemical TEXT NOT NULL CHECK(HH_ChemicalValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    matrix TEXT NOT NULL CHECK(HH_MatrixValue)
+  }
+  Attributes "HH_HealthServicesStatistic" {
+    description = "Type of health care indicator."
+    identifier = "HumanHealth::HealthServicesStatistic"
+    tableName = "HH_HealthServicesStatistic"
+    healthServiceType TEXT NOT NULL CHECK(HH_HealthServicesTypeValue)
+    healthServiceValue DOUBLE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    referencePeriod_endDate DATE NOT NULL
+    referencePeriod_startDate DATE NOT NULL
+    aggregationUnit INTEGER
+  }
+  Class <<union>>  "Age" {
+    month: INTEGER
+    week: INTEGER
+    year: INTEGER
+  }
+  Attributes "HH_EnvHealthDeterminantStatisticalData" {
+    description = "A statistical data of interest for human health determinant analysis, resulting from the aggregation of raw measurements located within a statistical unit."
+    identifier = "HumanHealth::EnvHealthDeterminantStatisticalData"
+    tableName = "HH_EnvHealthDeterminantStatisticalData"
+    id INTEGER NOT NULL PRIMARY KEY
+    statisticalMethod TEXT NOT NULL CHECK(HH_StatisticalAggregationMethodValue)
+    type TEXT NOT NULL CHECK(HH_EnvHealthDeterminantTypeValue)
+    aggregationUnit INTEGER
+  }
+  Constraint Enum "HH_StatisticalAggregationMethodValue" {
+    identifier = "HumanHealth::StatisticalAggregationMethodValue"
+  }
+  Constraint Enum "HH_ComponentTypeValue" {
+    identifier = "HumanHealth::ComponentTypeValue"
+  }
+  Feature "HH_EnvHealthDeterminantMeasure" {
+    description = "A raw measurement performed at some place that is of interest for human health determinant analysis."
+    identifier = "HumanHealth::EnvHealthDeterminantMeasure"
+    tableName = "HH_EnvHealthDeterminantMeasure"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    location GEOMETRY NOT NULL
+    type TEXT NOT NULL CHECK(HH_EnvHealthDeterminantTypeValue)
+    validFrom DATETIME
+    validTo DATETIME
+  }
+  Constraint Enum "HH_HealthServicesTypeValue" {
+    identifier = "HumanHealth::HealthServicesTypeValue"
+  }
+  Attributes "HH_Biomarker" {
+    description = "A biomarker (of exposure) is the concentration of a chemical, its metabolite or the product of an interaction between a chemical and some target molecule or cell that is measured in a compartment in an organism."
+    identifier = "HumanHealth::Biomarker"
+    tableName = "HH_Biomarker"
+    ageRange_range Age NOT NULL
+    ageRange_startAge Age NOT NULL
+    biomarkerName_chemical TEXT NOT NULL CHECK(HH_ChemicalValue)
+    biomarkerName_matrix TEXT NOT NULL CHECK(HH_MatrixValue)
+    biomarkerStatisticalParameter_CI95ofGM TEXT
+    biomarkerStatisticalParameter_CI95ofGM_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_CI95ofP95 TEXT
+    biomarkerStatisticalParameter_CI95ofP95_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_LOQ DOUBLE
+    biomarkerStatisticalParameter_P50 TEXT
+    biomarkerStatisticalParameter_P50_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_P90 TEXT
+    biomarkerStatisticalParameter_P90_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_P95 TEXT
+    biomarkerStatisticalParameter_P95_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_geometricMean TEXT
+    biomarkerStatisticalParameter_geometricMean_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_maximum TEXT
+    biomarkerStatisticalParameter_maximum_uom TEXT CHECK(GML_UomIdentifier)
+    biomarkerStatisticalParameter_numberOfPartecipants INTEGER NOT NULL
+    biomarkerStatisticalParameter_pinLOD DOUBLE
+    gender TEXT NOT NULL CHECK(BASE2_GenderValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    referencePeriod_endDate DATE NOT NULL
+    referencePeriod_startDate DATE NOT NULL
+    refersTo INTEGER
+    aggregationUnit INTEGER
+  }
+  Class <<type>>  "Concentration" {
+    uom: UomConcentration
+    value: TEXT
+  }
+  Constraint Enum "HH_ICDValue" {
+    identifier = "HumanHealth::ICDValue"
+  }
+  Class <<type>>  "NoiseMeasure" {
+    uom: UomNoise
+    value: TEXT
+  }
+  Class <<type>>  "UomConcentration" {
+    component: TEXT
+    formula: TEXT [0..1]
+    measureType: TEXT
+    media: TEXT
+    nameStandardUnit: TEXT [0..1]
+    offsetToStandardUnit: DOUBLE [0..1]
+    scaleToStandardUnit: DOUBLE [0..1]
+    uomName: TEXT
+    uomSymbol: TEXT
+    ref measure: Measure[0..*] inv uom
+  }
+  Constraint Enum "HH_BathingWaterQualityComponentTypeValue" {
+    identifier = "HumanHealth::BathingWaterQualityComponentTypeValue"
+  }
+  Attributes "HH_BiomarkerThematicMetadata" {
+    description = "Thematic Metadata describing the purpose of the study, target population and the characteristic of the studied areas."
+    identifier = "HumanHealth::BiomarkerThematicMetadata"
+    tableName = "HH_BiomarkerThematicMetadata"
+    id INTEGER NOT NULL PRIMARY KEY
+    meanAge Age NOT NULL
+  }
+  Relation "HH_HealthStatisticalData_aggregationUnit" {
+    profile = "attributes"
+    relatedReference = "HH_HealthStatisticalData#aggregationUnit"
+    tableName = "HH_HealthStatisticalData_aggregationUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_HealthStatisticalData(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_CORE_StatisticalUnit(id)
+  }
+  Relation "HH_Disease_diseaseMeasure" {
+    profile = "attributes"
+    tableName = "HH_Disease_diseaseMeasure"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_Disease(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_DiseaseMeasure(id)
+  }
+  Relation "HH_BiomarkerThematicMetadata_describedBy" {
+    profile = "attributes"
+    relatedReference = "HH_Biomarker#refersTo"
+    tableName = "HH_BiomarkerThematicMetadata_describedBy"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_BiomarkerThematicMetadata(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_Biomarker(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "BASE2_GenderValue" {
+    identifier = "Base Types 2::GenderValue"
+    female
+    male
+    unknown
+  }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+  Attributes "SU_CORE_StatisticalUnit" {
+    description = "Unit for dissemination or use of statistical information.
+
+    SOURCE [INSPIRE Directive:2007].
+
+    EXAMPLE grid cell, point, line, polygon.
+
+    NOTE Spatial features of any INSPIRE application schema can be considered as a statistical unit, because all can be used as spatial reference. This class is provided to represent features that are used only to disseminate statistical information and that are not included in another INSPIRE application schema."
+    identifier = "Statistical Units Base::StatisticalUnit"
+    tableName = "SU_CORE_StatisticalUnit"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+}

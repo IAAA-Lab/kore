@@ -1,0 +1,587 @@
+Container <<applicationSchema>>  "Statistical Units Vector" {
+  Attributes "SU_VECTOR_VectorStatisticalUnit" {
+    description = "Statistical unit represented as a vector geometry (point, line or surface)."
+    identifier = "Statistical Units Vector::VectorStatisticalUnit"
+    tableName = "SU_VECTOR_VectorStatisticalUnit"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Constraint Enum "SU_VECTOR_EvolutionTypeValue" {
+    obligation = "technicalGuidance"
+    identifier = "Statistical Units Vector::EvolutionTypeValue"
+  }
+  Attributes "SU_VECTOR_StatisticalTessellation" {
+    description = "A tesselation composed of area statistical units.
+
+    EXAMPLE A NUTS regions coverage."
+    identifier = "Statistical Units Vector::StatisticalTessellation"
+    tableName = "SU_VECTOR_StatisticalTessellation"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    lower INTEGER
+  }
+  Attributes "SU_VECTOR_AreaStatisticalUnit" {
+    description = "Vector statistical unit with a surfacic reference geometry.
+
+    Such object can be composed of other area statistical unit.
+
+    EXAMPLE A country area, an administrative unit, a NUTS region."
+    identifier = "Statistical Units Vector::AreaStatisticalUnit"
+    tableName = "SU_VECTOR_AreaStatisticalUnit"
+    areaValue TEXT NOT NULL
+    areaValue_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    landAreaValue TEXT
+    landAreaValue_uom TEXT CHECK(GML_UomIdentifier)
+    livableAreaValue TEXT
+    livableAreaValue_uom TEXT CHECK(GML_UomIdentifier)
+    tesselation INTEGER
+  }
+  Constraint Enum "SU_VECTOR_GeometryTypeValue" {
+    obligation = "implementingRule"
+    identifier = "Statistical Units Vector::GeometryTypeValue"
+  }
+  Attributes "SU_VECTOR_Evolution" {
+    description = "Representation of vector statistical unit evolution."
+    identifier = "Statistical Units Vector::Evolution"
+    tableName = "SU_VECTOR_Evolution"
+    areaVariation TEXT
+    areaVariation_uom TEXT CHECK(GML_UomIdentifier)
+    date DATETIME NOT NULL
+    evolutionType TEXT NOT NULL CHECK(SU_VECTOR_EvolutionTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    populationVariation INTEGER
+  }
+  Attributes "SU_VECTOR_GeometryDescriptor" {
+    description = "A descriptor for vector statistical unit geometry."
+    identifier = "Statistical Units Vector::GeometryDescriptor"
+    tableName = "SU_VECTOR_GeometryDescriptor"
+    geometryType TEXT NOT NULL CHECK(SU_VECTOR_GeometryTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    leastDetailedScale INTEGER
+    mostDetailedScale INTEGER
+  }
+  Feature "SU_VECTOR_VectorStatisticalUnitGeometry" {
+    description = "A geometrical representation for vector statistical units.
+
+    Vector statistical units can have several representations depending on the context they are used for. It is adviced to produce at least one reference geometry.
+
+    EXAMPLE1: A vector statistical units may be represented both by an area and a point geometry. Such point can be the center of gravity or a label location.
+
+    EXAMPLE2: For mapping, different generalised representations of vector statistical units are required. These geometries depend on the visualisation scale."
+    identifier = "Statistical Units Vector::VectorStatisticalUnitGeometry"
+    tableName = "SU_VECTOR_VectorStatisticalUnitGeometry"
+    geometry GEOMETRY NOT NULL
+    geometryDescriptor_geometryType TEXT NOT NULL CHECK(SU_VECTOR_GeometryTypeValue)
+    geometryDescriptor_leastDetailedScale INTEGER
+    geometryDescriptor_mostDetailedScale INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Relation "SU_VECTOR_VectorStatisticalUnit_geometry" {
+    profile = "features"
+    tableName = "SU_VECTOR_VectorStatisticalUnit_geometry"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnitGeometry(id)
+  }
+  Relation "SU_VECTOR_VectorStatisticalUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "SU_VECTOR_VectorStatisticalUnit#inspireId"
+    tableName = "SU_VECTOR_VectorStatisticalUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SU_VECTOR_VectorStatisticalUnit_thematicId" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_VectorStatisticalUnit_thematicId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_ThematicIdentifier(id)
+  }
+  Relation "SU_VECTOR_VectorStatisticalUnit_geographicalName" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_VectorStatisticalUnit_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "SU_VECTOR_StatisticalTessellation_lower" {
+    profile = "attributes"
+    relatedReference = "SU_VECTOR_StatisticalTessellation#lower"
+    tableName = "SU_VECTOR_StatisticalTessellation_lower"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
+  }
+  Relation "SU_VECTOR_StatisticalTessellation_units" {
+    profile = "attributes"
+    relatedReference = "SU_VECTOR_AreaStatisticalUnit#tesselation"
+    tableName = "SU_VECTOR_StatisticalTessellation_units"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+  }
+  Relation "SU_VECTOR_StatisticalTessellation_inspireId" {
+    profile = "attributes"
+    relatedReference = "SU_VECTOR_StatisticalTessellation#inspireId"
+    tableName = "SU_VECTOR_StatisticalTessellation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SU_VECTOR_AreaStatisticalUnit_administrativeUnit" {
+    profile = "features"
+    tableName = "SU_VECTOR_AreaStatisticalUnit_administrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "SU_VECTOR_AreaStatisticalUnit_successors" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_AreaStatisticalUnit_successors"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+  }
+  Relation "SU_VECTOR_AreaStatisticalUnit_lowers" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_AreaStatisticalUnit_lowers"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+  }
+  Relation "SU_VECTOR_Evolution_initialUnitVersions" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_Evolution_initialUnitVersions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_Evolution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+  }
+  Relation "SU_VECTOR_Evolution_units" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_Evolution_units"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_Evolution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+  }
+  Relation "SU_VECTOR_Evolution_finalUnitVersions" {
+    profile = "attributes"
+    tableName = "SU_VECTOR_Evolution_finalUnitVersions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_Evolution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "ER_S_AggregatedEnergy_statisticalUnit" {
+    profile = "attributes"
+    relatedReference = "ER_S_AggregatedEnergy#statisticalUnit"
+    tableName = "ER_S_AggregatedEnergy_statisticalUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_S_AggregatedEnergy(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_CORE_StatisticalUnit(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "AU_admUnit_boundary" {
+    profile = "features"
+    tableName = "AU_admUnit_boundary"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
+  }
+  Relation "AU_AdministrativeUnit_administeredBy" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_administeredBy"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
+    profile = "features"
+    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
+    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_AdministrativeUnit_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeUnit#inspireId"
+    tableName = "AU_AdministrativeUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeUnit_name" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_AdministrativeUnit_nationalLevelName" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeUnit_nationalLevelName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
+    profile = "features"
+    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
+  }
+  Relation "AU_AdministrativeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeBoundary#inspireId"
+    tableName = "AU_AdministrativeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeBoundary_nationalLevel" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeBoundary_nationalLevel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
+  }
+  Relation "AU_Condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_Condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_Condominium_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_Condominium#inspireId"
+    tableName = "AU_Condominium_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_Condominium_name" {
+    profile = "attributes"
+    tableName = "AU_Condominium_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_ResidenceOfAuthority_name" {
+    profile = "attributes"
+    relatedReference = "AU_ResidenceOfAuthority#name"
+    tableName = "AU_ResidenceOfAuthority_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Constraint Enum "BASE2_CountryCode" {
+    identifier = "Base Types 2::CountryCode"
+    AT
+    BE
+    BG
+    CY
+    CZ
+    DE
+    DK
+    EE
+    EL
+    ES
+    FI
+    FR
+    HR
+    HU
+    IE
+    IT
+    LT
+    LU
+    LV
+    MT
+    NL
+    PL
+    PT
+    RO
+    SE
+    SI
+    SK
+    TR
+    UK
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "ER_S_AggregatedEnergy" {
+    description = "Abstract class intended to aggregate values on energy statistics (energy products, consumption, supply, etc...) and energy resources (fossil fuels, renewables and waste)."
+    identifier = "Energy Statistics::AggregatedEnergy"
+    tableName = "ER_S_AggregatedEnergy"
+    aggregationPeriod TM_Period NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+    measureValue Measure NOT NULL
+    statisticalUnit INTEGER
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "BASE2_ThematicIdentifier" {
+    description = "Thematic identifier to uniquely identify the spatial object.
+
+    Some spatial objects may be assigned multiple unique identifiers.
+
+    These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
+    identifier = "Base Types 2::ThematicIdentifier"
+    tableName = "BASE2_ThematicIdentifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    identifier TEXT NOT NULL
+    identifierScheme TEXT NOT NULL
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Feature "AU_AdministrativeUnit" {
+    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    identifier = "AdministrativeUnits::AdministrativeUnit"
+    tableName = "AU_AdministrativeUnit"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    nationalCode TEXT NOT NULL
+    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+    upperLevelUnit INTEGER
+  }
+  Attributes "SU_CORE_StatisticalUnit" {
+    description = "Unit for dissemination or use of statistical information.
+
+    SOURCE [INSPIRE Directive:2007].
+
+    EXAMPLE grid cell, point, line, polygon.
+
+    NOTE Spatial features of any INSPIRE application schema can be considered as a statistical unit, because all can be used as spatial reference. This class is provided to represent features that are used only to disseminate statistical information and that are not included in another INSPIRE application schema."
+    identifier = "Statistical Units Base::StatisticalUnit"
+    tableName = "SU_CORE_StatisticalUnit"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Feature "AU_AdministrativeBoundary" {
+    description = "A line of demarcation between administrative units."
+    identifier = "AdministrativeUnits::AdministrativeBoundary"
+    tableName = "AU_AdministrativeBoundary"
+    beginLifespanVersion DATETIME
+    country TEXT NOT NULL CHECK(BASE2_CountryCode)
+    endLifespanVersion DATETIME
+    geometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+  }
+  Attributes "GMD_LocalisedCharacterString" {
+    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+  Feature "AU_ResidenceOfAuthority" {
+    description = "Data type representing the name and position of a residence of authority."
+    identifier = "AdministrativeUnits::ResidenceOfAuthority"
+    tableName = "AU_ResidenceOfAuthority"
+    geometry POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    name INTEGER
+  }
+  Attributes "AU_AdministrativeHierarchyLevel" {
+    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    tableName = "AU_AdministrativeHierarchyLevel"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+  }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "AU_AdministrativeHierarchyLevel" {
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    1stOrder
+    2ndOrder
+    3rdOrder
+    4thOrder
+    5thOrder
+    6thOrder
+  }
+  Constraint Enum "AU_LegalStatusValue" {
+    identifier = "AdministrativeUnits::LegalStatusValue"
+    agreed
+    notAgreed
+  }
+  Constraint Enum "AU_TechnicalStatusValue" {
+    identifier = "AdministrativeUnits::TechnicalStatusValue"
+    edgeMatched
+    notEdgeMatched
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+}

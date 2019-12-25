@@ -1,0 +1,36 @@
+Container <<applicationSchema>>  "ElevationBaseTypes" {
+  Constraint Enum "EL_BAS_SurfaceTypeValue" {
+    identifier = "ElevationBaseTypes::SurfaceTypeValue"
+    DSM
+    DTM
+  }
+  Constraint Enum "EL_BAS_ElevationPropertyTypeValue" {
+    identifier = "ElevationBaseTypes::ElevationPropertyTypeValue"
+    depth
+    height
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}

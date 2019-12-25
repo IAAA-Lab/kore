@@ -1,0 +1,205 @@
+Container <<applicationSchema>>  "Statistical Units Grid" {
+  Attributes "SU_GRID_StatisticalGrid" {
+    description = "A grid composed of statistical cells.
+
+    Such grid is associated with an upper grid, that has a bigger resolution, and a lower grid that has a lower resolution. Some statistical grids are organised into a hierarchy of grids with different resolutions. The cells composing two linked grids have to satisfy some topological constraints: each cell of the upper grid should be the aggregation of cells of the lower grid.
+
+    EXAMPLE The hierarchical structure is a quadtree if the grids are composed of quadrilateral cells and each cell is composed of less than four cells of the lower level."
+    identifier = "Statistical Units Grid::StatisticalGrid"
+    tableName = "SU_GRID_StatisticalGrid"
+    EPSGCode INTEGER
+    height INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    lower INTEGER
+    origin_coordinate Sequence<Number>
+    origin_dimension INTEGER
+    resolution StatisticalGridResolution
+    width INTEGER
+  }
+  Class <<union>>  "StatisticalGridResolution" {
+    angleResolution: TEXT
+    angleResolution_uom: TEXT
+    lengthResolution: TEXT
+    lengthResolution_uom: TEXT
+  }
+  Attributes "SU_GRID_StatisticalGridCell" {
+    description = "Unit for dissemination or use of statistical information that is represented as a grid cell.
+
+    A statistical grid cell is associated with:
+
+    - the unique statistical grid cell of its upper level (if any) it is covered by,
+
+    - the statistical grid cells of its lower level (if any) it covers.
+
+    NB Statistical grid cells are squares.
+
+    EXAMPLE In a quadtree structure, some cells are associated with the four cells they are decomposed into."
+    identifier = "Statistical Units Grid::StatisticalGridCell"
+    tableName = "SU_GRID_StatisticalGridCell"
+    code TEXT
+    geographicalPosition_coordinate Sequence<Number> NOT NULL
+    geographicalPosition_dimension INTEGER NOT NULL
+    geometry GM_Polygon
+    grid INTEGER
+    gridPosition_x INTEGER
+    gridPosition_y INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    upper INTEGER
+    ref AggregatedEnergy inv statisticalUnit
+    ref HealthStatisticalData inv aggregationUnit
+    ref Dimensions inv spatial
+  }
+  Attributes "SU_GRID_GridPosition" {
+    description = "A grid cell position within a grid."
+    identifier = "Statistical Units Grid::GridPosition"
+    tableName = "SU_GRID_GridPosition"
+    id INTEGER NOT NULL PRIMARY KEY
+    x INTEGER NOT NULL
+    y INTEGER NOT NULL
+  }
+  Relation "SU_GRID_StatisticalGrid_lower" {
+    profile = "attributes"
+    relatedReference = "SU_GRID_StatisticalGrid#lower"
+    tableName = "SU_GRID_StatisticalGrid_lower"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_GRID_StatisticalGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_GRID_StatisticalGrid(id)
+  }
+  Relation "SU_GRID_grid_cells" {
+    profile = "attributes"
+    relatedReference = "SU_GRID_StatisticalGridCell#grid"
+    tableName = "SU_GRID_grid_cells"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_GRID_StatisticalGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_GRID_StatisticalGridCell(id)
+  }
+  Relation "SU_GRID_StatisticalGrid_inspireId" {
+    profile = "attributes"
+    relatedReference = "SU_GRID_StatisticalGrid#inspireId"
+    tableName = "SU_GRID_StatisticalGrid_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_GRID_StatisticalGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SU_GRID_StatisticalGridCell_lowers" {
+    profile = "attributes"
+    relatedReference = "SU_GRID_StatisticalGridCell#upper"
+    tableName = "SU_GRID_StatisticalGridCell_lowers"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_GRID_StatisticalGridCell(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_GRID_StatisticalGridCell(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}

@@ -1,0 +1,437 @@
+Container <<applicationSchema>>  "Observation References" {
+  Attributes "OMOR_ObservationSet" {
+    description = "Links a set of Observations
+
+    This class is used to link multiple related Observations together"
+    identifier = "Observation References::ObservationSet"
+    tableName = "OMOR_ObservationSet"
+    extent_description TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Relation "OMOR_ObservationSet_inspireId" {
+    profile = "attributes"
+    relatedReference = "OMOR_ObservationSet#inspireId"
+    tableName = "OMOR_ObservationSet_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOR_ObservationSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Constraint Enum "TRS_TM_IndeterminateValue" {
+    identifier = "Temporal Reference System::TM_IndeterminateValue"
+    after
+    before
+    name
+    now
+    unknow
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "GMD_PT_Locale" {
+    identifier = "Cultural and linguistic adapdability::PT_Locale"
+    tableName = "GMD_PT_Locale"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+  }
+  Attributes "MI_MD_ScopeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    description = "Class of information to which the referencing entity applies."
+    identifier = "Maintenance information::MD_ScopeCode"
+    tableName = "MI_MD_ScopeCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Attributes "MI_MD_ScopeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    description = "Class of information to which the referencing entity applies."
+    identifier = "Maintenance information::MD_ScopeCode"
+    tableName = "MI_MD_ScopeCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
+  }
+  Attributes "GMD_MD_ProgressCode" {
+    description = "Status of the dataset or progress of a review"
+    identifier = "Identification information::MD_ProgressCode"
+    tableName = "GMD_MD_ProgressCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_MD_ProgressCode)
+  }
+  Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
+    identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
+    annually
+    asNeeded
+    biannually
+    continual
+    daily
+    fortnightly
+    irregular
+    monthly
+    notPlanned
+    quarterly
+    unknown
+    weekly
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "MI_MD_ScopeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    identifier = "Maintenance information::MD_ScopeCode"
+    attribute
+    attributeType
+    collectionHardware
+    collectionSession
+    dataset
+    dimensionGroup
+    feature
+    featureType
+    fieldSession
+    model
+    nonGeographicDataset
+    propertyType
+    series
+    service
+    software
+    tile
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+  Constraint Enum "MEI_MD_ObligationCode" {
+    identifier = "Metadata extension information::MD_ObligationCode"
+    conditional
+    mandatory
+    optional
+  }
+  Constraint Enum "MEI_MD_DatatypeCode" {
+    identifier = "Metadata extension information::MD_DatatypeCode"
+    abstractClass
+    aggregateClass
+    association
+    characterString
+    class
+    codelist
+    codelistElement
+    datatypeClass
+    enumeration
+    integer
+    interfaceClass
+    metaClass
+    specifiedClass
+    typeClass
+    unionClass
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "GMD_MD_KeywordTypeCode" {
+    identifier = "Identification information::MD_KeywordTypeCode"
+    discipline
+    place
+    stratum
+    temporal
+    theme
+  }
+  Constraint Enum "GMD_DS_AssociationTypeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    identifier = "Identification information::DS_AssociationTypeCode"
+    crossReference
+    largerWorkCitation
+    partOfSeamlessDatabase
+    source
+    stereoMate
+  }
+  Constraint Enum "GMD_DS_InitiativeTypeCode" {
+    identifier = "Identification information::DS_InitiativeTypeCode"
+    campaign
+    collection
+    exercise
+    experiment
+    investigation
+    mission
+    operation
+    platform
+    process
+    program
+    project
+    sensor
+    study
+    task
+    trial
+  }
+  Constraint Enum "GMD_MD_ProgressCode" {
+    identifier = "Identification information::MD_ProgressCode"
+    completed
+    historicalArchive
+    obsolete
+    onGoing
+    planned
+    required
+    underDevelopment
+  }
+  Attributes "DI_MD_MediumFormatCode" {
+    description = ""
+    identifier = "Distribution information::MD_MediumFormatCode"
+    tableName = "DI_MD_MediumFormatCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(DI_MD_MediumFormatCode)
+  }
+  Constraint Enum "DI_MD_MediumNameCode" {
+    identifier = "Distribution information::MD_MediumNameCode"
+    1quarterInchCartridgeTape
+    3480Cartridge
+    3490Cartridge
+    3580Cartridge
+    3halfInchFloppy
+    4mmCartridgeTape
+    5quarterInchFloppy
+    7trackTape
+    8mmCartridgeTape
+    9trackTape
+    cdRom
+    digitalLinearTape
+    dvd
+    dvdRom
+    hardcopy
+    onLine
+    satellite
+    telephoneLink
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "DI_MD_MediumFormatCode" {
+    identifier = "Distribution information::MD_MediumFormatCode"
+    cpio
+    highSierra
+    iso9660
+    iso9660AppleHFS
+    iso9660RockRidge
+    tar
+  }
+}

@@ -1,0 +1,169 @@
+Container <<applicationSchema>>  "Existing Land Use" {
+  Feature "ELU_ExistingLandUseDataSet" {
+    description = "An existing land use data set is a collection of areas for which information on existing (present or past) land uses is provided."
+    identifier = "Existing Land Use::ExistingLandUseDataSet"
+    tableName = "ELU_ExistingLandUseDataSet"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    extent MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT NOT NULL
+    validFrom DATE
+    validTo DATE
+  }
+  Feature "ELU_ExistingLandUseObject" {
+    description = "An existing land use object describes the land use of an area having a homogeneous combination of land use types."
+    identifier = "Existing Land Use::ExistingLandUseObject"
+    tableName = "ELU_ExistingLandUseObject"
+    beginLifespanVersion DATETIME
+    dataset INTEGER
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    hilucsPresence HILUCSPresence
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    observationDate DATE
+    specificPresence SpecificPresence
+    validFrom DATE
+    validTo DATE
+  }
+  Relation "ELU_ExistingLandUseDataSet_inspireId" {
+    profile = "attributes"
+    relatedReference = "ELU_ExistingLandUseDataSet#inspireId"
+    tableName = "ELU_ExistingLandUseDataSet_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseDataSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "ELU_ExistingLandUseObject_dataset" {
+    profile = "features"
+    relatedReference = "ELU_ExistingLandUseObject#dataset"
+    tableName = "ELU_ExistingLandUseObject_dataset"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ELU_ExistingLandUseDataSet(id)
+  }
+  Relation "ELU_ExistingLandUseObject_inspireId" {
+    profile = "attributes"
+    relatedReference = "ELU_ExistingLandUseObject#inspireId"
+    tableName = "ELU_ExistingLandUseObject_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "ELU_ExistingLandUseObject_hilucsLandUse" {
+    profile = "attributes"
+    tableName = "ELU_ExistingLandUseObject_hilucsLandUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LUNOM_HILUCSValue(id)
+  }
+  Relation "ELU_ExistingLandUseObject_specificLandUse" {
+    profile = "attributes"
+    tableName = "ELU_ExistingLandUseObject_specificLandUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LUNOM_LandUseClassificationValue(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "LUNOM_HILUCSValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
+
+    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
+
+    The elements of the list should be both applicable to existing land use and planned land use."
+    identifier = "Land Use Nomenclature::HILUCSValue"
+    tableName = "LUNOM_HILUCSValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
+  }
+  Attributes "LUNOM_LandUseClassificationValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
+
+    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+    tableName = "LUNOM_LandUseClassificationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
+  }
+  Attributes "LUNOM_HILUCSPercentage" {
+    description = "Percentage of land use object that is covered by this HILUCS presence.
+
+    NOTE1:The percentage is according to the socio-economic or functional importance of the use.
+
+    NOTE2:examples are provided in the narrative description part of the data specification."
+    identifier = "Land Use Nomenclature::HILUCSPercentage"
+    tableName = "LUNOM_HILUCSPercentage"
+    hilucsValue TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER NOT NULL
+  }
+  Attributes "LUNOM_HILUCSValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
+
+    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
+
+    The elements of the list should be both applicable to existing land use and planned land use."
+    identifier = "Land Use Nomenclature::HILUCSValue"
+    tableName = "LUNOM_HILUCSValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
+  }
+  Attributes "LUNOM_SpecificPercentage" {
+    description = "Percentage of land use object that is covered by this specific presence."
+    identifier = "Land Use Nomenclature::SpecificPercentage"
+    tableName = "LUNOM_SpecificPercentage"
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER NOT NULL
+    specificValue TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
+  }
+  Attributes "LUNOM_LandUseClassificationValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
+
+    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+    tableName = "LUNOM_LandUseClassificationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
+  }
+  Constraint Enum "LUNOM_HILUCSValue" {
+    identifier = "Land Use Nomenclature::HILUCSValue"
+  }
+  Constraint Enum "LUNOM_LandUseClassificationValue" {
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+  }
+}

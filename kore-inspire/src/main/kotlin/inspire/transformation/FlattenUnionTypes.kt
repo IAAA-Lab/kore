@@ -2,10 +2,7 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.copy
-import es.iaaa.kore.references
+import es.iaaa.kore.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 
@@ -24,11 +21,11 @@ import es.iaaa.kore.transform.rules.patch
  */
 val `Flatten union types`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = { upperBound == 1 && type?.references("Union") == true }) {
-        val union = type as? KoreClass ?: throw Exception("Union types must be classes")
+        val union = type as? KoreClass ?: throw Exception("Union types must be classes but was ${type?.javaClass?.simpleName}")
         union.attributes.forEach { attribute ->
             copy(containingClass as KoreClass).apply {
                 name = "${name}_${attribute.name}"
-                type = attribute.type as? KoreClass ?: throw Exception("Attributes of union types must be classes")
+                type = attribute.type
                 lowerBound = 0
             }
         }

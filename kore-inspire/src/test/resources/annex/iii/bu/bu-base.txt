@@ -1,0 +1,341 @@
+Container <<applicationSchema>>  "BuildingsBase" {
+  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ConditionOfConstructionValue"
+  }
+  Attributes "BU_BASE_AbstractBuilding" {
+    Governance = "<<missing>>"
+    description = "Abstract spatial object type grouping the common semantic properties of the spatial object types Building and BuildingPart."
+    identifier = "BuildingsBase::AbstractBuilding"
+    tableName = "BU_BASE_AbstractBuilding"
+    beginLifespanVersion DATETIME
+    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    dateOfConstruction_anyPoint DATETIME
+    dateOfConstruction_beginning DATETIME
+    dateOfConstruction_end DATETIME
+    dateOfDemolition_anyPoint DATETIME
+    dateOfDemolition_beginning DATETIME
+    dateOfDemolition_end DATETIME
+    dateOfRenovation_anyPoint DATETIME
+    dateOfRenovation_beginning DATETIME
+    dateOfRenovation_end DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    numberOfBuildingUnits INTEGER
+    numberOfDwellings INTEGER
+    numberOfFloorsAboveGround INTEGER
+  }
+  Constraint Enum "BU_BASE_HorizontalGeometryReferenceValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
+  }
+  Attributes "BU_BASE_Building" {
+    description = "A Building is an enclosed <b>construction </b>above and/or underground, used or intended for the shelter of humans, animals or things or for the production of economic goods. A building refers to any structure permanently constructed or erected on its site."
+    identifier = "BuildingsBase::Building"
+    tableName = "BU_BASE_Building"
+    beginLifespanVersion DATETIME
+    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    dateOfConstruction_anyPoint DATETIME
+    dateOfConstruction_beginning DATETIME
+    dateOfConstruction_end DATETIME
+    dateOfDemolition_anyPoint DATETIME
+    dateOfDemolition_beginning DATETIME
+    dateOfDemolition_end DATETIME
+    dateOfRenovation_anyPoint DATETIME
+    dateOfRenovation_beginning DATETIME
+    dateOfRenovation_end DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    numberOfBuildingUnits INTEGER
+    numberOfDwellings INTEGER
+    numberOfFloorsAboveGround INTEGER
+  }
+  Constraint Enum "BU_BASE_ElevationReferenceValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ElevationReferenceValue"
+  }
+  Attributes "BU_BASE_BuildingPart" {
+    description = "A BuildingPart is a sub-division of a Building that might be considered itself as a building.
+
+    NOTE 1: A BuildingPart is homogeneous related to its physical, functional or temporal aspects.
+
+    NOTE 2: Building and BuildingPart share the same set of properties.
+
+    EXAMPLE: A building may be composed of two building parts having different heights above ground."
+    identifier = "BuildingsBase::BuildingPart"
+    tableName = "BU_BASE_BuildingPart"
+    beginLifespanVersion DATETIME
+    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    dateOfConstruction_anyPoint DATETIME
+    dateOfConstruction_beginning DATETIME
+    dateOfConstruction_end DATETIME
+    dateOfDemolition_anyPoint DATETIME
+    dateOfDemolition_beginning DATETIME
+    dateOfDemolition_end DATETIME
+    dateOfRenovation_anyPoint DATETIME
+    dateOfRenovation_beginning DATETIME
+    dateOfRenovation_end DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    numberOfBuildingUnits INTEGER
+    numberOfDwellings INTEGER
+    numberOfFloorsAboveGround INTEGER
+  }
+  Constraint Enum "BU_BASE_BuildingNatureValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::BuildingNatureValue"
+  }
+  Constraint Enum "BU_BASE_HeightStatusValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HeightStatusValue"
+  }
+  Attributes "BU_BASE_Elevation" {
+    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
+    identifier = "BuildingsBase::Elevation"
+    tableName = "BU_BASE_Elevation"
+    elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
+    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_dimension INTEGER NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Constraint Enum "BU_BASE_CurrentUseValue" {
+    extensiblity = "narrower"
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::CurrentUseValue"
+  }
+  Attributes "BU_BASE_DateOfEvent" {
+    description = "This data type includes the different possible ways to define the date of an event."
+    identifier = "BuildingsBase::DateOfEvent"
+    tableName = "BU_BASE_DateOfEvent"
+    anyPoint DATETIME
+    beginning DATETIME
+    end DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "BU_BASE_ExternalReference" {
+    description = "Reference to an external information system containing any piece of information related to the spatial object."
+    identifier = "BuildingsBase::ExternalReference"
+    tableName = "BU_BASE_ExternalReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    informationSystem TEXT NOT NULL
+    reference TEXT NOT NULL
+  }
+  Attributes "BU_BASE_CurrentUse" {
+    description = "This data type enables to detail the current use(s)."
+    identifier = "BuildingsBase::CurrentUse"
+    tableName = "BU_BASE_CurrentUse"
+    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER
+  }
+  Feature "BU_BASE_BuildingGeometry2D" {
+    description = "This data types includes the geometry of the building and metadata information about which element of the building was captured and how."
+    identifier = "BuildingsBase::BuildingGeometry2D"
+    tableName = "BU_BASE_BuildingGeometry2D"
+    geometry GEOMETRY NOT NULL
+    horizontalGeometryEstimatedAccuracy TEXT
+    horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    horizontalGeometryReference TEXT NOT NULL CHECK(BU_BASE_HorizontalGeometryReferenceValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    referenceGeometry BOOLEAN NOT NULL
+    verticalGeometryEstimatedAccuracy TEXT
+    verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    verticalGeometryReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+  }
+  Attributes "BU_BASE_AbstractConstruction" {
+    description = "Abstract spatial object type grouping the semantic properties of  buildings, building parts and of some optional spatial object types that may be added in order to provide more information about the theme Buildings.
+
+    The optional spatial object types that may be added to core profiles are described in the extended profiles. The ones inheriting from the attributes of AbstractConstruction are Installation and OtherConstruction."
+    identifier = "BuildingsBase::AbstractConstruction"
+    tableName = "BU_BASE_AbstractConstruction"
+    beginLifespanVersion DATETIME
+    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    dateOfConstruction_anyPoint DATETIME
+    dateOfConstruction_beginning DATETIME
+    dateOfConstruction_end DATETIME
+    dateOfDemolition_anyPoint DATETIME
+    dateOfDemolition_beginning DATETIME
+    dateOfDemolition_end DATETIME
+    dateOfRenovation_anyPoint DATETIME
+    dateOfRenovation_beginning DATETIME
+    dateOfRenovation_end DATETIME
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Attributes "BU_BASE_HeightAboveGround" {
+    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
+    identifier = "BuildingsBase::HeightAboveGround"
+    tableName = "BU_BASE_HeightAboveGround"
+    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    status TEXT CHECK(BU_BASE_HeightStatusValue)
+    value TEXT NOT NULL
+    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+  }
+  Attributes "BU_BASE_BuildingNatureValue" {
+    obligation = "implementingRule"
+    description = "Values indicating the nature of a building.
+
+    NOTE 1 : This code list does not aim to be exhaustive as the attribute buildingNature addresses only noticeable buildings.
+
+    NOTE 2: The values included in this code list address mainly (but not only) two international use cases: air flights where buildings may be obstacles and marine navigation where buildings may be landmarks.
+
+    NOTE 3: This code list should only be applied for buildings, even if it may be applicable to other constructions (for example, not all dams are buildings)."
+    identifier = "BuildingsBase::BuildingNatureValue"
+    tableName = "BU_BASE_BuildingNatureValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(BU_BASE_BuildingNatureValue)
+  }
+  Relation "BU_BASE_AbstractBuilding_currentUse" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractBuilding_currentUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_CurrentUse(id)
+  }
+  Relation "BU_BASE_AbstractBuilding_buildingNature" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractBuilding_buildingNature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_BuildingNatureValue(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_elevation" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_elevation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_Elevation(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_externalReference" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_externalReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_ExternalReference(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_heightAboveGround" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_heightAboveGround"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_HeightAboveGround(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_inspireId" {
+    profile = "attributes"
+    relatedReference = "BU_BASE_AbstractConstruction#inspireId"
+    tableName = "BU_BASE_AbstractConstruction_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "BU_BASE_AbstractConstruction_name" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractConstruction_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "BU_BASE_Building_parts" {
+    profile = "attributes"
+    tableName = "BU_BASE_Building_parts"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_BuildingPart(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+}

@@ -3,6 +3,7 @@
 package inspire.transformation
 
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreNamedElement
 import es.iaaa.kore.KoreObject
 import es.iaaa.kore.models.gpkg.AttributesTable
 import es.iaaa.kore.models.gpkg.FeaturesTable
@@ -33,7 +34,7 @@ fun canToFeature(name: String): (KoreObject) -> Boolean = {
             ?.attributes
             ?.filter { att -> GeometryType.isInstance(att.type) }
             ?.run { size == 1 && all { att -> att.upperBound == 1 } }
-            ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class")
+            ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class but ${(it as? KoreNamedElement)?.fullName} was ${it.javaClass.simpleName}")
         else -> false
     }
 }

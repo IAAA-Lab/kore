@@ -1,0 +1,136 @@
+Container <<applicationSchema>>  "Energy Resources Coverage" {
+  Constraint Enum "ER_C_WindPotentialValue" {
+    identifier = "Energy Resources Coverage::WindPotentialValue"
+    averageMeanWindPowerDensity
+    averageMeanWindSpeed
+  }
+  Constraint Enum "ER_C_PotentialTypeValue" {
+    identifier = "Energy Resources Coverage::PotentialTypeValue"
+  }
+  Constraint Enum "ER_C_TidalPotentialValue" {
+    identifier = "Energy Resources Coverage::TidalPotentialValue"
+    averagePeakFlow
+    averageTidalPower
+    meanNeapTidalPower
+    meanNeapTidalRange
+    meanNeapTidePeakFlow
+    meanSpringTidalPower
+    meanSpringTidalRange
+    meanSpringTidePeakFlow
+  }
+  Constraint Enum "ER_C_HydroPotentialValue" {
+    identifier = "Energy Resources Coverage::HydroPotentialValue"
+    potentialHydroPower
+  }
+  Attributes "ER_C_RenewableAndWastePotentialCoverage" {
+    description = "Function that returns an energy potential value from its range for any direct position within its spatial, temporal or spatio-temporal domain.
+
+    SOURCE Adapted from "Coverage" [ISO 19123:2005]."
+    identifier = "Energy Resources Coverage::RenewableAndWastePotentialCoverage"
+    tableName = "ER_C_RenewableAndWastePotentialCoverage"
+    assessmentMethod DocumentCitation
+    beginLifespanVersion DATETIME
+    coverageFunction: CoverageFunction [0..1]
+    domainSet: Any
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    metadata: Any [0..*]
+    name TEXT
+    potentialType TEXT NOT NULL CHECK(ER_C_PotentialTypeValue)
+    rangeSet: Any [0..*]
+    rangeType: RecordType
+    typeOfResource TEXT NOT NULL CHECK(ER_B_RenewableAndWasteValue)
+    validTime TM_Period
+    verticalExtent_verticalExtent VerticalExtentValue
+    verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
+    ref domainExtent: EX_Extent[1..*]
+  }
+  Constraint Enum "ER_C_SolarPotentialValue" {
+    identifier = "Energy Resources Coverage::SolarPotentialValue"
+    diffuseIrradiance
+    diffuseIrradiation
+    directNormalIrradiance
+    directNormalIrradiation
+    globalHorizontalIrradiance
+    globalHorizontalIrradiation
+  }
+  Constraint Enum "ER_C_GeothermalPotentialValue" {
+    identifier = "Energy Resources Coverage::GeothermalPotentialValue"
+    geothermalGradient
+    temperature
+  }
+  Relation "ER_C_RenewableAndWastePotentialCoverage_inspireId" {
+    profile = "attributes"
+    relatedReference = "ER_C_RenewableAndWastePotentialCoverage#inspireId"
+    tableName = "ER_C_RenewableAndWastePotentialCoverage_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_C_RenewableAndWastePotentialCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "ER_B_RenewableAndWasteValue" {
+    identifier = "Energy Resources Base::RenewableAndWasteValue"
+    biogas
+    geothermal
+    hydro
+    industrialWaste
+    liquidBiofuels
+    municipalSolidWaste
+    solarPhotovoltaic
+    solarThermal
+    solidBiomass
+    tideWaveOcean
+    wind
+  }
+  Constraint Enum "ER_B_VerticalReferenceValue" {
+    identifier = "Energy Resources Base::VerticalReferenceValue"
+    groundLevel
+    lowestAstronomicalTide
+    meanSeaLevel
+    seafloor
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+}

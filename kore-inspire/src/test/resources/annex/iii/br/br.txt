@@ -1,0 +1,154 @@
+Container <<applicationSchema>>  "Bio-geographicalRegions" {
+  Feature "BR_Bio-geographicalRegion" {
+    description = "An area in which there are relatively homogeneous ecological conditions with common characteristics.
+
+    EXAMPLE Europe is divided into eleven broad bio-geographical terrestrial zones and 5 zones for marine bio-geographical regions.
+
+    NOTE The marine regions are used in the context of Natura2000 due to practical / technical reasons only; they do not have any legal status in contrast to the "terrestrial" Bio-geographical Regions."
+    identifier = "Bio-geographicalRegions::Bio-geographicalRegion"
+    tableName = "BR_Bio-geographicalRegion"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    regionClassification TEXT NOT NULL CHECK(BR_RegionClassificationValue)
+    regionClassificationLevel TEXT CHECK(BR_RegionClassificationLevelValue)
+    regionClassificationScheme TEXT NOT NULL CHECK(BR_RegionClassificationSchemeValue)
+  }
+  Constraint Enum "BR_MarineStrategyFrameworkDirectiveClassificationValue" {
+    identifier = "Bio-geographicalRegions::MarineStrategyFrameworkDirectiveClassificationValue"
+    adriaticSea
+    ageanLevantineSea
+    balitcSea
+    bayOfBiscayAndTheIberianCoast
+    blackSea
+    celticSeas
+    greaterNorthSea
+    ionianSeaAndCentralMediterraneanSea
+    macronesia
+    mediterraneanSea
+    northeastAtlanticOcean
+    westernMediterraneanSea
+  }
+  Constraint Enum "BR_Natura2000AndEmeraldBio-geographicalRegionClassificationValue" {
+    identifier = "Bio-geographicalRegions::Natura2000AndEmeraldBio-geographicalRegionClassificationValue"
+    alpine
+    anatolian
+    arctic
+    atlantic
+    blackSea
+    boreal
+    continental
+    macaronesian
+    marineAtlantic
+    marineBaltic
+    marineBlackSea
+    marineMacaronesian
+    marineMediterranean
+    mediterranean
+    pannonian
+    steppic
+  }
+  Constraint Enum "BR_RegionClassificationValue" {
+    identifier = "Bio-geographicalRegions::RegionClassificationValue"
+  }
+  Constraint Enum "BR_NaturalVegetationClassificationValue" {
+    identifier = "Bio-geographicalRegions::NaturalVegetationClassificationValue"
+    arcticTundrasAndAlpineVegetation
+    atlanticDwarfShrubHeaths
+    coastalVegetationAndInlandHalophyticVegetation
+    deserts
+    forestSteppesMeadowSteppesAlternatingWithDeciduousBroadleavedForestsAndDryGrasslandsAlternatingWithXerophyticScrub
+    hygrothermophilousMixedDeciduousBroadleavedForests
+    mediterraneanSclerophyllousForestsAndScrub
+    mesophyticAndHygromesophyticConiferousAndMixedBroadleavedConiferousForests
+    mesophyticDeciduousBroadleavedAndMixedConiferousBroadleavedForests
+    mires
+    oroxerophyticVegetationThornushionCommunitiesTomillaresMountainSteppesPartlyScrub
+    polarDesertsAndSubnivalNivalVegetationOfHighMountains
+    steppes
+    subarcticBorealAndNemoralMontaneOpenWoodlandsAsWellAsSubalpineAndOromediterraneanVegetation
+    swampAndFenForests
+    tallReedVegetationAndTallSedgeSwampsAquaticVegetation
+    thermophilousMixedDeciduousBroadleavedForests
+    vegetationOfFloodplainsEstuariesAndFreshwaterPoldersAndOtherMoistOrWetSites
+    xerophyticConiferousForestsWoodlandsAndScrub
+  }
+  Constraint Enum "BR_EnvironmentalStratificationClassificationValue" {
+    identifier = "Bio-geographicalRegions::EnvironmentalStratificationClassificationValue"
+    alpineNorth
+    alpineSouth
+    anatolian
+    atlanticCentral
+    atlanticNorth
+    boreal
+    continental
+    lusitanian
+    mediterraneanMountains
+    mediterraneanNorth
+    mediterraneanSouth
+    nemoral
+    pannonian
+  }
+  Constraint Enum "BR_RegionClassificationLevelValue" {
+    identifier = "Bio-geographicalRegions::RegionClassificationLevelValue"
+    international
+    local
+    national
+    regional
+  }
+  Constraint Enum "BR_RegionClassificationSchemeValue" {
+    identifier = "Bio-geographicalRegions::RegionClassificationSchemeValue"
+    environmentalStratification
+    marineStrategyFrameworkDirective
+    natura2000AndEmeraldBio-geographicalRegion
+    naturalVegetation
+  }
+  Relation "BR_Bio-geographicalRegion_inspireId" {
+    profile = "attributes"
+    relatedReference = "BR_Bio-geographicalRegion#inspireId"
+    tableName = "BR_Bio-geographicalRegion_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BR_Bio-geographicalRegion(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+}

@@ -1,0 +1,282 @@
+Container <<applicationSchema>>  "Population distribution - demography" {
+  Constraint Enum "PD_ClassificationTypeValue" {
+    obligation = "TG"
+    identifier = "Population distribution - demography::ClassificationTypeValue"
+  }
+  Constraint Enum "PD_NACECodeValue" {
+    obligation = "TG"
+    identifier = "Population distribution - demography::NACECodeValue"
+  }
+  Constraint Enum "PD_SpecialValue" {
+    obligation = "IR"
+    identifier = "Population distribution - demography::SpecialValue"
+  }
+  Constraint Enum "PD_AgeByYearValue" {
+    obligation = "TG"
+    identifier = "Population distribution - demography::AgeByYearValue"
+  }
+  Attributes "PD_ClassificationItem" {
+    description = "An item composing a classification.
+
+    EXAMPLE: The classification with a type "gender" is composed of the items "female", "male" and "unknown"."
+    identifier = "Population distribution - demography::ClassificationItem"
+    tableName = "PD_ClassificationItem"
+    id INTEGER NOT NULL PRIMARY KEY
+    type TEXT NOT NULL CHECK(PD_ClassificationItemTypeValue)
+  }
+  Constraint Enum "PD_StatisticsMeasurementMethodValue" {
+    obligation = "IR"
+    identifier = "Population distribution - demography::StatisticsMeasurementMethodValue"
+  }
+  Attributes "PD_StatisticalDistribution" {
+    description = "Set of measures describing how a phenomenon is spread within some part of the 2D world."
+    identifier = "Population distribution - demography::StatisticalDistribution"
+    tableName = "PD_StatisticalDistribution"
+    areaOfDissemination GM_Surface NOT NULL
+    beginLifeSpanVersion DATETIME
+    endLifeSpanVersion DATETIME
+    generalStatus TEXT NOT NULL CHECK(PD_StatisticalDataStatusValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    measure TEXT NOT NULL CHECK(PD_VariableValue)
+    measurementMethod TEXT NOT NULL CHECK(PD_StatisticsMeasurementMethodValue)
+    measurementUnit_formula TEXT
+    measurementUnit_measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    measurementUnit_nameStandardUnit TEXT
+    measurementUnit_offsetToStandardUnit DOUBLE
+    measurementUnit_scaleToStandardUnit DOUBLE
+    measurementUnit_uomName TEXT NOT NULL
+    measurementUnit_uomSymbol TEXT NOT NULL
+    notCountedProportion TEXT
+  }
+  Constraint Enum "PD_VariableValue" {
+    obligation = "TG"
+    identifier = "Population distribution - demography::VariableValue"
+  }
+  Attributes "PD_Classification" {
+    description = "A classification used for a statistical distribution.
+
+    This code list describes the classification of the provided statistical values. It is the composition of the classification items."
+    identifier = "Population distribution - demography::Classification"
+    tableName = "PD_Classification"
+    id INTEGER NOT NULL PRIMARY KEY
+    type TEXT NOT NULL CHECK(PD_ClassificationTypeValue)
+  }
+  Attributes "PD_StatisticalValue" {
+    description = "The pieces of datum of the distribution."
+    identifier = "Population distribution - demography::StatisticalValue"
+    tableName = "PD_StatisticalValue"
+    approximatelyLocatedPopulationProportion TEXT
+    conventionallyLocatedProportion TEXT
+    dimensions INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    specialValue TEXT CHECK(PD_SpecialValue)
+    status TEXT NOT NULL CHECK(PD_StatisticalDataStatusValue)
+    value TEXT
+  }
+  Attributes "PD_Dimensions" {
+    description = "The identification of what the piece of datum refers to in terms of geographic location or individual characteristics."
+    identifier = "Population distribution - demography::Dimensions"
+    tableName = "PD_Dimensions"
+    id INTEGER NOT NULL PRIMARY KEY
+    spatial INTEGER
+  }
+  Constraint Enum "PD_StatisticalDataStatusValue" {
+    obligation = "IR"
+    identifier = "Population distribution - demography::StatisticalDataStatusValue"
+  }
+  Constraint Enum "PD_AgeGroupValue" {
+    obligation = "TG"
+    identifier = "Population distribution - demography::AgeGroupValue"
+  }
+  Constraint Enum "PD_ClassificationItemTypeValue" {
+    identifier = "Population distribution - demography::ClassificationItemTypeValue"
+  }
+  Constraint Enum "PD_AgeBy5YearsValue" {
+    obligation = "IR"
+    identifier = "Population distribution - demography::AgeBy5YearsValue"
+  }
+  Relation "PD_StatisticalDistribution_value" {
+    profile = "attributes"
+    tableName = "PD_StatisticalDistribution_value"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalDistribution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PD_StatisticalValue(id)
+  }
+  Relation "PD_StatisticalDistribution_classification" {
+    profile = "attributes"
+    tableName = "PD_StatisticalDistribution_classification"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalDistribution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PD_Classification(id)
+  }
+  Relation "PD_StatisticalDistribution_inspireId" {
+    profile = "attributes"
+    relatedReference = "PD_StatisticalDistribution#inspireId"
+    tableName = "PD_StatisticalDistribution_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalDistribution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PD_Classification_item" {
+    profile = "attributes"
+    tableName = "PD_Classification_item"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_Classification(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PD_ClassificationItem(id)
+  }
+  Relation "PD_StatisticalValue_dimensions" {
+    profile = "attributes"
+    relatedReference = "PD_StatisticalValue#dimensions"
+    tableName = "PD_StatisticalValue_dimensions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalValue(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PD_Dimensions(id)
+  }
+  Relation "PD_Dimensions_thematic" {
+    profile = "attributes"
+    tableName = "PD_Dimensions_thematic"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_Dimensions(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PD_ClassificationItem(id)
+  }
+  Relation "PD_Dimensions_spatial" {
+    profile = "attributes"
+    relatedReference = "PD_Dimensions#spatial"
+    tableName = "PD_Dimensions_spatial"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_Dimensions(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_CORE_StatisticalUnit(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "SU_CORE_StatisticalUnit" {
+    description = "Unit for dissemination or use of statistical information.
+
+    SOURCE [INSPIRE Directive:2007].
+
+    EXAMPLE grid cell, point, line, polygon.
+
+    NOTE Spatial features of any INSPIRE application schema can be considered as a statistical unit, because all can be used as spatial reference. This class is provided to represent features that are used only to disseminate statistical information and that are not included in another INSPIRE application schema."
+    identifier = "Statistical Units Base::StatisticalUnit"
+    tableName = "SU_CORE_StatisticalUnit"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+}

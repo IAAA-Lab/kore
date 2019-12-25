@@ -1,0 +1,401 @@
+Container <<applicationSchema>>  "Planned Land Use" {
+  Feature "PLU_SupplementaryRegulation" {
+    description = "A spatial object (point, line or polygon) of a spatial plan that provides supplementary information and/or limitation of the use of land/water necessary for spatial planning reasons or to formalise external rules defined in legal text.
+
+    NOTE the supplementary regulations affects all land use that overlap with the geometry
+
+    EXAMPLE an air field generates restriction in its surroundings regarding aircraft landing, radar and telecommunication devices. It is the buffer around these artefacts that generates the supplementary regulation on the Land Use."
+    identifier = "Planned Land Use::SupplementaryRegulation"
+    tableName = "PLU_SupplementaryRegulation"
+    backgroundMap_backgroudMapURI TEXT
+    backgroundMap_backgroundMapDate DATETIME NOT NULL
+    backgroundMap_backgroundMapReference TEXT NOT NULL
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry GEOMETRY NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inheritedFromOtherPlans BOOLEAN
+    inspireId INTEGER
+    plan INTEGER
+    processStepGeneral TEXT CHECK(PLU_ProcessStepGeneralValue)
+    regulationNature TEXT NOT NULL CHECK(PLU_RegulationNatureValue)
+    specificRegulationNature TEXT
+    validFrom DATE
+    validTo DATE
+    ref name: TEXT[0..*]
+  }
+  Attributes "PLU_DimensioningIndicationIntegerValue" {
+    description = "Dimensioning indication whose value is of type integer."
+    identifier = "Planned Land Use::DimensioningIndicationIntegerValue"
+    tableName = "PLU_DimensioningIndicationIntegerValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    indicationReference TEXT NOT NULL
+    value INTEGER NOT NULL
+  }
+  Attributes "PLU_DimensioningIndicationRealValue" {
+    description = "Dimensioning indication whose value is a floating point number."
+    identifier = "Planned Land Use::DimensioningIndicationRealValue"
+    tableName = "PLU_DimensioningIndicationRealValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    indicationReference TEXT NOT NULL
+    value DOUBLE NOT NULL
+  }
+  Attributes "PLU_OrdinanceValue" {
+    description = "Reference to administrative ordinance. Ordinance is a regulation/rule that is adopted by an authority that is legally mandated to take such ordinance."
+    identifier = "Planned Land Use::OrdinanceValue"
+    tableName = "PLU_OrdinanceValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    ordinanceDate DATETIME NOT NULL
+    ordinanceReference TEXT NOT NULL
+  }
+  Constraint Enum "PLU_RegulationNatureValue" {
+    extensibilty = "none"
+    identifier = "Planned Land Use::RegulationNatureValue"
+  }
+  Attributes "PLU_DimensioningIndicationMeasureValue" {
+    description = "Dimensioning indication whose value is a measure."
+    identifier = "Planned Land Use::DimensioningIndicationMeasureValue"
+    tableName = "PLU_DimensioningIndicationMeasureValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    indicationReference TEXT NOT NULL
+    value_unitOfMeasure UnitOfMeasure NOT NULL
+    value_value TEXT NOT NULL
+  }
+  Feature "PLU_ZoningElement" {
+    description = "A spatial object which is homogeneous regarding the permitted uses of land based on zoning which separate one set of land uses from another.
+
+    Zoning elements refer to the regulation of the kinds of activities which will be acceptable on particular lots (such as open space, residential, agricultural, commercial or industrial).  The intensity of use at which those activities can be performed (from low-density housing such as single family homes to high-density such as high-rise apartment buildings), the height of buildings, the amount of space that structures may occupy, the proportions of the types of space on a lot, such as how much landscaped space, impervious surface, traffic lanes, and parking may be provided."
+    identifier = "Planned Land Use::ZoningElement"
+    tableName = "PLU_ZoningElement"
+    backgroundMap_backgroudMapURI TEXT
+    backgroundMap_backgroundMapDate DATETIME NOT NULL
+    backgroundMap_backgroundMapReference TEXT NOT NULL
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    hilucsPresence HILUCSPresence
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    plan INTEGER
+    processStepGeneral TEXT CHECK(PLU_ProcessStepGeneralValue)
+    regulationNature TEXT NOT NULL CHECK(PLU_RegulationNatureValue)
+    specificPresence SpecificPresence
+    validFrom DATE
+    validTo DATE
+  }
+  Attributes "PLU_DimensioningIndicationCharacterValue" {
+    description = "Dimensioning indication whose value is of type CharacterString."
+    identifier = "Planned Land Use::DimensioningIndicationCharacterValue"
+    tableName = "PLU_DimensioningIndicationCharacterValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    indicationReference TEXT NOT NULL
+    value TEXT NOT NULL
+  }
+  Constraint Enum "PLU_SupplementaryRegulationValue" {
+    identifier = "Planned Land Use::SupplementaryRegulationValue"
+  }
+  Feature "PLU_SpatialPlan" {
+    description = "A set of documents that indicates a strategic direction for the development of a given geographic area, states the policies, priorities, programmes and land allocations that will implement the strategic direction and influences the distribution of people and activities in spaces of various scales. Spatial plans may be developed for urban planning, regional planning, environmental planning, landscape planning, national spatial plans, or spatial planning at the Union level."
+    identifier = "Planned Land Use::SpatialPlan"
+    tableName = "PLU_SpatialPlan"
+    alternativeTitle TEXT
+    backgroundMap_backgroudMapURI TEXT
+    backgroundMap_backgroundMapDate DATETIME NOT NULL
+    backgroundMap_backgroundMapReference TEXT NOT NULL
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    extent MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    levelOfSpatialPlan TEXT NOT NULL CHECK(PLU_LevelOfSpatialPlanValue)
+    officialTitle TEXT NOT NULL
+    planTypeName TEXT NOT NULL CHECK(PLU_PlanTypeNameValue)
+    processStepGeneral TEXT CHECK(PLU_ProcessStepGeneralValue)
+    validFrom DATE
+    validTo DATE
+  }
+  Constraint Enum "PLU_LevelOfSpatialPlanValue" {
+    identifier = "Planned Land Use::LevelOfSpatialPlanValue"
+  }
+  Constraint Enum "PLU_SpecificSupplementaryRegulationValue" {
+    identifier = "Planned Land Use::SpecificSupplementaryRegulationValue"
+  }
+  Attributes "PLU_BackgroundMapValue" {
+    description = "Information regarding the map that has been used as a background in the definition of a spatial plan, a zoning element or a supplementary regulation."
+    identifier = "Planned Land Use::BackgroundMapValue"
+    tableName = "PLU_BackgroundMapValue"
+    backgroudMapURI TEXT
+    backgroundMapDate DATETIME NOT NULL
+    backgroundMapReference TEXT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "PLU_DimensioningIndicationValue" {
+    description = "Specifications about the dimensioning of the urban developments."
+    identifier = "Planned Land Use::DimensioningIndicationValue"
+    tableName = "PLU_DimensioningIndicationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    indicationReference TEXT NOT NULL
+  }
+  Attributes "PLU_OfficialDocumentation" {
+    description = "The official documentation that composes the spatial plan; it may be composed of, the applicable legislation, the regulations, cartographic elements, descriptive elements that may be associated with the complete spatial plan, a zoning element or a supplementary regulation . In some Member States the actual textual regulation will be part of the data set (and can be put in the regulationText attribute), in other Member States the text will not be part of the data set and will be referenced via a reference to a document or a legal act.
+
+    At least one of the three voidable values shall be provided.
+
+    NOTE: The LegislationCitation is the value type of the attribute regulation reference. An example of a regulation reference would be: http://www2.vlaanderen.be /ruimtelijk/grup/00350/00362_00001/data/ 212_00362_00001_d_0BVR.pdf."
+    identifier = "Planned Land Use::OfficialDocumentation"
+    tableName = "PLU_OfficialDocumentation"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    legislationCitation LegislationCitation
+    planDocument DocumentCitation
+    regulationText TEXT
+    null INTEGER
+  }
+  Constraint Enum "PLU_ProcessStepGeneralValue" {
+    identifier = "Planned Land Use::ProcessStepGeneralValue"
+  }
+  Constraint Enum "PLU_PlanTypeNameValue" {
+    identifier = "Planned Land Use::PlanTypeNameValue"
+  }
+  Attributes "PLU_SpecificSupplementaryRegulationValue" {
+    description = "Category of supplementary regulation provided in a specific nomenclature of supplementary
+
+    regulations provided by the data provider.
+
+    The allowed values for this code list comprise any values defined by data providers."
+    identifier = "Planned Land Use::SpecificSupplementaryRegulationValue"
+    tableName = "PLU_SpecificSupplementaryRegulationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(PLU_SpecificSupplementaryRegulationValue)
+  }
+  Attributes "PLU_SupplementaryRegulationValue" {
+    description = "Types of conditions and constraints in spatial plans.
+
+    This list is populated with the categories of the Hierarchical Supplementary Regulation Code List (HSRCL)."
+    identifier = "Planned Land Use::SupplementaryRegulationValue"
+    tableName = "PLU_SupplementaryRegulationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(PLU_SupplementaryRegulationValue)
+  }
+  Relation "PLU_SupplementaryRegulation_plan" {
+    profile = "features"
+    relatedReference = "PLU_SupplementaryRegulation#plan"
+    tableName = "PLU_SupplementaryRegulation_plan"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_SpatialPlan(id)
+  }
+  Relation "PLU_SupplementaryRegulation_officialDocument" {
+    profile = "attributes"
+    tableName = "PLU_SupplementaryRegulation_officialDocument"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_OfficialDocumentation(id)
+  }
+  Relation "PLU_SupplementaryRegulation_dimensioningIndication" {
+    profile = "attributes"
+    tableName = "PLU_SupplementaryRegulation_dimensioningIndication"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_DimensioningIndicationValue(id)
+  }
+  Relation "PLU_SupplementaryRegulation_inspireId" {
+    profile = "attributes"
+    relatedReference = "PLU_SupplementaryRegulation#inspireId"
+    tableName = "PLU_SupplementaryRegulation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PLU_SupplementaryRegulation_specificSupplementaryRegulation" {
+    profile = "attributes"
+    tableName = "PLU_SupplementaryRegulation_specificSupplementaryRegulation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_SpecificSupplementaryRegulationValue(id)
+  }
+  Relation "PLU_SupplementaryRegulation_supplementaryRegulation" {
+    profile = "attributes"
+    tableName = "PLU_SupplementaryRegulation_supplementaryRegulation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_SupplementaryRegulationValue(id)
+  }
+  Relation "PLU_ZoningElement_officialDocument" {
+    profile = "attributes"
+    tableName = "PLU_ZoningElement_officialDocument"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_OfficialDocumentation(id)
+  }
+  Relation "PLU_ZoningElement_plan" {
+    profile = "features"
+    relatedReference = "PLU_ZoningElement#plan"
+    tableName = "PLU_ZoningElement_plan"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_SpatialPlan(id)
+  }
+  Relation "PLU_ZoningElement_inspireId" {
+    profile = "attributes"
+    relatedReference = "PLU_ZoningElement#inspireId"
+    tableName = "PLU_ZoningElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PLU_ZoningElement_dimensioningIndication" {
+    profile = "attributes"
+    tableName = "PLU_ZoningElement_dimensioningIndication"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_DimensioningIndicationValue(id)
+  }
+  Relation "PLU_ZoningElement_hilucsLandUse" {
+    profile = "attributes"
+    tableName = "PLU_ZoningElement_hilucsLandUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LUNOM_HILUCSValue(id)
+  }
+  Relation "PLU_ZoningElement_specificLandUse" {
+    profile = "attributes"
+    tableName = "PLU_ZoningElement_specificLandUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LUNOM_LandUseClassificationValue(id)
+  }
+  Relation "PLU_null_officialDocument" {
+    profile = "attributes"
+    relatedReference = "PLU_OfficialDocumentation#null"
+    tableName = "PLU_null_officialDocument"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SpatialPlan(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_OfficialDocumentation(id)
+  }
+  Relation "PLU_SpatialPlan_inspireId" {
+    profile = "attributes"
+    relatedReference = "PLU_SpatialPlan#inspireId"
+    tableName = "PLU_SpatialPlan_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SpatialPlan(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PLU_SpatialPlan_ordinance" {
+    profile = "attributes"
+    tableName = "PLU_SpatialPlan_ordinance"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SpatialPlan(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_OrdinanceValue(id)
+  }
+  Relation "PLU_OfficialDocumentation_inspireId" {
+    profile = "attributes"
+    relatedReference = "PLU_OfficialDocumentation#inspireId"
+    tableName = "PLU_OfficialDocumentation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_OfficialDocumentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "LUNOM_HILUCSValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
+
+    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
+
+    The elements of the list should be both applicable to existing land use and planned land use."
+    identifier = "Land Use Nomenclature::HILUCSValue"
+    tableName = "LUNOM_HILUCSValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
+  }
+  Attributes "LUNOM_LandUseClassificationValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
+
+    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+    tableName = "LUNOM_LandUseClassificationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
+  }
+  Attributes "LUNOM_HILUCSPercentage" {
+    description = "Percentage of land use object that is covered by this HILUCS presence.
+
+    NOTE1:The percentage is according to the socio-economic or functional importance of the use.
+
+    NOTE2:examples are provided in the narrative description part of the data specification."
+    identifier = "Land Use Nomenclature::HILUCSPercentage"
+    tableName = "LUNOM_HILUCSPercentage"
+    hilucsValue TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER NOT NULL
+  }
+  Attributes "LUNOM_HILUCSValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
+
+    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
+
+    The elements of the list should be both applicable to existing land use and planned land use."
+    identifier = "Land Use Nomenclature::HILUCSValue"
+    tableName = "LUNOM_HILUCSValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
+  }
+  Attributes "LUNOM_SpecificPercentage" {
+    description = "Percentage of land use object that is covered by this specific presence."
+    identifier = "Land Use Nomenclature::SpecificPercentage"
+    tableName = "LUNOM_SpecificPercentage"
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER NOT NULL
+    specificValue TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
+  }
+  Attributes "LUNOM_LandUseClassificationValue" {
+    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
+
+    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+    tableName = "LUNOM_LandUseClassificationValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
+  }
+  Constraint Enum "BASE2_LegislationLevelValue" {
+    identifier = "Base Types 2::LegislationLevelValue"
+    european
+    international
+    national
+    sub-national
+  }
+  Constraint Enum "LUNOM_HILUCSValue" {
+    identifier = "Land Use Nomenclature::HILUCSValue"
+  }
+  Constraint Enum "LUNOM_LandUseClassificationValue" {
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+}

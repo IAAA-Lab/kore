@@ -1,0 +1,528 @@
+Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
+  isnamespace = "0"
+  Constraint Enum "PF_InstallationTypeValue" {
+    identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
+  }
+  Feature "PF_ProductionInstallationPart" {
+    description = "A single engineered facility that performs specific functionalities related with a production activity.
+
+    This level of description covers specific parts of the Production Installation which must be registered by the legal mandate of the competent authorities. Points of emission as chimneys (for pollutants) or tanks (for special products), will be included in this definition."
+    identifier = "ProductionAndIndustrialFacilities::ProductionInstallationPart"
+    tableName = "PF_ProductionInstallationPart"
+    groupingInstallation INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    pointGeometry POINT
+    surfaceGeometry GM_Surface
+    technique TEXT CHECK(PF_PollutionAbatementTechniqueValue)
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+    type TEXT CHECK(PF_InstallationPartTypeValue)
+    ref description: TEXT[0..*]
+    ref name: TEXT[0..*]
+  }
+  Attributes "PF_StatusType" {
+    description = "The state or condition of a technical component, with regard to the functional and operational order, in which it is arranged for a limited or extended time period.
+
+    It applies equally to the technical unit (facility, installation or installation part), to the production site, to the parcel and to the production building."
+    identifier = "ProductionAndIndustrialFacilities::StatusType"
+    tableName = "PF_StatusType"
+    description TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    statusType TEXT NOT NULL CHECK(BASE_ConditionOfFacilityValue)
+    validFrom DATE
+    validTo DATE
+  }
+  Constraint Enum "PF_RiverBasinDistrictValue" {
+    identifier = "ProductionAndIndustrialFacilities::RiverBasinDistrictValue"
+  }
+  Constraint Enum "PF_InstallationPartTypeValue" {
+    identifier = "ProductionAndIndustrialFacilities::InstallationPartTypeValue"
+  }
+  Class <<code List>>  "TypeOfProductionBuildingValue" {
+    visibility = "Public"
+  }
+  Feature "PF_ProductionBuilding" {
+    description = "Artificial construction, part of the production facility that are useful to host or provide shelter to activity development.
+
+    Inside a facility, and in relation with the definition of building, this entity should represent a construction under responsibility of the facility, either as an independent unit or as a functional infrastructure for an installation."
+    identifier = "ProductionAndIndustrialFacilities::ProductionBuilding"
+    tableName = "PF_ProductionBuilding"
+    geometry GEOMETRY
+    id INTEGER NOT NULL PRIMARY KEY
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+    ref typeOfBuilding: TypeOfProductionBuildingValue[0..*]
+  }
+  Attributes "PF_TechnicalUnit" {
+    description = "Represents the common "abstract level" for production infrastructures: facilities, installations, installation parts.
+
+    It applies since the production infrastructures (facility, installation, installation part) may have an UML "equivalent behaviour": this means they have properties in common and the same associations to be reused."
+    identifier = "ProductionAndIndustrialFacilities::TechnicalUnit"
+    tableName = "PF_TechnicalUnit"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Feature "PF_ProductionInstallation" {
+    description = "A technical unit, such as machinery,  apparatus, devices or equipment placed in position or connected for use.
+
+    Stationary technical unit part of a facility where one or more activities are carried out, and any other directly associated activities which have a technical connection to the activities carried out on that site and which could have an effect on the environment.
+
+    May be a technical unit within an establishment in which dangerous substances are produced, used, handled or stored."
+    identifier = "ProductionAndIndustrialFacilities::ProductionInstallation"
+    tableName = "PF_ProductionInstallation"
+    groupingFacility INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    pointGeometry POINT
+    surfaceGeometry GM_Surface
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+    type TEXT CHECK(PF_InstallationTypeValue)
+    ref description: TEXT[0..*]
+    ref name: TEXT[0..*]
+  }
+  Feature "PF_ProductionSite" {
+    description = "All land at a distinct geographic location where the production facility was, is, or is intended to be located. This includes all infrastructure, equipment and materials;
+
+    An area of land or water that one or more process plants is or may be situated on, or else a single location, in which, if there is more than one manufacturer of (a) substance(s), certain infrastructure and facilities are shared.
+
+    A continuous surface, maritime or terrestrial in which production facilities have been already implanted or urban and/or engineering activities have been developed for production purposes. The location will be defined by means of geographical boundaries within which activities under the control of an organization may be carried out. The geographical boundaries may be on land and in water, and include above and below surface structures, both natural and man-made."
+    identifier = "ProductionAndIndustrialFacilities::ProductionSite"
+    tableName = "PF_ProductionSite"
+    geometry MULTISURFACE
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+    ref description: TEXT[0..*]
+    ref name: TEXT[0..*]
+    ref sitePlan: DocumentCitation[0..*]
+  }
+  Attributes "PF_ProductionPlot" {
+    description = "A portion of land or water part of a production facility destined to functional purposes.
+
+    A potential sub-division of a major site as delimited extension of land in which are performed extensive operations related with the activity or one of the activities performed by a facility."
+    identifier = "ProductionAndIndustrialFacilities::ProductionPlot"
+    tableName = "PF_ProductionPlot"
+    geometry GM_Surface
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+  }
+  Attributes "PF_ProductionFacility" {
+    description = "One or more installations on the same site operated by the same natural or legal person,
+
+    designed, built or installed to serve specific production or industrial purposes, comprehending
+
+    all infrastructure, equipment and materials.
+
+    A production facility groups together a single installation, set of installations or production processes (stationary or mobile), which can be defined within a single geographical boundary, organizational unit or production process. A production facility can also be identified as one or more installations located on the same site that are operated by the same natural or legal person and in which production activities are being carried out. Such a facility groups potentially the land, buildings, and equipment used in carrying on an industrial business or other undertaking or service."
+    identifier = "ProductionAndIndustrialFacilities::ProductionFacility"
+    tableName = "PF_ProductionFacility"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: GEOMETRY
+    hostingSite INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    name: TEXT [0..1]
+    riverBasinDistrict TEXT CHECK(PF_RiverBasinDistrictValue)
+    surfaceGeometry GM_Surface
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref function: ACT_CORE_Function[1..*]
+    ref inspireId: BASE_Identifier
+    ref thematicId: BASE2_ThematicIdentifier[0..*]
+  }
+  Constraint Enum "PF_PollutionAbatementTechniqueValue" {
+    identifier = "ProductionAndIndustrialFacilities::PollutionAbatementTechniqueValue"
+  }
+  Relation "PF_ProductionInstallationPart_groupingInstallation" {
+    profile = "features"
+    relatedReference = "PF_ProductionInstallationPart#groupingInstallation"
+    tableName = "PF_ProductionInstallationPart_groupingInstallation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionInstallation(id)
+  }
+  Relation "PF_ProductionInstallationPart_inspireId" {
+    profile = "attributes"
+    relatedReference = "PF_ProductionInstallationPart#inspireId"
+    tableName = "PF_ProductionInstallationPart_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionInstallationPart_status" {
+    profile = "attributes"
+    tableName = "PF_ProductionInstallationPart_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Relation "PF_ProductionBuilding_groupedFacility" {
+    profile = "attributes"
+    tableName = "PF_ProductionBuilding_groupedFacility"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
+  }
+  Relation "PF_ProductionBuilding_status" {
+    profile = "attributes"
+    tableName = "PF_ProductionBuilding_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Relation "PF_ProductionInstallation_groupingFacility" {
+    profile = "attributes"
+    relatedReference = "PF_ProductionInstallation#groupingFacility"
+    tableName = "PF_ProductionInstallation_groupingFacility"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
+  }
+  Relation "PF_ProductionInstallation_inspireId" {
+    profile = "attributes"
+    relatedReference = "PF_ProductionInstallation#inspireId"
+    tableName = "PF_ProductionInstallation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionInstallation_status" {
+    profile = "attributes"
+    tableName = "PF_ProductionInstallation_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Relation "PF_ProductionSite_hostedFacility" {
+    profile = "attributes"
+    relatedReference = "PF_ProductionFacility#hostingSite"
+    tableName = "PF_ProductionSite_hostedFacility"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
+  }
+  Relation "PF_ProductionSite_inspireId" {
+    profile = "attributes"
+    relatedReference = "PF_ProductionSite#inspireId"
+    tableName = "PF_ProductionSite_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionSite_status" {
+    profile = "attributes"
+    tableName = "PF_ProductionSite_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Relation "PF_ProductionPlot_groupingFacility" {
+    profile = "attributes"
+    tableName = "PF_ProductionPlot_groupingFacility"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
+  }
+  Relation "PF_ProductionPlot_inspireId" {
+    profile = "attributes"
+    relatedReference = "PF_ProductionPlot#inspireId"
+    tableName = "PF_ProductionPlot_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionPlot_status" {
+    profile = "attributes"
+    tableName = "PF_ProductionPlot_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Relation "PF_ProductionFacility_status" {
+    profile = "attributes"
+    tableName = "PF_ProductionFacility_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Relation "BU_BASE_AbstractBuilding_currentUse" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractBuilding_currentUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_CurrentUse(id)
+  }
+  Relation "BU_BASE_AbstractBuilding_buildingNature" {
+    profile = "attributes"
+    tableName = "BU_BASE_AbstractBuilding_buildingNature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_BuildingNatureValue(id)
+  }
+  Relation "ACT_CORE_Function_activity" {
+    profile = "attributes"
+    tableName = "ACT_CORE_Function_activity"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityValue(id)
+  }
+  Relation "ACT_CORE_Function_input" {
+    profile = "attributes"
+    tableName = "ACT_CORE_Function_input"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
+  }
+  Relation "ACT_CORE_Function_output" {
+    profile = "attributes"
+    tableName = "ACT_CORE_Function_output"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
+  }
+  Relation "GN_GeographicalName_spelling" {
+    profile = "attributes"
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Constraint Enum "BASE_ConditionOfFacilityValue" {
+    identifier = "Base Types::ConditionOfFacilityValue"
+    decommissioned
+    disused
+    functional
+    projected
+    underConstruction
+  }
+  Attributes "BU_BASE_AbstractBuilding" {
+    Governance = "<<missing>>"
+    description = "Abstract spatial object type grouping the common semantic properties of the spatial object types Building and BuildingPart."
+    identifier = "BuildingsBase::AbstractBuilding"
+    tableName = "BU_BASE_AbstractBuilding"
+    beginLifespanVersion: DATETIME [0..1]
+    conditionOfConstruction: TEXT [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    numberOfBuildingUnits INTEGER
+    numberOfDwellings INTEGER
+    numberOfFloorsAboveGround INTEGER
+    ref dateOfConstruction: BU_BASE_DateOfEvent[0..1]
+    ref dateOfDemolition: BU_BASE_DateOfEvent[0..1]
+    ref dateOfRenovation: BU_BASE_DateOfEvent[0..1]
+    ref elevation: BU_BASE_Elevation[0..*]
+    ref externalReference: BU_BASE_ExternalReference[0..*]
+    ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
+    ref inspireId: BASE_Identifier
+    ref name: GN_GeographicalName[0..*]
+    ref Address inv building[0..*]
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "BASE2_ThematicIdentifier" {
+    description = "Thematic identifier to uniquely identify the spatial object.
+
+    Some spatial objects may be assigned multiple unique identifiers.
+
+    These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
+    identifier = "Base Types 2::ThematicIdentifier"
+    tableName = "BASE2_ThematicIdentifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    identifier TEXT NOT NULL
+    identifierScheme TEXT NOT NULL
+  }
+  Attributes "ACT_CORE_Function" {
+    description = "The function of something expressed as an activity and optional input and/or output.
+
+    NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
+    identifier = "Activity Complex::Function"
+    tableName = "ACT_CORE_Function"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "BU_BASE_CurrentUse" {
+    description = "This data type enables to detail the current use(s)."
+    identifier = "BuildingsBase::CurrentUse"
+    tableName = "BU_BASE_CurrentUse"
+    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER
+  }
+  Attributes "BU_BASE_BuildingNatureValue" {
+    obligation = "implementingRule"
+    description = "Values indicating the nature of a building.
+
+    NOTE 1 : This code list does not aim to be exhaustive as the attribute buildingNature addresses only noticeable buildings.
+
+    NOTE 2: The values included in this code list address mainly (but not only) two international use cases: air flights where buildings may be obstacles and marine navigation where buildings may be landmarks.
+
+    NOTE 3: This code list should only be applied for buildings, even if it may be applicable to other constructions (for example, not all dams are buildings)."
+    identifier = "BuildingsBase::BuildingNatureValue"
+    tableName = "BU_BASE_BuildingNatureValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(BU_BASE_BuildingNatureValue)
+  }
+  Attributes "ACT_CORE_EconomicActivityValue" {
+    description = "Classification of economic activities."
+    identifier = "Activity Complex::EconomicActivityValue"
+    tableName = "ACT_CORE_EconomicActivityValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityValue)
+  }
+  Attributes "ACT_CORE_InputOutputValue" {
+    description = "Classification of inputs or outputs."
+    identifier = "Activity Complex::InputOutputValue"
+    tableName = "ACT_CORE_InputOutputValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
+  }
+  Attributes "ACT_CORE_InputOutputValue" {
+    description = "Classification of inputs or outputs."
+    identifier = "Activity Complex::InputOutputValue"
+    tableName = "ACT_CORE_InputOutputValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
+  }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+
+    SOURCE Adapted from [UNGEGN Manual 2006].
+
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
+  Attributes "BU_BASE_DateOfEvent" {
+    description = "This data type includes the different possible ways to define the date of an event."
+    identifier = "BuildingsBase::DateOfEvent"
+    tableName = "BU_BASE_DateOfEvent"
+    anyPoint DATETIME
+    beginning DATETIME
+    end DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "BU_BASE_Elevation" {
+    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
+    identifier = "BuildingsBase::Elevation"
+    tableName = "BU_BASE_Elevation"
+    elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
+    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_dimension INTEGER NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "BU_BASE_ExternalReference" {
+    description = "Reference to an external information system containing any piece of information related to the spatial object."
+    identifier = "BuildingsBase::ExternalReference"
+    tableName = "BU_BASE_ExternalReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    informationSystem TEXT NOT NULL
+    reference TEXT NOT NULL
+  }
+  Attributes "BU_BASE_HeightAboveGround" {
+    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
+    identifier = "BuildingsBase::HeightAboveGround"
+    tableName = "BU_BASE_HeightAboveGround"
+    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    status TEXT CHECK(BU_BASE_HeightStatusValue)
+    value TEXT NOT NULL
+    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+  }
+  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ConditionOfConstructionValue"
+  }
+  Constraint Enum "BU_BASE_CurrentUseValue" {
+    extensiblity = "narrower"
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::CurrentUseValue"
+  }
+  Constraint Enum "BU_BASE_BuildingNatureValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::BuildingNatureValue"
+  }
+  Constraint Enum "ACT_CORE_EconomicActivityValue" {
+    identifier = "Activity Complex::EconomicActivityValue"
+  }
+  Constraint Enum "ACT_CORE_InputOutputValue" {
+    identifier = "Activity Complex::InputOutputValue"
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "BU_BASE_ElevationReferenceValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ElevationReferenceValue"
+  }
+  Constraint Enum "BU_BASE_HeightStatusValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HeightStatusValue"
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+}

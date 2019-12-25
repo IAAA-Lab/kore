@@ -1,0 +1,703 @@
+Container <<applicationSchema>>  "Geology" {
+  Constraint Enum "GE_MappingFrameValue" {
+    identifier = "Geology::MappingFrameValue"
+  }
+  Attributes "GE_MappedInterval" {
+    description = "A special kind of mapped feature whose shape is a 1-D interval and which uses the SRS of the containing borehole."
+    identifier = "Geology::MappedInterval"
+    tableName = "GE_MappedInterval"
+    id INTEGER NOT NULL PRIMARY KEY
+    mappingFrame TEXT NOT NULL CHECK(GE_MappingFrameValue)
+    shape GEOMETRY NOT NULL
+    specification INTEGER
+  }
+  Feature "GE_MappedFeature" {
+    description = "A spatial representation of a GeologicFeature.
+
+    A MappedFeature is part of a geological interpretation.
+
+    It provides a link between a notional feature (description package) and one spatial representation of it, or part of it (exposures, surface traces and intercepts, etc) which forms the specific bounded occurrence, such as an outcrop or map polygon."
+    identifier = "Geology::MappedFeature"
+    tableName = "GE_MappedFeature"
+    id INTEGER NOT NULL PRIMARY KEY
+    mappingFrame TEXT NOT NULL CHECK(GE_MappingFrameValue)
+    shape GEOMETRY NOT NULL
+    specification INTEGER
+  }
+  Attributes "GE_AnthropogenicGeomorphologicFeature" {
+    description = "A geomorphologic feature (ie, landform) which has been created by human activity.
+
+    EXAMPLE: dredged channel, midden, open pit, reclaimed land."
+    identifier = "Geology::AnthropogenicGeomorphologicFeature"
+    tableName = "GE_AnthropogenicGeomorphologicFeature"
+    anthropogenicGeomorphologicFeatureType TEXT NOT NULL CHECK(GE_AnthropogenicGeomorphologicFeatureTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+  }
+  Attributes "GE_ShearDisplacementStructure" {
+    description = "Brittle to ductile style structures along which displacement has occurred.
+
+    These range from from a simple, single 'planar' brittle or ductile surface to a fault system comprised of tens of strands of both brittle and ductile nature."
+    identifier = "Geology::ShearDisplacementStructure"
+    tableName = "GE_ShearDisplacementStructure"
+    faultType TEXT NOT NULL CHECK(GE_FaultTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+  }
+  Attributes "GE_GeologicUnit" {
+    description = "A volume of rock with distinct characteristics.
+
+    Includes both formal units (i.e. formally adopted and named in an official lexicon) and informal units (i.e. named but not promoted to the lexicon) and unnamed units (i.e. recognisable and described and delineable in the field but not otherwise formalised).
+
+    Spatial properties are only available through association with a MappedFeature."
+    identifier = "Geology::GeologicUnit"
+    tableName = "GE_GeologicUnit"
+    geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+  }
+  Constraint Enum "GE_GeologicUnitTypeValue" {
+    identifier = "Geology::GeologicUnitTypeValue"
+  }
+  Constraint Enum "GE_NaturalGeomorphologicFeatureTypeValue" {
+    identifier = "Geology::NaturalGeomorphologicFeatureTypeValue"
+  }
+  Attributes "GE_NaturalGeomorphologicFeature" {
+    description = "A geomorphologic feature (ie, landform) that has been created by natural Earth processes.
+
+    EXAMPLE: river channel, beach ridge, caldera, canyon, moraine, mud flat."
+    identifier = "Geology::NaturalGeomorphologicFeature"
+    tableName = "GE_NaturalGeomorphologicFeature"
+    activity TEXT CHECK(GE_GeomorphologicActivityValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+    naturalGeomorphologicFeatureType TEXT NOT NULL CHECK(GE_NaturalGeomorphologicFeatureTypeValue)
+  }
+  Attributes "GE_GeologicStructure" {
+    description = "A configuration of matter in the Earth based on describable inhomogeneity, pattern, or fracture in an earth material.
+
+    The identity of a GeologicStructure is independent of the material that is the substrate for the structure."
+    identifier = "Geology::GeologicStructure"
+    tableName = "GE_GeologicStructure"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+  }
+  Constraint Enum "GE_FoldProfileTypeValue" {
+    identifier = "Geology::FoldProfileTypeValue"
+  }
+  Constraint Enum "GE_BoreholePurposeValue" {
+    identifier = "Geology::BoreholePurposeValue"
+  }
+  Attributes "GE_GeologicEvent" {
+    description = "An identifiable event during which one or more geological processes act to modify geological entities.
+
+    A GeologicEvent should have a specified geologic age and process, and may have a specified environment. An example might be a cratonic uplift event during which erosion, sedimentation, and volcanism all take place. A GeologicEvent age can represent an instant in time or an interval of time."
+    identifier = "Geology::GeologicEvent"
+    tableName = "GE_GeologicEvent"
+    eventEnvironment TEXT CHECK(GE_EventEnvironmentValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    name TEXT
+    olderNamedAge TEXT CHECK(GE_GeochronologicEraValue)
+    youngerNamedAge TEXT CHECK(GE_GeochronologicEraValue)
+  }
+  Constraint Enum "GE_CompositionPartRoleValue" {
+    identifier = "Geology::CompositionPartRoleValue"
+  }
+  Constraint Enum "GE_LithologyValue" {
+    identifier = "Geology::LithologyValue"
+  }
+  Constraint Enum "GE_ThematicClassificationValue" {
+    identifier = "Geology::ThematicClassificationValue"
+  }
+  Attributes "GE_GeomorphologicFeature" {
+    description = "An abstract spatial object type describing the shape and nature of the Earth's land surface (ie, a landform).
+
+    These landforms may be created by natural Earth processes (eg, river channel, beach, moraine, mountain) or through human (anthropogenic) activity (eg, dredged channel, reclaimed land, mine waste dumps)."
+    identifier = "Geology::GeomorphologicFeature"
+    tableName = "GE_GeomorphologicFeature"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+  }
+  Constraint Enum "GE_EventEnvironmentValue" {
+    identifier = "Geology::EventEnvironmentValue"
+  }
+  Constraint Enum "GE_AnthropogenicGeomorphologicFeatureTypeValue" {
+    identifier = "Geology::AnthropogenicGeomorphologicFeatureTypeValue"
+  }
+  Attributes "GE_GeologicFeature" {
+    description = "A conceptual geological feature that is hypothesized to exist coherently in the world.
+
+    This corresponds with a "legend item" from a traditional geologic map. While the bounding coordinates of a Geologic Feature may be described, its shape is not.
+
+    The implemented Geologic Feature instance acts as the "description package""
+    identifier = "Geology::GeologicFeature"
+    tableName = "GE_GeologicFeature"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+  }
+  Constraint Enum "GE_FaultTypeValue" {
+    identifier = "Geology::FaultTypeValue"
+  }
+  Constraint Enum "GE_ThematicClassValue" {
+    identifier = "Geology::ThematicClassValue"
+  }
+  Attributes "GE_Fold" {
+    description = "One or more systematically curved layers, surfaces, or lines in a rock body.
+
+    A fold denotes a structure formed by the deformation of a Geologic Structure to form a structure that may be described by the translation of an abstract line (the fold axis) parallel to itself along some curvilinear path (the fold profile). Folds have a hinge zone (zone of maximum curvature along the surface) and limbs (parts of the deformed surface not in the hinge zone)."
+    identifier = "Geology::Fold"
+    tableName = "GE_Fold"
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT
+    profileType TEXT CHECK(GE_FoldProfileTypeValue)
+  }
+  Attributes "GE_GeologicCollection" {
+    description = "A collection of geological or geophysical objects.
+
+    Geologic objects are commonly grouped into collections such as geological maps, thematic maps, or the required input to a geological model."
+    identifier = "Geology::GeologicCollection"
+    tableName = "GE_GeologicCollection"
+    beginLifespanVersion DATETIME
+    collectionType TEXT NOT NULL CHECK(GE_CollectionTypeValue)
+    endLifespanVersion DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    name TEXT NOT NULL
+    reference DocumentCitation
+  }
+  Attributes "GE_CompositionPart" {
+    description = "The composition of a geologic unit in terms of lithological constituents."
+    identifier = "Geology::CompositionPart"
+    tableName = "GE_CompositionPart"
+    id INTEGER NOT NULL PRIMARY KEY
+    material TEXT NOT NULL CHECK(GE_LithologyValue)
+    proportion QuantityRange
+    role TEXT NOT NULL CHECK(GE_CompositionPartRoleValue)
+  }
+  Constraint Enum "GE_GeomorphologicActivityValue" {
+    identifier = "Geology::GeomorphologicActivityValue"
+  }
+  Constraint Enum "GE_CollectionTypeValue" {
+    identifier = "Geology::CollectionTypeValue"
+  }
+  Constraint Enum "GE_GeochronologicEraValue" {
+    identifier = "Geology::GeochronologicEraValue"
+  }
+  Constraint Enum "GE_EventProcessValue" {
+    identifier = "Geology::EventProcessValue"
+  }
+  Class "Borehole" {
+    boreholeLength: Quantity [0..1]
+    downholeGeometry: CURVE [0..1]
+    elevation_coordinate: Sequence<Number>
+    elevation_dimension: INTEGER
+    location: POINT
+    ref inspireId: BASE_Identifier
+    ref purpose: GE_BoreholePurposeValue[0..*]
+  }
+  Attributes "GE_ThematicClass" {
+    description = "A generic thematic classifier to enable the reclassification of Geologic Features with user defined classes appropriate to thematic maps.
+
+    This datatype allows Geologic Features to be classified against thematic classes. This provides a generic means of delivering geological thematic map data."
+    identifier = "Geology::ThematicClass"
+    tableName = "GE_ThematicClass"
+    id INTEGER NOT NULL PRIMARY KEY
+    themeClass TEXT NOT NULL CHECK(GE_ThematicClassValue)
+    themeClassification TEXT NOT NULL CHECK(GE_ThematicClassificationValue)
+  }
+  Attributes "GE_EventProcessValue" {
+    description = "Terms specifying the process or processes that occurred during an event.
+
+    EXAMPLE: deposition, extrusion, intrusion, cooling."
+    identifier = "Geology::EventProcessValue"
+    tableName = "GE_EventProcessValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GE_EventProcessValue)
+  }
+  Attributes "GE_BoreholePurposeValue" {
+    description = "Purposes for which a borehole was drilled.
+
+    EXAMPLE: mineral exploration, water pumping, site evaluation, stratigraphic research, etc."
+    identifier = "Geology::BoreholePurposeValue"
+    tableName = "GE_BoreholePurposeValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GE_BoreholePurposeValue)
+  }
+  Relation "GE_MappedFeature_specification" {
+    profile = "attributes"
+    relatedReference = "GE_MappedFeature#specification"
+    tableName = "GE_MappedFeature_specification"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_MappedFeature(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_GeologicFeature(id)
+  }
+  Relation "GE_GeologicFeature_geologicHistory" {
+    profile = "attributes"
+    tableName = "GE_GeologicFeature_geologicHistory"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicFeature(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_GeologicEvent(id)
+  }
+  Relation "GE_GeologicFeature_themeClass" {
+    profile = "attributes"
+    tableName = "GE_GeologicFeature_themeClass"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicFeature(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_ThematicClass(id)
+  }
+  Relation "GE_GeologicFeature_inspireId" {
+    profile = "attributes"
+    relatedReference = "GE_GeologicFeature#inspireId"
+    tableName = "GE_GeologicFeature_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicFeature(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GeologicUnit_composition" {
+    profile = "attributes"
+    tableName = "GE_GeologicUnit_composition"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_CompositionPart(id)
+  }
+  Relation "GE_GeologicEvent_eventProcess" {
+    profile = "attributes"
+    tableName = "GE_GeologicEvent_eventProcess"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_EventProcessValue(id)
+  }
+  Relation "GE_GeologicCollection_mapMember" {
+    profile = "features"
+    tableName = "GE_GeologicCollection_mapMember"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicCollection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_MappedFeature(id)
+  }
+  Relation "GE_GeologicCollection_inspireId" {
+    profile = "attributes"
+    relatedReference = "GE_GeologicCollection#inspireId"
+    tableName = "GE_GeologicCollection_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicCollection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "TRS_TM_IndeterminateValue" {
+    identifier = "Temporal Reference System::TM_IndeterminateValue"
+    after
+    before
+    name
+    now
+    unknow
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Attributes "GMD_PT_Locale" {
+    identifier = "Cultural and linguistic adapdability::PT_Locale"
+    tableName = "GMD_PT_Locale"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+  }
+  Attributes "MI_MD_ScopeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    description = "Class of information to which the referencing entity applies."
+    identifier = "Maintenance information::MD_ScopeCode"
+    tableName = "MI_MD_ScopeCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
+  }
+  Constraint Enum "GMD_MD_CharacterSetCode" {
+    identifier = "Identification information::MD_CharacterSetCode"
+    (reservedforfutureuse)
+    8859part1
+    8859part10
+    8859part11
+    8859part13
+    8859part14
+    8859part15
+    8859part16
+    8859part2
+    8859part3
+    8859part4
+    8859part5
+    8859part6
+    8859part7
+    8859part8
+    8859part9
+    GB2312
+    big5
+    ebcdic
+    eucJP
+    eucKR
+    jis
+    shiftJIS
+    ucs2
+    ucs4
+    usAscii
+    utf16
+    utf7
+    utf8
+  }
+  Attributes "MI_MD_ScopeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    description = "Class of information to which the referencing entity applies."
+    identifier = "Maintenance information::MD_ScopeCode"
+    tableName = "MI_MD_ScopeCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
+  }
+  Attributes "GMD_MD_ProgressCode" {
+    description = "Status of the dataset or progress of a review"
+    identifier = "Identification information::MD_ProgressCode"
+    tableName = "GMD_MD_ProgressCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_MD_ProgressCode)
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
+  }
+  Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
+    identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
+    annually
+    asNeeded
+    biannually
+    continual
+    daily
+    fortnightly
+    irregular
+    monthly
+    notPlanned
+    quarterly
+    unknown
+    weekly
+  }
+  Constraint Enum "GMD_LanguageCode" {
+    identifier = "ISO 00639 Language Codes::LanguageCode"
+    Afrikaans
+    Albanian
+    Arabic
+    Basque
+    Belarusian
+    Bulgarian
+    Catalan
+    Chinese
+    Croatian
+    Czech
+    Danish
+    Dutch
+    English
+    Estonian
+    Faeroese
+    Finnish
+    French
+    French(Canadian)
+    German
+    Greek
+    Hawaian
+    Hebrew
+    Hungarian
+    Icelandic
+    Indonesian
+    Italian
+    Japanese
+    Korean
+    Latvian
+    Lithuanian
+    Malaysian
+    Norwegian
+    Polish
+    Portuguese
+    Romanian
+    Russian
+    Serbian
+    Slovak
+    Slovenian
+    Spanish
+    Swahili
+    Swedish
+    Turkish
+    Ukranian
+  }
+  Constraint Enum "GMD_CountryCode" {
+    identifier = "ISO 03166 Country Codes::CountryCode"
+  }
+  Constraint Enum "MI_MD_ScopeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    identifier = "Maintenance information::MD_ScopeCode"
+    attribute
+    attributeType
+    collectionHardware
+    collectionSession
+    dataset
+    dimensionGroup
+    feature
+    featureType
+    fieldSession
+    model
+    nonGeographicDataset
+    propertyType
+    series
+    service
+    software
+    tile
+  }
+  Constraint Enum "MEI_MD_ObligationCode" {
+    identifier = "Metadata extension information::MD_ObligationCode"
+    conditional
+    mandatory
+    optional
+  }
+  Constraint Enum "MEI_MD_DatatypeCode" {
+    identifier = "Metadata extension information::MD_DatatypeCode"
+    abstractClass
+    aggregateClass
+    association
+    characterString
+    class
+    codelist
+    codelistElement
+    datatypeClass
+    enumeration
+    integer
+    interfaceClass
+    metaClass
+    specifiedClass
+    typeClass
+    unionClass
+  }
+  Constraint Enum "GMD_MD_KeywordTypeCode" {
+    identifier = "Identification information::MD_KeywordTypeCode"
+    discipline
+    place
+    stratum
+    temporal
+    theme
+  }
+  Constraint Enum "GMD_DS_AssociationTypeCode" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    identifier = "Identification information::DS_AssociationTypeCode"
+    crossReference
+    largerWorkCitation
+    partOfSeamlessDatabase
+    source
+    stereoMate
+  }
+  Constraint Enum "GMD_DS_InitiativeTypeCode" {
+    identifier = "Identification information::DS_InitiativeTypeCode"
+    campaign
+    collection
+    exercise
+    experiment
+    investigation
+    mission
+    operation
+    platform
+    process
+    program
+    project
+    sensor
+    study
+    task
+    trial
+  }
+  Constraint Enum "GMD_MD_ProgressCode" {
+    identifier = "Identification information::MD_ProgressCode"
+    completed
+    historicalArchive
+    obsolete
+    onGoing
+    planned
+    required
+    underDevelopment
+  }
+  Attributes "DI_MD_MediumFormatCode" {
+    description = ""
+    identifier = "Distribution information::MD_MediumFormatCode"
+    tableName = "DI_MD_MediumFormatCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(DI_MD_MediumFormatCode)
+  }
+  Constraint Enum "DI_MD_MediumNameCode" {
+    identifier = "Distribution information::MD_MediumNameCode"
+    1quarterInchCartridgeTape
+    3480Cartridge
+    3490Cartridge
+    3580Cartridge
+    3halfInchFloppy
+    4mmCartridgeTape
+    5quarterInchFloppy
+    7trackTape
+    8mmCartridgeTape
+    9trackTape
+    cdRom
+    digitalLinearTape
+    dvd
+    dvdRom
+    hardcopy
+    onLine
+    satellite
+    telephoneLink
+  }
+  Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "DI_MD_MediumFormatCode" {
+    identifier = "Distribution information::MD_MediumFormatCode"
+    cpio
+    highSierra
+    iso9660
+    iso9660AppleHFS
+    iso9660RockRidge
+    tar
+  }
+}

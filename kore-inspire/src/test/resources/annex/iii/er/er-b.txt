@@ -1,0 +1,98 @@
+Container <<applicationSchema>>  "Energy Resources Base" {
+  Attributes "ER_B_VerticalExtentType" {
+    description = "Vertical dimensional property consisting of an absolute measure or range of measures referenced to a well-defined vertical reference level which is commonly taken as origin (ground level, mean sea level, etc.)."
+    identifier = "Energy Resources Base::VerticalExtentType"
+    tableName = "ER_B_VerticalExtentType"
+    id INTEGER NOT NULL PRIMARY KEY
+    verticalExtent VerticalExtentValue NOT NULL
+    verticalReference TEXT NOT NULL CHECK(ER_B_VerticalReferenceValue)
+  }
+  Constraint Enum "ER_B_ClassificationAndQuantificationFrameworkValue" {
+    identifier = "Energy Resources Base::ClassificationAndQuantificationFrameworkValue"
+    NPD
+    PERC
+    RF
+    SPE/WPC/AAPG(PRMS)
+    UNFC1997
+    UNFC2004
+    UNFC2009
+    USGS
+  }
+  Constraint Enum "ER_B_FossilFuelClassValue" {
+    identifier = "Energy Resources Base::FossilFuelClassValue"
+    contingentResources
+    provenReserves
+    resourcesInitiallyInPlace
+  }
+  Attributes "ER_B_VerticalExtentRangeType" {
+    description = "Value indicating the upper and lower bounds of the height/depth range.
+
+    In the case of depth, the range between the deepest (lower bound) and most shallow (upper bound) aspect of the deposit body, where the depth is true vertical depth below a chosen vertical reference level."
+    identifier = "Energy Resources Base::VerticalExtentRangeType"
+    tableName = "ER_B_VerticalExtentRangeType"
+    id INTEGER NOT NULL PRIMARY KEY
+    lowerBound Length
+    upperBound Length NOT NULL
+  }
+  Constraint Enum "ER_B_RenewableAndWasteValue" {
+    identifier = "Energy Resources Base::RenewableAndWasteValue"
+    biogas
+    geothermal
+    hydro
+    industrialWaste
+    liquidBiofuels
+    municipalSolidWaste
+    solarPhotovoltaic
+    solarThermal
+    solidBiomass
+    tideWaveOcean
+    wind
+  }
+  Constraint Enum "ER_B_VerticalReferenceValue" {
+    identifier = "Energy Resources Base::VerticalReferenceValue"
+    groundLevel
+    lowestAstronomicalTide
+    meanSeaLevel
+    seafloor
+  }
+  Class <<union>>  "VerticalExtentValue" {
+    range_lowerBound: Length [0..1]
+    range_upperBound: Length
+    scalar: Length
+  }
+  Constraint Enum "ER_B_FossilFuelValue" {
+    identifier = "Energy Resources Base::FossilFuelValue"
+    crudeOil
+    hardCoal
+    lowRankCoal
+    naturalGas
+    naturalGasLiquids
+    oilSands
+    oilShales
+    peat
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}

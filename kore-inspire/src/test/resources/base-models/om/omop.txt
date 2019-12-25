@@ -1,0 +1,186 @@
+Container <<applicationSchema>>  "Observable Properties" {
+  Constraint Enum "OMOP_ComparisonOperatorValue" {
+    identifier = "Observable Properties::ComparisonOperatorValue"
+    <<enum>> equalTo
+    <<enum>> greaterThan
+    <<enum>> greaterThanOrEqualTo
+    <<enum>> lessThan
+    <<enum>> lessThanOrEqualTo
+    <<enum>> notEqualTo
+  }
+  Attributes "OMOP_ScalarConstraint" {
+    description = "A numerical scalar constraint on some property e.g. length &gt;= 1m
+
+    A scalar constraint on some property e.g. length &gt;= 1m"
+    identifier = "Observable Properties::ScalarConstraint"
+    tableName = "OMOP_ScalarConstraint"
+    comparison TEXT NOT NULL CHECK(OMOP_ComparisonOperatorValue)
+    constrainedProperty TEXT CHECK(OMOP_PhenomenonTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+    uom_formula TEXT
+    uom_measureType TEXT CHECK(GML_MeasureType)
+    uom_nameStandardUnit TEXT
+    uom_offsetToStandardUnit DOUBLE
+    uom_scaleToStandardUnit DOUBLE
+    uom_uomName TEXT
+    uom_uomSymbol TEXT
+    ref value: DOUBLE[1..*]
+  }
+  Constraint Enum "OMOP_StatisticalFunctionTypeValue" {
+    identifier = "Observable Properties::StatisticalFunctionTypeValue"
+  }
+  Attributes "OMOP_RangeConstraint" {
+    description = "A numerical range constraint on some property e.g.  wavelength &gt;=300nm and wavelength &lt;=600nm
+
+    A numerical range constraint on some property e.g. wavelength &gt;=300nm and wavelength &lt;=600nm
+
+    e.g. To be used when data is observed in particular bands or groupings based on a numerical quantity."
+    identifier = "Observable Properties::RangeConstraint"
+    tableName = "OMOP_RangeConstraint"
+    constrainedProperty TEXT CHECK(OMOP_PhenomenonTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+    uom_formula TEXT
+    uom_measureType TEXT CHECK(GML_MeasureType)
+    uom_nameStandardUnit TEXT
+    uom_offsetToStandardUnit DOUBLE
+    uom_scaleToStandardUnit DOUBLE
+    uom_uomName TEXT
+    uom_uomSymbol TEXT
+  }
+  Class <<type>>  "StatisticalMeasure" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    aggregationArea: TEXT [0..1]
+    aggregationArea_uom: TEXT [0..1]
+    aggregationLength: TEXT [0..1]
+    aggregationLength_uom: TEXT [0..1]
+    aggregationTimePeriod: TM_Duration [0..1]
+    aggregationVolume: TEXT [0..1]
+    aggregationVolume_uom: TEXT [0..1]
+    label: TEXT [0..1]
+    otherAggregation: Any [0..1]
+    statisticalFunction: TEXT [0..1]
+  }
+  GF_PropertyType <<Type>>  "AbstractObservableProperty" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    ref label: TEXT[0..*]
+  }
+  Attributes "OMOP_RangeBounds" {
+    description = "The start and end bounding values of a numerical range (e.g. start &gt;=50, end &lt;=99)"
+    identifier = "Observable Properties::RangeBounds"
+    tableName = "OMOP_RangeBounds"
+    endComparison TEXT NOT NULL CHECK(OMOP_ComparisonOperatorValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    rangeEnd DOUBLE NOT NULL
+    rangeStart DOUBLE NOT NULL
+    startComparison TEXT NOT NULL CHECK(OMOP_ComparisonOperatorValue)
+  }
+  Attributes "OMOP_CategoryConstraint" {
+    description = "A constraint based on some qualifying category.  e..g  colour = 'Red'.
+
+    A constraint based on some qualifying category.  e..g  colour = 'Red'.
+
+    The value ('Red') of the constraint ('colour') can be any string, although it may be desirable to constrain this in particular application domains."
+    identifier = "Observable Properties::CategoryConstraint"
+    tableName = "OMOP_CategoryConstraint"
+    comparison TEXT NOT NULL CHECK(OMOP_ComparisonOperatorValue)
+    constrainedProperty TEXT CHECK(OMOP_PhenomenonTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+    ref value: TEXT[1..*]
+  }
+  Class <<Type>>  "CompositeObservableProperty" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    count: INTEGER
+    ref label: TEXT[0..*]
+  }
+  Attributes "OMOP_OtherConstraint" {
+    description = "A constraint, not modelled in a structured way, but may be described using the freetext 'description' attribute."
+    identifier = "Observable Properties::OtherConstraint"
+    tableName = "OMOP_OtherConstraint"
+    constrainedProperty TEXT CHECK(OMOP_PhenomenonTypeValue)
+    description TEXT NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+  }
+  Attributes "OMOP_Constraint" {
+    description = "A constraint on some property e.g. wavelength = 200nm.
+
+    A constraint on some property e.g. wavelength = 200nm. This property is  typically not the same property as the base phenomenon of the observed property. e.g.
+
+    the observed property has a base phenomenon 'radiance'.
+
+    a constraint is added to say 'wavelength = 200nm'
+
+    So the overall ObservableProperty which is represented is 'radiance where wavelength = 200nm'
+
+    The Constraint class is specialised into several specific classes covering Scalar, Range and Categorical constraints"
+    identifier = "Observable Properties::Constraint"
+    tableName = "OMOP_Constraint"
+    constrainedProperty TEXT CHECK(OMOP_PhenomenonTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+  }
+  Constraint Enum "OMOP_PhenomenonTypeValue" {
+    identifier = "Observable Properties::PhenomenonTypeValue"
+  }
+  Class <<Type>>  "ObservableProperty" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    basePhenomenon: TEXT
+    uom_formula: TEXT [0..1]
+    uom_measureType: TEXT [0..1]
+    uom_nameStandardUnit: TEXT [0..1]
+    uom_offsetToStandardUnit: DOUBLE [0..1]
+    uom_scaleToStandardUnit: DOUBLE [0..1]
+    uom_uomName: TEXT [0..1]
+    uom_uomSymbol: TEXT [0..1]
+    ref label: TEXT[0..*]
+  }
+  Relation "OMOP_RangeConstraint_value" {
+    profile = "attributes"
+    tableName = "OMOP_RangeConstraint_value"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOP_RangeConstraint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOP_RangeBounds(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+}

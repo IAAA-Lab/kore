@@ -1,0 +1,172 @@
+Container <<applicationSchema>>  "HabitatsAndBiotopes" {
+  Constraint Enum "HB_ReferenceHabitatTypeSchemeValue" {
+    identifier = "HabitatsAndBiotopes::ReferenceHabitatTypeSchemeValue"
+    eunis
+    habitatsDirective
+    marineStrategyFrameworkDirective
+  }
+  Attributes "HB_HabitatTypeCoverType" {
+    description = "Habitat type according to an international, national or local habitat classifications scheme.
+
+    Includes additional information on covered area, covered length, or containing volume."
+    identifier = "HabitatsAndBiotopes::HabitatTypeCoverType"
+    tableName = "HB_HabitatTypeCoverType"
+    areaCovered TEXT
+    areaCovered_uom TEXT CHECK(GML_UomIdentifier)
+    id INTEGER NOT NULL PRIMARY KEY
+    lengthCovered TEXT
+    lengthCovered_uom TEXT CHECK(GML_UomIdentifier)
+    localHabitatName_localName TEXT
+    localHabitatName_localNameCode TEXT CHECK(HB_LocalNameCodeValue)
+    localHabitatName_localScheme TEXT
+    localHabitatName_qualifierLocalName TEXT CHECK(HB_QualifierLocalNameValue)
+    referenceHabitatTypeId TEXT NOT NULL CHECK(HB_ReferenceHabitatTypeCodeValue)
+    referenceHabitatTypeName TEXT
+    referenceHabitatTypeScheme TEXT NOT NULL CHECK(HB_ReferenceHabitatTypeSchemeValue)
+    volumeCovered TEXT
+    volumeCovered_uom TEXT CHECK(GML_UomIdentifier)
+  }
+  Attributes "HB_LocalNameType" {
+    description = "Name according to a local classification scheme."
+    identifier = "HabitatsAndBiotopes::LocalNameType"
+    tableName = "HB_LocalNameType"
+    id INTEGER NOT NULL PRIMARY KEY
+    localName TEXT
+    localNameCode TEXT NOT NULL CHECK(HB_LocalNameCodeValue)
+    localScheme TEXT NOT NULL
+    qualifierLocalName TEXT CHECK(HB_QualifierLocalNameValue)
+  }
+  Constraint Enum "HB_HabitatsDirectiveCodeValue" {
+    identifier = "HabitatsAndBiotopes::HabitatsDirectiveCodeValue"
+  }
+  Constraint Enum "HB_QualifierLocalNameValue" {
+    identifier = "HabitatsAndBiotopes::QualifierLocalNameValue"
+    congruent
+    excludes
+    includedIn
+    includes
+    overlaps
+  }
+  Attributes "HB_HabitatSpeciesType" {
+    description = "Species which occurs in a certain habitat at the time of mapping."
+    identifier = "HabitatsAndBiotopes::HabitatSpeciesType"
+    tableName = "HB_HabitatSpeciesType"
+    id INTEGER NOT NULL PRIMARY KEY
+    localSpeciesName_localName TEXT
+    localSpeciesName_localNameCode TEXT CHECK(HB_LocalNameCodeValue)
+    localSpeciesName_localScheme TEXT
+    localSpeciesName_qualifierLocalName TEXT CHECK(HB_QualifierLocalNameValue)
+    referenceSpeciesId TEXT NOT NULL CHECK(SD_ReferenceSpeciesCodeValue)
+    referenceSpeciesScheme TEXT NOT NULL CHECK(SD_ReferenceSpeciesSchemeValue)
+  }
+  Constraint Enum "HB_MarineStrategyFrameworkDirectiveCodeValue" {
+    identifier = "HabitatsAndBiotopes::MarineStrategyFrameworkDirectiveCodeValue"
+  }
+  Constraint Enum "HB_ReferenceHabitatTypeCodeValue" {
+    identifier = "HabitatsAndBiotopes::ReferenceHabitatTypeCodeValue"
+  }
+  Constraint Enum "HB_EunisHabitatTypeCodeValue" {
+    identifier = "HabitatsAndBiotopes::EunisHabitatTypeCodeValue"
+  }
+  Constraint Enum "HB_LocalNameCodeValue" {
+    identifier = "HabitatsAndBiotopes::LocalNameCodeValue"
+  }
+  Attributes "HB_HabitatVegetationType" {
+    description = "Vegetation type which occurs in a certain habitat."
+    identifier = "HabitatsAndBiotopes::HabitatVegetationType"
+    tableName = "HB_HabitatVegetationType"
+    id INTEGER NOT NULL PRIMARY KEY
+    localVegetationName_localName TEXT
+    localVegetationName_localNameCode TEXT NOT NULL CHECK(HB_LocalNameCodeValue)
+    localVegetationName_localScheme TEXT NOT NULL
+    localVegetationName_qualifierLocalName TEXT CHECK(HB_QualifierLocalNameValue)
+  }
+  Feature "HB_Habitat" {
+    description = "Geographical areas characterised by specific ecological conditions, processes, structure, and functions that physically support the organisms that live there.
+
+    Includes terrestrial and aquatic areas distinguished by geographical, abiotic and biotic features, whether entirely natural or semi-natural [Directive 2007/2/EC].
+
+    A Habitat area, line or point may comprise one or more HabitatTypesCoverTypes according to one or more habitat classification schemes, often depending on the data capture process or related to the scale of a map. So a habitat feature might represent a complex of different HabitatTypesCoverTypes.
+
+    NOTE Although habitats in principle are geographical areas, they may also be depicted as lines or points."
+    identifier = "HabitatsAndBiotopes::Habitat"
+    tableName = "HB_Habitat"
+    geometry GEOMETRY NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
+  Relation "HB_Habitat_inspireId" {
+    profile = "attributes"
+    relatedReference = "HB_Habitat#inspireId"
+    tableName = "HB_Habitat_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HB_Habitat_habitat" {
+    profile = "attributes"
+    tableName = "HB_Habitat_habitat"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HB_HabitatTypeCoverType(id)
+  }
+  Relation "HB_Habitat_habitatSpecies" {
+    profile = "attributes"
+    tableName = "HB_Habitat_habitatSpecies"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HB_HabitatSpeciesType(id)
+  }
+  Relation "HB_Habitat_habitatVegetation" {
+    profile = "attributes"
+    tableName = "HB_Habitat_habitatVegetation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HB_HabitatVegetationType(id)
+  }
+  Metadata "Unknown" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attribute"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    metadata = ""
+    mimeType = "text/xml"
+    scope = "attributeType"
+    standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "SD_ReferenceSpeciesCodeValue" {
+    identifier = "SpeciesDistribution::ReferenceSpeciesCodeValue"
+  }
+  Constraint Enum "SD_ReferenceSpeciesSchemeValue" {
+    identifier = "SpeciesDistribution::ReferenceSpeciesSchemeValue"
+    eunis
+    eunomen
+    natureDirectives
+  }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+}
