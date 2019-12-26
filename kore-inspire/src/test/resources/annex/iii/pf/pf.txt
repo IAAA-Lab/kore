@@ -5,7 +5,7 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Feature "PF_ProductionInstallationPart" {
     description = "A single engineered facility that performs specific functionalities related with a production activity.
-
+  
     This level of description covers specific parts of the Production Installation which must be registered by the legal mandate of the competent authorities. Points of emission as chimneys (for pollutants) or tanks (for special products), will be included in this definition."
     identifier = "ProductionAndIndustrialFacilities::ProductionInstallationPart"
     tableName = "PF_ProductionInstallationPart"
@@ -23,7 +23,7 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Attributes "PF_StatusType" {
     description = "The state or condition of a technical component, with regard to the functional and operational order, in which it is arranged for a limited or extended time period.
-
+  
     It applies equally to the technical unit (facility, installation or installation part), to the production site, to the parcel and to the production building."
     identifier = "ProductionAndIndustrialFacilities::StatusType"
     tableName = "PF_StatusType"
@@ -44,7 +44,7 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Feature "PF_ProductionBuilding" {
     description = "Artificial construction, part of the production facility that are useful to host or provide shelter to activity development.
-
+  
     Inside a facility, and in relation with the definition of building, this entity should represent a construction under responsibility of the facility, either as an independent unit or as a functional infrastructure for an installation."
     identifier = "ProductionAndIndustrialFacilities::ProductionBuilding"
     tableName = "PF_ProductionBuilding"
@@ -54,19 +54,12 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     thematicId_identifierScheme TEXT
     ref typeOfBuilding: TypeOfProductionBuildingValue[0..*]
   }
-  Attributes "PF_TechnicalUnit" {
-    description = "Represents the common "abstract level" for production infrastructures: facilities, installations, installation parts.
-
-    It applies since the production infrastructures (facility, installation, installation part) may have an UML "equivalent behaviour": this means they have properties in common and the same associations to be reused."
-    identifier = "ProductionAndIndustrialFacilities::TechnicalUnit"
-    tableName = "PF_TechnicalUnit"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
+  Class "TechnicalUnit" {}
   Feature "PF_ProductionInstallation" {
     description = "A technical unit, such as machinery,  apparatus, devices or equipment placed in position or connected for use.
-
+  
     Stationary technical unit part of a facility where one or more activities are carried out, and any other directly associated activities which have a technical connection to the activities carried out on that site and which could have an effect on the environment.
-
+  
     May be a technical unit within an establishment in which dangerous substances are produced, used, handled or stored."
     identifier = "ProductionAndIndustrialFacilities::ProductionInstallation"
     tableName = "PF_ProductionInstallation"
@@ -83,9 +76,9 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Feature "PF_ProductionSite" {
     description = "All land at a distinct geographic location where the production facility was, is, or is intended to be located. This includes all infrastructure, equipment and materials;
-
+  
     An area of land or water that one or more process plants is or may be situated on, or else a single location, in which, if there is more than one manufacturer of (a) substance(s), certain infrastructure and facilities are shared.
-
+  
     A continuous surface, maritime or terrestrial in which production facilities have been already implanted or urban and/or engineering activities have been developed for production purposes. The location will be defined by means of geographical boundaries within which activities under the control of an organization may be carried out. The geographical boundaries may be on land and in water, and include above and below surface structures, both natural and man-made."
     identifier = "ProductionAndIndustrialFacilities::ProductionSite"
     tableName = "PF_ProductionSite"
@@ -100,7 +93,7 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Attributes "PF_ProductionPlot" {
     description = "A portion of land or water part of a production facility destined to functional purposes.
-
+  
     A potential sub-division of a major site as delimited extension of land in which are performed extensive operations related with the activity or one of the activities performed by a facility."
     identifier = "ProductionAndIndustrialFacilities::ProductionPlot"
     tableName = "PF_ProductionPlot"
@@ -112,11 +105,11 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Attributes "PF_ProductionFacility" {
     description = "One or more installations on the same site operated by the same natural or legal person,
-
+  
     designed, built or installed to serve specific production or industrial purposes, comprehending
-
+  
     all infrastructure, equipment and materials.
-
+  
     A production facility groups together a single installation, set of installations or production processes (stationary or mobile), which can be defined within a single geographical boundary, organizational unit or production process. A production facility can also be identified as one or more installations located on the same site that are operated by the same natural or legal person and in which production activities are being carried out. Such a facility groups potentially the land, buildings, and equipment used in carrying on an industrial business or other undertaking or service."
     identifier = "ProductionAndIndustrialFacilities::ProductionFacility"
     tableName = "PF_ProductionFacility"
@@ -258,18 +251,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "BU_BASE_AbstractBuilding_currentUse" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractBuilding_currentUse"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractBuilding(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_CurrentUse(id)
-  }
-  Relation "BU_BASE_AbstractBuilding_buildingNature" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractBuilding_buildingNature"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractBuilding(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_BuildingNatureValue(id)
-  }
   Relation "ACT_CORE_Function_activity" {
     profile = "attributes"
     tableName = "ACT_CORE_Function_activity"
@@ -302,35 +283,13 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     projected
     underConstruction
   }
-  Attributes "BU_BASE_AbstractBuilding" {
-    Governance = "<<missing>>"
-    description = "Abstract spatial object type grouping the common semantic properties of the spatial object types Building and BuildingPart."
-    identifier = "BuildingsBase::AbstractBuilding"
-    tableName = "BU_BASE_AbstractBuilding"
-    beginLifespanVersion: DATETIME [0..1]
-    conditionOfConstruction: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    id INTEGER NOT NULL PRIMARY KEY
-    numberOfBuildingUnits INTEGER
-    numberOfDwellings INTEGER
-    numberOfFloorsAboveGround INTEGER
-    ref dateOfConstruction: BU_BASE_DateOfEvent[0..1]
-    ref dateOfDemolition: BU_BASE_DateOfEvent[0..1]
-    ref dateOfRenovation: BU_BASE_DateOfEvent[0..1]
-    ref elevation: BU_BASE_Elevation[0..*]
-    ref externalReference: BU_BASE_ExternalReference[0..*]
-    ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
-    ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
-    ref Address inv building[0..*]
-  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -341,9 +300,9 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.
-
+  
     Some spatial objects may be assigned multiple unique identifiers.
-
+  
     These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
     identifier = "Base Types 2::ThematicIdentifier"
     tableName = "BASE2_ThematicIdentifier"
@@ -353,33 +312,11 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Attributes "ACT_CORE_Function" {
     description = "The function of something expressed as an activity and optional input and/or output.
-
+  
     NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
     identifier = "Activity Complex::Function"
     tableName = "ACT_CORE_Function"
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "BU_BASE_CurrentUse" {
-    description = "This data type enables to detail the current use(s)."
-    identifier = "BuildingsBase::CurrentUse"
-    tableName = "BU_BASE_CurrentUse"
-    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    percentage INTEGER
-  }
-  Attributes "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    description = "Values indicating the nature of a building.
-
-    NOTE 1 : This code list does not aim to be exhaustive as the attribute buildingNature addresses only noticeable buildings.
-
-    NOTE 2: The values included in this code list address mainly (but not only) two international use cases: air flights where buildings may be obstacles and marine navigation where buildings may be landmarks.
-
-    NOTE 3: This code list should only be applied for buildings, even if it may be applicable to other constructions (for example, not all dams are buildings)."
-    identifier = "BuildingsBase::BuildingNatureValue"
-    tableName = "BU_BASE_BuildingNatureValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BU_BASE_BuildingNatureValue)
   }
   Attributes "ACT_CORE_EconomicActivityValue" {
     description = "Classification of economic activities."
@@ -418,9 +355,9 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -428,6 +365,28 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
+  }
+  Attributes "BU_BASE_CurrentUse" {
+    description = "This data type enables to detail the current use(s)."
+    identifier = "BuildingsBase::CurrentUse"
+    tableName = "BU_BASE_CurrentUse"
+    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    percentage INTEGER
+  }
+  Attributes "BU_BASE_BuildingNatureValue" {
+    obligation = "implementingRule"
+    description = "Values indicating the nature of a building.
+  
+    NOTE 1 : This code list does not aim to be exhaustive as the attribute buildingNature addresses only noticeable buildings.
+  
+    NOTE 2: The values included in this code list address mainly (but not only) two international use cases: air flights where buildings may be obstacles and marine navigation where buildings may be landmarks.
+  
+    NOTE 3: This code list should only be applied for buildings, even if it may be applicable to other constructions (for example, not all dams are buildings)."
+    identifier = "BuildingsBase::BuildingNatureValue"
+    tableName = "BU_BASE_BuildingNatureValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(BU_BASE_BuildingNatureValue)
   }
   Attributes "BU_BASE_DateOfEvent" {
     description = "This data type includes the different possible ways to define the date of an event."
@@ -470,15 +429,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
   }
-  Constraint Enum "BU_BASE_CurrentUseValue" {
-    extensiblity = "narrower"
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::CurrentUseValue"
-  }
-  Constraint Enum "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::BuildingNatureValue"
-  }
   Constraint Enum "ACT_CORE_EconomicActivityValue" {
     identifier = "Activity Complex::EconomicActivityValue"
   }
@@ -515,6 +465,15 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     creation
     publication
     revision
+  }
+  Constraint Enum "BU_BASE_CurrentUseValue" {
+    extensiblity = "narrower"
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::CurrentUseValue"
+  }
+  Constraint Enum "BU_BASE_BuildingNatureValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::BuildingNatureValue"
   }
   Constraint Enum "BU_BASE_ElevationReferenceValue" {
     obligation = "implementingRule"

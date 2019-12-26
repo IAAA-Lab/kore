@@ -8,28 +8,22 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     NOTE 1 The attribute propertyType is equal to 'height' in the case of contour lines and it is equal to 'depth' in the case of depth contours."
     identifier = "ElevationVectorElements::ContourLine"
     tableName = "EL_VEC_ContourLine"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     contourLineType TEXT CHECK(EL_VEC_ContourLineTypeValue)
     downRight BOOLEAN
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum ChartDatum
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    localDepthDatum: ChartDatum [0..1]
+    propertyType: TEXT
     propertyValue_coordinate Sequence<Number> NOT NULL
     propertyValue_dimension INTEGER NOT NULL
   }
-  Attributes "EL_VEC_ElevationVectorObject" {
-    description = "Elevation spatial object forming part of a vector data set, which participates in the description of the elevation property of a real world surface. It consists of an identity base for all vector objects which can be included as part of an elevation data set.
-  
-    It is an abstract feature type which generically describes every possible type of elevation vector object. It includes common attributes, properties and constraints for such spatial objects."
-    identifier = "ElevationVectorElements::ElevationVectorObject"
-    tableName = "EL_VEC_ElevationVectorObject"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum ChartDatum
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+  Class "ElevationVectorObject" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    localDepthDatum: ChartDatum [0..1]
+    propertyType: TEXT
   }
   Attributes "EL_VEC_VoidArea" {
     description = "Area of the Earth's surface where the elevation model is unknown because of missing input data. This area shall be excluded from a DEM.
@@ -41,12 +35,12 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     NOTE 2  Void areas can be useful as masks when calculating a more appropriate or accurate DEM."
     identifier = "ElevationVectorElements::VoidArea"
     tableName = "EL_VEC_VoidArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry GM_Surface NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum ChartDatum
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    localDepthDatum: ChartDatum [0..1]
+    propertyType: TEXT
   }
   Constraint Enum "EL_VEC_SpotElevationClassValue" {
     identifier = "ElevationVectorElements::SpotElevationClassValue"
@@ -69,14 +63,14 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     NOTE 4  Breaklines are useful as input data for the generation of a more appropriate or accurate digital elevation model by using interpolation methods."
     identifier = "ElevationVectorElements::BreakLine"
     tableName = "EL_VEC_BreakLine"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     breakLineType TEXT NOT NULL CHECK(EL_VEC_BreakLineTypeValue)
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum ChartDatum
+    localDepthDatum: ChartDatum [0..1]
     manMadeBreak BOOLEAN
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    propertyType: TEXT
   }
   Class "ChartDatum" {
     datumWaterLevel: TEXT
@@ -97,12 +91,12 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     NOTE 2 Isolated areas can be useful as masks when calculating a more appropriate or accurate DEM."
     identifier = "ElevationVectorElements::IsolatedArea"
     tableName = "EL_VEC_IsolatedArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry GM_Surface NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum ChartDatum
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    localDepthDatum: ChartDatum [0..1]
+    propertyType: TEXT
   }
   Feature "EL_VEC_SpotElevation" {
     description = "Point spatial object which describes the elevation of an Earth's surface at a specific location. It provides a single elevation property value.
@@ -112,13 +106,13 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     NOTE 2 The attribute propertyType is equal to 'height' in the case of spot heights. It is equal to 'depth' in the case of spot depths."
     identifier = "ElevationVectorElements::SpotElevation"
     tableName = "EL_VEC_SpotElevation"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     classification TEXT CHECK(EL_VEC_SpotElevationClassValue)
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum ChartDatum
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
+    localDepthDatum: ChartDatum [0..1]
+    propertyType: TEXT
     propertyValue_coordinate Sequence<Number> NOT NULL
     propertyValue_dimension INTEGER NOT NULL
     spotElevationType TEXT CHECK(EL_VEC_SpotElevationTypeValue)

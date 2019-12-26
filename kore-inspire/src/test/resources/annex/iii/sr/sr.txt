@@ -1,7 +1,7 @@
 Container <<applicationSchema>>  "Sea Regions" {
   Feature "SR_ShoreSegment" {
     description = "A Shore Segment is a section of shore line.
-
+  
     Where it is possible to provide attributes about shore stability (eroding, stable etc) and/or shore type (sand, rock, harbour etc). Then the Shore Segment should be used in place of the GML LineString element to describe curve segments."
     identifier = "Sea Regions::ShoreSegment"
     tableName = "SR_ShoreSegment"
@@ -12,17 +12,17 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "SR_SeaSurfaceArea" {
     description = "An area of the sea surface with some type of cover e.g. an area of sea ice.
-
+  
     This describes a sea region according to the characteristics of the sea surface rather than characteristics of the water column in general. It is analogous to the concept of LandCover (INSPIRE Annex III)."
     identifier = "Sea Regions::SeaSurfaceArea"
     tableName = "SR_SeaSurfaceArea"
-    geometry GEOMETRY
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     surfaceType TEXT NOT NULL CHECK(SR_SeaSurfaceClassificationValue)
   }
   Feature "SR_Sea" {
     description = "Extent of sea at High Water (meanHighWater).
-
+  
     An area of sea, bounded by land and adjacent sea regions.  May contain smaller scale sea regions. Has common large scale circulation patterns, in part defined by its land boundaries.  High Water is taken to be mean high water.  Applies to common names areas of sea, e.g. North Sea, Agean Sea etc. (Source: IHO S23 SeaRegion)"
     identifier = "Sea Regions::Sea"
     tableName = "SR_Sea"
@@ -33,6 +33,8 @@ Container <<applicationSchema>>  "Sea Regions" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Constraint Enum "SR_ShoreTypeClassificationValue" {
     identifier = "Sea Regions::ShoreTypeClassificationValue"
@@ -48,7 +50,7 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "SR_MarineIsoline" {
     description = "An isoline representing a particular value of some marine physical or chemical phenomenon such as temperature, salinity or wave height.
-
+  
     A Marine Contour representing a particular value of some phenomenon. The geometry of the contour is a GM_Multicurve, i.e. may be formulated from several curves, all representing  the same value e.g. 15 degrees celsius."
     identifier = "Sea Regions::MarineIsoline"
     tableName = "SR_MarineIsoline"
@@ -59,18 +61,18 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "SR_SeaBedArea" {
     description = "An area of the sea bed with some identified type of cover. e.g. an area of vegetation or sediment type.
-
+  
     This describes a sea region according to the characteristics of the sea bed  rather than characteristics of the water column in general.  It does not include the subsea geology and is analogous to the concept of LandCover (INSPIRE Annex III)."
     identifier = "Sea Regions::SeaBedArea"
     tableName = "SR_SeaBedArea"
-    geometry GEOMETRY
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "SR_SeaArea" {
     description = "An area of sea defined according to its physical and chemical characteristics. It may have multiple geometries (extent) to represent different tidal states.
-
+  
     A SeaArea is a type of HydroObject as described in the Annex1 theme Hydrography. It has geometry described by one or more GM_MultiSurfaces. Multiple geometries are allowed  to enable a SeaArea to be described according to different tidal states.
-
+  
     Typically however, specialisations of SeaArea will restrict the geometry to a particular tidal state or set of tidal states.  SeaAreas include named seas such as ‘Baltic Sea’ and also un-named areas of sea that have particular chemical and physical characteristics.  SeaAreas are 2D objects and carry no explicit information about the depth of the sea, this is specified in the INSPIRE Elevation Theme."
     identifier = "Sea Regions::SeaArea"
     tableName = "SR_SeaArea"
@@ -79,6 +81,8 @@ Container <<applicationSchema>>  "Sea Regions" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "SR_Shoreline" {
     description = "Any Boundary between a Sea Area and land."
@@ -86,22 +90,26 @@ Container <<applicationSchema>>  "Sea Regions" {
     tableName = "SR_Shoreline"
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "SR_Coastline" {
     description = "A special case of a shoreline defined as the shoreline at Mean High Water (MHW). Where there is not significant variation in water level, Mean Sea Level (MSL) can be used as a substitute for MHW.
-
+  
     This feature type is designed for the general use case where the land:sea boundary is required to support general discovery and viewing of datasets.  It is not designed to infer any political boundaries.  The purpose is to provide a consistent overview of European marine extent and for this reason a single tidal extent is selected.  This is consistent with IHO-57 definitions"
     identifier = "Sea Regions::Coastline"
     tableName = "SR_Coastline"
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Constraint Enum "SR_ShoreStabilityValue" {
     identifier = "Sea Regions::ShoreStabilityValue"
   }
   Feature "SR_MarineCirculationZone" {
     description = "A sea area defined by its physical and chemical circulation patterns.
-
+  
     Typically used for management and reporting of the marine environment or marine environmental classification."
     identifier = "Sea Regions::MarineCirculationZone"
     tableName = "SR_MarineCirculationZone"
@@ -113,20 +121,14 @@ Container <<applicationSchema>>  "Sea Regions" {
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
     zoneType TEXT NOT NULL CHECK(SR_ZoneTypeValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Constraint Enum "SR_SeaBedCoverValue" {
     identifier = "Sea Regions::SeaBedCoverValue"
   }
-  Feature "SR_MarineLayer" {
-    description = "A Marine Layer describes any layer that may cover any part of a sea surface or sea bottom.
-
-    Examples of surface layers identified in the reference material include oil, algal blooms and ice.  Examples of seabed layer identified in the reference material include sediment type and presence or absence of vegetation.
-
-    As these phenomena have a dynamic characteristic, the extent they describe (GM_Surface) has a validity period. A marineLayer may not be associated with a particular SeaArea. A SeaArea may have multiple MarineLayers and MarineLayers can overlap each other."
-    identifier = "Sea Regions::MarineLayer"
-    tableName = "SR_MarineLayer"
-    geometry GEOMETRY
-    id INTEGER NOT NULL PRIMARY KEY
+  Class "MarineLayer" {
+    geometry: GEOMETRY [0..1]
   }
   Constraint Enum "SR_SeaSurfaceClassificationValue" {
     identifier = "Sea Regions::SeaSurfaceClassificationValue"
@@ -136,7 +138,7 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "SR_InterTidalArea" {
     description = "The part of the marine environment that is exposed (not covered in water) during a normal tidal cycle; defined as the difference between any high and any low water level.
-
+  
     The part of the marine environment that is exposed (not covered in water) during a normal tidal cycle."
     identifier = "Sea Regions::InterTidalArea"
     tableName = "SR_InterTidalArea"
@@ -148,12 +150,14 @@ Container <<applicationSchema>>  "Sea Regions" {
     highWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
     lowWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
     ref SurfaceWater inv bank[0..*]
   }
   Feature "SR_MarineExtent" {
     description = "The extent of a sea area for a given tidal state
-
+  
     The expected 2D geometric extent of a SeaArea for a particular tidal state."
     identifier = "Sea Regions::MarineExtent"
     tableName = "SR_MarineExtent"
@@ -163,7 +167,7 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "SR_MarineContour" {
     description = "A set of isolines representing the value of some phenomenon at a particular time.
-
+  
     A representation of any physical or chemical phenomenon related to the SeaArea.  MarineContour should be derived from an OceanGeographicFeature of the same phenomenon.  The source observations used to derive this feature may be linked to via the sourceObservations association. MarineContour is an abstraction of the ‘real world’ to provide an overview of the expected conditions of a SeaArea.  Examples would include salinity contours, depth contours, significant wave height."
     identifier = "Sea Regions::MarineContour"
     tableName = "SR_MarineContour"
@@ -180,20 +184,14 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "SR_SeaBedCoverValue" {
     description = "Types of cover found on sea beds.
-
+  
     The allowed values for this code list comprise any values defined by data providers.
-
+  
     May be extended by member states"
     identifier = "Sea Regions::SeaBedCoverValue"
     tableName = "SR_SeaBedCoverValue"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(SR_SeaBedCoverValue)
-  }
-  Relation "SR_MarineLayer_subLayer" {
-    profile = "features"
-    tableName = "SR_MarineLayer_subLayer"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineLayer(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineLayer(id)
   }
   Relation "SR_SeaArea_subArea" {
     profile = "attributes"
@@ -268,24 +266,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "HY_HydroObject_relatedHydroObject" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_relatedHydroObject"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroObject(id)
-  }
-  Relation "HY_HydroObject_geographicalName" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "HY_HydroObject_hydroId" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_hydroId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
-  }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
     tableName = "GN_GeographicalName_spelling"
@@ -359,39 +339,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     now
     unknow
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "OMOR_ObservationSet" {
-    description = "Links a set of Observations
-
-    This class is used to link multiple related Observations together"
-    identifier = "Observation References::ObservationSet"
-    tableName = "OMOR_ObservationSet"
-    extent_description TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "HY_HydroObject" {
-    description = "An identity base for hydrographic (including man-made) objects in the real world.
-
-    NOTE Derived 'views' of real-world hydrographic objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name or hydrographic identifier."
-    identifier = "Hydro - base::HydroObject"
-    tableName = "HY_HydroObject"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
     identifier = "Geographical Names::GeographicalName"
@@ -408,7 +355,7 @@ Container <<applicationSchema>>  "Sea Regions" {
   }
   Attributes "HY_HydroIdentifier" {
     description = "A hydrographic thematic identifier.
-
+  
     NOTE May be used to hold a national hydrological identification code."
     identifier = "Hydro - base::HydroIdentifier"
     tableName = "HY_HydroIdentifier"
@@ -417,11 +364,36 @@ Container <<applicationSchema>>  "Sea Regions" {
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
   }
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
+  Attributes "OMOR_ObservationSet" {
+    description = "Links a set of Observations
+  
+    This class is used to link multiple related Observations together"
+    identifier = "Observation References::ObservationSet"
+    tableName = "OMOR_ObservationSet"
+    extent_description TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"

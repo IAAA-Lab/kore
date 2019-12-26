@@ -34,13 +34,7 @@ Container <<applicationSchema>>  "HumanHealth" {
   Constraint Enum "HH_EnvHealthDeterminantTypeValue" {
     identifier = "HumanHealth::EnvHealthDeterminantTypeValue"
   }
-  Attributes "HH_HealthStatisticalData" {
-    description = "Human health related data, from recorded diseases and related health problems (according to internationally accepted code lists, such as ICD-10), expressed as morbidity and mortality, to data on general health status (BMI, self perceived health, etc.), data on health care services (health care expenditure, day cases, etc.), and data on biomarkers; these are statistical indices aggregated at different statistical units, collected/reported in different population groups. Inclusion of human biomonitoring data provides an opportunity to explore potential direct or indirect links between human health and the environment."
-    identifier = "HumanHealth::HealthStatisticalData"
-    tableName = "HH_HealthStatisticalData"
-    id INTEGER NOT NULL PRIMARY KEY
-    aggregationUnit INTEGER
-  }
+  Class "HealthStatisticalData" {}
   Attributes "HH_AgeRangeType" {
     description = "Age interval of a specific subpopulation expressed as starting age and an interval, both alternatively expressed in years, months or weeks."
     identifier = "HumanHealth::AgeRangeType"
@@ -61,14 +55,13 @@ Container <<applicationSchema>>  "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
-    aggregationUnit INTEGER
   }
   Constraint Enum "HH_LakeWaterQuality" {
     identifier = "HumanHealth::LakeWaterQuality"
   }
   Attributes "HH_Disease" {
     description = "Statistical information related to pathologies linked directly or indirectly to the quality of environment.
-
+  
     Statistical information related to diseases, health-related conditions and external causes of disease and injury, as classified in the International Statistical Classification of Diseases and Related Health Problems, 10th Revision (ICD-10). For practical reasons, a short term &lsquo;disease&rsquo; is used to label all conditions covered by this definition."
     identifier = "HumanHealth::Disease"
     tableName = "HH_Disease"
@@ -80,22 +73,21 @@ Container <<applicationSchema>>  "HumanHealth" {
     pathology TEXT CHECK(HH_ICDValue)
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
-    aggregationUnit INTEGER
   }
   Constraint Enum "HH_RiverWaterQualityComponentTypeValue" {
     identifier = "HumanHealth::RiverWaterQualityComponentTypeValue"
   }
   Attributes "HH_DiseaseMeasure" {
     description = "Different ways in which data on diseases and related health problems in a population can be reported.
-
+  
     There is a strong agreement between the two codelists addressed in the Data Specifications Document; the &ldquo;ICD10Value&rdquo; and the &ldquo;CODValue&rdquo; codelist. Taking into account that the main source of harmonized data is Eurostat, the reporting formats of Eurostat should be promoted in the definition of DiseaseMeasureType:
-
+  
     &bull; Absolute numbers: the total prevalence of a disease or mortality cause, without any further weighing or processing;
-
+  
     &bull; Crude death rate: describes mortality in relation to the total population. Expressed in deaths per 100,000 inhabitants, it is calculated as the number of deaths recorded in the population for a given period divided by population in the same period and then multiplied by 100,000;
-
+  
     &bull; Standardised death rate: weighted average of age-specific mortality rates. The weighting factor is the age distribution of a standard reference population. Standardised death rates are calculated for the age group 0-64 ('premature death') and for the total of ages. As most causes of death vary significantly with people's age and sex, the use of standardised death rates improves comparability over time and between countries.
-
+  
     The reporting formats as presented above are regulated through the European Parliament&rsquo;s &ldquo; Regulation on Community statistics on public health and health and safety at work (EC) No 1338/2008&rdquo;."
     identifier = "HumanHealth::DiseaseMeasure"
     tableName = "HH_DiseaseMeasure"
@@ -157,7 +149,6 @@ Container <<applicationSchema>>  "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
-    aggregationUnit INTEGER
   }
   Class <<union>>  "Age" {
     month: INTEGER
@@ -171,7 +162,6 @@ Container <<applicationSchema>>  "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     statisticalMethod TEXT NOT NULL CHECK(HH_StatisticalAggregationMethodValue)
     type TEXT NOT NULL CHECK(HH_EnvHealthDeterminantTypeValue)
-    aggregationUnit INTEGER
   }
   Constraint Enum "HH_StatisticalAggregationMethodValue" {
     identifier = "HumanHealth::StatisticalAggregationMethodValue"
@@ -224,7 +214,6 @@ Container <<applicationSchema>>  "HumanHealth" {
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
     refersTo INTEGER
-    aggregationUnit INTEGER
   }
   Class <<type>>  "Concentration" {
     uom: UomConcentration
@@ -258,13 +247,6 @@ Container <<applicationSchema>>  "HumanHealth" {
     tableName = "HH_BiomarkerThematicMetadata"
     id INTEGER NOT NULL PRIMARY KEY
     meanAge Age NOT NULL
-  }
-  Relation "HH_HealthStatisticalData_aggregationUnit" {
-    profile = "attributes"
-    relatedReference = "HH_HealthStatisticalData#aggregationUnit"
-    tableName = "HH_HealthStatisticalData_aggregationUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_HealthStatisticalData(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_CORE_StatisticalUnit(id)
   }
   Relation "HH_Disease_diseaseMeasure" {
     profile = "attributes"
@@ -320,17 +302,5 @@ Container <<applicationSchema>>  "HumanHealth" {
     velocity
     volume
     weight
-  }
-  Attributes "SU_CORE_StatisticalUnit" {
-    description = "Unit for dissemination or use of statistical information.
-
-    SOURCE [INSPIRE Directive:2007].
-
-    EXAMPLE grid cell, point, line, polygon.
-
-    NOTE Spatial features of any INSPIRE application schema can be considered as a statistical unit, because all can be used as spatial reference. This class is provided to represent features that are used only to disseminate statistical information and that are not included in another INSPIRE application schema."
-    identifier = "Statistical Units Base::StatisticalUnit"
-    tableName = "SU_CORE_StatisticalUnit"
-    id INTEGER NOT NULL PRIMARY KEY
   }
 }

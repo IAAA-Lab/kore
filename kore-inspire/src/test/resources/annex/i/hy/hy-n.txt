@@ -1,14 +1,17 @@
 Container <<applicationSchema>>  "Hydro - Network" {
   Attributes "HY_N_WatercourseSeparatedCrossing" {
     description = "An element in the hydrographic network used to indicate non-interacting crossing of watercourse links separated by level.
-
+  
     NOTE The crossing may legitimately break a no-intersection quality rule."
     identifier = "Hydro - Network::WatercourseSeparatedCrossing"
     tableName = "HY_N_WatercourseSeparatedCrossing"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "HY_N_HydroNodeCategoryValue" {
     identifier = "Hydro - Network::HydroNodeCategoryValue"
@@ -21,54 +24,65 @@ Container <<applicationSchema>>  "Hydro - Network" {
   }
   Attributes "HY_N_HydroNode" {
     description = "A node within the hydrographic network.
-
+  
     NOTE May represent a physical confluence, bifurcation/confluence/vanishing point etc, or it may be associated with a hydrographic point of interest or facility."
     identifier = "Hydro - Network::HydroNode"
     tableName = "HY_N_HydroNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     hydroNodeCategory TEXT CHECK(HY_N_HydroNodeCategoryValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "HY_N_WatercourseLink" {
     description = "A segment of a watercourse within a hydrographic network.
-
+  
     NOTE A watercourse link may be fictitious, with no direct correspondence to a real-world object and included only to ensure a closed network.
-
+  
     EXAMPLE Fictitious examples:
-
+  
     - virtual network segment in coastal water area
-
+  
     - virtual network segment in lake area
-
+  
     - virtual network segment in river to connect tributary
-
+  
     - virtual network segment in transitional water area"
     identifier = "Hydro - Network::WatercourseLink"
     tableName = "HY_N_WatercourseLink"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     flowDirection TEXT CHECK(NET_LinkDirectionValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     length TEXT
     length_uom TEXT CHECK(GML_UomIdentifier)
-    startNode INTEGER
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref LinkSet inv link[1..*]
   }
   Attributes "HY_N_WatercourseLinkSequence" {
     description = "A sequence of watercourse links representing a non-branching path through a hydrographic network."
     identifier = "Hydro - Network::WatercourseLinkSequence"
     tableName = "HY_N_WatercourseLinkSequence"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
     ref link: NET_DirectedLink[1..*]
     ref LinkSet inv link[1..*]
   }
@@ -96,51 +110,6 @@ Container <<applicationSchema>>  "Hydro - Network" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "HY_HydroObject_relatedHydroObject" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_relatedHydroObject"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroObject(id)
-  }
-  Relation "HY_HydroObject_geographicalName" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "HY_HydroObject_hydroId" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_hydroId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
-  }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NET_Node_spokeStart" {
-    profile = "features"
-    relatedReference = "NET_Link#startNode"
-    tableName = "NET_Node_spokeStart"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_Node_spokeEnd" {
-    profile = "features"
-    relatedReference = "NET_Link#endNode"
-    tableName = "NET_Node_spokeEnd"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
     tableName = "GN_GeographicalName_spelling"
@@ -153,13 +122,6 @@ Container <<applicationSchema>>  "Hydro - Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
-  Relation "NET_DirectedLink_link" {
-    profile = "features"
-    relatedReference = "NET_DirectedLink#link"
-    tableName = "NET_DirectedLink_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
   Constraint Enum "NET_LinkDirectionValue" {
     identifier = "Network::LinkDirectionValue"
     bothDirections
@@ -167,36 +129,6 @@ Container <<applicationSchema>>  "Hydro - Network" {
     inOppositeDirection
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Feature "NET_Link" {
-    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
-    identifier = "Network::Link"
-    tableName = "NET_Link"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
-    ref LinkSet inv link[1..*]
-  }
-  Attributes "NET_DirectedLink" {
-    description = "A link either in its positive or negative direction."
-    identifier = "Network::DirectedLink"
-    tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    link INTEGER
-  }
-  Attributes "HY_HydroObject" {
-    description = "An identity base for hydrographic (including man-made) objects in the real world.
-
-    NOTE Derived 'views' of real-world hydrographic objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name or hydrographic identifier."
-    identifier = "Hydro - base::HydroObject"
-    tableName = "HY_HydroObject"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
     identifier = "Geographical Names::GeographicalName"
@@ -213,7 +145,7 @@ Container <<applicationSchema>>  "Hydro - Network" {
   }
   Attributes "HY_HydroIdentifier" {
     description = "A hydrographic thematic identifier.
-
+  
     NOTE May be used to hold a national hydrological identification code."
     identifier = "Hydro - base::HydroIdentifier"
     tableName = "HY_HydroIdentifier"
@@ -222,30 +154,22 @@ Container <<applicationSchema>>  "Hydro - Network" {
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
   }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
-
+  
     The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
     identifier = "Network::Network"
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -254,23 +178,18 @@ Container <<applicationSchema>>  "Hydro - Network" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
-  Feature "NET_Node" {
-    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
-
-    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
-    identifier = "Network::Node"
-    tableName = "NET_Node"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+  Attributes "NET_DirectedLink" {
+    description = "A link either in its positive or negative direction."
+    identifier = "Network::DirectedLink"
+    tableName = "NET_DirectedLink"
+    direction Sign NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"

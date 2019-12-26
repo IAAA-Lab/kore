@@ -9,55 +9,53 @@ Container <<applicationSchema>>  "Geology" {
     id INTEGER NOT NULL PRIMARY KEY
     mappingFrame TEXT NOT NULL CHECK(GE_MappingFrameValue)
     shape GEOMETRY NOT NULL
-    specification INTEGER
   }
   Feature "GE_MappedFeature" {
     description = "A spatial representation of a GeologicFeature.
-
+  
     A MappedFeature is part of a geological interpretation.
-
+  
     It provides a link between a notional feature (description package) and one spatial representation of it, or part of it (exposures, surface traces and intercepts, etc) which forms the specific bounded occurrence, such as an outcrop or map polygon."
     identifier = "Geology::MappedFeature"
     tableName = "GE_MappedFeature"
     id INTEGER NOT NULL PRIMARY KEY
     mappingFrame TEXT NOT NULL CHECK(GE_MappingFrameValue)
     shape GEOMETRY NOT NULL
-    specification INTEGER
   }
   Attributes "GE_AnthropogenicGeomorphologicFeature" {
     description = "A geomorphologic feature (ie, landform) which has been created by human activity.
-
+  
     EXAMPLE: dredged channel, midden, open pit, reclaimed land."
     identifier = "Geology::AnthropogenicGeomorphologicFeature"
     tableName = "GE_AnthropogenicGeomorphologicFeature"
     anthropogenicGeomorphologicFeatureType TEXT NOT NULL CHECK(GE_AnthropogenicGeomorphologicFeatureTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+    name: TEXT [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "GE_ShearDisplacementStructure" {
     description = "Brittle to ductile style structures along which displacement has occurred.
-
+  
     These range from from a simple, single 'planar' brittle or ductile surface to a fault system comprised of tens of strands of both brittle and ductile nature."
     identifier = "Geology::ShearDisplacementStructure"
     tableName = "GE_ShearDisplacementStructure"
     faultType TEXT NOT NULL CHECK(GE_FaultTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+    name: TEXT [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "GE_GeologicUnit" {
     description = "A volume of rock with distinct characteristics.
-
+  
     Includes both formal units (i.e. formally adopted and named in an official lexicon) and informal units (i.e. named but not promoted to the lexicon) and unnamed units (i.e. recognisable and described and delineable in the field but not otherwise formalised).
-
+  
     Spatial properties are only available through association with a MappedFeature."
     identifier = "Geology::GeologicUnit"
     tableName = "GE_GeologicUnit"
     geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+    name: TEXT [0..1]
+    ref inspireId: BASE_Identifier
   }
   Constraint Enum "GE_GeologicUnitTypeValue" {
     identifier = "Geology::GeologicUnitTypeValue"
@@ -67,25 +65,19 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "GE_NaturalGeomorphologicFeature" {
     description = "A geomorphologic feature (ie, landform) that has been created by natural Earth processes.
-
+  
     EXAMPLE: river channel, beach ridge, caldera, canyon, moraine, mud flat."
     identifier = "Geology::NaturalGeomorphologicFeature"
     tableName = "GE_NaturalGeomorphologicFeature"
     activity TEXT CHECK(GE_GeomorphologicActivityValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+    name: TEXT [0..1]
     naturalGeomorphologicFeatureType TEXT NOT NULL CHECK(GE_NaturalGeomorphologicFeatureTypeValue)
+    ref inspireId: BASE_Identifier
   }
-  Attributes "GE_GeologicStructure" {
-    description = "A configuration of matter in the Earth based on describable inhomogeneity, pattern, or fracture in an earth material.
-
-    The identity of a GeologicStructure is independent of the material that is the substrate for the structure."
-    identifier = "Geology::GeologicStructure"
-    tableName = "GE_GeologicStructure"
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+  Class "GeologicStructure" {
+    name: TEXT [0..1]
+    ref inspireId: BASE_Identifier
   }
   Constraint Enum "GE_FoldProfileTypeValue" {
     identifier = "Geology::FoldProfileTypeValue"
@@ -95,7 +87,7 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "GE_GeologicEvent" {
     description = "An identifiable event during which one or more geological processes act to modify geological entities.
-
+  
     A GeologicEvent should have a specified geologic age and process, and may have a specified environment. An example might be a cratonic uplift event during which erosion, sedimentation, and volcanism all take place. A GeologicEvent age can represent an instant in time or an interval of time."
     identifier = "Geology::GeologicEvent"
     tableName = "GE_GeologicEvent"
@@ -114,15 +106,9 @@ Container <<applicationSchema>>  "Geology" {
   Constraint Enum "GE_ThematicClassificationValue" {
     identifier = "Geology::ThematicClassificationValue"
   }
-  Attributes "GE_GeomorphologicFeature" {
-    description = "An abstract spatial object type describing the shape and nature of the Earth's land surface (ie, a landform).
-
-    These landforms may be created by natural Earth processes (eg, river channel, beach, moraine, mountain) or through human (anthropogenic) activity (eg, dredged channel, reclaimed land, mine waste dumps)."
-    identifier = "Geology::GeomorphologicFeature"
-    tableName = "GE_GeomorphologicFeature"
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+  Class "GeomorphologicFeature" {
+    name: TEXT [0..1]
+    ref inspireId: BASE_Identifier
   }
   Constraint Enum "GE_EventEnvironmentValue" {
     identifier = "Geology::EventEnvironmentValue"
@@ -130,17 +116,9 @@ Container <<applicationSchema>>  "Geology" {
   Constraint Enum "GE_AnthropogenicGeomorphologicFeatureTypeValue" {
     identifier = "Geology::AnthropogenicGeomorphologicFeatureTypeValue"
   }
-  Attributes "GE_GeologicFeature" {
-    description = "A conceptual geological feature that is hypothesized to exist coherently in the world.
-
-    This corresponds with a "legend item" from a traditional geologic map. While the bounding coordinates of a Geologic Feature may be described, its shape is not.
-
-    The implemented Geologic Feature instance acts as the "description package""
-    identifier = "Geology::GeologicFeature"
-    tableName = "GE_GeologicFeature"
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+  Class "GeologicFeature" {
+    name: TEXT [0..1]
+    ref inspireId: BASE_Identifier
   }
   Constraint Enum "GE_FaultTypeValue" {
     identifier = "Geology::FaultTypeValue"
@@ -150,18 +128,18 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "GE_Fold" {
     description = "One or more systematically curved layers, surfaces, or lines in a rock body.
-
+  
     A fold denotes a structure formed by the deformation of a Geologic Structure to form a structure that may be described by the translation of an abstract line (the fold axis) parallel to itself along some curvilinear path (the fold profile). Folds have a hinge zone (zone of maximum curvature along the surface) and limbs (parts of the deformed surface not in the hinge zone)."
     identifier = "Geology::Fold"
     tableName = "GE_Fold"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+    name: TEXT [0..1]
     profileType TEXT CHECK(GE_FoldProfileTypeValue)
+    ref inspireId: BASE_Identifier
   }
   Attributes "GE_GeologicCollection" {
     description = "A collection of geological or geophysical objects.
-
+  
     Geologic objects are commonly grouped into collections such as geological maps, thematic maps, or the required input to a geological model."
     identifier = "Geology::GeologicCollection"
     tableName = "GE_GeologicCollection"
@@ -205,7 +183,7 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "GE_ThematicClass" {
     description = "A generic thematic classifier to enable the reclassification of Geologic Features with user defined classes appropriate to thematic maps.
-
+  
     This datatype allows Geologic Features to be classified against thematic classes. This provides a generic means of delivering geological thematic map data."
     identifier = "Geology::ThematicClass"
     tableName = "GE_ThematicClass"
@@ -215,7 +193,7 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "GE_EventProcessValue" {
     description = "Terms specifying the process or processes that occurred during an event.
-
+  
     EXAMPLE: deposition, extrusion, intrusion, cooling."
     identifier = "Geology::EventProcessValue"
     tableName = "GE_EventProcessValue"
@@ -224,38 +202,12 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "GE_BoreholePurposeValue" {
     description = "Purposes for which a borehole was drilled.
-
+  
     EXAMPLE: mineral exploration, water pumping, site evaluation, stratigraphic research, etc."
     identifier = "Geology::BoreholePurposeValue"
     tableName = "GE_BoreholePurposeValue"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(GE_BoreholePurposeValue)
-  }
-  Relation "GE_MappedFeature_specification" {
-    profile = "attributes"
-    relatedReference = "GE_MappedFeature#specification"
-    tableName = "GE_MappedFeature_specification"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_MappedFeature(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_GeologicFeature(id)
-  }
-  Relation "GE_GeologicFeature_geologicHistory" {
-    profile = "attributes"
-    tableName = "GE_GeologicFeature_geologicHistory"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicFeature(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_GeologicEvent(id)
-  }
-  Relation "GE_GeologicFeature_themeClass" {
-    profile = "attributes"
-    tableName = "GE_GeologicFeature_themeClass"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicFeature(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_ThematicClass(id)
-  }
-  Relation "GE_GeologicFeature_inspireId" {
-    profile = "attributes"
-    relatedReference = "GE_GeologicFeature#inspireId"
-    tableName = "GE_GeologicFeature_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicFeature(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "GE_GeologicUnit_composition" {
     profile = "attributes"
@@ -308,11 +260,11 @@ Container <<applicationSchema>>  "Geology" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"

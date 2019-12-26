@@ -50,58 +50,66 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     description = "A linear spatial object, composed of an ordered collection of railway links, which represents a continuous path in a railway network without any branches. The element has a defined beginning and end and every position on the railway link sequence is identifiable with one single parameter such as length. It describes an element of the railway network, characterized by one or more thematical identifiers and/or properties."
     identifier = "Railway Transport Network::RailwayLinkSequence"
     tableName = "TN_RA_RailwayLinkSequence"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
     ref link: NET_DirectedLink[1..*]
   }
   Attributes "TN_RA_RailwayNode" {
     description = "A point spatial object which represents a significant point along the railway network or defines an intersection of railway tracks used to describe its connectivity."
     identifier = "Railway Transport Network::RailwayNode"
     tableName = "TN_RA_RailwayNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
-    geometry POINT NOT NULL
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_RA_RailwayYardArea" {
     description = "An area spatial object which is used to represent the topographical limits of a railway yard.
-
+  
     DEFINITION Railway yard: An area crossed by a number of parallel railway tracks (usually more than two) interconnected between them, which are used to stop trains in order to load / unload freight without interrupting the traffic of a main railway line."
     identifier = "Railway Transport Network::RailwayYardArea"
     tableName = "TN_RA_RailwayYardArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_RA_RailwayStationNode" {
     description = "A railway node which represents the location of a railway station along the railway network."
     identifier = "Railway Transport Network::RailwayStationNode"
     tableName = "TN_RA_RailwayStationNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
-    geometry POINT NOT NULL
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     numberOfPlatforms INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Constraint Enum "TN_RA_MinMaxTrackValue" {
     identifier = "Railway Transport Network::MinMaxTrackValue"
@@ -113,14 +121,15 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     description = "An area spatial object which is used to represent the topographical limits of the facilities of a railway station (buildings, railway yards, installations and equipment) devoted to carry out railway station operations."
     identifier = "Railway Transport Network::RailwayStationArea"
     tableName = "TN_RA_RailwayStationArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_RA_RailwayUse" {
     description = "The current use of the railway."
@@ -137,21 +146,22 @@ Container <<applicationSchema>>  "Railway Transport Network" {
   }
   Attributes "TN_RA_RailwayLink" {
     description = "A linear spatial object that describes the geometry and connectivity of a railway network between two points in the network.
-
+  
     NOTE Railway links can be used to represent stretches of railway with one or multiple tracks."
     identifier = "Railway Transport Network::RailwayLink"
     tableName = "TN_RA_RailwayLink"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
     fictitious BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Constraint Enum "TN_RA_TrackGaugeCategoryValue" {
@@ -176,18 +186,20 @@ Container <<applicationSchema>>  "Railway Transport Network" {
   }
   Attributes "TN_RA_RailwayLine" {
     description = "A collection of railway link sequences and or individual railway links that are characterized by one or more thematical identifiers and/or properties.
-
+  
     EXAMPLE Railway lines characterized by a specific identification code, used by railroad companies or tourist railways, identified by a specific name."
     identifier = "Railway Transport Network::RailwayLine"
     tableName = "TN_RA_RailwayLine"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     railwayLineCode TEXT
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref post: TN_MarkerPost[0..*] inv route[0..1]
   }
   Constraint Enum "TN_RA_RailwayUseValue" {
     identifier = "Railway Transport Network::RailwayUseValue"
@@ -214,14 +226,15 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     description = "Surface occupied by a railway track, including ballast."
     identifier = "Railway Transport Network::RailwayArea"
     tableName = "TN_RA_RailwayArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "TN_RA_RailwayTypeValue" {
     identifier = "Railway Transport Network::RailwayTypeValue"
@@ -236,7 +249,7 @@ Container <<applicationSchema>>  "Railway Transport Network" {
   }
   Attributes "TN_RA_NumberOfTracks" {
     description = "The number of tracks for a railway stretch.
-
+  
     This is dependent on the resolution of the data."
     identifier = "Railway Transport Network::NumberOfTracks"
     tableName = "TN_RA_NumberOfTracks"
@@ -252,19 +265,22 @@ Container <<applicationSchema>>  "Railway Transport Network" {
   }
   Attributes "TN_RA_RailwayYardNode" {
     description = "A railway node which occurs within a railway yard area.
-
+  
     DEFINTION Railway yard: An area crossed by a number of parallel railway tracks (usually more than two) interconnected between them, which are used to stop trains in order to load / unload freight without interrupting the traffic of a main railway line."
     identifier = "Railway Transport Network::RailwayYardNode"
     tableName = "TN_RA_RailwayYardNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
-    geometry POINT NOT NULL
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Metadata "Unknown" {
     metadata = ""
@@ -290,45 +306,11 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NET_Node_spokeStart" {
-    profile = "features"
-    relatedReference = "NET_Link#startNode"
-    tableName = "NET_Node_spokeStart"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_Node_spokeEnd" {
-    profile = "features"
-    relatedReference = "NET_Link#endNode"
-    tableName = "NET_Node_spokeEnd"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
   Relation "NET_NetworkReference_involves" {
     profile = "attributes"
     tableName = "NET_NetworkReference_involves"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
-  }
-  Relation "NET_NetworkReference_element" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkReference#element"
-    tableName = "NET_NetworkReference_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
   }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
@@ -336,25 +318,11 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
-  Relation "NET_DirectedLink_link" {
-    profile = "features"
-    relatedReference = "NET_DirectedLink#link"
-    tableName = "NET_DirectedLink_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "TN_MarkerPost_route" {
-    profile = "attributes"
-    relatedReference = "TN_MarkerPost#route"
-    tableName = "TN_MarkerPost_route"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLinkSet(id)
   }
   Relation "HH_SA_Event_additionalInformation" {
     profile = "attributes"
@@ -472,15 +440,14 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     identifier = "Network::NetworkReference"
     tableName = "NET_NetworkReference"
     id INTEGER NOT NULL PRIMARY KEY
-    element INTEGER
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -509,58 +476,34 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     tableName = "NET_DirectedLink"
     direction Sign NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    link INTEGER
-  }
-  Attributes "NET_GeneralisedLink" {
-    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
-    identifier = "Network::GeneralisedLink"
-    tableName = "NET_GeneralisedLink"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
   }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
-
+  
     The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
     identifier = "Network::Network"
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
-  Feature "NET_Node" {
-    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
-
-    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
-    identifier = "Network::Node"
-    tableName = "NET_Node"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+  Attributes "TN_MarkerPost" {
+    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
+  
+    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
+    identifier = "Common Transport Elements::MarkerPost"
+    tableName = "TN_MarkerPost"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Feature "NET_Link" {
-    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
-    identifier = "Network::Link"
-    tableName = "NET_Link"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
+    location TEXT NOT NULL
+    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref route: TransportLinkSet[0..1] inv post[0..*]
   }
   Attributes "HH_SA_TrafficRelatedEvent" {
     description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
@@ -583,9 +526,9 @@ Container <<applicationSchema>>  "Railway Transport Network" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -593,44 +536,6 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Attributes "TN_MarkerPost" {
-    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
-
-    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
-    identifier = "Common Transport Elements::MarkerPost"
-    tableName = "TN_MarkerPost"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry: POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    location TEXT NOT NULL
-    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    route INTEGER
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
-  }
-  Attributes "TN_TransportLinkSet" {
-    description = "A collection of transport link sequences and or individual transport links that has a specific function or significance in a transport network.
-
-    NOTE
-
-    This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
-
-    EXAMPLE
-
-    A dual carriageway road, as a collection of the two link sequences that represent each carriageway."
-    identifier = "Common Transport Elements::TransportLinkSet"
-    tableName = "TN_TransportLinkSet"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
-    ref geographicalName: GN_GeographicalName[0..1]
   }
   Attributes "HH_SA_Event" {
     description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
@@ -718,7 +623,7 @@ Container <<applicationSchema>>  "Railway Transport Network" {
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"
@@ -753,10 +658,10 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     plural
     singular
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
-  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "HH_SA_ConsequenceTypeValue" {
     identifier = "Safety::ConsequenceTypeValue"
   }

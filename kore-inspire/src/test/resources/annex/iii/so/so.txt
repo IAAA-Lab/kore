@@ -1,11 +1,11 @@
 Container <<applicationSchema>>  "Soil" {
   Feature "SO_SoilBody" {
     description = "Part of the soil cover that is delineated and that is homogeneous with regard to certain soil properties and/or spatial patterns.
-
+  
     The soils present in the soil body are characterized by one or more derived soil profiles that are found together in the area specified by the &ldquo;geometry&rdquo; attribute of the SoilBody.
-
+  
     NOTE 1 If several derived soil profiles are used to describe the soil body, the spatial distribution of the soil they describe within the soil body is not defined, but their presence is indicated by a range percentage of area. The underlying reason behind the fact of not delineating the different soils within a soil body is the target scale of the map or spatial dataset. This means that geographical accuracy and preciseness of soil characterization depend on and vary with the target scale, i.e. the soil body can be delineated differently among scales.
-
+  
     NOTE 2 The concept of soil body is a correlate of the concept soil mapping unit, and the soils of a soilbody might form e.g. a soil association, a soil complex, etc."
     identifier = "Soil::SoilBody"
     tableName = "SO_SoilBody"
@@ -21,7 +21,7 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_SoilThemeParameterType" {
     description = "A soil-related property (soil theme) that is represented by this coverage. It is composed of a parameter name coming from a codelist SoilDerivedObjectParameterNameValue and a Unit of Measure used for expressing that parameter.
-
+  
     EXAMPLE Land irrigation suitability, pH in the topsoil, etc"
     identifier = "Soil::SoilThemeParameterType"
     tableName = "SO_SoilThemeParameterType"
@@ -37,65 +37,68 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_SoilLayer" {
     description = "domain of a soil with a certain vertical extension developed through non-pedogenic processes, displaying a change in structure and/or composition to possibly over- or underlying adjacent domains, or a grouping of soil horizons or other sub-domains with a special purpose.
-
+  
     NOTE1 Different kinds of layer concepts are covered by this definition.
-
+  
     EXAMPLE 1 Geogenic layers: These are domains, resulting from e.g. sedimentation (as non-pedogenic) processes, that display an unconformity to possibly over- or underlying adjacent domains.
-
+  
     EXAMPLE 2 Topsoil and Subsoil: These can be domains that group different soil horizon types (e.g. A vs. B horizons), or a special case of fixed depths with only two depth ranges (e.g. 0-15 cm: topsoil and, 15-75 cm: subsoil).
-
+  
     EXAMPLE 3 Depth intervals: They are often used in soil monitoring, sampling of contaminated sites and in modelling and include: (i) depth increments (also called fixed depths) that are often used for sampling, e.g. 0-30cm, 30-60cm, and so on, (ii) a single depth range in which a soil sample (&rdquo;specimen&rdquo;) is taken and for which the analytical result is valid, and (iii) soil slicing, that is, profile segmentation according to a specified vector, for instance, either regularly spaced intervals (1cm), or a user-defined vector of segment boundaries (i.e. 0-10, 10-25, 25-50, 50-100). Slicing is used in modelling to generate continuous depth functions for soil properties.
-
+  
     EXAMPLE 4: In the framework of soils deeply modified by human activity, artificial layers may be due to different kinds of deposits (concrete, bricks, &hellip;).
-
+  
     SOURCE WD ISO28258, modified"
     identifier = "Soil::SoilLayer"
     tableName = "SO_SoilLayer"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isPartOf INTEGER
     layerGenesisEnvironment TEXT CHECK(GE_EventEnvironmentValue)
     layerGenesisProcess TEXT CHECK(GE_EventProcessValue)
     layerGenesisProcessState TEXT CHECK(SO_LayerGenesisProcessStateValue)
     layerType TEXT NOT NULL CHECK(SO_LayerTypeValue)
-    profileElementDepthRange_lowerValue DOUBLE
-    profileElementDepthRange_uom_formula TEXT
-    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    profileElementDepthRange_uom_nameStandardUnit TEXT
-    profileElementDepthRange_uom_offsetToStandardUnit DOUBLE
-    profileElementDepthRange_uom_scaleToStandardUnit DOUBLE
-    profileElementDepthRange_uom_uomName TEXT
-    profileElementDepthRange_uom_uomSymbol TEXT
-    profileElementDepthRange_upperValue DOUBLE
+    profileElementDepthRange_lowerValue: DOUBLE [0..1]
+    profileElementDepthRange_uom_formula: TEXT [0..1]
+    profileElementDepthRange_uom_measureType: TEXT [0..1]
+    profileElementDepthRange_uom_nameStandardUnit: TEXT [0..1]
+    profileElementDepthRange_uom_offsetToStandardUnit: DOUBLE [0..1]
+    profileElementDepthRange_uom_scaleToStandardUnit: DOUBLE [0..1]
+    profileElementDepthRange_uom_uomName: TEXT [0..1]
+    profileElementDepthRange_uom_uomSymbol: TEXT [0..1]
+    profileElementDepthRange_upperValue: DOUBLE [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref isPartOf: SoilProfileinv isDescribedBy[0..*]
+    ref particleSizeFraction: SO_ParticleSizeFractionType[0..*]
   }
   Constraint Enum "SO_FAOHorizonMasterValue" {
     identifier = "Soil::FAOHorizonMasterValue"
   }
   Attributes "SO_ObservedSoilProfile" {
     description = "a representation of a soil profile found on a specific location which is described on the basis of observations in a trial pit or with a borehole.
-
+  
     The observed soil profile corresponds to a set of data taken directly from a georeferenced<b> </b>soil profile, described in the field, and often sampled and analyzed in the laboratory."
     identifier = "Soil::ObservedSoilProfile"
     tableName = "SO_ObservedSoilProfile"
-    WRBSoilName INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    localIdentifier TEXT
+    localIdentifier: TEXT [0..1]
     location INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref WRBSoilName: SO_WRBSoilNameType[0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref isDescribedBy: ProfileElement[0..*] inv isPartOf
+    ref otherSoilName: SO_OtherSoilNameType[0..*]
   }
   Attributes "SO_WRBSoilNameType" {
     description = "an identification of the soil profile according to the profile to according to “World Reference Base for Soil Resources 2006, first update 2007”, World Soil Resources Reports No. 103. FAO, Rome.
-
+  
     NOTE The structure of the WRBSoilNameType was based on the <i>World reference base for soil resources 2006</i>, <i>first update 2007</i>, World Soil Resources Reports No. 103, Food and Agriculture Organization of the United
-
+  
     Nations, Rome, 2007.
-
+  
     EXAMPLE Lixic Vertic Ferralsol (Ferric, Rhodic), WRB 2006, update 2007."
     identifier = "Soil::WRBSoilNameType"
     tableName = "SO_WRBSoilNameType"
@@ -124,7 +127,7 @@ Container <<applicationSchema>>  "Soil" {
   }
   Feature "SO_SoilDerivedObject" {
     description = "A spatial object type for representing spatial objects with soil-related property derived from one or more soil and possibly other non soil properties.
-
+  
     NOTE Soil thematic maps can be derived directly from the involved soil database (organic matter content, pH, texture, etc.) or they can be derived by using pedotransfer functions or pedotransfer rules (e.g. plant available water in the rooting depth). Derivation can be simple extraction from a single data field, or a complex combination of different kind of data and application of e.g. mathematical or expert knowledge-based procedures."
     identifier = "Soil::SoilDerivedObject"
     tableName = "SO_SoilDerivedObject"
@@ -147,7 +150,7 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_OtherSoilNameType" {
     description = "an identification of the soil profile according to a specific classification scheme.
-
+  
     EXAMPLE Fluventic Haploxerept, according to Soil Taxonomy (USDA 2006)."
     identifier = "Soil::OtherSoilNameType"
     tableName = "SO_OtherSoilNameType"
@@ -160,9 +163,9 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_SoilThemeDescriptiveParameterType" {
     description = "data type providing a descriptive property for the soil-related property (soil theme) that is represented by its associated SoilThemeCoverage.
-
+  
     this datatype exists of a name and if needed a unit of measurement.
-
+  
     EXAMPLE confidence level for each value in the SoilThemeCoverage (pH in the topsoil)"
     identifier = "Soil::SoilThemeDescriptiveParameterType"
     tableName = "SO_SoilThemeDescriptiveParameterType"
@@ -198,23 +201,23 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_FAOHorizonNotationType" {
     description = "A classification of a horizon according to the Horizon classification system specified in <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006.
-
+  
     A code system that denotes horizons in which the same dominant soil forming processes has been active similarly. This code summarizes many observations of the soil description and gives an impression about the genetic processes that have formed the soil under observation.
-
+  
     NOTE The horizon notation according to FAO (2006) is a combination of several symbols:
-
+  
     · A number that gives information about discontinuities, i.e. the number of the material in which the soil has formed, counted up from the soil surface, but not for the first material.
-
+  
     · One or two capital letters that designate the type of master horizon (or transitional horizon), possibly separated by a slash
-
+  
     · Lower case letters that designate subordinate characteristics of the horizon.
-
+  
     · A number that designates horizontal subdivisions of otherwise similarly denoted horizon parts
-
+  
     · A prime that enables to distinguish two horizons that have the same naming, but formed in different cycles of pedogenesis.
-
+  
     EXAMPLE 2B' tg1
-
+  
     SOURCE 1 Page 67 - 77 of the <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006. (ISBN 92-5-105521-1)"
     identifier = "Soil::FAOHorizonNotationType"
     tableName = "SO_FAOHorizonNotationType"
@@ -230,13 +233,13 @@ Container <<applicationSchema>>  "Soil" {
   }
   Feature "SO_SoilPlot" {
     description = "spot where a specific soil investigation is carried out.
-
+  
     NOTE 1: For observed soil profiles, a spot location has to be defined. It is the place on which the observation is made. The profile is an observation made on the plot.
-
+  
     NOTE 2: All types of plots only provide locality, but no soil information itself.
-
+  
     EXAMPLE A borehole is the location where you gather the information to abstract a profile information from.
-
+  
     SOURCE GS Soil"
     identifier = "Soil::SoilPlot"
     tableName = "SO_SoilPlot"
@@ -258,28 +261,24 @@ Container <<applicationSchema>>  "Soil" {
   Constraint Enum "SO_SoilInvestigationPurposeValue" {
     identifier = "Soil::SoilInvestigationPurposeValue"
   }
-  Attributes "SO_SoilProfile" {
-    description = "description of the soil that is characterized by a vertical succession of profile elements.
-
-    NOTE The soil profile is abstracted from observations in a trial pit or a boring, or derived from expert knowledge using other soil profiles."
-    identifier = "Soil::SoilProfile"
-    tableName = "SO_SoilProfile"
-    WRBSoilName INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    localIdentifier TEXT
-    validFrom DATETIME
-    validTo DATETIME
+  Class "SoilProfile" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    localIdentifier: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref WRBSoilName: SO_WRBSoilNameType[0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref isDescribedBy: ProfileElement[0..*] inv isPartOf
+    ref otherSoilName: SO_OtherSoilNameType[0..*]
   }
   Attributes "SO_SoilThemeDescriptiveCoverage" {
     description = "a spatial object type that is associated to the soil theme coverage and holds additional information on values of a property of the soil theme coverage.
-
+  
     This coverage can only exist in relation to a base coverage SoilThemeCoverage, it has the same domain and spatial extent as the base coverage. And it gives extra information on the values of the base coverages
-
+  
     SOURCE Adapted from "Coverage" [ISO 19123:2005].
-
+  
     EXAMPLE coverage indicating the confidence level of the pH values reported in the associated SoilThemeCoverage."
     identifier = "Soil::SoilThemeDescriptiveCoverage"
     tableName = "SO_SoilThemeDescriptiveCoverage"
@@ -302,30 +301,25 @@ Container <<applicationSchema>>  "Soil" {
     soilThemeDescriptiveParameter_uom_uomSymbol TEXT
     ref domainExtent: EX_Extent[1..*]
   }
-  Attributes "SO_ProfileElement" {
-    description = "An abstract spatial object type grouping soil layers and / or horizons for functional/operational aims.
-
-    Profile element is the general term for both horizons and layers."
-    identifier = "Soil::ProfileElement"
-    tableName = "SO_ProfileElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isPartOf INTEGER
-    profileElementDepthRange_lowerValue DOUBLE
-    profileElementDepthRange_uom_formula TEXT
-    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    profileElementDepthRange_uom_nameStandardUnit TEXT
-    profileElementDepthRange_uom_offsetToStandardUnit DOUBLE
-    profileElementDepthRange_uom_scaleToStandardUnit DOUBLE
-    profileElementDepthRange_uom_uomName TEXT
-    profileElementDepthRange_uom_uomSymbol TEXT
-    profileElementDepthRange_upperValue DOUBLE
+  Class "ProfileElement" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    profileElementDepthRange_lowerValue: DOUBLE [0..1]
+    profileElementDepthRange_uom_formula: TEXT [0..1]
+    profileElementDepthRange_uom_measureType: TEXT [0..1]
+    profileElementDepthRange_uom_nameStandardUnit: TEXT [0..1]
+    profileElementDepthRange_uom_offsetToStandardUnit: DOUBLE [0..1]
+    profileElementDepthRange_uom_scaleToStandardUnit: DOUBLE [0..1]
+    profileElementDepthRange_uom_uomName: TEXT [0..1]
+    profileElementDepthRange_uom_uomSymbol: TEXT [0..1]
+    profileElementDepthRange_upperValue: DOUBLE [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref isPartOf: SoilProfileinv isDescribedBy[0..*]
+    ref particleSizeFraction: SO_ParticleSizeFractionType[0..*]
   }
   Attributes "SO_OtherHorizonNotationType" {
     description = "classification of a horizon according to a specific classification system.
-
+  
     A code system denoting horizons in which the same dominant soil forming processes have been active in the same way. This code summarizes many observations of the soil description and gives an impression about the genetic processes that have formed the soil under observation."
     identifier = "Soil::OtherHorizonNotationType"
     tableName = "SO_OtherHorizonNotationType"
@@ -346,7 +340,7 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_SoilThemeCoverage" {
     description = "a spatial object type that holds values for a property based on one or more soil and possibly non soil parameters within its spatial, temporal or spatiotemporal domain.
-
+  
     SOURCE Adapted from "Coverage" [ISO 19123:2005]."
     identifier = "Soil::SoilThemeCoverage"
     tableName = "SO_SoilThemeCoverage"
@@ -372,13 +366,13 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_ParticleSizeFractionType" {
     description = "share of the soil that is composed of mineral soil particles of the size within the size range specified.
-
+  
     Mineral part of the soil, fractioned on the basis of size (diameter), limits of the particles. It is the fine earth fraction. That is, the portion of the soil that passes through a 2 mm diameter sieve opening.
-
+  
     The grain (or particle) size distribution characterizes the soil mineral material, based on the share of each equivalent diameter class of the individual particles.
-
+  
     SOURCE1 NRCS Natural Resources Conservation Service, Soil survey laboratory information manual, Soil survey investigation report n.45 version 1.0 May 1995 pag. 11
-
+  
     SOURCE2 GLOSSARY OF SOIL SCIENCE TERMS"
     identifier = "Soil::ParticleSizeFractionType"
     tableName = "SO_ParticleSizeFractionType"
@@ -396,31 +390,31 @@ Container <<applicationSchema>>  "Soil" {
   }
   Feature "SO_SoilSite" {
     description = "area within a larger survey, study or monitored area, where a specific soil investigation is carried out.
-
+  
     Site provides the object to describe:
-
+  
     a.) the surroundings of the plot
-
+  
     and/or
-
+  
     b.) the larger piece of land that is directly linked to and described by all soil investigations on its one or more spots (SoilPlots). It thus provides the object to which soil data of different kind (or the same kind, but at different points in time, e.g. in soil monitoring) obtained on different plots is related as if it would have been collected at the very same place. This allows for:
-
+  
     1. combination of data that cannot be obtained on the very same place
-
+  
     EXAMPLE: a soil pit and investigations on earthworm abundance cannot be done in the same place, but possibly some metres apart from each other. Nonetheless shall the results of both investigations be combined to inform about the soil state.
-
+  
     or
-
+  
     2. comparison of soil condition after some time has elapsed.
-
+  
     EXAMPLE: Organic carbon stock has been investigated using data from two monitoring periods that had to be conducted on spatially slightly separated places because the sampling is destructive. Nonetheless are the results of both periods regarded as giving an idea how organic carbon stock has changed over the years at the same place.
-
+  
     The site is also the object to state the date and time information on validity, etc.
-
+  
     The soil site might have delineation, but can be located with a centre or reference point location only. Delineated soil sites - possibly in the form of cadastral parcels - are especially used in the inventory of contaminated areas.
-
+  
     NOTE Any plot can be linked to one specific site only, but several plots to one site.
-
+  
     SOURCE GS Soil, modified"
     identifier = "Soil::SoilSite"
     tableName = "SO_SoilSite"
@@ -444,52 +438,55 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "SO_SoilHorizon" {
     description = "Domain of a soil with a certain vertical extension, more or less parallel to the surface and homogeneous for most morphological and analytical characteristics, developed in a parent material layer through pedogenic processes or made up of in-situ sedimented organic residues of up-growing plants (peat).
-
+  
     SOURCE ISO/WD 28258, modified
-
+  
     NOTE Horizons may be part of a layer."
     identifier = "Soil::SoilHorizon"
     tableName = "SO_SoilHorizon"
     FAOHorizonNotation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isPartOf INTEGER
-    profileElementDepthRange_lowerValue DOUBLE
-    profileElementDepthRange_uom_formula TEXT
-    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    profileElementDepthRange_uom_nameStandardUnit TEXT
-    profileElementDepthRange_uom_offsetToStandardUnit DOUBLE
-    profileElementDepthRange_uom_scaleToStandardUnit DOUBLE
-    profileElementDepthRange_uom_uomName TEXT
-    profileElementDepthRange_uom_uomSymbol TEXT
-    profileElementDepthRange_upperValue DOUBLE
+    profileElementDepthRange_lowerValue: DOUBLE [0..1]
+    profileElementDepthRange_uom_formula: TEXT [0..1]
+    profileElementDepthRange_uom_measureType: TEXT [0..1]
+    profileElementDepthRange_uom_nameStandardUnit: TEXT [0..1]
+    profileElementDepthRange_uom_offsetToStandardUnit: DOUBLE [0..1]
+    profileElementDepthRange_uom_scaleToStandardUnit: DOUBLE [0..1]
+    profileElementDepthRange_uom_uomName: TEXT [0..1]
+    profileElementDepthRange_uom_uomSymbol: TEXT [0..1]
+    profileElementDepthRange_upperValue: DOUBLE [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref isPartOf: SoilProfileinv isDescribedBy[0..*]
+    ref particleSizeFraction: SO_ParticleSizeFractionType[0..*]
   }
   Attributes "SO_DerivedSoilProfile" {
     description = "non-point-located soil profile that serves as a reference profile for a specific soil type in a certain geographical area.
-
+  
     The characteristics of a derived soil profile are mostly derived (e.g. averaged) from one or several observed profiles of the same soil type in the area of interest, or are designed with expert knowledge about the same kind of landscape.
-
+  
     NOTE 1 The derived soil profile represents the average or typical profile that characterizes the so called soil typological unit, soil series."
     identifier = "Soil::DerivedSoilProfile"
     tableName = "SO_DerivedSoilProfile"
-    WRBSoilName INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    localIdentifier TEXT
-    validFrom DATETIME
-    validTo DATETIME
+    localIdentifier: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref WRBSoilName: SO_WRBSoilNameType[0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref isDescribedBy: ProfileElement[0..*] inv isPartOf
+    ref otherSoilName: SO_OtherSoilNameType[0..*]
   }
   Attributes "SO_FAOHorizonSubordinateValue" {
     description = "A code list of designations of subordinate distinctions and features within the master horizons and layers which are based on profile characteristics observable in the field and are applied during the description of the soil at the site.
-
+  
     The allowed values for this code list comprise only the values specified in <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006, pp. 67-77.
-
+  
     Lower case letters are used as suffixes to designate specific kinds of master horizons and layers, and other features.
-
+  
     SOURCE <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006, pp. 67-77, table 85"
     identifier = "Soil::FAOHorizonSubordinateValue"
     tableName = "SO_FAOHorizonSubordinateValue"
@@ -500,9 +497,9 @@ Container <<applicationSchema>>  "Soil" {
     genfile = "C:\temp\SpecifierValue.java"
     genoptions = "nKill=0;nLang=1;sLang=Java;bConstructor=1;bConInline=0;sConScope=Public;bCpyConstructor=0;bCpyConInline=0;sCpyConScope=Public;bDestructor=1;bDesVirtual=1;bDesInline=0;sDesScope=Public;CHeader=.h;CBody=.cpp;JBody=.java;VBody=.cls;VBNetBody=.vb;sAssocName=m_$LinkClass;bGetSet=1;bGenInterfaces=1;JCol=Vector;CCol=[];VCol=Collection;bVMultiuse=1;bVPersist=0;bVDatabind=0;bVDatasource=0;bVGlobal=0;bVCreatable=1;bVExposed=0;sMTS=0;sCRefType=*;sCGetPrefix=Get;sCSetPrefix=Set;sJGetPrefix=get;sJSetPrefix=set;sCSGetPrefix=Get;sCSSetPrefix=Set;sVVersion=6.0;CSBody=.cs;DBody=.pas;bJInnerClasses=1;sJCollection=;sCodePage=;sPHPBody=.php;sPHPVersion=;sPHPGetPrefix=get;sPHPSetPrefix=set;ASBody=.as;PyBody=.py;CPPVersion=;ASVersion=2.0;ANSICHeader=.h;ANSICBody=.c;ANSIC_OOSupport=0;ANSIC_NSDLMT=_;ANSIC_RefParam=1;ANSIC_RefStyle=*;ANSIC_RefName=this;ANSIC_ConstructorName=new;ANSIC_DestructorName=delete;"
     description = "list of possible specifiers. The allowed values for this code list comprise only the values specified in “World reference base for soil resources 2006, first update 2007”.
-
+  
     SOURCE <i>World reference base for soil resources 2006</i>, <i>first update 2007</i>, World Soil Resources Reports No. 103, Food and Agriculture Organization of the United Nations, Rome, 2007.
-
+  
     Specifiers are name elements in WRB restricting the meaning of qualifiers."
     identifier = "Soil::WRBSpecifierValue"
     tableName = "SO_WRBSpecifierValue"
@@ -528,52 +525,12 @@ Container <<applicationSchema>>  "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilLayer(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_LithologyValue(id)
   }
-  Relation "SO_isDescribedBy_isPartOf" {
-    profile = "attributes"
-    relatedReference = "SO_ProfileElement#isPartOf"
-    tableName = "SO_isDescribedBy_isPartOf"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ProfileElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilProfile(id)
-  }
-  Relation "SO_ProfileElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "SO_ProfileElement#inspireId"
-    tableName = "SO_ProfileElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ProfileElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "SO_ProfileElement_particleSizeFraction" {
-    profile = "attributes"
-    tableName = "SO_ProfileElement_particleSizeFraction"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ProfileElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ParticleSizeFractionType(id)
-  }
   Relation "SO_observedProfile_location" {
     profile = "features"
     relatedReference = "SO_ObservedSoilProfile#location"
     tableName = "SO_observedProfile_location"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilPlot(id)
-  }
-  Relation "SO_SoilProfile_inspireId" {
-    profile = "attributes"
-    relatedReference = "SO_SoilProfile#inspireId"
-    tableName = "SO_SoilProfile_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilProfile(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "SO_SoilProfile_WRBSoilName" {
-    profile = "attributes"
-    relatedReference = "SO_SoilProfile#WRBSoilName"
-    tableName = "SO_SoilProfile_WRBSoilName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilProfile(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBSoilNameType(id)
-  }
-  Relation "SO_SoilProfile_otherSoilName" {
-    profile = "attributes"
-    tableName = "SO_SoilProfile_otherSoilName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilProfile(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_OtherSoilNameType(id)
   }
   Relation "SO_WRBSoilNameType_over" {
     profile = "attributes"
@@ -715,11 +672,11 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -730,7 +687,7 @@ Container <<applicationSchema>>  "Soil" {
   }
   Attributes "GE_LithologyValue" {
     description = "Terms describing the lithology.
-
+  
     EXAMPLE: granite, sandstone, schist."
     identifier = "Geology::LithologyValue"
     tableName = "GE_LithologyValue"

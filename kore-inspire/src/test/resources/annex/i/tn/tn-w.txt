@@ -1,32 +1,35 @@
 Container <<applicationSchema>>  "Water Transport Network" {
   Attributes "TN_W_FairwayArea" {
     description = "The main travelled part of a waterway.
-
+  
     SOURCE  [International Hydrographic Dictionary].
-
+  
     NOTE That part of a river, harbour and so on, where the main navigable channel for vessels of larger size lies. It is also the usual course followed by vessels entering or leaving harbours, called 'ship channel' [IHO Hidrographic Registry]."
     identifier = "Water Transport Network::FairwayArea"
     tableName = "TN_W_FairwayArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_FerryCrossing" {
     description = "A special waterway aimed at supporting the transport of passengers, vehicles or other cargo/freight across a water body, and which is normally used as a connection linking two or more nodes of a land based transport network."
     identifier = "Water Transport Network::FerryCrossing"
     tableName = "TN_W_FerryCrossing"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref post: TN_MarkerPost[0..*] inv route[0..1]
   }
   Constraint Enum "TN_W_FerryUseValue" {
     identifier = "Water Transport Network::FerryUseValue"
@@ -38,18 +41,19 @@ Container <<applicationSchema>>  "Water Transport Network" {
   }
   Attributes "TN_W_TrafficSeparationSchemeRoundabout" {
     description = "A traffic separation scheme in which traffic moves in a counter-clockwise direction around a specified point or zone.
-
+  
     SOURCE [IHO Hydrographic Registry]."
     identifier = "Water Transport Network::TrafficSeparationSchemeRoundabout"
     tableName = "TN_W_TrafficSeparationSchemeRoundabout"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_FerryUse" {
     description = "The type of transport carried out by a ferry crossing."
@@ -85,83 +89,74 @@ Container <<applicationSchema>>  "Water Transport Network" {
     terminal
     turningBasin
   }
-  Attributes "TN_W_TrafficSeparationScheme" {
-    description = "A scheme which aims at reducing the risk of collision in congested and/or converging areas by separating traffic moving in opposite, or nearly opposite, directions.
-
-    SOURCE  [S-32 - IHO International Hydrographic Dictionary]
-
-    NOTE 1 Acronym: TSS.
-
-    NOTE 2 TSSs constitute main components of maritime routing measures for hydrographic transport."
-    identifier = "Water Transport Network::TrafficSeparationScheme"
-    tableName = "TN_W_TrafficSeparationScheme"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "TN_W_WaterNode" {
-    description = "A point spatial object which is used to represent the connectivity between two different waterway links, or between a waterway link and a watercourse link, in the water transport network.
-
-    NOTE It is also used to represent a significant feature in the network, such as a port."
-    identifier = "Water Transport Network::WaterNode"
-    tableName = "TN_W_WaterNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "TrafficSeparationScheme" {}
+  Class "WaterNode" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_W_PortNode" {
     description = "A point spatial object which is used to represent a sea or inland port in a simplified way, aproximately located at the bank of the waterbody where the port is placed.
-
+  
     NOTE It is used to connect the port with the rest of the water transport network, by means of the different waterway links which arrive to / depart from it."
     identifier = "Water Transport Network::PortNode"
     tableName = "TN_W_PortNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_W_WaterwayLink" {
     description = "A linear spatial object that describes the geometry or connectivity of the water transport network between two consecutive waterway or watercourse nodes. It represents a linear section across a body of water which is used for shipping.
-
+  
     NOTE Water Transport Networks will use the <i>WatercourseLink</i> class - provided by the INSPIRE Hydrography Data Specification - wherever possible."
     identifier = "Water Transport Network::WaterwayLink"
     tableName = "TN_W_WaterwayLink"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Attributes "TN_W_Buoy" {
     description = "A floating object moored to the bottom in a particular (charted) place, as an aid to navigation or for other specific purposes.
-
+  
     SOURCE  [S-32 - IHO International Hydrographic Dictionary]
-
+  
     NOTE Navigational buoys may be classified according to: (a) their shape, appearance, or construction, such as barrel, can, cask, conical, cylindrical, dan, keg, nun, pillar, spar, spherical, or topmark buoy; (b) their colour, such as black, chequered, green, red buoy; (c) their location, such as bifurcation, fairway, junction, mid-channel, middle-ground, or turning buoy; (d) the various kinds of hazards or dangers to navigation which they mark, such as bar, isolated danger, fish trap, obstruction, spoil ground, telegraph or wreck buoy; (e) their particular purpose or use, such as anchor, anchorage, compass adjustment, dredging, farewell (or landfall), marker, quarantine, station (or watch), or warping buoy. [S-32 - IHO International Hydrographic Dictionary]."
     identifier = "Water Transport Network::Buoy"
     tableName = "TN_W_Buoy"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_ConditionOfWaterFacility" {
     description = "State of a water transport network element with regards to its completion and use."
@@ -180,101 +175,111 @@ Container <<applicationSchema>>  "Water Transport Network" {
     description = "Waterway which is defined at sea waters."
     identifier = "Water Transport Network::MarineWaterway"
     tableName = "TN_W_MarineWaterway"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     deepWaterRoute BOOLEAN
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref post: TN_MarkerPost[0..*] inv route[0..1]
   }
   Attributes "TN_W_PortArea" {
     description = "An area spatial object which is used to represent the physical limits of all the facilities which constitute the terrestrial zone of a sea or inland port."
     identifier = "Water Transport Network::PortArea"
     tableName = "TN_W_PortArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_WaterLinkSequence" {
     description = "A linear spatial object, composed of an ordered collection of waterway and/or watercourse links (as necessary), which represents a continuous path in the water network without any branches.
-
+  
     NOTE The element has a defined beginning and end and every position on the water link sequence is identifiable with one single parameter such as length. It describes a element of the water network, which is a navigable path within a water body (oceans, seas, rivers, lakes, channels or canals) and could be characterized by one or more thematical identifiers and/or properties."
     identifier = "Water Transport Network::WaterLinkSequence"
     tableName = "TN_W_WaterLinkSequence"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
     ref link: NET_DirectedLink[1..*]
   }
   Attributes "TN_W_TrafficSeparationSchemeLane" {
     description = "An area within defined limits in which one-way traffic flow is established.
-
+  
     SOURCE [IMO Ships Routeing, 6th Edition], [IHO Hydrographic Registry]."
     identifier = "Water Transport Network::TrafficSeparationSchemeLane"
     tableName = "TN_W_TrafficSeparationSchemeLane"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_WaterwayNode" {
     description = "A point spatial object which is used to represent the connectivity between two different waterway links, or between a waterway link and a watercourse link, in the water transport network."
     identifier = "Water Transport Network::WaterwayNode"
     tableName = "TN_W_WaterwayNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     formOfWaterwayNode TEXT CHECK(TN_W_FormOfWaterwayNodeValue)
-    geometry POINT NOT NULL
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_W_TrafficSeparationSchemeSeparator" {
     description = "A zone separating the lanes in which ships are proceeding in opposite or nearly opposite directions; or separating traffic lanes designated for particular classes of ships proceeding in the same direction.
-
+  
     SOURCE [IHO Hydrographic Registry]."
     identifier = "Water Transport Network::TrafficSeparationSchemeSeparator"
     tableName = "TN_W_TrafficSeparationSchemeSeparator"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_TrafficSeparationSchemeCrossing" {
     description = "A defined area where traffic lanes cross.
-
+  
     SOURCE [IHO Hydrographic Registry]."
     identifier = "Water Transport Network::TrafficSeparationSchemeCrossing"
     tableName = "TN_W_TrafficSeparationSchemeCrossing"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "TN_W_CEMTClassValue" {
     identifier = "Water Transport Network::CEMTClassValue"
@@ -291,44 +296,45 @@ Container <<applicationSchema>>  "Water Transport Network" {
   }
   Attributes "TN_W_InlandWaterway" {
     description = "Waterway which is defined at inland continental waters.
-
+  
     EXAMPLE The inland waterways classified by the CEMT (European Conference of Ministers of Transport)."
     identifier = "Water Transport Network::InlandWaterway"
     tableName = "TN_W_InlandWaterway"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
-    ref geographicalName: GN_GeographicalName[0..1]
-  }
-  Attributes "TN_W_Beacon" {
-    description = "A prominent specially constructed object forming a conspicuous mark as a fixed aid to navigation, or for use in hydrographic survey.
-
-    SOURCE  [S-32 - IHO International Hydrographic Dictionary]."
-    identifier = "Water Transport Network::Beacon"
-    tableName = "TN_W_Beacon"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry: POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref post: TN_MarkerPost[0..*] inv route[0..1]
   }
-  Attributes "TN_W_Waterway" {
-    description = "A collection of water link sequences and or individual waterway and/or watercourse links (as necessary) that are characterized by one or more thematical identifiers and/or properties, which perform a navigable route within a water body (oceans, seas, rivers, lakes, channels or canals)."
-    identifier = "Water Transport Network::Waterway"
-    tableName = "TN_W_Waterway"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Attributes "TN_W_Beacon" {
+    description = "A prominent specially constructed object forming a conspicuous mark as a fixed aid to navigation, or for use in hydrographic survey.
+  
+    SOURCE  [S-32 - IHO International Hydrographic Dictionary]."
+    identifier = "Water Transport Network::Beacon"
+    tableName = "TN_W_Beacon"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+  }
+  Class "Waterway" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref post: TN_MarkerPost[0..*] inv route[0..1]
   }
   Attributes "TN_W_RestrictionForWaterVehicles" {
     description = "Restriction on vehicles on a water transport element."
@@ -357,18 +363,15 @@ Container <<applicationSchema>>  "Water Transport Network" {
     ref inspireId: BASE_Identifier[0..1]
     ref networkRef: NET_NetworkReference[0..*]
   }
-  Attributes "TN_W_TrafficSeparationSchemeArea" {
-    description = "An area spatial object forming part of a traffic separation scheme."
-    identifier = "Water Transport Network::TrafficSeparationSchemeArea"
-    tableName = "TN_W_TrafficSeparationSchemeArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Class "TrafficSeparationSchemeArea" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_W_FerryUseValue" {
     description = "Types of transport carried out by a ferry."
@@ -382,30 +385,6 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_FerryUse_ferryUse"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryUse(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_W_FerryUseValue(id)
-  }
-  Relation "TN_W_TrafficSeparationScheme_markerBeacon" {
-    profile = "attributes"
-    tableName = "TN_W_TrafficSeparationScheme_markerBeacon"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationScheme(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_W_Beacon(id)
-  }
-  Relation "TN_W_TrafficSeparationScheme_marineWaterRoute" {
-    profile = "attributes"
-    tableName = "TN_W_TrafficSeparationScheme_marineWaterRoute"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationScheme(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_W_MarineWaterway(id)
-  }
-  Relation "TN_W_TrafficSeparationScheme_markerBuoy" {
-    profile = "attributes"
-    tableName = "TN_W_TrafficSeparationScheme_markerBuoy"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationScheme(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_W_Buoy(id)
-  }
-  Relation "TN_W_TrafficSeparationScheme_component" {
-    profile = "attributes"
-    tableName = "TN_W_TrafficSeparationScheme_component"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationScheme(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_W_TrafficSeparationSchemeArea(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -431,33 +410,6 @@ Container <<applicationSchema>>  "Water Transport Network" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NET_Node_spokeStart" {
-    profile = "features"
-    relatedReference = "NET_Link#startNode"
-    tableName = "NET_Node_spokeStart"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_Node_spokeEnd" {
-    profile = "features"
-    relatedReference = "NET_Link#endNode"
-    tableName = "NET_Node_spokeEnd"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
     tableName = "GN_GeographicalName_spelling"
@@ -470,32 +422,11 @@ Container <<applicationSchema>>  "Water Transport Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
-  Relation "TN_MarkerPost_route" {
-    profile = "attributes"
-    relatedReference = "TN_MarkerPost#route"
-    tableName = "TN_MarkerPost_route"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLinkSet(id)
-  }
   Relation "NET_NetworkReference_involves" {
     profile = "attributes"
     tableName = "NET_NetworkReference_involves"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
-  }
-  Relation "NET_NetworkReference_element" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkReference#element"
-    tableName = "NET_NetworkReference_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
-  }
-  Relation "NET_DirectedLink_link" {
-    profile = "features"
-    relatedReference = "NET_DirectedLink#link"
-    tableName = "NET_DirectedLink_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
   }
   Relation "HH_SA_Event_additionalInformation" {
     profile = "attributes"
@@ -646,29 +577,22 @@ Container <<applicationSchema>>  "Water Transport Network" {
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
   }
-  Attributes "NET_GeneralisedLink" {
-    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
-    identifier = "Network::GeneralisedLink"
-    tableName = "NET_GeneralisedLink"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Attributes "NET_Network" {
+    description = "A network is a collection of network elements.
+  
+    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
+    identifier = "Network::Network"
+    tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_NetworkReference" {
-    description = "A reference to a network element."
-    identifier = "Network::NetworkReference"
-    tableName = "NET_NetworkReference"
-    id INTEGER NOT NULL PRIMARY KEY
-    element INTEGER
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -677,61 +601,43 @@ Container <<applicationSchema>>  "Water Transport Network" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
+  Attributes "TN_MarkerPost" {
+    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
+  
+    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
+    identifier = "Common Transport Elements::MarkerPost"
+    tableName = "TN_MarkerPost"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    location TEXT NOT NULL
+    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref route: TransportLinkSet[0..1] inv post[0..*]
+  }
+  Attributes "NET_NetworkReference" {
+    description = "A reference to a network element."
+    identifier = "Network::NetworkReference"
+    tableName = "NET_NetworkReference"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
   Attributes "NET_DirectedLink" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
     direction Sign NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    link INTEGER
-  }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_Network" {
-    description = "A network is a collection of network elements.
-
-    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
-    identifier = "Network::Network"
-    tableName = "NET_Network"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Feature "NET_Node" {
-    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
-
-    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
-    identifier = "Network::Node"
-    tableName = "NET_Node"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Feature "NET_Link" {
-    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
-    identifier = "Network::Link"
-    tableName = "NET_Link"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -739,44 +645,6 @@ Container <<applicationSchema>>  "Water Transport Network" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Attributes "TN_MarkerPost" {
-    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
-
-    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
-    identifier = "Common Transport Elements::MarkerPost"
-    tableName = "TN_MarkerPost"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry: POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    location TEXT NOT NULL
-    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    route INTEGER
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
-  }
-  Attributes "TN_TransportLinkSet" {
-    description = "A collection of transport link sequences and or individual transport links that has a specific function or significance in a transport network.
-
-    NOTE
-
-    This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
-
-    EXAMPLE
-
-    A dual carriageway road, as a collection of the two link sequences that represent each carriageway."
-    identifier = "Common Transport Elements::TransportLinkSet"
-    tableName = "TN_TransportLinkSet"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
-    ref geographicalName: GN_GeographicalName[0..1]
   }
   Attributes "HH_SA_TrafficRelatedEvent" {
     description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
@@ -883,7 +751,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"

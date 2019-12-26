@@ -1,14 +1,6 @@
 Container <<applicationSchema>>  "Coverages (Base)" {
-  Attributes "CVBASE_Coverage" {
-    description = "Spatial object that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain.
-
-    EXAMPLE Examples include a raster image, polygon overlay or digital elevation matrix.
-
-    NOTE In other words, a coverage is a feature that has multiple values for each attribute type, where each direct position within the geometric representation of the feature has a single value for each attribute type."
-    identifier = "Coverages (Base)::Coverage"
-    tableName = "CVBASE_Coverage"
-    id INTEGER NOT NULL PRIMARY KEY
-    rangeType RecordType NOT NULL
+  Class "Coverage" {
+    rangeType: RecordType
     ref metadata: Any[0..*]
   }
   Metadata "Unknown" {

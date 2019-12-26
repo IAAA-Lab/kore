@@ -1,16 +1,5 @@
 Container <<applicationSchema>>  "Statistical Units Base" {
-  Attributes "SU_CORE_StatisticalUnit" {
-    description = "Unit for dissemination or use of statistical information.
-
-    SOURCE [INSPIRE Directive:2007].
-
-    EXAMPLE grid cell, point, line, polygon.
-
-    NOTE Spatial features of any INSPIRE application schema can be considered as a statistical unit, because all can be used as spatial reference. This class is provided to represent features that are used only to disseminate statistical information and that are not included in another INSPIRE application schema."
-    identifier = "Statistical Units Base::StatisticalUnit"
-    tableName = "SU_CORE_StatisticalUnit"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
+  Class "StatisticalUnit" {}
   Metadata "Unknown" {
     metadata = ""
     mimeType = "text/xml"

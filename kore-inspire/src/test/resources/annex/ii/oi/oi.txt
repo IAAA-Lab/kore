@@ -1,21 +1,21 @@
 Container <<applicationSchema>>  "Orthoimagery" {
   Attributes "OI_AggregatedMosaicElement" {
     description = "Mosaic element relating to several input images that share the same acquisition time at a given level of definition (e.g. day, month).
-
+  
     NOTE The geometry of an aggregated mosaic element corresponds to the union of the contributing areas, in the mosaic, of several input images."
     identifier = "Orthoimagery::AggregatedMosaicElement"
     tableName = "OI_AggregatedMosaicElement"
-    geometry MULTISURFACE NOT NULL
+    geometry: MULTISURFACE
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    ref inspireId: BASE_Identifier[0..1]
   }
   Feature "OI_OrthoimageCoverage" {
     description = "Raster image of the Earth surface that has been geometrically corrected ("orthorectified") to remove distortion caused by differences in elevation, sensor tilt and, optionally, by sensor optics.
-
+  
     NOTE 1 An orthoimage coverage is a continuous coverage based on a rectified quadrilateral grid. It is provided with an interpolation method to evaluate value records at any direct position within its domain.
-
+  
     NOTE 2 An orthoimage coverage can be derived from one single input image or from different input images which have been mosaicked and merged together.
-
+  
     NOTE 3 An orthoimage coverage may be an aggregation of subsets extracted from other orthoimage coverages. For the avoidance of data duplication, this kind of aggregated orthoimage is dynamically constructed thanks to references to the contributing orthoimage coverages ."
     identifier = "Orthoimagery::OrthoimageCoverage"
     tableName = "OI_OrthoimageCoverage"
@@ -43,14 +43,14 @@ Container <<applicationSchema>>  "Orthoimagery" {
   }
   Attributes "OI_SingleMosaicElement" {
     description = "Mosaic element relating to a single input image.
-
+  
     NOTE The geometry of a single mosaic element corresponds exactly to the contributing area, in the mosaic, of the single input image."
     identifier = "Orthoimagery::SingleMosaicElement"
     tableName = "OI_SingleMosaicElement"
-    geometry MULTISURFACE NOT NULL
+    geometry: MULTISURFACE
     id INTEGER NOT NULL PRIMARY KEY
     imageSourceReference TEXT
-    inspireId INTEGER
+    ref inspireId: BASE_Identifier[0..1]
   }
   Feature "OI_OrthoimageAggregation" {
     conID = "EAID_B8ACC2DD_B106_4e19_ACED_53E6E26FDDC6"
@@ -63,28 +63,9 @@ Container <<applicationSchema>>  "Orthoimagery" {
   Constraint Enum "OI_InterpolationMethodValue" {
     identifier = "Orthoimagery::InterpolationMethodValue"
   }
-  Feature "OI_MosaicElement" {
-    description = "Abstract type identifying both the contributing area and the acquisition time of one or several input images used to generate a mosaicked orthoimage coverage.
-
-    NOTE The main purpose of this feature type is the provision of a mechanism for describing the spatial distribution of the acquisition dates and times over a mosaicked orthoimage. The acquisition time can be supplied either for each individual input image, or for sets of input images grouped together according to temporal criteria."
-    identifier = "Orthoimagery::MosaicElement"
-    tableName = "OI_MosaicElement"
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Relation "OI_MosaicElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "OI_MosaicElement#inspireId"
-    tableName = "OI_MosaicElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_MosaicElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "OI_OrthoimageCoverage_mosaicElement" {
-    profile = "features"
-    tableName = "OI_OrthoimageCoverage_mosaicElement"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OI_MosaicElement(id)
+  Class "MosaicElement" {
+    geometry: MULTISURFACE
+    ref inspireId: BASE_Identifier[0..1]
   }
   Relation "OI_OrthoimageCoverage_contributingOrthoimageCoverage" {
     profile = "features"
@@ -134,11 +115,11 @@ Container <<applicationSchema>>  "Orthoimagery" {
   Constraint Enum "GML_UomIdentifier" {}
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"

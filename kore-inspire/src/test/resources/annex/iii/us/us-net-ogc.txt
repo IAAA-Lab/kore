@@ -3,12 +3,11 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     description = "A pipe used to convey oil, gas or chemicals from one location to another."
     identifier = "Oil-Gas-Chemicals Network::OilGasChemicalsPipe"
     tableName = "US_NET_OGC_OilGasChemicalsPipe"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     currentStatus: TEXT [0..1]
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     governmentalServiceReference: GovernmentalService [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     pipeDiameter Measure
     pressure Measure
     utilityDeliveryType: UtilityDeliveryTypeValue [0..1]
@@ -17,6 +16,8 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     validTo: DATETIME [0..1]
     verticalPosition: TEXT [0..1]
     warningType: TEXT [0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "US_NET_OGC_OilGasChemicalsProductTypeValue" {
     identifier = "Oil-Gas-Chemicals Network::OilGasChemicalsProductTypeValue"
@@ -33,7 +34,7 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     chlorine
     compressedAir
     crude
-    dichloroethane
+    dichloroethane 
     diesel
     empty
     ethylene
@@ -45,7 +46,7 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     kerosene
     liquefiedNaturalGas
     liquidAmmonia
-    liquidHydrocarbon
+    liquidHydrocarbon 
     methane
     multiProduct
     naturalGas
@@ -120,25 +121,6 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_NET_COMMON_Pipe(id)
   }
-  Relation "US_NET_COMMON_Pipe_cables" {
-    profile = "attributes"
-    tableName = "US_NET_COMMON_Pipe_cables"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_NET_COMMON_Cable(id)
-  }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
   Relation "ACT_CORE_ActivityComplex_inspireId" {
     profile = "attributes"
     relatedReference = "ACT_CORE_ActivityComplex#inspireId"
@@ -210,11 +192,11 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
   }
   Feature "ACT_CORE_ActivityComplex" {
     description = "A "single unit", both technically and economically, under the management control of the same legal entity (operator), covering activities as those listed in the Eurostat NACE classification, products and services. Activity Complex includes all infrastructure, equipment and materials. It must represent the whole area, at the same or different geographical location, managed by a "single unit".
-
+  
     NOTE 1 This class describes the minimal set of elements necessary to describe and identify geographically a legal entity and the activities taken place on it under the context of a Environmental purposes.
-
+  
     NOTE 2 "Activity Complex" could be assimilated to terms described on the legislation as Facility, Establishment, Plant, Holding, Organization ,Farm, Extractive Industries or Aquaculture Production Business among others
-
+  
     EXAMPLE i.e. an Agro-business that is legally registered under the Emissions Directive."
     identifier = "Activity Complex::ActivityComplex"
     tableName = "ACT_CORE_ActivityComplex"
@@ -227,77 +209,22 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     validFrom DATETIME
     validTo DATETIME
   }
-  Attributes "NET_GeneralisedLink" {
-    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
-    identifier = "Network::GeneralisedLink"
-    tableName = "NET_GeneralisedLink"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "US_NET_COMMON_Pipe" {
-    description = "A utility link or link sequence for the conveyance of solids, liquids, chemicals or gases from one location to another.
-
-    A pipe can also be used as an object to encase several cables (a bundle of cables) or other (smaller) pipes."
-    identifier = "Common Utility Network Elements::Pipe"
-    tableName = "US_NET_COMMON_Pipe"
-    beginLifespanVersion DATETIME
-    currentStatus: TEXT [0..1]
-    endLifespanVersion DATETIME
-    governmentalServiceReference: GovernmentalService [0..1]
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    pipeDiameter Measure
-    pressure Measure
-    utilityDeliveryType: UtilityDeliveryTypeValue [0..1]
-    utilityFacilityReference: ACT_CORE_ActivityComplex [0..1]
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    verticalPosition: TEXT [0..1]
-    warningType: TEXT [0..1]
-  }
-  Attributes "US_NET_COMMON_Cable" {
-    description = "A utility link or link sequence used to convey electricity or data from one location to another."
-    identifier = "Common Utility Network Elements::Cable"
-    tableName = "US_NET_COMMON_Cable"
-    beginLifespanVersion DATETIME
-    currentStatus: TEXT [0..1]
-    endLifespanVersion DATETIME
-    governmentalServiceReference: GovernmentalService [0..1]
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    utilityDeliveryType: UtilityDeliveryTypeValue [0..1]
-    utilityFacilityReference: ACT_CORE_ActivityComplex [0..1]
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    verticalPosition: TEXT [0..1]
-    warningType: TEXT [0..1]
-  }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
-
+  
     The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
     identifier = "Network::Network"
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -306,11 +233,33 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
+  Attributes "US_NET_COMMON_Pipe" {
+    description = "A utility link or link sequence for the conveyance of solids, liquids, chemicals or gases from one location to another.
+  
+    A pipe can also be used as an object to encase several cables (a bundle of cables) or other (smaller) pipes."
+    identifier = "Common Utility Network Elements::Pipe"
+    tableName = "US_NET_COMMON_Pipe"
+    beginLifespanVersion: DATETIME [0..1]
+    currentStatus: TEXT [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    governmentalServiceReference: GovernmentalService [0..1]
+    id INTEGER NOT NULL PRIMARY KEY
+    pipeDiameter Measure
+    pressure Measure
+    utilityDeliveryType: UtilityDeliveryTypeValue [0..1]
+    utilityFacilityReference: ACT_CORE_ActivityComplex [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    verticalPosition: TEXT [0..1]
+    warningType: TEXT [0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+  }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.
-
+  
     Some spatial objects may be assigned multiple unique identifiers.
-
+  
     These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
     identifier = "Base Types 2::ThematicIdentifier"
     tableName = "BASE2_ThematicIdentifier"
@@ -320,7 +269,7 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
   }
   Attributes "ACT_CORE_Function" {
     description = "The function of something expressed as an activity and optional input and/or output.
-
+  
     NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
     identifier = "Activity Complex::Function"
     tableName = "ACT_CORE_Function"
@@ -363,9 +312,9 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"

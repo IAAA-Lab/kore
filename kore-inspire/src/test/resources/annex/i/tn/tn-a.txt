@@ -1,64 +1,70 @@
 Container <<applicationSchema>>  "Air Transport Network" {
   Attributes "TN_A_DesignatedPoint" {
     description = "A geographical location not marked by the site of a radio navigation aid, used in defining an ATS route, the flight path of an aircraft or for other navigation or ATS purposes.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE Examples of Designated points are compulsory and non-compulsory reporting points."
     identifier = "Air Transport Network::DesignatedPoint"
     tableName = "TN_A_DesignatedPoint"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designator TEXT
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    significantPoint BOOLEAN NOT NULL
+    significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_A_AirspaceArea" {
     description = "A defined volume in the air, described as horizontal projection with vertical limits.
-
+  
     SOURCE [AirspaceVolume - AIXM5.0].
-
+  
     NOTE 1 Definition of Airspace: A defined three dimensional region of space relevant to air traffic [AIXM5.0].
-
+  
     NOTE 2 Airspace regions are managed by air traffic control systems to provide a safe IFR (Instrument Flight Rules) navigation for air traffic services and aircrafts."
     identifier = "Air Transport Network::AirspaceArea"
     tableName = "TN_A_AirspaceArea"
     AirspaceAreaType TEXT NOT NULL CHECK(TN_A_AirspaceAreaTypeValue)
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_A_AirRoute" {
     description = "A specified route designed for channelling the flow of traffic as necessary for the provision of air traffic services, from the end of the take-off and initial climb phase to the commencement of the approach and landing phase.
-
+  
     SOURCE [Route - AIXM5.0].
-
+  
     NOTE A collection of air link sequences and or individual air links that are characterized by one or more thematic identifiers and /or properties, which perform a Route."
     identifier = "Air Transport Network::AirRoute"
     tableName = "TN_A_AirRoute"
     airRouteType AirRouteTypeValue
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designator TEXT
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref post: TN_MarkerPost[0..*] inv route[0..1]
   }
   Attributes "TN_A_LowerAltitudeLimit" {
     description = "Altitude that defines the lower limit of an air transport network object.
-
+  
     NOTE When applied to an AirRouteLink it corresponds to the Lowest Safe Altitude, which is defined in order to provide safety for navigation."
     identifier = "Air Transport Network::LowerAltitudeLimit"
     tableName = "TN_A_LowerAltitudeLimit"
@@ -79,44 +85,46 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_TaxiwayArea" {
     description = "A defined path at an aerodrome/heliport established for the taxiing of aircraft/helicopters and intended to provide a link between one part of the aerodrome and another.
-
+  
     SOURCE [Taxiway - AIXM5.0].
-
+  
     NOTE This includes aircraft/helicopter stand taxilines, apron taxiways, rapid exit taxiways, air taxiways etc."
     identifier = "Air Transport Network::TaxiwayArea"
     tableName = "TN_A_TaxiwayArea"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designator TEXT
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_A_StandardInstrumentArrival" {
     description = "A designated instrument flight rule (IFR) arrival route linking a significant point, normally on an ATS route, with a point from which a published instrument approach procedure can be commenced.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE 1 Acronym: STAR.
-
+  
     NOTE 2 It corresponds to the initial approach during the landing phase. Each airport/heliport could have various STAR linking significant points (usually connected to air routes) to the points designated to start the landing on a specific runway."
     identifier = "Air Transport Network::StandardInstrumentArrival"
     tableName = "TN_A_StandardInstrumentArrival"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
     designator TEXT
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Constraint Enum "TN_A_NavaidTypeValue" {
@@ -140,71 +148,78 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_RunwayCentrelinePoint" {
     description = "An operationally significant position on the center line of a runway direction.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE 1 The role of the point along the runway direction centreline is indicated within the pointRole attribute.
-
+  
     NOTE 2 Runway centreline points are used to connect the Procedure Links that connect an airport/heliport to the rest of the air network.
-
+  
     EXAMPLE A typical example is the runway threshold [AIXM5.0]."
     identifier = "Air Transport Network::RunwayCentrelinePoint"
     tableName = "TN_A_RunwayCentrelinePoint"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     pointRole PointRoleValue NOT NULL
-    significantPoint BOOLEAN NOT NULL
+    significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_A_AerodromeNode" {
     description = "Node located at the aerodrome reference point of an airport/heliport, which is used to represent it in a simplified way.
-
+  
     DEFINITION Aerodrome Reference Point (ARP): The designated geographical location of an aerodrome, located near the initial or planned geometric centre of the aerodrome and normally remaining where originally established [AIXM3.3].
-
+  
     DEFINITION Airport/heliport: A defined area on land or water (including any buildings, installations and equipment) intended to be used either wholly or in part for the arrival, departure and surface movement of aircraft/helicopters [AIXM5.0].
-
+  
     SOURCE [AIXM5.0]."
     identifier = "Air Transport Network::AerodromeNode"
     tableName = "TN_A_AerodromeNode"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designatorIATA TEXT
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     locationIndicatorICAO TEXT
-    significantPoint BOOLEAN NOT NULL
+    significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_A_StandardInstrumentDeparture" {
     description = "A designated instrument flight rule (IFR) departure route linking the aerodrome or a specific runway of the aerodrome with a specified significant point, normally on a designated ATS route, at which the en-route phase of a flight commences.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE 1 Acronym: SID.
-
+  
     NOTE 2 It corresponds to the take-off phase. Each airport/heliport could have various SID linking the different runways to one or various significant points, usually connected to air routes."
     identifier = "Air Transport Network::StandardInstrumentDeparture"
     tableName = "TN_A_StandardInstrumentDeparture"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
     designator TEXT
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Attributes "TN_A_ElementLength" {
@@ -220,21 +235,18 @@ Container <<applicationSchema>>  "Air Transport Network" {
     ref inspireId: BASE_Identifier[0..1]
     ref networkRef: NET_NetworkReference[0..*]
   }
-  Attributes "TN_A_AirLink" {
-    description = "A linear spatial object that describes the geometry and connectivity of the air network between two points in the network."
-    identifier = "Air Transport Network::AirLink"
-    tableName = "TN_A_AirLink"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
+  Class "AirLink" {
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Attributes "TN_A_AerodromeCategory" {
@@ -252,24 +264,25 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_RunwayArea" {
     description = "A defined rectangular area on a land aerodrome/heliport prepared for the landing and take-off of aircraft.
-
+  
     SOURCE [Runway - AIXM5.0].
-
+  
     NOTE 1 This includes the concept of Final Approach and Take-Off Area (FATO) for helicopters [Runway - AIXM5.0].
-
+  
     NOTE 2 The runway strip is a defined area including the runway and stopway, if provided, intended : a) to reduce the risk of damage to aircraft running off a runway; and b) to protect aircraft flying over it during take-off or landing operations [ICAO]."
     identifier = "Air Transport Network::RunwayArea"
     tableName = "TN_A_RunwayArea"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designator TEXT
-    endLifespanVersion DATETIME
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     runwayType TEXT CHECK(TN_A_RunwayTypeValue)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "TN_A_AirRouteTypeValue" {
     identifier = "Air Transport Network::AirRouteTypeValue"
@@ -291,27 +304,30 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_Navaid" {
     description = "One or more Navaid Equipments providing navigation services.
-
+  
     DEFINITION Navaid equipment: A physical navaid equipment like VOR, DME, localizer, TACAN or etc.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE 1
-
+  
     The Navaid Equipment share business rules like paired frequencies [AIXM5.0]."
     identifier = "Air Transport Network::Navaid"
     tableName = "TN_A_Navaid"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designator TEXT
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     navaidType TEXT CHECK(TN_A_NavaidTypeValue)
-    significantPoint BOOLEAN NOT NULL
+    significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_A_ElementWidth" {
     description = "The physical width of the element."
@@ -328,27 +344,28 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_InstrumentApproachProcedure" {
     description = "A series of predetermined manoeuvres by reference to flight instruments with specified protection from obstacles from the initial approach fix, or where applicable, from the beginning of a defined arrival route to a point from which a landing can be completed and thereafter, if a landing is not completed, to a position at which holding or en route obstacle clearance criteria apply.
-
+  
     SOURCE  [AIXM5.0].
-
+  
     NOTE 1 Acronym: IAP.
-
+  
     NOTE 2 It corresponds to the final approach and arrival during the landing phase.
-
+  
     NOTE 3 A specific runway of an airport/heliport usually has more than one IAP, depending on the landing direction on it."
     identifier = "Air Transport Network::InstrumentApproachProcedure"
     tableName = "TN_A_InstrumentApproachProcedure"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Constraint Enum "TN_A_AirUseRestrictionValue" {
@@ -358,83 +375,89 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_TouchDownLiftOff" {
     description = "A load bearing area on which a helicopter may touch down or lift-off.
-
+  
     SOURCE [AIXM5.0]."
     identifier = "Air Transport Network::TouchDownLiftOff"
     tableName = "TN_A_TouchDownLiftOff"
-    beginLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
     designator TEXT
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    significantPoint BOOLEAN NOT NULL
+    significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_A_ProcedureLink" {
     description = "A series of predetermined manoeuvres with specified protection from obstacles.
-
+  
     SOURCE [Procedure - AIXM5.0].
-
+  
     NOTE 1 A defined airway connector designed for channelling the flow of traffic as necessary for the provision of air traffic services during the take-off or landing phase, which links an airport/heliport to a significant point, usually connected to one or more air routes.
-
+  
     NOTE 2 When a airport/heliport is not connected with a standardized airway connector to the rest of the air network, this object can be used as a fictitious connector between the airport/heliport and a significant point on one or more ATS routes - for example for VFR (Visual Flight Rules) flights.
-
+  
     NOTE 3 Nevertheless, three main types of standardized Procedures are usually defined for IFR (Instrument Flight Rules) flights:
-
+  
     - Standard Instrument Departure (SID), corresponding to the take-off phase.
-
+  
     - Standard Instrument Arrival (STAR), corresponding to the initial approach during the landing phase.
-
+  
     - Instrument Approach Procedure (IAP), corresponding to the final approach and arrival during the landing phase."
     identifier = "Air Transport Network::ProcedureLink"
     tableName = "TN_A_ProcedureLink"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Attributes "TN_A_ApronArea" {
     description = "A defined area, on a land aerodrome/heliport, intended to accommodate aircraft/helicopters for purposes of loading and unloading passengers, mail or cargo, and for fuelling, parking or maintenance.
-
+  
     SOURCE [Apron - AIXM5.0]."
     identifier = "Air Transport Network::ApronArea"
     tableName = "TN_A_ApronArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "TN_A_AerodromeArea" {
     description = "A defined area on land or water (including any buildings, installations and equipment) intended to be used either wholly or in part for the arrival, departure and surface movement of aircraft and/or helicopters.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE An area spatial object which is used to represent the physical limits of all the facilities which form part of an inland aerodrome."
     identifier = "Air Transport Network::AerodromeArea"
     tableName = "TN_A_AerodromeArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     geometry: GM_Surface
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "TN_A_RunwayTypeValue" {
     identifier = "Air Transport Network::RunwayTypeValue"
@@ -449,9 +472,9 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_FieldElevation" {
     description = "The aerodrome elevation as the vertical distance between the highest point of the landing area of an aerodrome and mean sea level.
-
+  
     SOURCE [AIXM5.0].
-
+  
     NOTE This might be different from the elevation of the Aerodrome Reference Point."
     identifier = "Air Transport Network::FieldElevation"
     tableName = "TN_A_FieldElevation"
@@ -473,24 +496,25 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_AirRouteLink" {
     description = "A portion of a route to be flown usually without an intermediate stop, as defined by two consecutive significant points.
-
+  
     SOURCE [AirRouteSegment - AIXM5.0].
-
+  
     NOTE The presence of air nodes (normally defining Significant Points) is not mandated."
     identifier = "Air Transport Network::AirRouteLink"
     tableName = "TN_A_AirRouteLink"
     airRouteLinkClass TEXT CHECK(TN_A_AirRouteLinkClassValue)
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
     ref ThoroughfareName inv transportLink[0..*]
   }
   Attributes "TN_A_UseRestriction" {
@@ -545,25 +569,24 @@ Container <<applicationSchema>>  "Air Transport Network" {
     ref inspireId: BASE_Identifier[0..1]
     ref networkRef: NET_NetworkReference[0..*]
   }
-  Attributes "TN_A_AirNode" {
-    description = "A node which occurs in a air network."
-    identifier = "Air Transport Network::AirNode"
-    tableName = "TN_A_AirNode"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    significantPoint BOOLEAN NOT NULL
+  Class "AirNode" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
+    significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
   Attributes "TN_A_AerodromeType" {
     description = "A code specifying the type of aerodrome.
-
+  
     SOURCE [AIXM5.0].
-
+  
     EXAMPLE Aerodrome only, combined aerodrome/heliport or simple landing site."
     identifier = "Air Transport Network::AerodromeType"
     tableName = "TN_A_AerodromeType"
@@ -578,19 +601,20 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Attributes "TN_A_AirLinkSequence" {
     description = "A linear spatial object, composed of an ordered collection of air links, which represents a continuous path in the air network without any branches.
-
+  
     NOTE 1 The element has a defined beginning and end and every position on the air link sequence is identifiable with one single parameter such as length. It describes an element of the air network, which could be characterized by one or more thematical identifiers and/or properties.
-
+  
     NOTE 2 This collection of air links is equivalent to RoutePortion feature in AIXM5.0. RoutePortion: A group of two or more consecutive segments of the same route, which have the usage and/or the same flight restrictions [AIXM5.0]."
     identifier = "Air Transport Network::AirLinkSequence"
     tableName = "TN_A_AirLinkSequence"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
     ref link: NET_DirectedLink[1..*]
   }
   Constraint Enum "TN_A_AirspaceAreaTypeValue" {
@@ -629,33 +653,6 @@ Container <<applicationSchema>>  "Air Transport Network" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "NET_Node_spokeStart" {
-    profile = "features"
-    relatedReference = "NET_Link#startNode"
-    tableName = "NET_Node_spokeStart"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_Node_spokeEnd" {
-    profile = "features"
-    relatedReference = "NET_Link#endNode"
-    tableName = "NET_Node_spokeEnd"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
     tableName = "GN_GeographicalName_spelling"
@@ -668,32 +665,11 @@ Container <<applicationSchema>>  "Air Transport Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
-  Relation "TN_MarkerPost_route" {
-    profile = "attributes"
-    relatedReference = "TN_MarkerPost#route"
-    tableName = "TN_MarkerPost_route"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLinkSet(id)
-  }
   Relation "NET_NetworkReference_involves" {
     profile = "attributes"
     tableName = "NET_NetworkReference_involves"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
-  }
-  Relation "NET_NetworkReference_element" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkReference#element"
-    tableName = "NET_NetworkReference_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
-  }
-  Relation "NET_DirectedLink_link" {
-    profile = "features"
-    relatedReference = "NET_DirectedLink#link"
-    tableName = "NET_DirectedLink_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
   }
   Relation "HH_SA_Event_additionalInformation" {
     profile = "attributes"
@@ -828,29 +804,22 @@ Container <<applicationSchema>>  "Air Transport Network" {
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
   }
-  Attributes "NET_GeneralisedLink" {
-    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
-    identifier = "Network::GeneralisedLink"
-    tableName = "NET_GeneralisedLink"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Attributes "NET_Network" {
+    description = "A network is a collection of network elements.
+  
+    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
+    identifier = "Network::Network"
+    tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_NetworkReference" {
-    description = "A reference to a network element."
-    identifier = "Network::NetworkReference"
-    tableName = "NET_NetworkReference"
-    id INTEGER NOT NULL PRIMARY KEY
-    element INTEGER
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -859,61 +828,43 @@ Container <<applicationSchema>>  "Air Transport Network" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
+  Attributes "TN_MarkerPost" {
+    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
+  
+    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
+    identifier = "Common Transport Elements::MarkerPost"
+    tableName = "TN_MarkerPost"
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
+    id INTEGER NOT NULL PRIMARY KEY
+    location TEXT NOT NULL
+    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref geographicalName: GN_GeographicalName[0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref route: TransportLinkSet[0..1] inv post[0..*]
+  }
+  Attributes "NET_NetworkReference" {
+    description = "A reference to a network element."
+    identifier = "Network::NetworkReference"
+    tableName = "NET_NetworkReference"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
   Attributes "NET_DirectedLink" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
     direction Sign NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    link INTEGER
-  }
-  Feature "NET_Node" {
-    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
-
-    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
-    identifier = "Network::Node"
-    tableName = "NET_Node"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Feature "NET_Link" {
-    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
-    identifier = "Network::Link"
-    tableName = "NET_Link"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
-  }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_Network" {
-    description = "A network is a collection of network elements.
-
-    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
-    identifier = "Network::Network"
-    tableName = "NET_Network"
-    id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -921,44 +872,6 @@ Container <<applicationSchema>>  "Air Transport Network" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Attributes "TN_MarkerPost" {
-    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
-
-    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
-    identifier = "Common Transport Elements::MarkerPost"
-    tableName = "TN_MarkerPost"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry: POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    location TEXT NOT NULL
-    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    route INTEGER
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
-  }
-  Attributes "TN_TransportLinkSet" {
-    description = "A collection of transport link sequences and or individual transport links that has a specific function or significance in a transport network.
-
-    NOTE
-
-    This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
-
-    EXAMPLE
-
-    A dual carriageway road, as a collection of the two link sequences that represent each carriageway."
-    identifier = "Common Transport Elements::TransportLinkSet"
-    tableName = "TN_TransportLinkSet"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
-    ref geographicalName: GN_GeographicalName[0..1]
   }
   Attributes "HH_SA_TrafficRelatedEvent" {
     description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
@@ -1065,7 +978,7 @@ Container <<applicationSchema>>  "Air Transport Network" {
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"

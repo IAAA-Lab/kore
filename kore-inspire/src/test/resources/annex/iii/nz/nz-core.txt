@@ -1,17 +1,13 @@
 Container <<applicationSchema>>  "NaturalRiskZones" {
-  Attributes "NZ_CORE_AbstractObservedEvent" {
-    description = "A natural phenomenon relevant to the study of natural hazards which occurred and which has been observed."
-    identifier = "NaturalRiskZones::AbstractObservedEvent"
-    tableName = "NZ_CORE_AbstractObservedEvent"
-    beginLifeSpanVersion DATETIME
-    endLifeSpanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    nameOfEvent TEXT
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    validFrom DATETIME
-    validTo DATETIME
+  Class "AbstractObservedEvent" {
+    beginLifeSpanVersion: DATETIME [0..1]
+    endLifeSpanVersion: DATETIME [0..1]
+    nameOfEvent: TEXT [0..1]
+    typeOfHazard_hazardCategory: TEXT
+    typeOfHazard_specificHazardType: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "NZ_CORE_ExposedElementClassification" {
     description = "This class provides piece of information about the nature of the exposed element which is relevant to risk analysis."
@@ -25,19 +21,19 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     description = "A coverage representating continuous information about exposed elements."
     identifier = "NaturalRiskZones::ExposedElementCoverage"
     tableName = "NZ_CORE_ExposedElementCoverage"
-    beginLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
     coverageFunction: CoverageFunction [0..1]
     domainSet: Any
-    endLifeSpanVersion DATETIME
+    endLifeSpanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     metadata: Any [0..*]
     rangeSet: Any [0..*]
     rangeType: RecordType
     typeOfElement_exposedElementCategory TEXT NOT NULL CHECK(NZ_CORE_ExposedElementCategoryValue)
     typeOfElement_specificExposedElementType TEXT CHECK(NZ_CORE_SpecificExposedElementTypeValue)
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "NZ_CORE_NaturalHazardClassification" {
     description = "This class provides piece of information about the nature of the natural hazard as well as the type of hazard which is the source of risk."
@@ -53,36 +49,30 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   Constraint Enum "NZ_CORE_SpecificHazardTypeValue" {
     identifier = "NaturalRiskZones::SpecificHazardTypeValue"
   }
-  Attributes "NZ_CORE_AbstractHazardArea" {
-    description = "An area affected by a natural hazard.
-
-    A natural hazard is a natural process or phenomenon that may cause loss of life, injury or other impacts, property damage, loss livelihoods and services, social and economic disruption, or environmental damage. [Council of The European Union - Commission Staff Working Paper - Risk Assessment and Mapping Guidelines for Disaster Management]."
-    identifier = "NaturalRiskZones::AbstractHazardArea"
-    tableName = "NZ_CORE_AbstractHazardArea"
-    beginLifeSpanVersion DATETIME
-    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
-    endLifeSpanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    validityPeriod TM_Period
+  Class "AbstractHazardArea" {
+    beginLifeSpanVersion: DATETIME [0..1]
+    determinationMethod: TEXT
+    endLifeSpanVersion: DATETIME [0..1]
+    typeOfHazard_hazardCategory: TEXT
+    typeOfHazard_specificHazardType: TEXT [0..1]
+    validityPeriod: TM_Period [0..1]
+    ref inspireId: BASE_Identifier
   }
   Feature "NZ_CORE_ExposedElement" {
     description = "Discrete spatial objects representing exposed element."
     identifier = "NaturalRiskZones::ExposedElement"
     tableName = "NZ_CORE_ExposedElement"
-    beginLifeSpanVersion DATETIME
-    endLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
+    endLifeSpanVersion: DATETIME [0..1]
     geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "NZ_CORE_VulnerabilityAssessment" {
     description = "Assessment of the vulnerability.
-
+  
     It contains piece of information about the source the vulnerability, about the level of vulnerability and about the magnitude or intensity of the hazard for which vulnerability is assessed."
     identifier = "NaturalRiskZones::VulnerabilityAssessment"
     tableName = "NZ_CORE_VulnerabilityAssessment"
@@ -111,7 +101,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "NZ_CORE_LevelOrIntensity" {
     description = "Quantitative or qualitative assessment of either risk, hazard or vulnerability.
-
+  
     Common concept for assessing the level of risk, or the level of hazard, or the level of vulnerability."
     identifier = "NaturalRiskZones::LevelOrIntensity"
     tableName = "NZ_CORE_LevelOrIntensity"
@@ -125,98 +115,90 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     description = "Discrete spatial objects representing a natural hazard."
     identifier = "NaturalRiskZones::HazardArea"
     tableName = "NZ_CORE_HazardArea"
-    beginLifeSpanVersion DATETIME
-    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
-    endLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
+    determinationMethod: TEXT
+    endLifeSpanVersion: DATETIME [0..1]
     geometry GM_Surface NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     likelihoodOfOccurrence LikelihoodOfOccurrence
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    validityPeriod TM_Period
+    typeOfHazard_hazardCategory: TEXT
+    typeOfHazard_specificHazardType: TEXT [0..1]
+    validityPeriod: TM_Period [0..1]
+    ref inspireId: BASE_Identifier
   }
   Feature "NZ_CORE_ObservedEvent" {
     description = "Discrete spatial objects representing natural phenomenon relevant to the study of natural hazards which occurred, or is currently occuring, and which has been observed."
     identifier = "NaturalRiskZones::ObservedEvent"
     tableName = "NZ_CORE_ObservedEvent"
-    beginLifeSpanVersion DATETIME
-    endLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
+    endLifeSpanVersion: DATETIME [0..1]
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    nameOfEvent TEXT
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    validFrom DATETIME
-    validTo DATETIME
+    nameOfEvent: TEXT [0..1]
+    typeOfHazard_hazardCategory: TEXT
+    typeOfHazard_specificHazardType: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "NZ_CORE_RiskZone" {
     description = "Discrete spatial objects representing the spatial extent of a combination of the consequences of an event (hazard) and the associated probability/likelihood of its occurrence."
     identifier = "NaturalRiskZones::RiskZone"
     tableName = "NZ_CORE_RiskZone"
-    beginLifeSpanVersion DATETIME
-    endLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
+    endLifeSpanVersion: DATETIME [0..1]
     geometry GM_Surface NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     levelOfRisk_assessmentMethod DocumentCitation
     levelOfRisk_qualitativeValue TEXT
     levelOfRisk_quantitativeValue_unitOfMeasure UnitOfMeasure NOT NULL
     levelOfRisk_quantitativeValue_value TEXT NOT NULL
-    source INTEGER
-    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    sourceOfRisk_hazardCategory: TEXT
+    sourceOfRisk_specificHazardType: TEXT [0..1]
+    ref inspireId: BASE_Identifier
     ref validityPeriod: TM_Period[0..*]
   }
   Attributes "NZ_CORE_HazardCoverage" {
     description = "A coverage representing continuous information about a type of natural hazard."
     identifier = "NaturalRiskZones::HazardCoverage"
     tableName = "NZ_CORE_HazardCoverage"
-    beginLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
     coverageFunction: CoverageFunction [0..1]
-    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
+    determinationMethod: TEXT
     domainSet: Any
-    endLifeSpanVersion DATETIME
+    endLifeSpanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     metadata: Any [0..*]
     rangeSet: Any [0..*]
     rangeType: RecordType
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    validityPeriod TM_Period
+    typeOfHazard_hazardCategory: TEXT
+    typeOfHazard_specificHazardType: TEXT [0..1]
+    validityPeriod: TM_Period [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "NZ_CORE_RiskCoverage" {
     description = "A coverage representation of natural risks."
     identifier = "NaturalRiskZones::RiskCoverage"
     tableName = "NZ_CORE_RiskCoverage"
-    beginLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
     coverageFunction: CoverageFunction [0..1]
     domainSet: Any
-    endLifeSpanVersion DATETIME
+    endLifeSpanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     metadata: Any [0..*]
     rangeSet: Any [0..*]
     rangeType: RecordType
-    source INTEGER
-    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    sourceOfRisk_hazardCategory: TEXT
+    sourceOfRisk_specificHazardType: TEXT [0..1]
+    ref inspireId: BASE_Identifier
     ref validityPeriod: TM_Period[0..*]
   }
-  Attributes "NZ_CORE_AbstractExposedElement" {
-    description = "SOURCE : [UNISDR, 2009]
-
-    People, property, systems, or other elements present in hazard zones that are thereby subject to potential losses."
-    identifier = "NaturalRiskZones::AbstractExposedElement"
-    tableName = "NZ_CORE_AbstractExposedElement"
-    beginLifeSpanVersion DATETIME
-    endLifeSpanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    validFrom DATETIME
-    validTo DATETIME
+  Class "AbstractExposedElement" {
+    beginLifeSpanVersion: DATETIME [0..1]
+    endLifeSpanVersion: DATETIME [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier
   }
   Attributes "NZ_CORE_QuantitativeLikelihood" {
     description = "A frequency of occurrence or return period of a hazard phenomenon."
@@ -230,22 +212,17 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     obligation = "ImplementingRule"
     identifier = "NaturalRiskZones::ExposedElementCategoryValue"
   }
-  Attributes "NZ_CORE_AbstractRiskZone" {
-    description = "A risk zone is the spatial extent of a combination of the consequences of an event (hazard) and the associated probability/likelihood of its occurrence."
-    identifier = "NaturalRiskZones::AbstractRiskZone"
-    tableName = "NZ_CORE_AbstractRiskZone"
-    beginLifeSpanVersion DATETIME
-    endLifeSpanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    source INTEGER
-    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+  Class "AbstractRiskZone" {
+    beginLifeSpanVersion: DATETIME [0..1]
+    endLifeSpanVersion: DATETIME [0..1]
+    sourceOfRisk_hazardCategory: TEXT
+    sourceOfRisk_specificHazardType: TEXT [0..1]
+    ref inspireId: BASE_Identifier
     ref validityPeriod: TM_Period[0..*]
   }
   Attributes "NZ_CORE_LikelihoodOfOccurrence" {
     description = "Likelihood is a general concept relating to the chance of an event occurring.
-
+  
     Likelihood is generally expressed as a probability or a frequency. [EXCIFF]."
     identifier = "NaturalRiskZones::LikelihoodOfOccurrence"
     tableName = "NZ_CORE_LikelihoodOfOccurrence"
@@ -259,53 +236,20 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     description = "A coverage representing continuous information about observed events."
     identifier = "NaturalRiskZones::ObservedEventCoverage"
     tableName = "NZ_CORE_ObservedEventCoverage"
-    beginLifeSpanVersion DATETIME
+    beginLifeSpanVersion: DATETIME [0..1]
     coverageFunction: CoverageFunction [0..1]
     domainSet: Any
-    endLifeSpanVersion DATETIME
+    endLifeSpanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     metadata: Any [0..*]
-    nameOfEvent TEXT
+    nameOfEvent: TEXT [0..1]
     rangeSet: Any [0..*]
     rangeType: RecordType
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    validFrom DATETIME
-    validTo DATETIME
-  }
-  Relation "NZ_CORE_AbstractObservedEvent_isMonitoredBy" {
-    profile = "attributes"
-    tableName = "NZ_CORE_AbstractObservedEvent_isMonitoredBy"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractObservedEvent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
-  }
-  Relation "NZ_CORE_AbstractObservedEvent_inspireId" {
-    profile = "attributes"
-    relatedReference = "NZ_CORE_AbstractObservedEvent#inspireId"
-    tableName = "NZ_CORE_AbstractObservedEvent_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractObservedEvent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NZ_CORE_AbstractExposedElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NZ_CORE_AbstractExposedElement#inspireId"
-    tableName = "NZ_CORE_AbstractExposedElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractExposedElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NZ_CORE_AbstractHazardArea_source" {
-    profile = "attributes"
-    tableName = "NZ_CORE_AbstractHazardArea_source"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractHazardArea(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_AbstractObservedEvent(id)
-  }
-  Relation "NZ_CORE_AbstractHazardArea_inspireId" {
-    profile = "attributes"
-    relatedReference = "NZ_CORE_AbstractHazardArea#inspireId"
-    tableName = "NZ_CORE_AbstractHazardArea_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractHazardArea(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+    typeOfHazard_hazardCategory: TEXT
+    typeOfHazard_specificHazardType: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier
   }
   Relation "NZ_CORE_ExposedElement_assessmentOfVulnerability" {
     profile = "attributes"
@@ -324,26 +268,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "NZ_CORE_ObservedEvent_magnitudeOrIntensity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEvent(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_LevelOrIntensity(id)
-  }
-  Relation "NZ_CORE_AbstractRiskZone_source" {
-    profile = "attributes"
-    relatedReference = "NZ_CORE_AbstractRiskZone#source"
-    tableName = "NZ_CORE_AbstractRiskZone_source"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractRiskZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_AbstractHazardArea(id)
-  }
-  Relation "NZ_CORE_AbstractRiskZone_exposedElement" {
-    profile = "attributes"
-    tableName = "NZ_CORE_AbstractRiskZone_exposedElement"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractRiskZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_AbstractExposedElement(id)
-  }
-  Relation "NZ_CORE_AbstractRiskZone_inspireId" {
-    profile = "attributes"
-    relatedReference = "NZ_CORE_AbstractRiskZone#inspireId"
-    tableName = "NZ_CORE_AbstractRiskZone_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_AbstractRiskZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -375,56 +299,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
   }
-  Relation "EF_AbstractMonitoringObject_supersedes" {
-    profile = "features"
-    tableName = "EF_AbstractMonitoringObject_supersedes"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_AbstractMonitoringObject(id)
-  }
-  Relation "EF_AbstractMonitoringObject_broader" {
-    profile = "features"
-    relatedReference = "EF_AbstractMonitoringObject#broader"
-    tableName = "EF_AbstractMonitoringObject_broader"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_AbstractMonitoringObject(id)
-  }
-  Relation "EF_AbstractMonitoringObject_observingCapability" {
-    profile = "attributes"
-    tableName = "EF_AbstractMonitoringObject_observingCapability"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ObservingCapability(id)
-  }
-  Relation "EF_AbstractMonitoringObject_inspireId" {
-    profile = "attributes"
-    relatedReference = "EF_AbstractMonitoringObject#inspireId"
-    tableName = "EF_AbstractMonitoringObject_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "EF_AbstractMonitoringObject_responsibleParty" {
-    profile = "attributes"
-    tableName = "EF_AbstractMonitoringObject_responsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
-  }
-  Relation "EF_AbstractMonitoringObject_mediaMonitored" {
-    profile = "attributes"
-    tableName = "EF_AbstractMonitoringObject_mediaMonitored"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_MediaValue(id)
-  }
-  Relation "EF_AbstractMonitoringObject_purpose" {
-    profile = "attributes"
-    tableName = "EF_AbstractMonitoringObject_purpose"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_PurposeOfCollectionValue(id)
-  }
-  Relation "EF_EnvironmentalMonitoringActivity_uses" {
-    profile = "attributes"
-    tableName = "EF_EnvironmentalMonitoringActivity_uses"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_AbstractMonitoringFeature(id)
-  }
   Relation "EF_EnvironmentalMonitoringActivity_responsibleParty" {
     profile = "attributes"
     relatedReference = "EF_EnvironmentalMonitoringActivity#responsibleParty"
@@ -451,12 +325,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "BASE2_RelatedParty_role"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
-  }
-  Relation "EF_AbstractMonitoringFeature_reportedTo" {
-    profile = "attributes"
-    tableName = "EF_AbstractMonitoringFeature_reportedTo"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_AbstractMonitoringFeature(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ReportToLegalAct(id)
   }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
@@ -502,24 +370,12 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
-  Relation "AD_Address_component" {
-    profile = "attributes"
-    tableName = "AD_Address_component"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
-  }
   Relation "AD_Address_parentAddress" {
     profile = "attributes"
     relatedReference = "AD_Address#parentAddress"
     tableName = "AD_Address_parentAddress"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_Address(id)
-  }
-  Relation "AD_Address_building" {
-    profile = "attributes"
-    tableName = "AD_Address_building"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_AbstractConstruction(id)
   }
   Relation "AD_Address_inspireId" {
     profile = "attributes"
@@ -545,57 +401,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
-  Relation "AD_AddressComponent_situatedWithin" {
-    profile = "attributes"
-    tableName = "AD_AddressComponent_situatedWithin"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressComponent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
-  }
-  Relation "AD_AddressComponent_inspireId" {
-    profile = "attributes"
-    relatedReference = "AD_AddressComponent#inspireId"
-    tableName = "AD_AddressComponent_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressComponent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_elevation" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_elevation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_Elevation(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_externalReference" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_externalReference"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_ExternalReference(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_heightAboveGround" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_heightAboveGround"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_HeightAboveGround(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_inspireId" {
-    profile = "attributes"
-    relatedReference = "BU_BASE_AbstractConstruction#inspireId"
-    tableName = "BU_BASE_AbstractConstruction_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_name" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AD_AddressLocator_withinScopeOf" {
-    profile = "attributes"
-    relatedReference = "AD_AddressLocator#withinScopeOf"
-    tableName = "AD_AddressLocator_withinScopeOf"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
   }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
@@ -714,26 +519,32 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "EF_EnvironmentalMonitoringProgramme" {
     description = "Framework based on policy relevant documents defining the target of a collection of observations and/or the deployment of AbstractMonitoringFeatures on the field.
-
+  
     Usually an Environmental Monitoring Programme has a long term perspective over at least a few years."
     identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringProgramme"
     tableName = "EF_EnvironmentalMonitoringProgramme"
-    additionalDescription TEXT
-    broader INTEGER
-    geometry GEOMETRY
+    additionalDescription: TEXT [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
+    ref inspireId: BASE_Identifier
     ref legalBackground: LegislationCitation[0..*]
+    ref mediaMonitored: EF_MediaValue[1..*]
     ref name: TEXT[0..*]
+    ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
     ref onlineResource: URL[0..*]
+    ref purpose: EF_PurposeOfCollectionValue[0..*]
+    ref responsibleParty: BASE2_RelatedParty[0..*]
+    ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
+    ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -744,7 +555,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "EF_EnvironmentalMonitoringActivity" {
     description = "Specific set of AbstractMonitoringFeatures used for a given domain in a coherent and concise timeframe, area and purpose. Usually the information collected is treated as one time step in a long term monitoring programme. It is a concrete realisation of a given EnvironmentalMonitoringProgramme.
-
+  
     For example a vessel could be equipped with a collection of EnvironmentalMonitoringFacilities for a given campaign (= EnvironmentalMonitoringActivity) fulfilling an EnvironmentalMonitoringProgramme requirements. Then, after a given period this exact same vessel could be equipped with another set of EnvironmentalMonitoringFacilities for another campaign fulfilling another EnvironmentalMonitoringProgramme requirements."
     identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringActivity"
     tableName = "EF_EnvironmentalMonitoringActivity"
@@ -755,64 +566,16 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     inspireId INTEGER
     responsibleParty INTEGER
     ref onlineResource: URL[0..*]
-  }
-  Feature "EF_AbstractMonitoringObject" {
-    description = "An abstract base class for environmental monitoring objects."
-    identifier = "EnvironmentalMonitoringFacilities::AbstractMonitoringObject"
-    tableName = "EF_AbstractMonitoringObject"
-    additionalDescription TEXT
-    broader INTEGER
-    geometry GEOMETRY
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    ref legalBackground: LegislationCitation[0..*]
-    ref name: TEXT[0..*]
-    ref onlineResource: URL[0..*]
-  }
-  Attributes "EF_ObservingCapability" {
-    description = "Explicit capability of an AbstractMonitoringObject."
-    identifier = "EnvironmentalMonitoringFacilities::ObservingCapability"
-    tableName = "EF_ObservingCapability"
-    id INTEGER NOT NULL PRIMARY KEY
-    observingTime TM_Object
-    processType TEXT CHECK(EF_ProcessTypeValue)
-    resultNature TEXT CHECK(EF_ResultNatureValue)
+    ref uses: AbstractMonitoringFeature[0..*] inv involvedIn[0..*]
   }
   Attributes "BASE2_RelatedParty" {
     description = "An organisation or a person with a role related to a resource.
-
+  
     NOTE 1 A party, typically an individual person, acting as a general point of contact for a resource can be specified without providing any particular role."
     identifier = "Base Types 2::RelatedParty"
     tableName = "BASE2_RelatedParty"
     contact INTEGER
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "EF_MediaValue" {
-    description = "Categories for different types of media."
-    identifier = "EnvironmentalMonitoringFacilities::MediaValue"
-    tableName = "EF_MediaValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(EF_MediaValue)
-  }
-  Attributes "EF_PurposeOfCollectionValue" {
-    description = "Categories for different purposes of collections."
-    identifier = "EnvironmentalMonitoringFacilities::PurposeOfCollectionValue"
-    tableName = "EF_PurposeOfCollectionValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(EF_PurposeOfCollectionValue)
-  }
-  Attributes "EF_AbstractMonitoringFeature" {
-    description = "An abstract base class for environmental monitoring features in the real world (EnvironmentalMonitoringNetwork, EnvironmentalMonitoringFacility)."
-    identifier = "EnvironmentalMonitoringFacilities::AbstractMonitoringFeature"
-    tableName = "EF_AbstractMonitoringFeature"
-    additionalDescription TEXT
-    broader INTEGER
-    geometry GEOMETRY
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    ref legalBackground: LegislationCitation[0..*]
-    ref name: TEXT[0..*]
-    ref onlineResource: URL[0..*]
   }
   Attributes "BASE2_Contact" {
     description = "Communication channels by which it is possible to gain access to someone or something."
@@ -832,25 +595,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
   }
-  Attributes "EF_ReportToLegalAct" {
-    description = "Information on the involvement of an AbstractMonitoringFeature in reporting. The information is specific per submitted reporting envelope and not per obligation/agreement.
-
-    From INSPIRE perspective, an AbstractMonitoringFeature requires the provision of  ISO 19156 compliant observations &amp; measurements only in the case that these have been required by a legal reporting obligation or a commonly agreed voluntarily data flow using INSPIRE EF dataspecification for the definition of datastructure."
-    identifier = "EnvironmentalMonitoringFacilities::ReportToLegalAct"
-    tableName = "EF_ReportToLegalAct"
-    description TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    legalAct LegislationCitation NOT NULL
-    observationRequired BOOLEAN
-    observingCapabilityRequired BOOLEAN
-    reportDate DATETIME
-    reportedEnvelope TEXT
-  }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
-
+  
     NOTE 1 The data type includes the all necessary readable address components as well as the address locator(s), which allows the identification of the address spatial objects, e.g., country, region, municipality, address area, post code, street name and address number. It also includes an optional reference to the full address spatial object.
-
+  
     NOTE 2 The datatype could be used in application schemas that wish to include address information e.g. in a dataset that registers buildings or properties."
     identifier = "Addresses::AddressRepresentation"
     tableName = "AD_AddressRepresentation"
@@ -861,19 +610,19 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
-
+  
     NOTE 1 The spatial object, referenced by the address, is defined as the "addressable object". The addressable object is not within the application schema, but it is possible to represent the address' reference to a cadastral parcel or a building through associations. It should, however, be noted that in different countries and regions, different traditions and/or regulations determine which object types should be regarded as addressable objects.
-
+  
     NOTE 2 In most situations the addressable objects are current, real world objects. However, addresses may also reference objects which are planned, under construction or even historical.
-
+  
     NOTE 3 Apart from the identification of the addressable objects (like e.g. buildings), addresses are very often used by a large number of other applications to identify object types e.g. statistics of the citizens living in the building, for taxation of the business entities that occupy the building, and the utility installations.
-
+  
     NOTE 4 For different purposes, the identification of an address can be represented in different ways (see example 3).
-
+  
     EXAMPLE 1 A property can e.g., be a plot of land, building, part of building, way of access or other construction,
-
+  
     EXAMPLE 2 In the Netherlands the primary addressable objects are buildings and dwellings which may include parts of buildings, mooring places or places for the permanent placement of trailers (mobile homes), in the UK it is the lowest level of unit for the delivery of services, in the Czech Republic it is buildings and entrance doors.
-
+  
     EXAMPLE 3 Addresses can be represented differently. In a human readable form an address in Spain and an address in Denmark could be represented like this: "Calle Mayor, 13, Cortijo del Marqués, 41037 Écija, Sevilla, España" or "Wildersgade 60A, st. th, 1408 Copenhagen K., Denmark"."
     identifier = "Addresses::Address"
     tableName = "AD_Address"
@@ -901,79 +650,28 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
   }
-  Attributes "AD_AddressComponent" {
-    description = "Identifier or geographic name of a specific geographic area, location, or other spatial object which defines the scope of an address.
-
-    NOTE 1 Four different subclasses of address components are defined:
-
-    o    Administrative unit name, which may include name of country, name of municipality, name of district
-
-    o    Address area name like e.g. name of village or settlement
-
-    o    Thoroughfare name, most often road name
-
-    o    Postal descriptor
-
-    In order to construct an address, these subclasses are often structured hierarchically.
-
-    NOTE 2 It is the combination of the address locator and the address components, which makes a specific address spatial object readable and unambiguous for the human user.
-
-    EXAMPLE The combination of the locator "13" and the address components "Calle Mayor" (thoroughfare name), "Cortijo del Marqués" (address area name), "41037" (postal descriptor), "Écija", "Sevilla" and "España" (administrative unit names) makes this specific address spatial object readable and unambiguous."
-    identifier = "Addresses::AddressComponent"
-    tableName = "AD_AddressComponent"
-    alternativeIdentifier TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
-  }
-  Attributes "BU_BASE_AbstractConstruction" {
-    description = "Abstract spatial object type grouping the semantic properties of  buildings, building parts and of some optional spatial object types that may be added in order to provide more information about the theme Buildings.
-
-    The optional spatial object types that may be added to core profiles are described in the extended profiles. The ones inheriting from the attributes of AbstractConstruction are Installation and OtherConstruction."
-    identifier = "BuildingsBase::AbstractConstruction"
-    tableName = "BU_BASE_AbstractConstruction"
-    beginLifespanVersion DATETIME
-    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
-    dateOfConstruction_anyPoint DATETIME
-    dateOfConstruction_beginning DATETIME
-    dateOfConstruction_end DATETIME
-    dateOfDemolition_anyPoint DATETIME
-    dateOfDemolition_beginning DATETIME
-    dateOfDemolition_end DATETIME
-    dateOfRenovation_anyPoint DATETIME
-    dateOfRenovation_beginning DATETIME
-    dateOfRenovation_end DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
   Attributes "AD_AddressLocator" {
     description = "Human readable designator or name that allows a user or application to reference and distinguish the address from neighbour addresses, within the scope of a thoroughfare name, address area name, administrative unit name or postal designator, in which the address is situated.
-
+  
     NOTE 1 The most common locators are designators like an address number, building number or flat identifier as well as the name of the property, complex or building.
-
+  
     NOTE 2 The locator identifier(s) are most often only unambiguous and meaningful within the scope of the adjacent thoroughfare name, address area name or post code.
-
+  
     NOTE 3 The locator could be composed of one or more designators e.g., address number, address number suffix, building number or name, floor number, flat or room identifier. In addition to these common locator types, also narrative or descriptive locators are possible.
-
+  
     NOTE 4 The locators of an address could be composed as a hierarchy, where one level of locators identifies the real property or building while another level of locators identifies the flats or dwellings inside the property.
-
+  
     EXAMPLE 1 In a Spanish city a "site-level" locator could identify a building on the thoroughfare name "Calle Gran Vía using the address number "8". If the building has four entrance doors, the door number "3" could be the "access-level" locator. The 3rd door could, via two staircases "A" and "B", give access to a number of floors, identified by a number "1" to "5" on which a number of dwellings are situated, also identified by numbers "1" to "3"; The "unit level" locator will thus composed of staircase-, floor- and dwelling identification e.g. "staircase A, floor 5, dwelling 1". In total, the three parent-child levels of locators uniquely identify the dwelling.
-
+  
     EXAMPLE 2 In Copenhagen an "access level" locator could identify a specific entrance door in a building on the thoroughfare name "Wildersgade" using the address number "60A" (In Denmark the optional suffix is a part of the address number). The entrance door gives access to a number of floors, e.g, "st", "1", "2", "3", on which two dwellings are situated "tv" and "th". The "unit level" locator will thus be composed by a floor- and a door identifier: "2. th." (2nd floor, door to the right). In total, the two parent-child levels of locators uniquely identify the dwelling.
-
+  
     EXAMPLE 3 In The Netherlands only one level of locators exists. The individual apartment within a large complex, a dwelling, a part of other kinds of buildings (for example an office), a mooring place or a place for the permanent placing of trailers are addressable objects which must have an address. This address is the only level of the locator. This locator could be composed by three attributes the house number, plus optionally an additional house letter, plus optionally an additional housenumber suffix.
-
+  
     EXAMPLE 4 Sometimes the building name is an alternative identifier to the address number e.g. the house located in "Calle Santiago, 15, Elizondo-Baztán, Navarra, Spain" is also identified by the building name "Urtekoetxea""
     identifier = "Addresses::AddressLocator"
     tableName = "AD_AddressLocator"
     id INTEGER NOT NULL PRIMARY KEY
     level TEXT NOT NULL CHECK(AD_LocatorLevelValue)
-    withinScopeOf INTEGER
   }
   Feature "AD_GeographicPosition" {
     description = "The position of a characteristic point which represents the location of the address according to a certain specification, including information on the origin of the position."
@@ -987,9 +685,9 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -998,41 +696,13 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
-  Attributes "BU_BASE_Elevation" {
-    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
-    identifier = "BuildingsBase::Elevation"
-    tableName = "BU_BASE_Elevation"
-    elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
-    elevationValue_dimension INTEGER NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "BU_BASE_ExternalReference" {
-    description = "Reference to an external information system containing any piece of information related to the spatial object."
-    identifier = "BuildingsBase::ExternalReference"
-    tableName = "BU_BASE_ExternalReference"
-    id INTEGER NOT NULL PRIMARY KEY
-    informationSystem TEXT NOT NULL
-    reference TEXT NOT NULL
-  }
-  Attributes "BU_BASE_HeightAboveGround" {
-    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
-    identifier = "BuildingsBase::HeightAboveGround"
-    tableName = "BU_BASE_HeightAboveGround"
-    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
-    status TEXT CHECK(BU_BASE_HeightStatusValue)
-    value TEXT NOT NULL
-    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
   Attributes "AD_LocatorDesignator" {
     description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
-
+  
     NOTE 1 Locator designators are often assigned according to a set of commonly known rules which enables a user or application to "parse" the information: Address numbers are most often assigned in ascending order with odd and even numbers on each side of the thoroughfare. In a building, the floor identifier represents the level according to the traditions within the area, e.g., 1, 2, 3.
-
+  
     NOTE 2 Several types of locator designators exist, such as: Address number, address number suffix, building identifier, building name. A locator could be composed by an ordered set of these.
-
+  
     EXAMPLE In Paris, France a locator could be composed by two locator designators: address number "18" and address number suffix: "BIS"."
     identifier = "Addresses::LocatorDesignator"
     tableName = "AD_LocatorDesignator"
@@ -1042,7 +712,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "AD_LocatorName" {
     description = "Proper noun applied to the real world entity identified by the locator.
-
+  
     NOTE The locator name could be the name of the property or complex, of the building or part of the building, or it could be the name of a room inside a building."
     identifier = "Addresses::LocatorName"
     tableName = "AD_LocatorName"
@@ -1095,15 +765,15 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Attributes "CP_BasicPropertyUnit" {
     description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
-
+  
     SOURCE Adapted from UN ECE 2004.
-
+  
     NOTE 1 In the INSPIRE context, basic property units are to be made available by member states where unique cadastral references are given only for basic property units and not for parcels.
-
+  
     NOTE 2 In many (but not all) countries, the area of the basic property unit corresponds to the cadastral parcel itself.
-
+  
     NOTE 3 Some countries, such as Finland, may also register officially basic property units without any area. These basic property units are considered out of the INSPIRE scope.
-
+  
     NOTE 4 Some countries, such as Norway, may have parcels which belong to several basic property units."
     identifier = "CadastralParcels::BasicPropertyUnit"
     tableName = "CP_BasicPropertyUnit"
@@ -1127,7 +797,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"
@@ -1137,17 +807,28 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
   }
-  Constraint Enum "EF_ProcessTypeValue" {
-    identifier = "EnvironmentalMonitoringFacilities::ProcessTypeValue"
+  Attributes "EF_ObservingCapability" {
+    description = "Explicit capability of an AbstractMonitoringObject."
+    identifier = "EnvironmentalMonitoringFacilities::ObservingCapability"
+    tableName = "EF_ObservingCapability"
+    id INTEGER NOT NULL PRIMARY KEY
+    observingTime TM_Object
+    processType TEXT CHECK(EF_ProcessTypeValue)
+    resultNature TEXT CHECK(EF_ResultNatureValue)
   }
-  Constraint Enum "EF_ResultNatureValue" {
-    identifier = "EnvironmentalMonitoringFacilities::ResultNatureValue"
-  }
-  Constraint Enum "EF_MediaValue" {
+  Attributes "EF_MediaValue" {
+    description = "Categories for different types of media."
     identifier = "EnvironmentalMonitoringFacilities::MediaValue"
+    tableName = "EF_MediaValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(EF_MediaValue)
   }
-  Constraint Enum "EF_PurposeOfCollectionValue" {
+  Attributes "EF_PurposeOfCollectionValue" {
+    description = "Categories for different purposes of collections."
     identifier = "EnvironmentalMonitoringFacilities::PurposeOfCollectionValue"
+    tableName = "EF_PurposeOfCollectionValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(EF_PurposeOfCollectionValue)
   }
   Constraint Enum "BASE2_PartyRoleValue" {
     identifier = "Base Types 2::PartyRoleValue"
@@ -1185,10 +866,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     plural
     singular
   }
-  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ConditionOfConstructionValue"
-  }
   Constraint Enum "AD_LocatorLevelValue" {
     identifier = "Addresses::LocatorLevelValue"
     accessLevel
@@ -1220,15 +897,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     byOtherParty
     fromFeature
   }
-  Constraint Enum "BU_BASE_ElevationReferenceValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ElevationReferenceValue"
-  }
-  Constraint Enum "BU_BASE_HeightStatusValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::HeightStatusValue"
-  }
-  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "AD_LocatorDesignatorTypeValue" {
     identifier = "Addresses::LocatorDesignatorTypeValue"
     addressIdentifierGeneral
@@ -1386,12 +1054,77 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     utf7
     utf8
   }
+  Constraint Enum "GML_UomIdentifier" {}
+  Attributes "EF_ReportToLegalAct" {
+    description = "Information on the involvement of an AbstractMonitoringFeature in reporting. The information is specific per submitted reporting envelope and not per obligation/agreement.
+  
+    From INSPIRE perspective, an AbstractMonitoringFeature requires the provision of  ISO 19156 compliant observations &amp; measurements only in the case that these have been required by a legal reporting obligation or a commonly agreed voluntarily data flow using INSPIRE EF dataspecification for the definition of datastructure."
+    identifier = "EnvironmentalMonitoringFacilities::ReportToLegalAct"
+    tableName = "EF_ReportToLegalAct"
+    description TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    legalAct LegislationCitation NOT NULL
+    observationRequired BOOLEAN
+    observingCapabilityRequired BOOLEAN
+    reportDate DATETIME
+    reportedEnvelope TEXT
+  }
+  Attributes "BU_BASE_Elevation" {
+    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
+    identifier = "BuildingsBase::Elevation"
+    tableName = "BU_BASE_Elevation"
+    elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
+    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_dimension INTEGER NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "BU_BASE_ExternalReference" {
+    description = "Reference to an external information system containing any piece of information related to the spatial object."
+    identifier = "BuildingsBase::ExternalReference"
+    tableName = "BU_BASE_ExternalReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    informationSystem TEXT NOT NULL
+    reference TEXT NOT NULL
+  }
+  Attributes "BU_BASE_HeightAboveGround" {
+    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
+    identifier = "BuildingsBase::HeightAboveGround"
+    tableName = "BU_BASE_HeightAboveGround"
+    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    status TEXT CHECK(BU_BASE_HeightStatusValue)
+    value TEXT NOT NULL
+    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+  }
+  Constraint Enum "EF_ProcessTypeValue" {
+    identifier = "EnvironmentalMonitoringFacilities::ProcessTypeValue"
+  }
+  Constraint Enum "EF_ResultNatureValue" {
+    identifier = "EnvironmentalMonitoringFacilities::ResultNatureValue"
+  }
+  Constraint Enum "EF_MediaValue" {
+    identifier = "EnvironmentalMonitoringFacilities::MediaValue"
+  }
   Constraint Enum "BASE2_LegislationLevelValue" {
     identifier = "Base Types 2::LegislationLevelValue"
     european
     international
     national
     sub-national
+  }
+  Constraint Enum "EF_PurposeOfCollectionValue" {
+    identifier = "EnvironmentalMonitoringFacilities::PurposeOfCollectionValue"
+  }
+  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ConditionOfConstructionValue"
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
   }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
@@ -1400,6 +1133,20 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     name
     now
     unknow
+  }
+  Constraint Enum "CP_CadastralZoningLevelValue" {
+    identifier = "CadastralParcels::CadastralZoningLevelValue"
+    1stOrder
+    2ndOrder
+    3rdOrder
+  }
+  Constraint Enum "BU_BASE_ElevationReferenceValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ElevationReferenceValue"
+  }
+  Constraint Enum "BU_BASE_HeightStatusValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HeightStatusValue"
   }
   Attributes "GMD_PT_Locale" {
     identifier = "Cultural and linguistic adapdability::PT_Locale"
@@ -1429,18 +1176,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "MI_MD_ScopeCode"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
-  }
-  Constraint Enum "CP_CadastralZoningLevelValue" {
-    identifier = "CadastralParcels::CadastralZoningLevelValue"
-    1stOrder
-    2ndOrder
-    3rdOrder
   }
   Attributes "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"

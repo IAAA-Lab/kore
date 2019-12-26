@@ -25,17 +25,16 @@ Container <<applicationSchema>>  "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     description = "The process of extracting metallic, non-metallic mineral, or industrial rock deposits from the Earth.
-
+  
     The term may also include preliminary treatment eg. cleaning or sizing."
     identifier = "MineralResources::MiningActivity"
     tableName = "MR_CORE_MiningActivity"
     activityType TEXT NOT NULL CHECK(MR_CORE_MiningActivityTypeValue)
     associatedMine INTEGER
-    deposit INTEGER
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     oreProcessed Quantity
     processingType TEXT NOT NULL CHECK(MR_CORE_ProcessingActivityTypeValue)
+    ref inspireId: BASE_Identifier
   }
   Class <<type>>  "MineralDepositModel" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -93,7 +92,7 @@ Container <<applicationSchema>>  "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     description = "A measure of the amount of the commodity based on a Reserve, Resource or Endowment calculation.
-
+  
     Where OreMeasure is Resource or Reserve CommodityMeasure is mandatory"
     identifier = "MineralResources::CommodityMeasure"
     tableName = "MR_CORE_CommodityMeasure"
@@ -101,7 +100,6 @@ Container <<applicationSchema>>  "MineralResources" {
     cutOffGrade QuantityRange
     grade QuantityRange
     id INTEGER NOT NULL PRIMARY KEY
-    null INTEGER
   }
   Constraint Enum "MR_CORE_ExplorationResultValue" {
     identifier = "MineralResources::ExplorationResultValue"
@@ -129,20 +127,20 @@ Container <<applicationSchema>>  "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     description = "The quantity of a mineral (or a group of minerals for industrial rocks) in accumulations (deposits) meeting specified physical characteristics such as quality, size and depth.
-
+  
     Usually includes Resources, as unlike the latter, it does not have to have prospects for "eventual economic extraction". It often includes the total amount of a commodity originally introduced to a particular location during the deposit forming processes - and thus can include resources, reserves, past production and mining and metallurgical losses."
     identifier = "MineralResources::Endowment"
     tableName = "MR_CORE_Endowment"
-    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
-    dimension INTEGER
+    classificationMethodUsed: TEXT
     id INTEGER NOT NULL PRIMARY KEY
     includesReserves BOOLEAN
     includesResources BOOLEAN
-    ore QuantityRange NOT NULL
-    proposedExtractionMethod Category
+    ore: QuantityRange
+    proposedExtractionMethod: Category [0..1]
+    ref dimension: MR_CORE_EarthResourceDimension[0..1]
     ref sourceReference: DocumentCitation[1..*]
   }
-  Attributes "MR_CORE_EarthResource" {
+  Class "EarthResource" {
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -161,14 +159,10 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "The kinds of observable or inferred phenomena required to classify economic and non-economic earth resources."
-    identifier = "MineralResources::EarthResource"
-    tableName = "MR_CORE_EarthResource"
-    beginLifespanVersion DATETIME
-    dimension INTEGER
-    endLifespanversion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanversion: DATETIME [0..1]
     name: TEXT [0..1]
+    ref dimension: MR_CORE_EarthResourceDimension[0..1]
     ref expression: Category[0..*]
     ref form: Category[0..*]
     ref inspireId: BASE_Identifier
@@ -205,18 +199,18 @@ Container <<applicationSchema>>  "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     description = "The economically mineable part of a Measured and/or Indicated Mineral Resource.
-
+  
     It includes diluting materials and allowances for losses, which may occur when the material is mined. &lsquo;Marketable Coal Reserves&rsquo; maybe reported in conjunction with, but not instead of, reports of Ore (Coal) Reserves. &lsquo;Saleable product&rsquo; (e.g. for industrial minerals) can be reported in conjunction with ore reserve.
-
+  
     Synonyms: Ore Reserve; Coal Reserve (s); Diamond (or gemstone) Ore Reserve; Mineral Reserves (not preferred, should be stated that used to mean the same as JORC&rsquo;s Ore Reserve); Mineable production estimates"
     identifier = "MineralResources::Reserve"
     tableName = "MR_CORE_Reserve"
     category TEXT NOT NULL CHECK(MR_CORE_ReserveCategoryValue)
-    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
-    dimension INTEGER
+    classificationMethodUsed: TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ore QuantityRange NOT NULL
-    proposedExtractionMethod Category
+    ore: QuantityRange
+    proposedExtractionMethod: Category [0..1]
+    ref dimension: MR_CORE_EarthResourceDimension[0..1]
     ref sourceReference: DocumentCitation[1..*]
   }
   Constraint Enum "MR_CORE_MiningActivityTypeValue" {
@@ -242,17 +236,17 @@ Container <<applicationSchema>>  "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     description = "An accumulation of material of intrinsic economic interest in or on the Earth&rsquo;s crust in such form, quality and quantity that there are reasonable prospects for economic extraction.
-
+  
     Synonyms: Mineral Resource; Coal Resource (s); Diamond (Gemstone) Resource; Potentially Mineable Mineralisation."
     identifier = "MineralResources::Resource"
     tableName = "MR_CORE_Resource"
     category TEXT NOT NULL CHECK(MR_CORE_ResourceCategoryValue)
-    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
-    dimension INTEGER
+    classificationMethodUsed: TEXT
     id INTEGER NOT NULL PRIMARY KEY
     includesReserves BOOLEAN
-    ore QuantityRange NOT NULL
-    proposedExtractionMethod Category
+    ore: QuantityRange
+    proposedExtractionMethod: Category [0..1]
+    ref dimension: MR_CORE_EarthResourceDimension[0..1]
     ref sourceReference: DocumentCitation[1..*]
   }
   Attributes "MR_CORE_MineName" {
@@ -312,12 +306,8 @@ Container <<applicationSchema>>  "MineralResources" {
     ref length: QuantityRange[0..*]
     ref width: QuantityRange[0..*]
   }
-  Attributes "MR_CORE_MiningFeature" {
-    description = "Spatial object type grouping the common properties of mines and mining activities."
-    identifier = "MineralResources::MiningFeature"
-    tableName = "MR_CORE_MiningFeature"
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "MiningFeature" {
+    ref inspireId: BASE_Identifier
   }
   Attributes "MR_CORE_Commodity" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -345,7 +335,6 @@ Container <<applicationSchema>>  "MineralResources" {
     commodityImportance TEXT CHECK(MR_CORE_ImportanceValue)
     commodityRank INTEGER
     id INTEGER NOT NULL PRIMARY KEY
-    source INTEGER
   }
   Attributes "MR_CORE_Mine" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -367,7 +356,7 @@ Container <<applicationSchema>>  "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     description = "An excavation carried out for the extraction of mineral deposits.
-
+  
     &lsquo;True&rsquo; mines are underground workings and open-pit workings (also called open-sky mines) generally for the extraction of metallic commodities. The Mine feature also includes open workings generally for the extraction of industrial minerals, commonly referred to as quarries."
     identifier = "MineralResources::Mine"
     tableName = "MR_CORE_Mine"
@@ -379,13 +368,13 @@ Container <<applicationSchema>>  "MineralResources" {
     endDate_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     endLifespanVersion DATETIME
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     startDate_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     startDate_position_date8601 DATE
     startDate_position_dateTime8601 DATETIME
     startDate_position_time8601 TEXT
     startDate_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     status TEXT NOT NULL CHECK(MR_CORE_MineStatusValue)
+    ref inspireId: BASE_Identifier
     ref sourceReference: DocumentCitation[0..*]
   }
   Constraint Enum "MR_CORE_MineralDepositTypeValue" {
@@ -413,12 +402,12 @@ Container <<applicationSchema>>  "MineralResources" {
     description = "<font color="#400040">A mineral accumulation in the lithosphere. </font>"
     identifier = "MineralResources::MineralOccurrence"
     tableName = "MR_CORE_MineralOccurrence"
-    beginLifespanVersion DATETIME
-    dimension INTEGER
-    endLifespanversion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanversion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     name: TEXT [0..1]
     type TEXT NOT NULL CHECK(MR_CORE_MineralOccurrenceTypeValue)
+    ref dimension: MR_CORE_EarthResourceDimension[0..1]
     ref expression: Category[0..*]
     ref form: Category[0..*]
     ref inspireId: BASE_Identifier
@@ -430,18 +419,17 @@ Container <<applicationSchema>>  "MineralResources" {
   }
   Feature "MR_CORE_MiningFeatureOccurrence" {
     description = "A spatial representation of a MiningFeature.
-
+  
     A MiningFeatureOccurrence provides a link between a notional feature (description package) and one spatial representation of it, or part of it. The MiningFeatureOccurrence carries a geometry and the association with a Mining Feature provides specification of all the other descriptors."
     identifier = "MineralResources::MiningFeatureOccurrence"
     tableName = "MR_CORE_MiningFeatureOccurrence"
     id INTEGER NOT NULL PRIMARY KEY
     shape GEOMETRY NOT NULL
-    specification INTEGER
   }
   Constraint Enum "MR_CORE_MineStatusValue" {
     identifier = "MineralResources::MineStatusValue"
   }
-  Attributes "MR_CORE_OreMeasure" {
+  Class "OreMeasure" {
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -460,14 +448,10 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "The estimate of the Reserve, Resource or Endowment ore amount."
-    identifier = "MineralResources::OreMeasure"
-    tableName = "MR_CORE_OreMeasure"
-    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
-    dimension INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    ore QuantityRange NOT NULL
-    proposedExtractionMethod Category
+    classificationMethodUsed: TEXT
+    ore: QuantityRange
+    proposedExtractionMethod: Category [0..1]
+    ref dimension: MR_CORE_EarthResourceDimension[0..1]
     ref sourceReference: DocumentCitation[1..*]
   }
   Constraint Enum "MR_CORE_EndusePotentialValue" {
@@ -478,7 +462,7 @@ Container <<applicationSchema>>  "MineralResources" {
   }
   Attributes "MR_CORE_MineralDepositGroupValue" {
     description = "Values indicating the grouping of mineral deposits on the basis of their generic characteristics.
-
+  
     EXAMPLE: host rock, host structure, commodity, association with similar mineral processes e.g. porphyry."
     identifier = "MineralResources::MineralDepositGroupValue"
     tableName = "MR_CORE_MineralDepositGroupValue"
@@ -487,7 +471,7 @@ Container <<applicationSchema>>  "MineralResources" {
   }
   Attributes "MR_CORE_MineralDepositTypeValue" {
     description = "Values indicating the style of mineral occurrence or deposit.
-
+  
     Generally a local or regional term. Should be referenced for definitions and descriptions. Single deposit terms may form member of a Mineral Deposit Group in local and regional schemas."
     identifier = "MineralResources::MineralDepositTypeValue"
     tableName = "MR_CORE_MineralDepositTypeValue"
@@ -503,23 +487,16 @@ Container <<applicationSchema>>  "MineralResources" {
   }
   Attributes "MR_CORE_EndusePotentialValue" {
     description = "Values indicating the end-use potential of the mineral.
-
+  
     <font color="#211d1e">EXAMPLE: </font>for energy, fertilizer, building raw material etc.
-
+  
     <font color="#211d1e">
-
+  
     </font>"
     identifier = "MineralResources::EndusePotentialValue"
     tableName = "MR_CORE_EndusePotentialValue"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(MR_CORE_EndusePotentialValue)
-  }
-  Relation "MR_CORE_MiningActivity_deposit" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_MiningActivity#deposit"
-    tableName = "MR_CORE_MiningActivity_deposit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MiningActivity(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_EarthResource(id)
   }
   Relation "MR_CORE_MiningActivity_associatedMine" {
     profile = "attributes"
@@ -528,76 +505,17 @@ Container <<applicationSchema>>  "MineralResources" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MiningActivity(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Mine(id)
   }
-  Relation "MR_CORE_MiningFeature_inspireId" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_MiningFeature#inspireId"
-    tableName = "MR_CORE_MiningFeature_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MiningFeature(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
   Relation "MR_CORE_CommodityMeasure_commodityOfInterest" {
     profile = "attributes"
     tableName = "MR_CORE_CommodityMeasure_commodityOfInterest"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_CommodityMeasure(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Commodity(id)
   }
-  Relation "MR_CORE_null_measureDetails" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_CommodityMeasure#null"
-    tableName = "MR_CORE_null_measureDetails"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_OreMeasure(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_CommodityMeasure(id)
-  }
-  Relation "MR_CORE_OreMeasure_dimension" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_OreMeasure#dimension"
-    tableName = "MR_CORE_OreMeasure_dimension"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_OreMeasure(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_EarthResourceDimension(id)
-  }
-  Relation "MR_CORE_EarthResource_resourceExtraction" {
-    profile = "attributes"
-    tableName = "MR_CORE_EarthResource_resourceExtraction"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_EarthResource(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_MiningActivity(id)
-  }
-  Relation "MR_CORE_EarthResource_explorationHistory" {
-    profile = "attributes"
-    tableName = "MR_CORE_EarthResource_explorationHistory"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_EarthResource(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_ExplorationActivity(id)
-  }
-  Relation "MR_CORE_EarthResource_commodityDescription" {
-    profile = "attributes"
-    tableName = "MR_CORE_EarthResource_commodityDescription"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_EarthResource(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Commodity(id)
-  }
-  Relation "MR_CORE_EarthResource_oreAmount" {
-    profile = "attributes"
-    tableName = "MR_CORE_EarthResource_oreAmount"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_EarthResource(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_OreMeasure(id)
-  }
-  Relation "MR_CORE_EarthResource_dimension" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_EarthResource#dimension"
-    tableName = "MR_CORE_EarthResource_dimension"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_EarthResource(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_EarthResourceDimension(id)
-  }
   Relation "MR_CORE_ExplorationActivity_explorationResult" {
     profile = "attributes"
     tableName = "MR_CORE_ExplorationActivity_explorationResult"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_ExplorationActivity(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_ExplorationResultValue(id)
-  }
-  Relation "MR_CORE_Commodity_source" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_Commodity#source"
-    tableName = "MR_CORE_Commodity_source"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_Commodity(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_EarthResource(id)
   }
   Relation "MR_CORE_Mine_relatedActivity" {
     profile = "attributes"
@@ -622,13 +540,6 @@ Container <<applicationSchema>>  "MineralResources" {
     tableName = "MR_CORE_MineralOccurrence_endusePotential"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MineralOccurrence(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_EndusePotentialValue(id)
-  }
-  Relation "MR_CORE_MiningFeatureOccurrence_specification" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_MiningFeatureOccurrence#specification"
-    tableName = "MR_CORE_MiningFeatureOccurrence_specification"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MiningFeatureOccurrence(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_MiningFeature(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -669,9 +580,24 @@ Container <<applicationSchema>>  "MineralResources" {
     unknow
   }
   Constraint Enum "GML_UomIdentifier" {}
+  Attributes "BASE_Identifier" {
+    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    identifier = "Base Types::Identifier"
+    tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    versionId TEXT
+  }
   Attributes "GE_GeologicEvent" {
     description = "An identifiable event during which one or more geological processes act to modify geological entities.
-
+  
     A GeologicEvent should have a specified geologic age and process, and may have a specified environment. An example might be a cratonic uplift event during which erosion, sedimentation, and volcanism all take place. A GeologicEvent age can represent an instant in time or an interval of time."
     identifier = "Geology::GeologicEvent"
     tableName = "GE_GeologicEvent"
@@ -683,7 +609,7 @@ Container <<applicationSchema>>  "MineralResources" {
   }
   Attributes "GE_ThematicClass" {
     description = "A generic thematic classifier to enable the reclassification of Geologic Features with user defined classes appropriate to thematic maps.
-
+  
     This datatype allows Geologic Features to be classified against thematic classes. This provides a generic means of delivering geological thematic map data."
     identifier = "Geology::ThematicClass"
     tableName = "GE_ThematicClass"
@@ -691,24 +617,9 @@ Container <<applicationSchema>>  "MineralResources" {
     themeClass TEXT NOT NULL CHECK(GE_ThematicClassValue)
     themeClassification TEXT NOT NULL CHECK(GE_ThematicClassificationValue)
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
   Attributes "GE_EventProcessValue" {
     description = "Terms specifying the process or processes that occurred during an event.
-
+  
     EXAMPLE: deposition, extrusion, intrusion, cooling."
     identifier = "Geology::EventProcessValue"
     tableName = "GE_EventProcessValue"

@@ -28,24 +28,35 @@ val `Feature types`: List<Transform> = listOf(
     `Feature Type stereotype without geometry to GeoPackage Attribute`
 )
 
+/**
+ * The class can to be transformed to a feature table if it is concrete and has one attribute with a geometry type
+ * and a maximum multiplicity of 1.
+ */
 fun canToFeature(name: String): (KoreObject) -> Boolean = {
-    when {
-        it.references(name) -> (it as? KoreClass)
-            ?.attributes
-            ?.filter { att -> GeometryType.isInstance(att.type) }
-            ?.run { size == 1 && all { att -> att.upperBound == 1 } }
-            ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class but ${(it as? KoreNamedElement)?.fullName} was ${it.javaClass.simpleName}")
-        else -> false
+    if (it.references(name)) {
+        if (it is KoreClass) {
+            !it.isAbstract && it.attributes
+                .filter { att -> GeometryType.isInstance(att.type) }
+                .run { size == 1 && all { att -> att.upperBound == 1 } }
+        } else {
+            throw Exception("Not expected: if the instance has the refinement $name it must be a class but ${(it as? KoreNamedElement)?.fullName} was ${it.javaClass.simpleName}")
+        }
+    } else {
+        false
     }
 }
 
+/**
+ * The class can to be transformed to an attribute table if it is concrete and no geometry attributes.
+ */
 fun canToAttribute(name: String): (KoreObject) -> Boolean = {
-    when {
-        it.references(name) ->
-            (it as? KoreClass)
-                ?.attributes
-                ?.none { att -> GeometryType.isInstance(att.type) }
-                ?: throw Exception("Not expected: if the instance has the refinement $name it must be a class")
-        else -> false
+    if (it.references(name)) {
+        if (it is KoreClass) {
+            !it.isAbstract && it.attributes.none { att -> GeometryType.isInstance(att.type) }
+        } else {
+            throw Exception("Not expected: if the instance has the refinement $name it must be a class but ${(it as? KoreNamedElement)?.fullName} was ${it.javaClass.simpleName}\"")
+        }
+    } else {
+        false
     }
 }

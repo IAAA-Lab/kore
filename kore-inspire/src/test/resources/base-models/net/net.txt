@@ -1,37 +1,32 @@
 Container <<applicationSchema>>  "Network" {
-  Feature "NET_Node" {
-    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
-
-    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
-    identifier = "Network::Node"
-    tableName = "NET_Node"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry POINT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "Node" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: POINT
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref spokeEnd: Link[0..*] inv endNode[0..1]
+    ref spokeStart: Link[0..*] inv startNode[0..1]
   }
-  Attributes "NET_NetworkArea" {
-    description = "A 2-dimensional element in a network."
-    identifier = "Network::NetworkArea"
-    tableName = "NET_NetworkArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry GM_Surface NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "NetworkArea" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    geometry: GM_Surface
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "NET_NetworkConnection" {
     description = "Represents a logical connection between two or more network elements in different networks.
-
+  
     In the case where the networks are in different spatial data sets, a network connection object may exist in both data sets."
     identifier = "Network::NetworkConnection"
     tableName = "NET_NetworkConnection"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     type TEXT CHECK(NET_ConnectionTypeValue)
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "NET_LinkReference" {
     description = "A network reference to a linear network element."
@@ -39,18 +34,13 @@ Container <<applicationSchema>>  "Network" {
     tableName = "NET_LinkReference"
     applicableDirection TEXT CHECK(NET_LinkDirectionValue)
     id INTEGER NOT NULL PRIMARY KEY
-    element INTEGER
   }
-  Attributes "NET_LinkSequence" {
-    description = "A network element which represents a continuous path in the network without any branches. The element has a defined beginning and end and every position on the link sequence is identifiable with one single parameter such as length.
-
-    EXAMPLE A link sequence may represent a route."
-    identifier = "Network::LinkSequence"
-    tableName = "NET_LinkSequence"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "LinkSequence" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref link: NET_DirectedLink[1..*]
   }
   Attributes "NET_SimpleLinearReference" {
     description = "A network reference that is restricted to part of a linear network element. The part is the part of the network element between fromPosition and toPosition."
@@ -64,7 +54,6 @@ Container <<applicationSchema>>  "Network" {
     offset_uom TEXT CHECK(GML_UomIdentifier)
     toPosition TEXT NOT NULL
     toPosition_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    element INTEGER
   }
   Attributes "NET_DirectedLink" {
     description = "A link either in its positive or negative direction."
@@ -72,7 +61,6 @@ Container <<applicationSchema>>  "Network" {
     tableName = "NET_DirectedLink"
     direction Sign NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    link INTEGER
   }
   Attributes "NET_SimplePointReference" {
     description = "A network reference that is restricted to a point on a linear network element. The point is the location on the network element at the position atPosition along the network."
@@ -84,27 +72,18 @@ Container <<applicationSchema>>  "Network" {
     id INTEGER NOT NULL PRIMARY KEY
     offset TEXT
     offset_uom TEXT CHECK(GML_UomIdentifier)
-    element INTEGER
   }
-  Attributes "NET_GeneralisedLink" {
-    description = "Abstract base type representing a linear network element that may be used as a target in linear referencing."
-    identifier = "Network::GeneralisedLink"
-    tableName = "NET_GeneralisedLink"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "GeneralisedLink" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
-  Attributes "NET_NetworkProperty" {
-    description = "Abstract base type representing phenomena located at or along a network element. This base type provides general properties to associate the network-related phenomena (network properties) with the network elements.
-
-    In the simplest case (NetworkReference), the network property applies to the whole network element. In the case of a Link, the spatial reference may be restricted to part of the Link by using a linear reference. ISO/TC 211 is currently in the early stages of developing a standard for Linear Referencing (ISO 19148). A simple mechanism to express linear references is provided in this version of the network model; it is expected that the model will be extended once ISO 19148 is stable. The current simple model requires for all linear references two expressions representing a distance from the start of the Link along its curve geometry. The network property applies to the part of the Link between fromPosition and toPosition."
-    identifier = "Network::NetworkProperty"
-    tableName = "NET_NetworkProperty"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "NetworkProperty" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
+    ref networkRef: NET_NetworkReference[0..*]
   }
   Constraint Enum "NET_LinkDirectionValue" {
     identifier = "Network::LinkDirectionValue"
@@ -120,7 +99,7 @@ Container <<applicationSchema>>  "Network" {
   }
   Attributes "NET_CrossReference" {
     description = "Represents a reference between two elements in the same network.
-
+  
     The cross reference may represent the case where two elements are different representations of the same spatial object."
     identifier = "Network::CrossReference"
     tableName = "NET_CrossReference"
@@ -128,156 +107,60 @@ Container <<applicationSchema>>  "Network" {
   }
   Attributes "NET_GradeSeparatedCrossing" {
     description = "Indicator which of two or more intersecting elements is/are below and which is/are above, to be used if elevation coordinates are not present or cannot be trusted.
-
+  
     NOTE 1 In most cases, the number of elements will be two.
-
+  
     NOTE 2 In the normal case this is when elements intersect in the x/y-plane when the z coordinate is not present or is not accurate enough."
     identifier = "Network::GradeSeparatedCrossing"
     tableName = "NET_GradeSeparatedCrossing"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
-  Feature "NET_Link" {
-    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
-    identifier = "Network::Link"
-    tableName = "NET_Link"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
+  Class "Link" {
+    beginLifespanVersion: DATETIME [0..1]
+    centrelineGeometry: CURVE
+    endLifespanVersion: DATETIME [0..1]
+    fictitious: BOOLEAN
+    ref endNode: Node[0..1] inv spokeEnd[0..*]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
+    ref startNode: Node[0..1] inv spokeStart[0..*]
   }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "NetworkElement" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "NET_NetworkReference" {
     description = "A reference to a network element."
     identifier = "Network::NetworkReference"
     tableName = "NET_NetworkReference"
     id INTEGER NOT NULL PRIMARY KEY
-    element INTEGER
   }
-  Attributes "NET_LinkSet" {
-    description = "A collection of link sequences and/or individual links that has a specific function or significance in a network.
-
-    NOTE This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
-
-    EXAMPLE A dual carriageway road, as a collection of the two link sequences that represent each carriageway."
-    identifier = "Network::LinkSet"
-    tableName = "NET_LinkSet"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Class "LinkSet" {
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    ref inNetwork: NET_Network[0..*] inv elements[0..*]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
-
+  
     The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
     identifier = "Network::Network"
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Relation "NET_Node_spokeStart" {
-    profile = "features"
-    relatedReference = "NET_Link#startNode"
-    tableName = "NET_Node_spokeStart"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_Node_spokeEnd" {
-    profile = "features"
-    relatedReference = "NET_Link#endNode"
-    tableName = "NET_Node_spokeEnd"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Node(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NET_NetworkConnection_element" {
-    profile = "attributes"
-    tableName = "NET_NetworkConnection_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkConnection(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Relation "NET_NetworkReference_involves" {
     profile = "attributes"
     tableName = "NET_NetworkReference_involves"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
-  }
-  Relation "NET_NetworkReference_element" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkReference#element"
-    tableName = "NET_NetworkReference_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
-  }
-  Relation "NET_LinkSequence_link" {
-    profile = "attributes"
-    tableName = "NET_LinkSequence_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_LinkSequence(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
-  }
-  Relation "NET_DirectedLink_link" {
-    profile = "features"
-    relatedReference = "NET_DirectedLink#link"
-    tableName = "NET_DirectedLink_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_NetworkProperty_networkRef" {
-    profile = "attributes"
-    tableName = "NET_NetworkProperty_networkRef"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkProperty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
-  }
-  Relation "NET_NetworkProperty_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkProperty#inspireId"
-    tableName = "NET_NetworkProperty_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkProperty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "NET_CrossReference_element" {
-    profile = "attributes"
-    tableName = "NET_CrossReference_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_CrossReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
-  }
-  Relation "NET_GradeSeparatedCrossing_element" {
-    profile = "features"
-    tableName = "NET_GradeSeparatedCrossing_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_GradeSeparatedCrossing(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Link(id)
-  }
-  Relation "NET_LinkSet_link" {
-    profile = "attributes"
-    tableName = "NET_LinkSet_link"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_LinkSet(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_GeneralisedLink(id)
   }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
@@ -429,11 +312,11 @@ Container <<applicationSchema>>  "Network" {
   Constraint Enum "GML_UomIdentifier" {}
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -501,9 +384,9 @@ Container <<applicationSchema>>  "Network" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -574,7 +457,7 @@ Container <<applicationSchema>>  "Network" {
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"

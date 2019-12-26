@@ -1,15 +1,15 @@
 Container <<applicationSchema>>  "MaritimeUnits" {
   Feature "MU_MaritimeBoundary" {
     description = "A line depicting the separation of any type of maritime jurisdiction.
-
+  
     SOURCE IHO Dictionary, S-32, Fifth Edition.
-
+  
     NOTE 1 Maritime boundary represents either:
-
+  
     1) the seaward outer limits of the maritime zones of a coastal State, such as territorial sea, contiguous zone, exclusive economic zone and continental shelf;
-
+  
     2) the limits of the maritime zones of States with opposite or adjacent coasts.
-
+  
     Maritime boundaries are a politically sensitive subject, because it affects coastal State's jurisdiction concerning fishery, petroleum and other resources of the sea as well as other uses of the sea. [Source: "Maritime Boundary", S.P. Jagota]"
     identifier = "MaritimeUnits::MaritimeBoundary"
     tableName = "MU_MaritimeBoundary"
@@ -39,13 +39,13 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Attributes "MU_Baseline" {
     description = "The line from which the outer limits of the territorial sea and certain other outer limits are measured.
-
+  
     SOURCE IHO Dictionary, S-32, Fifth Edition.
-
+  
     NOTE The baseline comprises of one or more baseline segments.
-
+  
     According to United Nations Convention on the Law of the Sea (UNCLOS), the baseline segment can be normal, straight or archipelagic depending on the method used to determine the baseline segment.
-
+  
     COMMENT: For this moment there is no clearly identified use-case that would require Baseline spatial object types, therefore it is not strictly necessary to include these objects in the dataset."
     identifier = "MaritimeUnits::Baseline"
     tableName = "MU_Baseline"
@@ -62,9 +62,9 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Feature "MU_MaritimeZone" {
     description = "A belt of sea defined by international treaties and conventions, where coastal State executes jurisdictional rights.
-
+  
     NOTE 1 The zone is established for e.g. cadastral, administrative, economic, security or safety purposes. It is not established for environmental management or regulation, which is covered by the theme Area management/restriction/regulation zones and reporting areas, or for environmental protection, which is covered by the theme Protected sites.
-
+  
     NOTE 2 The maritime zone can be either internal waters, territorial sea, contiguous zone, exclusive economic zone or continental shelf."
     identifier = "MaritimeUnits::MaritimeZone"
     tableName = "MU_MaritimeZone"
@@ -175,24 +175,6 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ShoreSegment(id)
   }
-  Relation "HY_HydroObject_relatedHydroObject" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_relatedHydroObject"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroObject(id)
-  }
-  Relation "HY_HydroObject_geographicalName" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "HY_HydroObject_hydroId" {
-    profile = "attributes"
-    tableName = "HY_HydroObject_hydroId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_HydroObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
-  }
   Relation "SR_SeaArea_subArea" {
     profile = "attributes"
     tableName = "SR_SeaArea_subArea"
@@ -268,11 +250,11 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -294,12 +276,14 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     tableName = "SR_Shoreline"
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "SR_SeaArea" {
     description = "An area of sea defined according to its physical and chemical characteristics. It may have multiple geometries (extent) to represent different tidal states.
-
+  
     A SeaArea is a type of HydroObject as described in the Annex1 theme Hydrography. It has geometry described by one or more GM_MultiSurfaces. Multiple geometries are allowed  to enable a SeaArea to be described according to different tidal states.
-
+  
     Typically however, specialisations of SeaArea will restrict the geometry to a particular tidal state or set of tidal states.  SeaAreas include named seas such as ‘Baltic Sea’ and also un-named areas of sea that have particular chemical and physical characteristics.  SeaAreas are 2D objects and carry no explicit information about the depth of the sea, this is specified in the INSPIRE Elevation Theme."
     identifier = "Sea Regions::SeaArea"
     tableName = "SR_SeaArea"
@@ -308,10 +292,12 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Feature "SR_Sea" {
     description = "Extent of sea at High Water (meanHighWater).
-
+  
     An area of sea, bounded by land and adjacent sea regions.  May contain smaller scale sea regions. Has common large scale circulation patterns, in part defined by its land boundaries.  High Water is taken to be mean high water.  Applies to common names areas of sea, e.g. North Sea, Agean Sea etc. (Source: IHO S23 SeaRegion)"
     identifier = "Sea Regions::Sea"
     tableName = "SR_Sea"
@@ -322,6 +308,8 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
+    ref geographicalName: GN_GeographicalName[0..*]
+    ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
@@ -339,7 +327,7 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Feature "SR_ShoreSegment" {
     description = "A Shore Segment is a section of shore line.
-
+  
     Where it is possible to provide attributes about shore stability (eroding, stable etc) and/or shore type (sand, rock, harbour etc). Then the Shore Segment should be used in place of the GML LineString element to describe curve segments."
     identifier = "Sea Regions::ShoreSegment"
     tableName = "SR_ShoreSegment"
@@ -347,25 +335,6 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     shoreClassification TEXT CHECK(SR_ShoreTypeClassificationValue)
     shoreStability TEXT CHECK(SR_ShoreStabilityValue)
-  }
-  Attributes "HY_HydroObject" {
-    description = "An identity base for hydrographic (including man-made) objects in the real world.
-
-    NOTE Derived 'views' of real-world hydrographic objects are represented through specialisations in other application schemas; all representations of the same real-world object share a common geographic name or hydrographic identifier."
-    identifier = "Hydro - base::HydroObject"
-    tableName = "HY_HydroObject"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "HY_HydroIdentifier" {
-    description = "A hydrographic thematic identifier.
-
-    NOTE May be used to hold a national hydrological identification code."
-    identifier = "Hydro - base::HydroIdentifier"
-    tableName = "HY_HydroIdentifier"
-    classificationScheme TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
   }
   Attributes "SR_ParameterValuePair" {
     description = "A parameter value pair contains a value of some observed property. e.g. Annual Mean Sea Surface Temperature."
@@ -378,7 +347,7 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Feature "SR_MarineExtent" {
     description = "The extent of a sea area for a given tidal state
-
+  
     The expected 2D geometric extent of a SeaArea for a particular tidal state."
     identifier = "Sea Regions::MarineExtent"
     tableName = "SR_MarineExtent"
@@ -388,9 +357,9 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -398,6 +367,17 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
+  }
+  Attributes "HY_HydroIdentifier" {
+    description = "A hydrographic thematic identifier.
+  
+    NOTE May be used to hold a national hydrological identification code."
+    identifier = "Hydro - base::HydroIdentifier"
+    tableName = "HY_HydroIdentifier"
+    classificationScheme TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
   }
   Constraint Enum "HY_P_WaterLevelValue" {
     identifier = "Hydro - Physical Waters::WaterLevelValue"

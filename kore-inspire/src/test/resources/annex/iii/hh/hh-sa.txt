@@ -246,13 +246,6 @@ Container <<applicationSchema>>  "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
-  Relation "NET_NetworkReference_element" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkReference#element"
-    tableName = "NET_NetworkReference_element"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkElement(id)
-  }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
     relatedReference = "AU_AdministrativeBoundary#inspireId"
@@ -291,19 +284,6 @@ Container <<applicationSchema>>  "Safety" {
     tableName = "AU_ResidenceOfAuthority_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
@@ -345,11 +325,11 @@ Container <<applicationSchema>>  "Safety" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -363,7 +343,6 @@ Container <<applicationSchema>>  "Safety" {
     identifier = "Network::NetworkReference"
     tableName = "NET_NetworkReference"
     id INTEGER NOT NULL PRIMARY KEY
-    element INTEGER
   }
   Feature "AU_AdministrativeBoundary" {
     description = "A line of demarcation between administrative units."
@@ -397,9 +376,9 @@ Container <<applicationSchema>>  "Safety" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -407,15 +386,6 @@ Container <<applicationSchema>>  "Safety" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
   }
   Attributes "AU_AdministrativeHierarchyLevel" {
     description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
@@ -426,7 +396,7 @@ Container <<applicationSchema>>  "Safety" {
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"
@@ -438,11 +408,12 @@ Container <<applicationSchema>>  "Safety" {
   }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
-
+  
     The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
     identifier = "Network::Network"
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Attributes "GMD_CI_PresentationFormCode" {
     description = "Mode in which the data is represented"

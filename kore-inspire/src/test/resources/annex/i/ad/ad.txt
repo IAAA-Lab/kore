@@ -6,34 +6,14 @@ Container <<applicationSchema>>  "Addresses" {
     byOtherParty
     fromFeature
   }
-  Attributes "AD_AddressComponent" {
-    description = "Identifier or geographic name of a specific geographic area, location, or other spatial object which defines the scope of an address.
-
-    NOTE 1 Four different subclasses of address components are defined:
-
-    o    Administrative unit name, which may include name of country, name of municipality, name of district
-
-    o    Address area name like e.g. name of village or settlement
-
-    o    Thoroughfare name, most often road name
-
-    o    Postal descriptor
-
-    In order to construct an address, these subclasses are often structured hierarchically.
-
-    NOTE 2 It is the combination of the address locator and the address components, which makes a specific address spatial object readable and unambiguous for the human user.
-
-    EXAMPLE The combination of the locator "13" and the address components "Calle Mayor" (thoroughfare name), "Cortijo del Marqués" (address area name), "41037" (postal descriptor), "Écija", "Sevilla" and "España" (administrative unit names) makes this specific address spatial object readable and unambiguous."
-    identifier = "Addresses::AddressComponent"
-    tableName = "AD_AddressComponent"
-    alternativeIdentifier TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
+  Class "AddressComponent" {
+    alternativeIdentifier: TEXT [0..1]
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    status: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "AD_LocatorLevelValue" {
     identifier = "Addresses::LocatorLevelValue"
@@ -47,15 +27,15 @@ Container <<applicationSchema>>  "Addresses" {
     identifier = "Addresses::AdminUnitName"
     tableName = "AD_AdminUnitName"
     adminUnit INTEGER
-    alternativeIdentifier TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    alternativeIdentifier: TEXT [0..1]
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     level TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
+    status: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "AD_ThoroughfareName" {
     description = "An address component which represents the name of a passage or way through from one location to another.
@@ -65,14 +45,14 @@ Container <<applicationSchema>>  "Addresses" {
     NOTE 2 Thoroughfare names includes names of squares and of cul de sacs, and they can also represent the network of smaller roads or paths e.g. in a small village or settlement."
     identifier = "Addresses::ThoroughfareName"
     tableName = "AD_ThoroughfareName"
-    alternativeIdentifier TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    alternativeIdentifier: TEXT [0..1]
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
+    status: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Constraint Enum "AD_LocatorDesignatorTypeValue" {
     identifier = "Addresses::LocatorDesignatorTypeValue"
@@ -187,7 +167,6 @@ Container <<applicationSchema>>  "Addresses" {
     tableName = "AD_AddressLocator"
     id INTEGER NOT NULL PRIMARY KEY
     level TEXT NOT NULL CHECK(AD_LocatorLevelValue)
-    withinScopeOf INTEGER
   }
   Attributes "AD_AddressAreaName" {
     description = "An address component which represents the name of a geographic area or locality that groups a number of addressable objects for addressing purposes, without being an administrative unit.
@@ -203,15 +182,15 @@ Container <<applicationSchema>>  "Addresses" {
     EXAMPLE 3 In Denmark "Supplerende bynavn" (en: Supplementary town name) is sometimes compulsory to ensure uniqueness of street names within the post code, sometimes it is just useful extra information, that makes the address more informative."
     identifier = "Addresses::AddressAreaName"
     tableName = "AD_AddressAreaName"
-    alternativeIdentifier TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    alternativeIdentifier: TEXT [0..1]
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     namedPlace INTEGER
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
+    status: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -273,15 +252,15 @@ Container <<applicationSchema>>  "Addresses" {
     EXAMPLE 4 In Germany the lowest level of the Postal descriptor (the 5 digit Postleitzahl) often does not fall within an administrative unit (e.g. municipality). The Postleitzahl is handled completely independent from the hierarchal systematic of the addresses. In addition, some "Postleitzahlen" represent not a delivery area, but institutions with a big amount of post."
     identifier = "Addresses::PostalDescriptor"
     tableName = "AD_PostalDescriptor"
-    alternativeIdentifier TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    alternativeIdentifier: TEXT [0..1]
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     postCode TEXT
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
+    status: TEXT [0..1]
+    validFrom: DATETIME [0..1]
+    validTo: DATETIME [0..1]
+    ref inspireId: BASE_Identifier[0..1]
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -306,19 +285,6 @@ Container <<applicationSchema>>  "Addresses" {
     method TEXT CHECK(AD_GeometryMethodValue)
     specification TEXT CHECK(AD_GeometrySpecificationValue)
   }
-  Relation "AD_AddressComponent_situatedWithin" {
-    profile = "attributes"
-    tableName = "AD_AddressComponent_situatedWithin"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressComponent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
-  }
-  Relation "AD_AddressComponent_inspireId" {
-    profile = "attributes"
-    relatedReference = "AD_AddressComponent#inspireId"
-    tableName = "AD_AddressComponent_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressComponent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
   Relation "AD_AdminUnitName_adminUnit" {
     profile = "features"
     relatedReference = "AD_AdminUnitName#adminUnit"
@@ -331,12 +297,6 @@ Container <<applicationSchema>>  "Addresses" {
     tableName = "AD_AdminUnitName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AD_ThoroughfareName_transportLink" {
-    profile = "attributes"
-    tableName = "AD_ThoroughfareName_transportLink"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES TN_TransportLink(id)
   }
   Relation "AD_ThoroughfareName_name" {
     profile = "attributes"
@@ -363,13 +323,6 @@ Container <<applicationSchema>>  "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareNameValue(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_PartOfName(id)
   }
-  Relation "AD_AddressLocator_withinScopeOf" {
-    profile = "attributes"
-    relatedReference = "AD_AddressLocator#withinScopeOf"
-    tableName = "AD_AddressLocator_withinScopeOf"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
-  }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
     tableName = "AD_AddressLocator_designator"
@@ -395,24 +348,12 @@ Container <<applicationSchema>>  "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
-  Relation "AD_Address_component" {
-    profile = "attributes"
-    tableName = "AD_Address_component"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressComponent(id)
-  }
   Relation "AD_Address_parentAddress" {
     profile = "attributes"
     relatedReference = "AD_Address#parentAddress"
     tableName = "AD_Address_parentAddress"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_Address(id)
-  }
-  Relation "AD_Address_building" {
-    profile = "attributes"
-    tableName = "AD_Address_building"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_AbstractConstruction(id)
   }
   Relation "AD_Address_inspireId" {
     profile = "attributes"
@@ -550,33 +491,6 @@ Container <<applicationSchema>>  "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
-  Relation "NET_Link_startNode" {
-    profile = "features"
-    relatedReference = "NET_Link#startNode"
-    tableName = "NET_Link_startNode"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Link(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Node(id)
-  }
-  Relation "NET_Link_endNode" {
-    profile = "features"
-    relatedReference = "NET_Link#endNode"
-    tableName = "NET_Link_endNode"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Link(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Node(id)
-  }
-  Relation "NET_NetworkElement_inNetwork" {
-    profile = "attributes"
-    tableName = "NET_NetworkElement_inNetwork"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
-  }
-  Relation "NET_NetworkElement_inspireId" {
-    profile = "attributes"
-    relatedReference = "NET_NetworkElement#inspireId"
-    tableName = "NET_NetworkElement_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkElement(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
   Relation "GN_NamedPlace_inspireId" {
     profile = "attributes"
     relatedReference = "GN_NamedPlace#inspireId"
@@ -607,37 +521,6 @@ Container <<applicationSchema>>  "Addresses" {
     tableName = "GN_NamedPlace_type"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_elevation" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_elevation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_Elevation(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_externalReference" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_externalReference"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_ExternalReference(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_heightAboveGround" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_heightAboveGround"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_HeightAboveGround(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_inspireId" {
-    profile = "attributes"
-    relatedReference = "BU_BASE_AbstractConstruction#inspireId"
-    tableName = "BU_BASE_AbstractConstruction_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "BU_BASE_AbstractConstruction_name" {
-    profile = "attributes"
-    tableName = "BU_BASE_AbstractConstruction_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_AbstractConstruction(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
@@ -750,23 +633,6 @@ Container <<applicationSchema>>  "Addresses" {
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
   }
-  Attributes "TN_TransportLink" {
-    description = "A linear spatial object that describes the geometry and connectivity of a transport network between two points in the network."
-    identifier = "Common Transport Elements::TransportLink"
-    tableName = "TN_TransportLink"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
-    validFrom DATETIME
-    validTo DATETIME
-    ref geographicalName: GN_GeographicalName[0..1]
-    ref LinkSet inv link[1..*]
-  }
   Feature "GN_NamedPlace" {
     description = "Any real world entity referred to by one or several proper nouns."
     identifier = "Geographical Names::NamedPlace"
@@ -782,27 +648,6 @@ Container <<applicationSchema>>  "Addresses" {
     mostDetailedViewingResolution_distance TEXT
     mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
-  }
-  Attributes "BU_BASE_AbstractConstruction" {
-    description = "Abstract spatial object type grouping the semantic properties of  buildings, building parts and of some optional spatial object types that may be added in order to provide more information about the theme Buildings.
-
-    The optional spatial object types that may be added to core profiles are described in the extended profiles. The ones inheriting from the attributes of AbstractConstruction are Installation and OtherConstruction."
-    identifier = "BuildingsBase::AbstractConstruction"
-    tableName = "BU_BASE_AbstractConstruction"
-    beginLifespanVersion DATETIME
-    conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
-    dateOfConstruction_anyPoint DATETIME
-    dateOfConstruction_beginning DATETIME
-    dateOfConstruction_end DATETIME
-    dateOfDemolition_anyPoint DATETIME
-    dateOfDemolition_beginning DATETIME
-    dateOfDemolition_end DATETIME
-    dateOfRenovation_anyPoint DATETIME
-    dateOfRenovation_beginning DATETIME
-    dateOfRenovation_end DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
   }
   Feature "AU_AdministrativeBoundary" {
     description = "A line of demarcation between administrative units."
@@ -847,38 +692,29 @@ Container <<applicationSchema>>  "Addresses" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
-  Feature "NET_Link" {
-    description = "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."
-    identifier = "Network::Link"
-    tableName = "NET_Link"
-    beginLifespanVersion DATETIME
-    centrelineGeometry CURVE NOT NULL
-    endLifespanVersion DATETIME
-    endNode INTEGER
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+  Attributes "GN_NamedPlaceTypeValue" {
+    description = "The type of a named place."
+    identifier = "Geographical Names::NamedPlaceTypeValue"
+    tableName = "GN_NamedPlaceTypeValue"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    startNode INTEGER
-    ref LinkSet inv link[1..*]
+    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
   }
-  Feature "NET_Node" {
-    description = "Represents a significant position in the network that always occurs at the beginning or the end of a link.
+  Attributes "AU_AdministrativeHierarchyLevel" {
+    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
+    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+    tableName = "AU_AdministrativeHierarchyLevel"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
+  }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
 
-    NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"
-    identifier = "Network::Node"
-    tableName = "NET_Node"
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
     beginLifespanVersion DATETIME
     endLifespanVersion DATETIME
-    geometry POINT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_NetworkElement" {
-    description = "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."
-    identifier = "Network::NetworkElement"
-    tableName = "NET_NetworkElement"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
   }
@@ -889,13 +725,32 @@ Container <<applicationSchema>>  "Addresses" {
     identifier = "Network::Network"
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
+    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
-  Attributes "GN_NamedPlaceTypeValue" {
-    description = "The type of a named place."
-    identifier = "Geographical Names::NamedPlaceTypeValue"
-    tableName = "GN_NamedPlaceTypeValue"
+  Attributes "CP_BasicPropertyUnit" {
+    description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
+
+    SOURCE Adapted from UN ECE 2004.
+
+    NOTE 1 In the INSPIRE context, basic property units are to be made available by member states where unique cadastral references are given only for basic property units and not for parcels.
+
+    NOTE 2 In many (but not all) countries, the area of the basic property unit corresponds to the cadastral parcel itself.
+
+    NOTE 3 Some countries, such as Finland, may also register officially basic property units without any area. These basic property units are considered out of the INSPIRE scope.
+
+    NOTE 4 Some countries, such as Norway, may have parcels which belong to several basic property units."
+    identifier = "CadastralParcels::BasicPropertyUnit"
+    tableName = "CP_BasicPropertyUnit"
+    administrativeUnit INTEGER
+    areaValue TEXT
+    areaValue_uom TEXT CHECK(GML_UomIdentifier)
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
     id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
+    inspireId INTEGER
+    nationalCadastralReference TEXT NOT NULL
+    validFrom DATETIME
+    validTo DATETIME
   }
   Attributes "BU_BASE_Elevation" {
     description = "This data types includes the elevation value itself  and information on how this elevation was measured."
@@ -925,51 +780,11 @@ Container <<applicationSchema>>  "Addresses" {
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-  }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
-    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "CP_BasicPropertyUnit" {
-    description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
-
-    SOURCE Adapted from UN ECE 2004.
-
-    NOTE 1 In the INSPIRE context, basic property units are to be made available by member states where unique cadastral references are given only for basic property units and not for parcels.
-
-    NOTE 2 In many (but not all) countries, the area of the basic property unit corresponds to the cadastral parcel itself.
-
-    NOTE 3 Some countries, such as Finland, may also register officially basic property units without any area. These basic property units are considered out of the INSPIRE scope.
-
-    NOTE 4 Some countries, such as Norway, may have parcels which belong to several basic property units."
-    identifier = "CadastralParcels::BasicPropertyUnit"
-    tableName = "CP_BasicPropertyUnit"
-    administrativeUnit INTEGER
-    areaValue TEXT
-    areaValue_uom TEXT CHECK(GML_UomIdentifier)
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    nationalCadastralReference TEXT NOT NULL
-    validFrom DATETIME
-    validTo DATETIME
-  }
   Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ConditionOfConstructionValue"
+  }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
     AT
@@ -1026,10 +841,6 @@ Container <<applicationSchema>>  "Addresses" {
     dual
     plural
     singular
-  }
-  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ConditionOfConstructionValue"
   }
   Constraint Enum "AU_LegalStatusValue" {
     identifier = "AdministrativeUnits::LegalStatusValue"
@@ -1135,6 +946,12 @@ Container <<applicationSchema>>  "Addresses" {
     protectedSite
     transportNetwork
   }
+  Constraint Enum "CP_CadastralZoningLevelValue" {
+    identifier = "CadastralParcels::CadastralZoningLevelValue"
+    1stOrder
+    2ndOrder
+    3rdOrder
+  }
   Constraint Enum "BU_BASE_ElevationReferenceValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ElevationReferenceValue"
@@ -1142,11 +959,5 @@ Container <<applicationSchema>>  "Addresses" {
   Constraint Enum "BU_BASE_HeightStatusValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::HeightStatusValue"
-  }
-  Constraint Enum "CP_CadastralZoningLevelValue" {
-    identifier = "CadastralParcels::CadastralZoningLevelValue"
-    1stOrder
-    2ndOrder
-    3rdOrder
   }
 }

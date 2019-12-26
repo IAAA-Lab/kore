@@ -86,7 +86,7 @@ class DryRunTest {
     }
 
     @Test
-    fun `Annex I Protected Sites - air transport network - draft`() {
+    fun `Annex I Transport networks - air transport network - draft`() {
         checkSchema("Air Transport Network", "annex/i/tn/tn-a")
     }
 
