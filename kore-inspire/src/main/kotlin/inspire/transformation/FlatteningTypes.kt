@@ -14,7 +14,7 @@ import es.iaaa.kore.transform.rules.flattenTypes
  */
 val `Flattening types`: Transform = { _, _ ->
     flattenTypes(predicate = { obj ->
-        (obj.references("dataType") || obj.hasNoReferences()) && !(obj nameIs "Identifier")
+        (obj.references(Stereotypes.dataType) || obj.hasNoReferences()) && !(obj nameIs "Identifier")
     },
         postFlatten = { old, new ->
             new.name = "${old.name}_${new.name}"

@@ -20,7 +20,7 @@ import es.iaaa.kore.transform.rules.patch
  * may be enforced by code in applications that update GeoPackage data values.
  */
 val `Flatten union types`: Transform = { _, _ ->
-    patch<KoreAttribute>(predicate = { upperBound == 1 && type?.references("Union") == true }) {
+    patch<KoreAttribute>(predicate = { upperBound == 1 && type?.references(Stereotypes.union) == true }) {
         val union = type as? KoreClass ?: throw Exception("Union types must be classes but was ${type?.javaClass?.simpleName}")
         union.attributes.forEach { attribute ->
             copy(containingClass as KoreClass).apply {

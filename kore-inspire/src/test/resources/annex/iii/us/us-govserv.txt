@@ -9,38 +9,26 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
   Constraint Enum "US_GOVSERV_ServiceTypeValue" {
     identifier = "AdministrativeAndSocialGovernmentalServices::ServiceTypeValue"
   }
-  Attributes "US_GOVSERV_GovernmentalService" {
-    description = "Administrative and social governmental services such as public administrations, civil protection sites, schools and hospitals provided by Public Administrative Bodies or by private institutions as far as they are covered by the scope of the INSPIRE directive. This scope is mapped to the values of the corresponding code list serviceType Value.
-  
-    The accordant sites are commonly presented in governmental and municipal portals and map systems as "point of interest"-data, and may be point-based locations of a variety of categories of municipal and governmental services and social infrastructure. The spatial object type itself is generic in terms of the modelling approach, that the concrete type of a GovernmentalService is determined by the value of the attribute serviceType."
-    identifier = "AdministrativeAndSocialGovernmentalServices::GovernmentalService"
-    tableName = "US_GOVSERV_GovernmentalService"
-    areaOfResponsibility AreaOfResponsibilityType
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    serviceLocation ServiceLocationType NOT NULL
-    serviceType TEXT NOT NULL CHECK(US_GOVSERV_ServiceTypeValue)
+  Class "GovernmentalService" {
+    areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit: AU_AdministrativeUnit [0..1]
+    areaOfResponsibility_areaOfResponsibilityByNamedPlace: GN_NamedPlace [0..1]
+    areaOfResponsibility_areaOfResponsibilityByPolygon: MULTISURFACE [0..1]
+    beginLifespanVersion: DATETIME [0..1]
+    endLifespanVersion: DATETIME [0..1]
+    serviceLocation_serviceLocationByActivityComplex: ACT_CORE_ActivityComplex [0..1]
+    serviceLocation_serviceLocationByBuilding: BU_CORE2D_Building [0..1]
+    serviceLocation_serviceLocationByGeometry: GEOMETRY [0..1]
+    serviceLocation_serviceLocationByUtilityNode: UtilityNode [0..1]
+    serviceType: TEXT
+    ref inspireId: BASE_Identifier
+    ref pointOfContact: BASE2_Contact[0..*]
+    ref serviceLocation_serviceLocationByAddress: AD_Address[0..1]
   }
   Class <<union>>  "AreaOfResponsibilityType" {
     areaOfResponsibilityByPolygon: MULTISURFACE
     ref areaOfResponsibilityByAdministrativeUnit: AU_AdministrativeUnit[1..*]
     ref areaOfResponsibilityByNamedPlace: GN_NamedPlace[1..*]
     ref areaOfResponsibilityByNetwork: NET_NetworkReference[1..*]
-  }
-  Relation "US_GOVSERV_GovernmentalService_inspireId" {
-    profile = "attributes"
-    relatedReference = "US_GOVSERV_GovernmentalService#inspireId"
-    tableName = "US_GOVSERV_GovernmentalService_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "US_GOVSERV_GovernmentalService_pointOfContact" {
-    profile = "attributes"
-    tableName = "US_GOVSERV_GovernmentalService_pointOfContact"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -110,19 +98,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     tableName = "AD_Address_position"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_GeographicPosition(id)
-  }
-  Relation "BASE2_Contact_address" {
-    profile = "attributes"
-    relatedReference = "BASE2_Contact#address"
-    tableName = "BASE2_Contact_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
-  }
-  Relation "NET_NetworkReference_involves" {
-    profile = "attributes"
-    tableName = "NET_NetworkReference_involves"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
   }
   Relation "AU_admUnit_boundary" {
     profile = "features"
@@ -199,6 +174,19 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
   }
+  Relation "BASE2_Contact_address" {
+    profile = "attributes"
+    relatedReference = "BASE2_Contact#address"
+    tableName = "BASE2_Contact_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
+  }
+  Relation "NET_NetworkReference_involves" {
+    profile = "attributes"
+    tableName = "NET_NetworkReference_involves"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+  }
   Relation "ACT_CORE_Function_activity" {
     profile = "attributes"
     tableName = "ACT_CORE_Function_activity"
@@ -240,6 +228,45 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "AU_AdministrativeBoundary_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_AdministrativeBoundary#inspireId"
+    tableName = "AU_AdministrativeBoundary_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_AdministrativeBoundary_nationalLevel" {
+    profile = "attributes"
+    tableName = "AU_AdministrativeBoundary_nationalLevel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
+  }
+  Relation "AU_Condominium_admUnit" {
+    profile = "features"
+    tableName = "AU_Condominium_admUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
+  }
+  Relation "AU_Condominium_inspireId" {
+    profile = "attributes"
+    relatedReference = "AU_Condominium#inspireId"
+    tableName = "AU_Condominium_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AU_Condominium_name" {
+    profile = "attributes"
+    tableName = "AU_Condominium_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "AU_ResidenceOfAuthority_name" {
+    profile = "attributes"
+    relatedReference = "AU_ResidenceOfAuthority#name"
+    tableName = "AU_ResidenceOfAuthority_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Relation "AD_AddressRepresentation_addressFeature" {
     profile = "attributes"
@@ -286,7 +313,7 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
   }
   Relation "HH_SA_Event_part" {
-    profile = "attributes"
+    profile = "features"
     relatedReference = "HH_SA_Event#aggregation"
     tableName = "HH_SA_Event_part"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
@@ -299,43 +326,17 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_inspireId" {
+  Relation "HH_SA_Event_sourceReference" {
     profile = "attributes"
-    relatedReference = "AU_AdministrativeBoundary#inspireId"
-    tableName = "AU_AdministrativeBoundary_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+    tableName = "HH_SA_Event_sourceReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Citation(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
+  Relation "HH_SA_Event_locationUnit_geographicalName" {
     profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
-  Relation "AU_Condominium_admUnit" {
-    profile = "features"
-    tableName = "AU_Condominium_admUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_Condominium_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_Condominium#inspireId"
-    tableName = "AU_Condominium_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_name" {
-    profile = "attributes"
-    tableName = "AU_Condominium_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AU_ResidenceOfAuthority_name" {
-    profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
+    relatedReference = "HH_SA_Event#locationUnit_geographicalName"
+    tableName = "HH_SA_Event_locationUnit_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Relation "CP_BasicPropertyUnit_administrativeUnit" {
@@ -359,11 +360,43 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Relation "HH_SA_EventConsequence_event" {
-    profile = "attributes"
+    profile = "features"
     relatedReference = "HH_SA_EventConsequence#event"
     tableName = "HH_SA_EventConsequence_event"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "GMD_CI_Citation_date" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_date"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
+  }
+  Relation "GMD_CI_Citation_citedResponsibleParty" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_citedResponsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
+  }
+  Relation "GMD_CI_Citation_presentationForm" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_presentationForm"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Feature "ACT_CORE_ActivityComplex" {
     description = "A "single unit", both technically and economically, under the management control of the same legal entity (operator), covering activities as those listed in the Eurostat NACE classification, products and services. Activity Complex includes all infrastructure, equipment and materials. It must represent the whole area, at the same or different geographical location, managed by a "single unit".
@@ -449,12 +482,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     ref name: GN_GeographicalName[0..*]
     ref ProductionBuilding inv building[0..*]
   }
-  Attributes "NET_NetworkReference" {
-    description = "A reference to a network element."
-    identifier = "Network::NetworkReference"
-    tableName = "NET_NetworkReference"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
   Feature "AU_AdministrativeUnit" {
     description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
     identifier = "AdministrativeUnits::AdministrativeUnit"
@@ -511,6 +538,12 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
+  Attributes "NET_NetworkReference" {
+    description = "A reference to a network element."
+    identifier = "Network::NetworkReference"
+    tableName = "NET_NetworkReference"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.
   
@@ -564,38 +597,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     method TEXT CHECK(AD_GeometryMethodValue)
     specification TEXT CHECK(AD_GeometrySpecificationValue)
   }
-  Attributes "AD_AddressRepresentation" {
-    description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
-  
-    NOTE 1 The data type includes the all necessary readable address components as well as the address locator(s), which allows the identification of the address spatial objects, e.g., country, region, municipality, address area, post code, street name and address number. It also includes an optional reference to the full address spatial object.
-  
-    NOTE 2 The datatype could be used in application schemas that wish to include address information e.g. in a dataset that registers buildings or properties."
-    identifier = "Addresses::AddressRepresentation"
-    tableName = "AD_AddressRepresentation"
-    addressFeature INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
-  }
-  Attributes "HH_SA_TrafficRelatedEvent" {
-    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
-    identifier = "Safety::TrafficRelatedEvent"
-    tableName = "HH_SA_TrafficRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    endTime DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
-    startTime DATETIME NOT NULL
-    trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
-    ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
-  }
   Feature "AU_AdministrativeBoundary" {
     description = "A line of demarcation between administrative units."
     identifier = "AdministrativeUnits::AdministrativeBoundary"
@@ -646,6 +647,39 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     tableName = "GN_NamedPlaceTypeValue"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
+  }
+  Attributes "AD_AddressRepresentation" {
+    description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
+  
+    NOTE 1 The data type includes the all necessary readable address components as well as the address locator(s), which allows the identification of the address spatial objects, e.g., country, region, municipality, address area, post code, street name and address number. It also includes an optional reference to the full address spatial object.
+  
+    NOTE 2 The datatype could be used in application schemas that wish to include address information e.g. in a dataset that registers buildings or properties."
+    identifier = "Addresses::AddressRepresentation"
+    tableName = "AD_AddressRepresentation"
+    addressFeature INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    postCode TEXT
+    ref locatorDesignator: TEXT[0..*]
+  }
+  Attributes "HH_SA_TrafficRelatedEvent" {
+    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
+    identifier = "Safety::TrafficRelatedEvent"
+    tableName = "HH_SA_TrafficRelatedEvent"
+    additionalInformation INTEGER
+    aggregation INTEGER
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    endTime DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    isIntentional BOOLEAN
+    isMajor BOOLEAN
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
+    startTime DATETIME NOT NULL
+    trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
+    ref causeOfEvent: PT_FreeText[0..*]
   }
   Attributes "ACT_CORE_EconomicActivityValue" {
     description = "Classification of economic activities."
@@ -713,30 +747,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
-  Attributes "HH_SA_Event" {
-    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
-    identifier = "Safety::Event"
-    tableName = "HH_SA_Event"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    endTime DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
-    startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
-  }
-  Attributes "HH_SA_EventInformation" {
-    description = "All available information about the  event."
-    identifier = "Safety::EventInformation"
-    tableName = "HH_SA_EventInformation"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
   Attributes "AU_AdministrativeHierarchyLevel" {
     description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
     identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
@@ -755,6 +765,49 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
+  }
+  Feature "HH_SA_Event" {
+    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
+    identifier = "Safety::Event"
+    tableName = "HH_SA_Event"
+    additionalInformation INTEGER
+    aggregation INTEGER
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    endTime DATETIME
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+    isIntentional BOOLEAN
+    isMajor BOOLEAN
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
+    startTime DATETIME NOT NULL
+    ref causeOfEvent: PT_FreeText[0..*]
+  }
+  Attributes "HH_SA_EventInformation" {
+    description = "All available information about the  event."
+    identifier = "Safety::EventInformation"
+    tableName = "HH_SA_EventInformation"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
   }
   Attributes "CP_BasicPropertyUnit" {
     description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
@@ -789,6 +842,59 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     event INTEGER
     id INTEGER NOT NULL PRIMARY KEY
     value DOUBLE NOT NULL
+  }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_ResponsibleParty" {
+    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_address INTEGER
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    contactInfo_phone INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Attributes "GMD_CI_Telephone" {
+    description = "Telephone numbers for contacting the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Telephone"
+    tableName = "GMD_CI_Telephone"
+    id INTEGER NOT NULL PRIMARY KEY
+    ref facsimile: TEXT[0..*]
+    ref voice: TEXT[0..*]
+  }
+  Attributes "GMD_CI_Address" {
+    description = "Location of the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Address"
+    tableName = "GMD_CI_Address"
+    administrativeArea TEXT
+    city TEXT
+    country TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    postalCode TEXT
+    ref deliveryPoint: TEXT[0..*]
+    ref electronicMailAddress: TEXT[0..*]
   }
   Attributes "BU_BASE_CurrentUse" {
     description = "This data type enables to detail the current use(s)."
@@ -937,9 +1043,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     byOtherParty
     fromFeature
   }
-  Constraint Enum "HH_SA_TrafficTypeValue" {
-    identifier = "Safety::TrafficTypeValue"
-  }
   Constraint Enum "AU_LegalStatusValue" {
     identifier = "AdministrativeUnits::LegalStatusValue"
     agreed
@@ -1069,6 +1172,9 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     protectedSite
     transportNetwork
   }
+  Constraint Enum "HH_SA_TrafficTypeValue" {
+    identifier = "Safety::TrafficTypeValue"
+  }
   Constraint Enum "ACT_CORE_EconomicActivityValue" {
     identifier = "Activity Complex::EconomicActivityValue"
   }
@@ -1102,33 +1208,19 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
   Constraint Enum "HH_SA_ConsequenceTypeValue" {
     identifier = "Safety::ConsequenceTypeValue"
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
-  Constraint Enum "BU_BASE_CurrentUseValue" {
-    extensiblity = "narrower"
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::CurrentUseValue"
-  }
-  Constraint Enum "BU_BASE_HeightStatusValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::HeightStatusValue"
-  }
-  Constraint Enum "CP_CadastralZoningLevelValue" {
-    identifier = "CadastralParcels::CadastralZoningLevelValue"
-    1stOrder
-    2ndOrder
-    3rdOrder
-  }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
     creation
     publication
     revision
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
   }
   Constraint Enum "GMD_CI_RoleCode" {
     identifier = "Citation and responsible party information::CI_RoleCode"
@@ -1161,12 +1253,19 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     videoDigital
     videoHardcopy
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
+  Constraint Enum "BU_BASE_CurrentUseValue" {
+    extensiblity = "narrower"
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::CurrentUseValue"
+  }
+  Constraint Enum "BU_BASE_HeightStatusValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HeightStatusValue"
+  }
+  Constraint Enum "CP_CadastralZoningLevelValue" {
+    identifier = "CadastralParcels::CadastralZoningLevelValue"
+    1stOrder
+    2ndOrder
+    3rdOrder
   }
 }

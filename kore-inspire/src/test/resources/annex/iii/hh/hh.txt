@@ -40,15 +40,23 @@ Container <<applicationSchema>>  "HumanHealth" {
     identifier = "HumanHealth::AgeRangeType"
     tableName = "HH_AgeRangeType"
     id INTEGER NOT NULL PRIMARY KEY
-    range Age NOT NULL
-    startAge Age NOT NULL
+    range_month INTEGER
+    range_week INTEGER
+    range_year INTEGER
+    startAge_month INTEGER
+    startAge_week INTEGER
+    startAge_year INTEGER
   }
   Attributes "HH_GeneralHealthStatistics" {
     description = "Numbers about some aspects of health related to a population or an area. For the purpose of this data model, 'general health' data include issues such as self-perceived health, demographic distribution of various health problems, smokers, etc., expressed as raw numbers, rates, percentage, stratified by gender, age, and/or socio-economic, cultural, ethnic or other factors."
     identifier = "HumanHealth::GeneralHealthStatistics"
     tableName = "HH_GeneralHealthStatistics"
-    ageRange_range Age NOT NULL
-    ageRange_startAge Age NOT NULL
+    ageRange_range_month INTEGER
+    ageRange_range_week INTEGER
+    ageRange_range_year INTEGER
+    ageRange_startAge_month INTEGER
+    ageRange_startAge_week INTEGER
+    ageRange_startAge_year INTEGER
     gender TEXT CHECK(BASE2_GenderValue)
     generalHealthName TEXT NOT NULL CHECK(HH_GeneralHealthTypeValue)
     generalHealthValue DOUBLE NOT NULL
@@ -66,8 +74,12 @@ Container <<applicationSchema>>  "HumanHealth" {
     identifier = "HumanHealth::Disease"
     tableName = "HH_Disease"
     COD TEXT CHECK(HH_CODValue)
-    ageRange_range Age NOT NULL
-    ageRange_startAge Age NOT NULL
+    ageRange_range_month INTEGER
+    ageRange_range_week INTEGER
+    ageRange_range_year INTEGER
+    ageRange_startAge_month INTEGER
+    ageRange_startAge_week INTEGER
+    ageRange_startAge_year INTEGER
     gender TEXT CHECK(BASE2_GenderValue)
     id INTEGER NOT NULL PRIMARY KEY
     pathology TEXT CHECK(HH_ICDValue)
@@ -188,8 +200,12 @@ Container <<applicationSchema>>  "HumanHealth" {
     description = "A biomarker (of exposure) is the concentration of a chemical, its metabolite or the product of an interaction between a chemical and some target molecule or cell that is measured in a compartment in an organism."
     identifier = "HumanHealth::Biomarker"
     tableName = "HH_Biomarker"
-    ageRange_range Age NOT NULL
-    ageRange_startAge Age NOT NULL
+    ageRange_range_month INTEGER
+    ageRange_range_week INTEGER
+    ageRange_range_year INTEGER
+    ageRange_startAge_month INTEGER
+    ageRange_startAge_week INTEGER
+    ageRange_startAge_year INTEGER
     biomarkerName_chemical TEXT NOT NULL CHECK(HH_ChemicalValue)
     biomarkerName_matrix TEXT NOT NULL CHECK(HH_MatrixValue)
     biomarkerStatisticalParameter_CI95ofGM TEXT
@@ -246,7 +262,9 @@ Container <<applicationSchema>>  "HumanHealth" {
     identifier = "HumanHealth::BiomarkerThematicMetadata"
     tableName = "HH_BiomarkerThematicMetadata"
     id INTEGER NOT NULL PRIMARY KEY
-    meanAge Age NOT NULL
+    meanAge_month INTEGER
+    meanAge_week INTEGER
+    meanAge_year INTEGER
   }
   Relation "HH_Disease_diseaseMeasure" {
     profile = "attributes"

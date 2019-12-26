@@ -73,13 +73,17 @@ Container <<applicationSchema>>  "Planned Land Use" {
     beginLifespanVersion DATETIME
     endLifespanVersion DATETIME
     geometry MULTISURFACE NOT NULL
-    hilucsPresence HILUCSPresence
+    hilucsPresence_orderedList TEXT CHECK(LUNOM_HILUCSValue)
+    hilucsPresence_percentageList_hilucsValue TEXT CHECK(LUNOM_HILUCSValue)
+    hilucsPresence_percentageList_percentage INTEGER
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     plan INTEGER
     processStepGeneral TEXT CHECK(PLU_ProcessStepGeneralValue)
     regulationNature TEXT NOT NULL CHECK(PLU_RegulationNatureValue)
-    specificPresence SpecificPresence
+    specificPresence_orderedList TEXT CHECK(LUNOM_LandUseClassificationValue)
+    specificPresence_percentageList_percentage INTEGER
+    specificPresence_percentageList_specificValue TEXT CHECK(LUNOM_LandUseClassificationValue)
     validFrom DATE
     validTo DATE
   }
@@ -304,6 +308,12 @@ Container <<applicationSchema>>  "Planned Land Use" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
+  Constraint Enum "LUNOM_HILUCSValue" {
+    identifier = "Land Use Nomenclature::HILUCSValue"
+  }
+  Constraint Enum "LUNOM_LandUseClassificationValue" {
+    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
 
@@ -339,58 +349,12 @@ Container <<applicationSchema>>  "Planned Land Use" {
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
   }
-  Attributes "LUNOM_HILUCSPercentage" {
-    description = "Percentage of land use object that is covered by this HILUCS presence.
-
-    NOTE1:The percentage is according to the socio-economic or functional importance of the use.
-
-    NOTE2:examples are provided in the narrative description part of the data specification."
-    identifier = "Land Use Nomenclature::HILUCSPercentage"
-    tableName = "LUNOM_HILUCSPercentage"
-    hilucsValue TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    percentage INTEGER NOT NULL
-  }
-  Attributes "LUNOM_HILUCSValue" {
-    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
-
-    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
-
-    The elements of the list should be both applicable to existing land use and planned land use."
-    identifier = "Land Use Nomenclature::HILUCSValue"
-    tableName = "LUNOM_HILUCSValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
-  }
-  Attributes "LUNOM_SpecificPercentage" {
-    description = "Percentage of land use object that is covered by this specific presence."
-    identifier = "Land Use Nomenclature::SpecificPercentage"
-    tableName = "LUNOM_SpecificPercentage"
-    id INTEGER NOT NULL PRIMARY KEY
-    percentage INTEGER NOT NULL
-    specificValue TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
-  }
-  Attributes "LUNOM_LandUseClassificationValue" {
-    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
-
-    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
-    identifier = "Land Use Nomenclature::LandUseClassificationValue"
-    tableName = "LUNOM_LandUseClassificationValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
-  }
   Constraint Enum "BASE2_LegislationLevelValue" {
     identifier = "Base Types 2::LegislationLevelValue"
     european
     international
     national
     sub-national
-  }
-  Constraint Enum "LUNOM_HILUCSValue" {
-    identifier = "Land Use Nomenclature::HILUCSValue"
-  }
-  Constraint Enum "LUNOM_LandUseClassificationValue" {
-    identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"

@@ -10,7 +10,7 @@ Container <<applicationSchema>>  "Observable Properties" {
   }
   Attributes "OMOP_ScalarConstraint" {
     description = "A numerical scalar constraint on some property e.g. length &gt;= 1m
-
+  
     A scalar constraint on some property e.g. length &gt;= 1m"
     identifier = "Observable Properties::ScalarConstraint"
     tableName = "OMOP_ScalarConstraint"
@@ -32,9 +32,9 @@ Container <<applicationSchema>>  "Observable Properties" {
   }
   Attributes "OMOP_RangeConstraint" {
     description = "A numerical range constraint on some property e.g.  wavelength &gt;=300nm and wavelength &lt;=600nm
-
+  
     A numerical range constraint on some property e.g. wavelength &gt;=300nm and wavelength &lt;=600nm
-
+  
     e.g. To be used when data is observed in particular bands or groupings based on a numerical quantity."
     identifier = "Observable Properties::RangeConstraint"
     tableName = "OMOP_RangeConstraint"
@@ -56,7 +56,6 @@ Container <<applicationSchema>>  "Observable Properties" {
     aggregationArea_uom: TEXT [0..1]
     aggregationLength: TEXT [0..1]
     aggregationLength_uom: TEXT [0..1]
-    aggregationTimePeriod: TM_Duration [0..1]
     aggregationVolume: TEXT [0..1]
     aggregationVolume_uom: TEXT [0..1]
     label: TEXT [0..1]
@@ -80,9 +79,9 @@ Container <<applicationSchema>>  "Observable Properties" {
   }
   Attributes "OMOP_CategoryConstraint" {
     description = "A constraint based on some qualifying category.  e..g  colour = 'Red'.
-
+  
     A constraint based on some qualifying category.  e..g  colour = 'Red'.
-
+  
     The value ('Red') of the constraint ('colour') can be any string, although it may be desirable to constrain this in particular application domains."
     identifier = "Observable Properties::CategoryConstraint"
     tableName = "OMOP_CategoryConstraint"
@@ -109,15 +108,15 @@ Container <<applicationSchema>>  "Observable Properties" {
   }
   Attributes "OMOP_Constraint" {
     description = "A constraint on some property e.g. wavelength = 200nm.
-
+  
     A constraint on some property e.g. wavelength = 200nm. This property is  typically not the same property as the base phenomenon of the observed property. e.g.
-
+  
     the observed property has a base phenomenon 'radiance'.
-
+  
     a constraint is added to say 'wavelength = 200nm'
-
+  
     So the overall ObservableProperty which is represented is 'radiance where wavelength = 200nm'
-
+  
     The Constraint class is specialised into several specific classes covering Scalar, Range and Categorical constraints"
     identifier = "Observable Properties::Constraint"
     tableName = "OMOP_Constraint"

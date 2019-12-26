@@ -15,10 +15,11 @@ Container <<applicationSchema>>  "Safety" {
     inspireId INTEGER
     isIntentional BOOLEAN
     isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
   }
   Constraint Enum "HH_SA_BuildingUseValue" {
     identifier = "Safety::BuildingUseValue"
@@ -37,7 +38,7 @@ Container <<applicationSchema>>  "Safety" {
   Constraint Enum "HH_SA_HazardousMaterialTypeValue" {
     identifier = "Safety::HazardousMaterialTypeValue"
   }
-  Attributes "HH_SA_Event" {
+  Feature "HH_SA_Event" {
     description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
     identifier = "Safety::Event"
     tableName = "HH_SA_Event"
@@ -50,10 +51,11 @@ Container <<applicationSchema>>  "Safety" {
     inspireId INTEGER
     isIntentional BOOLEAN
     isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
   }
   Attributes "HH_SA_NaturalHazardRelatedEvent" {
     description = "A natural incident resulting in a negative effect on humans, property or the environment."
@@ -68,11 +70,12 @@ Container <<applicationSchema>>  "Safety" {
     inspireId INTEGER
     isIntentional BOOLEAN
     isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
     naturalHazardType TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
   }
   Attributes "HH_SA_EventConsequence" {
     description = "The harm an event caused for humans, propriety."
@@ -99,11 +102,12 @@ Container <<applicationSchema>>  "Safety" {
     inspireId INTEGER
     isIntentional BOOLEAN
     isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
     ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
   }
   Attributes "HH_SA_HazardousMaterialRelatedEvent" {
     description = "An event resulted by<b> </b>substances that have the ability to harm humans, property, or the environment."
@@ -119,10 +123,11 @@ Container <<applicationSchema>>  "Safety" {
     inspireId INTEGER
     isIntentional BOOLEAN
     isMajor BOOLEAN
-    locationUnit LocationUnitType NOT NULL
+    locationUnit_administrativeUnit AU_AdministrativeUnit
+    locationUnit_geographicalName INTEGER
+    locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
-    ref sourceReference: CI_Citation[0..*]
   }
   Attributes "HH_SA_FireOrExplosionLocalityType" {
     description = "Characteristics of the place where the fire or explosion occurs."
@@ -146,7 +151,7 @@ Container <<applicationSchema>>  "Safety" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
   }
   Relation "HH_SA_Event_part" {
-    profile = "attributes"
+    profile = "features"
     relatedReference = "HH_SA_Event#aggregation"
     tableName = "HH_SA_Event_part"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
@@ -159,8 +164,21 @@ Container <<applicationSchema>>  "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "HH_SA_EventConsequence_event" {
+  Relation "HH_SA_Event_sourceReference" {
     profile = "attributes"
+    tableName = "HH_SA_Event_sourceReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Citation(id)
+  }
+  Relation "HH_SA_Event_locationUnit_geographicalName" {
+    profile = "attributes"
+    relatedReference = "HH_SA_Event#locationUnit_geographicalName"
+    tableName = "HH_SA_Event_locationUnit_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "HH_SA_EventConsequence_event" {
+    profile = "features"
     relatedReference = "HH_SA_EventConsequence#event"
     tableName = "HH_SA_EventConsequence_event"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
@@ -240,6 +258,24 @@ Container <<applicationSchema>>  "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
   }
+  Relation "GMD_CI_Citation_date" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_date"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
+  }
+  Relation "GMD_CI_Citation_citedResponsibleParty" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_citedResponsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
+  }
+  Relation "GMD_CI_Citation_presentationForm" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_presentationForm"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
+  }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
     tableName = "GN_GeographicalName_spelling"
@@ -284,6 +320,20 @@ Container <<applicationSchema>>  "Safety" {
     tableName = "AU_ResidenceOfAuthority_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
@@ -338,6 +388,24 @@ Container <<applicationSchema>>  "Safety" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
+  }
   Attributes "NET_NetworkReference" {
     description = "A reference to a network element."
     identifier = "Network::NetworkReference"
@@ -374,6 +442,39 @@ Container <<applicationSchema>>  "Safety" {
     id INTEGER NOT NULL PRIMARY KEY
     name INTEGER
   }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_ResponsibleParty" {
+    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_address INTEGER
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    contactInfo_phone INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
   
@@ -406,6 +507,26 @@ Container <<applicationSchema>>  "Safety" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
   }
+  Attributes "GMD_CI_Telephone" {
+    description = "Telephone numbers for contacting the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Telephone"
+    tableName = "GMD_CI_Telephone"
+    id INTEGER NOT NULL PRIMARY KEY
+    ref facsimile: TEXT[0..*]
+    ref voice: TEXT[0..*]
+  }
+  Attributes "GMD_CI_Address" {
+    description = "Location of the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Address"
+    tableName = "GMD_CI_Address"
+    administrativeArea TEXT
+    city TEXT
+    country TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    postalCode TEXT
+    ref deliveryPoint: TEXT[0..*]
+    ref electronicMailAddress: TEXT[0..*]
+  }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
   
@@ -414,13 +535,6 @@ Container <<applicationSchema>>  "Safety" {
     tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
     ref elements: NetworkElement[0..*] inv inNetwork[0..*]
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
@@ -586,6 +700,14 @@ Container <<applicationSchema>>  "Safety" {
     publication
     revision
   }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
   Constraint Enum "GMD_CI_RoleCode" {
     identifier = "Citation and responsible party information::CI_RoleCode"
     author
@@ -616,13 +738,5 @@ Container <<applicationSchema>>  "Safety" {
     tableHardcopy
     videoDigital
     videoHardcopy
-  }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
   }
 }

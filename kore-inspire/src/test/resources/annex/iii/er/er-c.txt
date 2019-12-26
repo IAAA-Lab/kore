@@ -24,7 +24,7 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
   }
   Attributes "ER_C_RenewableAndWastePotentialCoverage" {
     description = "Function that returns an energy potential value from its range for any direct position within its spatial, temporal or spatio-temporal domain.
-
+  
     SOURCE Adapted from "Coverage" [ISO 19123:2005]."
     identifier = "Energy Resources Coverage::RenewableAndWastePotentialCoverage"
     tableName = "ER_C_RenewableAndWastePotentialCoverage"
@@ -42,7 +42,9 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
     rangeType: RecordType
     typeOfResource TEXT NOT NULL CHECK(ER_B_RenewableAndWasteValue)
     validTime TM_Period
-    verticalExtent_verticalExtent VerticalExtentValue
+    verticalExtent_verticalExtent_range_lowerBound Length
+    verticalExtent_verticalExtent_range_upperBound Length
+    verticalExtent_verticalExtent_scalar Length
     verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
     ref domainExtent: EX_Extent[1..*]
   }
@@ -114,11 +116,11 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"

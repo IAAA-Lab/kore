@@ -11,7 +11,8 @@ Container <<applicationSchema>>  "Base Types 2" {
     ref telephoneVoice: TEXT[0..*]
   }
   Class "DocumentCitation" {
-    date: CI_Date [0..1]
+    date_date: DATE
+    date_dateType: TEXT
     name: TEXT
     shortName: TEXT [0..1]
     ref link: URL[0..*]
@@ -60,9 +61,10 @@ Container <<applicationSchema>>  "Base Types 2" {
     officialJournalIdentification TEXT NOT NULL
   }
   Class "LegislationCitation" {
-    date: CI_Date [0..1]
     dateEnteredIntoForce: TM_Position [0..1]
     dateRepealed: TM_Position [0..1]
+    date_date: DATE
+    date_dateType: TEXT
     identificationNumber: TEXT [0..1]
     journalCitation_ISBN: TEXT [0..1]
     journalCitation_ISSN: TEXT [0..1]
@@ -420,6 +422,12 @@ Container <<applicationSchema>>  "Base Types 2" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
   
@@ -646,12 +654,6 @@ Container <<applicationSchema>>  "Base Types 2" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"

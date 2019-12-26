@@ -9,11 +9,11 @@ import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.setMetMetaclassWhen
 
 val `simple feature-like Data Type stereotype to GeoPackage Feature`: Transform = { _, _ ->
-    setMetMetaclassWhen(FeaturesTable, predicate = canToFeature("dataType"))
+    setMetMetaclassWhen(FeaturesTable, predicate = canToFeature(Stereotypes.dataType))
 }
 
 val `Data Type stereotype to GeoPackage Attribute`: Transform = { _, _ ->
-    setMetMetaclassWhen(AttributesTable, predicate = canToAttribute("dataType"))
+    setMetMetaclassWhen(AttributesTable, predicate = canToAttribute(Stereotypes.dataType))
 }
 
 

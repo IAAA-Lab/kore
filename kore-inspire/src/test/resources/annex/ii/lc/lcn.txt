@@ -538,6 +538,12 @@ Container <<applicationSchema>>  "LandCoverNomenclature" {
     coveredPercentage INTEGER
     id INTEGER NOT NULL PRIMARY KEY
   }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
   Constraint Enum "BASE2_PartyRoleValue" {
     identifier = "Base Types 2::PartyRoleValue"
   }
@@ -790,12 +796,6 @@ Container <<applicationSchema>>  "LandCoverNomenclature" {
     status TEXT CHECK(BU_BASE_HeightStatusValue)
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"

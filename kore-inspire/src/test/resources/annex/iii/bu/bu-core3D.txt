@@ -186,6 +186,38 @@ Container <<applicationSchema>>  "Buildings3D" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
+  Relation "GMD_CI_Citation_date" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_date"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
+  }
+  Relation "GMD_CI_Citation_citedResponsibleParty" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_citedResponsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
+  }
+  Relation "GMD_CI_Citation_presentationForm" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_presentationForm"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
   Constraint Enum "BU_BASE_HorizontalGeometryReferenceValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
@@ -304,6 +336,77 @@ Container <<applicationSchema>>  "Buildings3D" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
+  }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_ResponsibleParty" {
+    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_address INTEGER
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    contactInfo_phone INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Attributes "GMD_CI_Telephone" {
+    description = "Telephone numbers for contacting the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Telephone"
+    tableName = "GMD_CI_Telephone"
+    id INTEGER NOT NULL PRIMARY KEY
+    ref facsimile: TEXT[0..*]
+    ref voice: TEXT[0..*]
+  }
+  Attributes "GMD_CI_Address" {
+    description = "Location of the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Address"
+    tableName = "GMD_CI_Address"
+    administrativeArea TEXT
+    city TEXT
+    country TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    postalCode TEXT
+    ref deliveryPoint: TEXT[0..*]
+    ref electronicMailAddress: TEXT[0..*]
+  }
   Constraint Enum "BU_BASE_CurrentUseValue" {
     extensiblity = "narrower"
     obligation = "implementingRule"
@@ -338,29 +441,19 @@ Container <<applicationSchema>>  "Buildings3D" {
     plural
     singular
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
     creation
     publication
     revision
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
   }
   Constraint Enum "GMD_CI_RoleCode" {
     identifier = "Citation and responsible party information::CI_RoleCode"
@@ -393,12 +486,24 @@ Container <<applicationSchema>>  "Buildings3D" {
     videoDigital
     videoHardcopy
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

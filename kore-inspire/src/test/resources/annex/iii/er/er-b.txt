@@ -4,7 +4,9 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     identifier = "Energy Resources Base::VerticalExtentType"
     tableName = "ER_B_VerticalExtentType"
     id INTEGER NOT NULL PRIMARY KEY
-    verticalExtent VerticalExtentValue NOT NULL
+    verticalExtent_range_lowerBound Length
+    verticalExtent_range_upperBound Length
+    verticalExtent_scalar Length
     verticalReference TEXT NOT NULL CHECK(ER_B_VerticalReferenceValue)
   }
   Constraint Enum "ER_B_ClassificationAndQuantificationFrameworkValue" {

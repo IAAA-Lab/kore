@@ -15,7 +15,7 @@ import es.iaaa.kore.transform.rules.setTypeWhen
 val `Code Lists`: Transform = { _, options ->
     val withDescription = options["description"] == true
     val patched = mutableListOf<KoreClass>()
-    patch<KoreClass>(predicate = { references("codeList") }) {
+    patch<KoreClass>(predicate = { references(Stereotypes.codeList) }) {
         metaClass = EnumConstraint
         attributes.forEach {
             it.metaClass = EnumConstraintValue

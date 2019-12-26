@@ -55,7 +55,7 @@ private fun KoreClass.assignPrefix(): String = when (container?.name) {
     "Identification information" -> "GMD_"                     // ISO 19139 identification.xsd
     "Citation and responsible party information" -> "GMD_"     // ISO 19139 citation.xsd
     "Data quality information" -> "GMD_"                       // ISO 19139 dataQuality.xsd
-    "Units of Measure" -> "UM_"                                // TODO Discover why this is required by Evelvation - vector elemsnts
+    "Units of Measure" -> "UM_"                                // TODO Discover why this is required by Evlevation - vector elemsnts
     "Temporal Reference System" -> "TRS_"
     "Maintenance information" -> "MI_"
     "Metadata extension information" -> "MEI_"
@@ -63,6 +63,8 @@ private fun KoreClass.assignPrefix(): String = when (container?.name) {
     "Data quality evaluation" -> "DQE_"
     "Enumerations" -> "GCO_"
     "Geometric primitive" -> ""
+    "Segmented Curve" -> "SC_"
+    "Coverage Core" -> "CC_"
     null -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy for package without name")
     else -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy for package '${container?.name}'")
 }

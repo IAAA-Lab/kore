@@ -864,15 +864,15 @@ Container <<applicationSchema>>  "LandCoverVector" {
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ConditionOfConstructionValue"
-  }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
     creation
     publication
     revision
+  }
+  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ConditionOfConstructionValue"
   }
   Constraint Enum "CP_CadastralZoningLevelValue" {
     identifier = "CadastralParcels::CadastralZoningLevelValue"

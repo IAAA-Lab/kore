@@ -429,6 +429,12 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
   }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
   Constraint Enum "ACT_CORE_EconomicActivityValue" {
     identifier = "Activity Complex::EconomicActivityValue"
   }
@@ -459,12 +465,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     dual
     plural
     singular
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "BU_BASE_CurrentUseValue" {
     extensiblity = "narrower"

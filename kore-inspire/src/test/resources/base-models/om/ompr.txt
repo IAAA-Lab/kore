@@ -8,7 +8,7 @@ Container <<applicationSchema>>  "Processes" {
     name TEXT
     type TEXT
     ref documentation: DocumentCitation[0..*]
-    ref generatedObservation: OM_Observation[0..*] inv procedure
+    ref generatedObservation: _OM_Observation[0..*] inv procedure
   }
   Attributes "OMPR_ProcessParameter" {
     description = "Description of the given parameter"
@@ -77,6 +77,18 @@ Container <<applicationSchema>>  "Processes" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
   }
+  Relation "_OM_Observation_relatedObservation" {
+    profile = "attributes"
+    tableName = "_OM_Observation_relatedObservation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
+  }
+  Relation "_OM_Observation_parameter" {
+    profile = "attributes"
+    tableName = "_OM_Observation_parameter"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
+  }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
     relatedReference = "BASE2_Contact#address"
@@ -121,6 +133,20 @@ Container <<applicationSchema>>  "Processes" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
   Relation "AD_Address_parentAddress" {
     profile = "attributes"
     relatedReference = "AD_Address#parentAddress"
@@ -152,6 +178,24 @@ Container <<applicationSchema>>  "Processes" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "GMD_CI_Citation_date" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_date"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
+  }
+  Relation "GMD_CI_Citation_citedResponsibleParty" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_citedResponsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
+  }
+  Relation "GMD_CI_Citation_presentationForm" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_presentationForm"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
@@ -268,6 +312,27 @@ Container <<applicationSchema>>  "Processes" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Attributes "_OM_Observation" {
+    hasXmlLang = "false#NOTES#Values: true | false
+    Default: false
+    Description: axml attribute xml:lang shall be generated for the type representing the class
+    "
+    description = "An observation is an act that results in the estimation of the value of a feature property, and involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. Use of a common model allows observation data using different procedures to be combined unambiguously. Observation details are also important for data discovery and for data quality estimation. Observation feature types are defined by the properties that support these applications.
+
+    An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. The result of an observation is an estimate of the value of a property of some feature, so the details of the observation are metadata concerning the value of the feature property. The observation itself is also a feature, since it has properties and identity."
+    identifier = "observation::OM_Observation"
+    tableName = "_OM_Observation"
+    id INTEGER NOT NULL PRIMARY KEY
+    phenomenonTime TM_Object NOT NULL
+    resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    resultTime_position_date8601 DATE
+    resultTime_position_dateTime8601 DATETIME
+    resultTime_position_time8601 TEXT
+    resultTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
+    ref featureOfInterest: GFI_Featureinv propertyValueProvider[0..*]
+    ref procedure: OM_Processinv generatedObservation[0..*]
+    ref resultQuality: DQ_Element[0..*]
+  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
@@ -309,6 +374,14 @@ Container <<applicationSchema>>  "Processes" {
     tableName = "BASE2_PartyRoleValue"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
+  }
+  Attributes "_NamedValue" {
+    description = "The class <i>NamedValue</i> provides for a generic soft-typed parameter value. NamedValue shall support two attributes."
+    identifier = "observation::NamedValue"
+    tableName = "_NamedValue"
+    id INTEGER NOT NULL PRIMARY KEY
+    name GenericName NOT NULL
+    value Any NOT NULL
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -365,6 +438,45 @@ Container <<applicationSchema>>  "Processes" {
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
   }
+  Attributes "GMD_CI_ResponsibleParty" {
+    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_address INTEGER
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    contactInfo_phone INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
+  Attributes "GMD_CI_Telephone" {
+    description = "Telephone numbers for contacting the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Telephone"
+    tableName = "GMD_CI_Telephone"
+    id INTEGER NOT NULL PRIMARY KEY
+    ref facsimile: TEXT[0..*]
+    ref voice: TEXT[0..*]
+  }
+  Attributes "GMD_CI_Address" {
+    description = "Location of the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Address"
+    tableName = "GMD_CI_Address"
+    administrativeArea TEXT
+    city TEXT
+    country TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    postalCode TEXT
+    ref deliveryPoint: TEXT[0..*]
+    ref electronicMailAddress: TEXT[0..*]
+  }
   Attributes "AD_AddressLocator" {
     description = "Human readable designator or name that allows a user or application to reference and distinguish the address from neighbour addresses, within the scope of a thoroughfare name, address area name, administrative unit name or postal designator, in which the address is situated.
   
@@ -410,6 +522,38 @@ Container <<applicationSchema>>  "Processes" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
+  }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
+  }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
   }
   Attributes "AD_LocatorDesignator" {
     description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
@@ -522,6 +666,12 @@ Container <<applicationSchema>>  "Processes" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
   }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
     after
@@ -567,6 +717,28 @@ Container <<applicationSchema>>  "Processes" {
     plural
     singular
   }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
   Constraint Enum "AD_LocatorLevelValue" {
     identifier = "Addresses::LocatorLevelValue"
     accessLevel
@@ -597,6 +769,23 @@ Container <<applicationSchema>>  "Processes" {
     byAdministrator
     byOtherParty
     fromFeature
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
   }
   Constraint Enum "AD_LocatorDesignatorTypeValue" {
     identifier = "Addresses::LocatorDesignatorTypeValue"
@@ -812,12 +1001,6 @@ Container <<applicationSchema>>  "Processes" {
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
-  }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
@@ -898,20 +1081,6 @@ Container <<applicationSchema>>  "Processes" {
     software
     tile
   }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
   Constraint Enum "CP_CadastralZoningLevelValue" {
     identifier = "CadastralParcels::CadastralZoningLevelValue"
     1stOrder
@@ -926,20 +1095,16 @@ Container <<applicationSchema>>  "Processes" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::HeightStatusValue"
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
+  Attributes "GMD_CI_OnlineResource" {
+    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
+    identifier = "Citation and responsible party information::CI_OnlineResource"
+    tableName = "GMD_CI_OnlineResource"
+    applicationProfile TEXT
+    description TEXT
+    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
     id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
+    name TEXT
+    protocol TEXT
   }
   Constraint Enum "MEI_MD_ObligationCode" {
     identifier = "Metadata extension information::MD_ObligationCode"
@@ -1057,23 +1222,6 @@ Container <<applicationSchema>>  "Processes" {
     satellite
     telephoneLink
   }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
   Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -1088,5 +1236,14 @@ Container <<applicationSchema>>  "Processes" {
     iso9660AppleHFS
     iso9660RockRidge
     tar
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }
