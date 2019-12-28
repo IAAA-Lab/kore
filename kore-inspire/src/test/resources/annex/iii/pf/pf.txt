@@ -3,23 +3,18 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   Constraint Enum "PF_InstallationTypeValue" {
     identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
   }
-  Feature "PF_ProductionInstallationPart" {
-    description = "A single engineered facility that performs specific functionalities related with a production activity.
-  
-    This level of description covers specific parts of the Production Installation which must be registered by the legal mandate of the competent authorities. Points of emission as chimneys (for pollutants) or tanks (for special products), will be included in this definition."
-    identifier = "ProductionAndIndustrialFacilities::ProductionInstallationPart"
-    tableName = "PF_ProductionInstallationPart"
-    groupingInstallation INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    pointGeometry POINT
-    surfaceGeometry GM_Surface
-    technique TEXT CHECK(PF_PollutionAbatementTechniqueValue)
-    thematicId_identifier TEXT
-    thematicId_identifierScheme TEXT
-    type TEXT CHECK(PF_InstallationPartTypeValue)
+  Class "ProductionInstallationPart" {
+    pointGeometry: POINT [0..1]
+    surfaceGeometry: SURFACE [0..1]
+    technique: TEXT [0..1]
+    thematicId_identifier: TEXT [0..1]
+    thematicId_identifierScheme: TEXT [0..1]
+    type: TEXT [0..1]
     ref description: TEXT[0..*]
+    ref groupingInstallation: ProductionInstallationinv groupedInstallationPart[0..*]
+    ref inspireId: BASE_Identifier
     ref name: TEXT[0..*]
+    ref status: PF_StatusType[0..*]
   }
   Attributes "PF_StatusType" {
     description = "The state or condition of a technical component, with regard to the functional and operational order, in which it is arranged for a limited or extended time period.
@@ -55,24 +50,18 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     ref typeOfBuilding: TypeOfProductionBuildingValue[0..*]
   }
   Class "TechnicalUnit" {}
-  Feature "PF_ProductionInstallation" {
-    description = "A technical unit, such as machinery,  apparatus, devices or equipment placed in position or connected for use.
-  
-    Stationary technical unit part of a facility where one or more activities are carried out, and any other directly associated activities which have a technical connection to the activities carried out on that site and which could have an effect on the environment.
-  
-    May be a technical unit within an establishment in which dangerous substances are produced, used, handled or stored."
-    identifier = "ProductionAndIndustrialFacilities::ProductionInstallation"
-    tableName = "PF_ProductionInstallation"
-    groupingFacility INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    pointGeometry POINT
-    surfaceGeometry GM_Surface
-    thematicId_identifier TEXT
-    thematicId_identifierScheme TEXT
-    type TEXT CHECK(PF_InstallationTypeValue)
+  Class "ProductionInstallation" {
+    pointGeometry: POINT [0..1]
+    surfaceGeometry: SURFACE [0..1]
+    thematicId_identifier: TEXT [0..1]
+    thematicId_identifierScheme: TEXT [0..1]
+    type: TEXT [0..1]
     ref description: TEXT[0..*]
+    ref groupedInstallationPart: ProductionInstallationPart[0..*] inv groupingInstallation
+    ref groupingFacility: PF_ProductionFacilityinv groupedInstallation[0..*]
+    ref inspireId: BASE_Identifier
     ref name: TEXT[0..*]
+    ref status: PF_StatusType[0..*]
   }
   Feature "PF_ProductionSite" {
     description = "All land at a distinct geographic location where the production facility was, is, or is intended to be located. This includes all infrastructure, equipment and materials;
@@ -91,19 +80,19 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     ref name: TEXT[0..*]
     ref sitePlan: DocumentCitation[0..*]
   }
-  Attributes "PF_ProductionPlot" {
+  Feature "PF_ProductionPlot" {
     description = "A portion of land or water part of a production facility destined to functional purposes.
   
     A potential sub-division of a major site as delimited extension of land in which are performed extensive operations related with the activity or one of the activities performed by a facility."
     identifier = "ProductionAndIndustrialFacilities::ProductionPlot"
     tableName = "PF_ProductionPlot"
-    geometry GM_Surface
+    geometry SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     thematicId_identifier TEXT
     thematicId_identifierScheme TEXT
   }
-  Attributes "PF_ProductionFacility" {
+  Feature "PF_ProductionFacility" {
     description = "One or more installations on the same site operated by the same natural or legal person,
   
     designed, built or installed to serve specific production or industrial purposes, comprehending
@@ -120,38 +109,19 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     id INTEGER NOT NULL PRIMARY KEY
     name: TEXT [0..1]
     riverBasinDistrict TEXT CHECK(PF_RiverBasinDistrictValue)
-    surfaceGeometry GM_Surface
+    surfaceGeometry SURFACE
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref function: ACT_CORE_Function[1..*]
+    ref groupedInstallation: ProductionInstallation[0..*] inv groupingFacility
     ref inspireId: BASE_Identifier
     ref thematicId: BASE2_ThematicIdentifier[0..*]
   }
   Constraint Enum "PF_PollutionAbatementTechniqueValue" {
     identifier = "ProductionAndIndustrialFacilities::PollutionAbatementTechniqueValue"
   }
-  Relation "PF_ProductionInstallationPart_groupingInstallation" {
-    profile = "features"
-    relatedReference = "PF_ProductionInstallationPart#groupingInstallation"
-    tableName = "PF_ProductionInstallationPart_groupingInstallation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionInstallation(id)
-  }
-  Relation "PF_ProductionInstallationPart_inspireId" {
-    profile = "attributes"
-    relatedReference = "PF_ProductionInstallationPart#inspireId"
-    tableName = "PF_ProductionInstallationPart_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "PF_ProductionInstallationPart_status" {
-    profile = "attributes"
-    tableName = "PF_ProductionInstallationPart_status"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
-  }
   Relation "PF_ProductionBuilding_groupedFacility" {
-    profile = "attributes"
+    profile = "features"
     tableName = "PF_ProductionBuilding_groupedFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
@@ -162,28 +132,8 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
-  Relation "PF_ProductionInstallation_groupingFacility" {
-    profile = "attributes"
-    relatedReference = "PF_ProductionInstallation#groupingFacility"
-    tableName = "PF_ProductionInstallation_groupingFacility"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
-  }
-  Relation "PF_ProductionInstallation_inspireId" {
-    profile = "attributes"
-    relatedReference = "PF_ProductionInstallation#inspireId"
-    tableName = "PF_ProductionInstallation_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "PF_ProductionInstallation_status" {
-    profile = "attributes"
-    tableName = "PF_ProductionInstallation_status"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
-  }
   Relation "PF_ProductionSite_hostedFacility" {
-    profile = "attributes"
+    profile = "features"
     relatedReference = "PF_ProductionFacility#hostingSite"
     tableName = "PF_ProductionSite_hostedFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
@@ -203,7 +153,7 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
   Relation "PF_ProductionPlot_groupingFacility" {
-    profile = "attributes"
+    profile = "features"
     tableName = "PF_ProductionPlot_groupingFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
@@ -274,38 +224,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "BASE_ConditionOfFacilityValue" {
     identifier = "Base Types::ConditionOfFacilityValue"
@@ -398,77 +316,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
-  }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
-  }
   Attributes "BU_BASE_CurrentUse" {
     description = "This data type enables to detail the current use(s)."
     identifier = "BuildingsBase::CurrentUse"
@@ -528,11 +375,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
@@ -574,58 +416,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     plural
     singular
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
-  }
   Constraint Enum "BU_BASE_CurrentUseValue" {
     extensiblity = "narrower"
     obligation = "implementingRule"
@@ -644,19 +434,4 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     identifier = "BuildingsBase::HeightStatusValue"
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
-  }
 }

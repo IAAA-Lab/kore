@@ -9,7 +9,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_FairwayArea"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -47,7 +47,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_TrafficSeparationSchemeRoundabout"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -192,7 +192,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_PortArea"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -224,7 +224,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_TrafficSeparationSchemeLane"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -257,7 +257,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_TrafficSeparationSchemeSeparator"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -273,7 +273,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableName = "TN_W_TrafficSeparationSchemeCrossing"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -367,7 +367,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
   Class "TrafficSeparationSchemeArea" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref geographicalName: GN_GeographicalName[0..1]
@@ -906,11 +906,6 @@ Container <<applicationSchema>>  "Water Transport Network" {
     plural
     singular
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
   Constraint Enum <<Enumeration>>  "GML_Sign" {
     identifier = "basicTypes::Sign"
     "+"
@@ -1099,33 +1094,5 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
-  }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
   }
 }

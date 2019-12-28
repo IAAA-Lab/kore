@@ -7,7 +7,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "GE_HG_HydrogeologicalObjectNatural"
     approximateQuantityOfFlow_quantityInterval QuantityRange
     approximateQuantityOfFlow_singleQuantity Quantity
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     groundWaterBody INTEGER
     id INTEGER NOT NULL PRIMARY KEY
     naturalObjectType TEXT NOT NULL CHECK(GE_HG_NaturalObjectTypeValue)
@@ -55,13 +55,13 @@ Container <<applicationSchema>>  "Hydrogeology" {
   Constraint Enum "GE_HG_StatusCodeTypeValue" {
     identifier = "Hydrogeology::StatusCodeTypeValue"
   }
-  Attributes "GE_HG_GroundWaterBody" {
+  Feature "GE_HG_GroundWaterBody" {
     description = "A distinct volume of groundwater within an aquifer or system of aquifers, which is hydraulically isolated from nearby groundwater bodies.
   
     Groundwater bodies form the principal management units under the European Water Framework Directive (2000/60/CE, 2000). They should be hydraulically continuous entities, and must be defined on the basis of flow or abstraction, and are inextricably linked to surface water bodies."
     identifier = "Hydrogeology::GroundWaterBody"
     tableName = "GE_HG_GroundWaterBody"
-    approximateHorizontalExtend GM_Surface
+    approximateHorizontalExtend SURFACE
     aquiferSystem INTEGER
     conditionOfGroundWaterBody TEXT NOT NULL CHECK(GE_HG_ConditionOfGroundwaterValue)
     id INTEGER NOT NULL PRIMARY KEY
@@ -75,7 +75,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     endLifespanVersion DATETIME
   }
   Class "HydrogeologicalObject" {
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     <<lifeCycleInfo - voidable>> beginLifespanVersion: DATETIME
     <<lifeCycleInfo - voidable>> endLifespanVersion: DATETIME [0..1]
     ref inspireId: BASE_Identifier[0..1]
@@ -84,7 +84,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::NaturalObjectTypeValue"
   }
   Class "HydrogeologicalObjectManMade" {
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     statusCode: TEXT [0..1]
     <<lifeCycleInfo - voidable>> beginLifespanVersion: DATETIME
     <<lifeCycleInfo - voidable>> endLifespanVersion: DATETIME [0..1]
@@ -147,7 +147,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::ActiveWell"
     tableName = "GE_HG_ActiveWell"
     environmentalMonitoringFacility INTEGER
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
     statusCode: TEXT [0..1]
     <<lifeCycleInfo - voidable>> beginLifespanVersion: DATETIME
@@ -223,7 +223,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     value TEXT NOT NULL CHECK(GE_HG_ActiveWellTypeValue)
   }
   Relation "GE_HG_HydrogeologicalObjectNatural_groundWaterBody" {
-    profile = "attributes"
+    profile = "features"
     relatedReference = "GE_HG_HydrogeologicalObjectNatural#groundWaterBody"
     tableName = "GE_HG_HydrogeologicalObjectNatural_groundWaterBody"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_HydrogeologicalObjectNatural(id)
@@ -314,7 +314,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_HG_Aquitard(id)
   }
   Relation "GE_HG_ActiveWell_groundWaterBody" {
-    profile = "attributes"
+    profile = "features"
     tableName = "GE_HG_ActiveWell_groundWaterBody"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_ActiveWell(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_HG_GroundWaterBody(id)
@@ -886,14 +886,14 @@ Container <<applicationSchema>>  "Hydrogeology" {
     name GenericName NOT NULL
     value Any NOT NULL
   }
-  Attributes "EF_EnvironmentalMonitoringActivity" {
+  Feature "EF_EnvironmentalMonitoringActivity" {
     description = "Specific set of AbstractMonitoringFeatures used for a given domain in a coherent and concise timeframe, area and purpose. Usually the information collected is treated as one time step in a long term monitoring programme. It is a concrete realisation of a given EnvironmentalMonitoringProgramme.
   
     For example a vessel could be equipped with a collection of EnvironmentalMonitoringFacilities for a given campaign (= EnvironmentalMonitoringActivity) fulfilling an EnvironmentalMonitoringProgramme requirements. Then, after a given period this exact same vessel could be equipped with another set of EnvironmentalMonitoringFacilities for another campaign fulfilling another EnvironmentalMonitoringProgramme requirements."
     identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringActivity"
     tableName = "EF_EnvironmentalMonitoringActivity"
     activityConditions TEXT
-    boundingBox GM_Boundary
+    boundingBox POLYGON
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     responsibleParty INTEGER
@@ -1334,11 +1334,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
   Constraint Enum "GE_ThematicClassValue" {
     identifier = "Geology::ThematicClassValue"
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
   Constraint Enum "EF_MeasurementRegimeValue" {
     identifier = "EnvironmentalMonitoringFacilities::MeasurementRegimeValue"
   }
@@ -1699,19 +1694,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     status TEXT CHECK(BU_BASE_HeightStatusValue)
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
   }
   Constraint Enum "GE_MappingFrameValue" {
     identifier = "Geology::MappingFrameValue"

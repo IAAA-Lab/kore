@@ -11,7 +11,7 @@ Container <<applicationSchema>>  "Network" {
   Class "NetworkArea" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
   }
@@ -590,11 +590,6 @@ Container <<applicationSchema>>  "Network" {
     ref deliveryPoint: TEXT[0..*]
     ref electronicMailAddress: TEXT[0..*]
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
@@ -803,33 +798,5 @@ Container <<applicationSchema>>  "Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
-  }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
   }
 }

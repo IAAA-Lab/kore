@@ -130,14 +130,14 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
     quantitativeValue_value TEXT NOT NULL
   }
-  Attributes "NZ_CORE_HazardArea" {
+  Feature "NZ_CORE_HazardArea" {
     description = "Discrete spatial objects representing a natural hazard."
     identifier = "NaturalRiskZones::HazardArea"
     tableName = "NZ_CORE_HazardArea"
     beginLifeSpanVersion: DATETIME [0..1]
     determinationMethod: TEXT
     endLifeSpanVersion: DATETIME [0..1]
-    geometry GM_Surface NOT NULL
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     likelihoodOfOccurrence_assessmentMethod DocumentCitation
     likelihoodOfOccurrence_qualitativeLikelihood TEXT
@@ -162,13 +162,13 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     validTo: DATETIME [0..1]
     ref inspireId: BASE_Identifier
   }
-  Attributes "NZ_CORE_RiskZone" {
+  Feature "NZ_CORE_RiskZone" {
     description = "Discrete spatial objects representing the spatial extent of a combination of the consequences of an event (hazard) and the associated probability/likelihood of its occurrence."
     identifier = "NaturalRiskZones::RiskZone"
     tableName = "NZ_CORE_RiskZone"
     beginLifeSpanVersion: DATETIME [0..1]
     endLifeSpanVersion: DATETIME [0..1]
-    geometry GM_Surface NOT NULL
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     levelOfRisk_assessmentMethod DocumentCitation
     levelOfRisk_qualitativeValue TEXT
@@ -326,7 +326,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Relation "EF_EnvironmentalMonitoringProgramme_triggers" {
-    profile = "attributes"
+    profile = "features"
     tableName = "EF_EnvironmentalMonitoringProgramme_triggers"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
@@ -364,24 +364,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
-  }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
   Relation "_OM_Observation_relatedObservation" {
     profile = "attributes"
@@ -477,6 +459,24 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+  }
+  Relation "GMD_CI_Citation_date" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_date"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
+  }
+  Relation "GMD_CI_Citation_citedResponsibleParty" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_citedResponsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
+  }
+  Relation "GMD_CI_Citation_presentationForm" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_presentationForm"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
@@ -649,14 +649,14 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
     ref startPoint: INTEGER[0..*]
   }
-  Attributes "EF_EnvironmentalMonitoringActivity" {
+  Feature "EF_EnvironmentalMonitoringActivity" {
     description = "Specific set of AbstractMonitoringFeatures used for a given domain in a coherent and concise timeframe, area and purpose. Usually the information collected is treated as one time step in a long term monitoring programme. It is a concrete realisation of a given EnvironmentalMonitoringProgramme.
   
     For example a vessel could be equipped with a collection of EnvironmentalMonitoringFacilities for a given campaign (= EnvironmentalMonitoringActivity) fulfilling an EnvironmentalMonitoringProgramme requirements. Then, after a given period this exact same vessel could be equipped with another set of EnvironmentalMonitoringFacilities for another campaign fulfilling another EnvironmentalMonitoringProgramme requirements."
     identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringActivity"
     tableName = "EF_EnvironmentalMonitoringActivity"
     activityConditions TEXT
-    boundingBox GM_Boundary
+    boundingBox POLYGON
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     responsibleParty INTEGER
@@ -701,57 +701,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     postCode TEXT
     ref locatorDesignator: TEXT[0..*]
-  }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
   }
   Attributes "_OM_Observation" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -823,6 +772,25 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
   }
+  Attributes "GMD_CI_ResponsibleParty" {
+    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_address INTEGER
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    contactInfo_phone INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
@@ -888,6 +856,38 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
+  }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
+  }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
   }
   Attributes "AD_LocatorDesignator" {
     description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
@@ -1037,52 +1037,8 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     publication
     revision
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
   Constraint Enum "BASE2_PartyRoleValue" {
     identifier = "Base Types 2::PartyRoleValue"
-  }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
   }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
@@ -1126,6 +1082,28 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     plural
     singular
   }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
   Constraint Enum "AD_LocatorLevelValue" {
     identifier = "Addresses::LocatorLevelValue"
     accessLevel
@@ -1156,6 +1134,23 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     byAdministrator
     byOtherParty
     fromFeature
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
   }
   Constraint Enum "AD_LocatorDesignatorTypeValue" {
     identifier = "Addresses::LocatorDesignatorTypeValue"
@@ -1404,19 +1399,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   Constraint Enum "EF_PurposeOfCollectionValue" {
     identifier = "EnvironmentalMonitoringFacilities::PurposeOfCollectionValue"
   }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
-  }
   Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -1638,15 +1620,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     satellite
     telephoneLink
   }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
-  }
   Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -1661,5 +1634,14 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     iso9660AppleHFS
     iso9660RockRidge
     tar
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

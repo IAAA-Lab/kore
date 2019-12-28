@@ -3,16 +3,17 @@ Container <<applicationSchema>>  "Buildings3D" {
     description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD2 representation."
     identifier = "Buildings3D::BuildingGeometry3DLoD2"
     tableName = "BU_CORE3D_BuildingGeometry3DLoD2"
-    geometryMultiSurface MULTISURFACE
-    geometrySolid GM_Solid
-    horizontalGeometryEstimatedAccuracy TEXT
-    horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    geometryMultiSurface: MULTISURFACE [0..1]
+    geometrySolid: BLOB [0..1]
+    geometrySolid_content_type: TEXT [0..1]
+    horizontalGeometryEstimatedAccuracy: TEXT [0..1]
+    horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
     id INTEGER NOT NULL PRIMARY KEY
-    terrainIntersection GM_MultiCurve
-    verticalGeometryEstimatedAccuracy TEXT
-    verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    terrainIntersection: MULTICURVE [0..1]
+    verticalGeometryEstimatedAccuracy: TEXT [0..1]
+    verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
+    verticalGeometryReference3DBottom: TEXT [0..1]
   }
   Class "BuildingPart" {
     beginLifespanVersion: DATETIME [0..1]
@@ -20,37 +21,41 @@ Container <<applicationSchema>>  "Buildings3D" {
     conditionOfConstruction: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry3DLoD1_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD1_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD1_geometrySolid: BLOB [0..1]
+    geometry3DLoD1_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD1_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD1_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD1_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD1_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD1_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD1_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD1_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD1_verticalGeometryReference3DBottom: TEXT [0..1]
     geometry3DLoD1_verticalGeometryReference3DTop: TEXT [0..1]
     geometry3DLoD2_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD2_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD2_geometrySolid: BLOB [0..1]
+    geometry3DLoD2_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD2_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD2_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD2_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD2_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD2_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD2_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD2_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD2_verticalGeometryReference3DBottom: TEXT [0..1]
     geometry3DLoD3_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD3_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD3_geometrySolid: BLOB [0..1]
+    geometry3DLoD3_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD3_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD3_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD3_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD3_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD3_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD3_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD3_verticalGeometryReference3DBottom: TEXT [0..1]
     geometry3DLoD4_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD4_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD4_geometrySolid: BLOB [0..1]
+    geometry3DLoD4_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD4_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD4_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD4_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD4_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD4_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD4_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD4_verticalGeometryReference3DBottom: TEXT [0..1]
@@ -70,34 +75,32 @@ Container <<applicationSchema>>  "Buildings3D" {
     ref ProductionBuilding inv building[0..*]
     ref Address inv building[0..*]
   }
-  Feature "BU_CORE3D_BuildingGeometry3DLoD" {
-    description = "Data type grouping the 3D geometry of a building or building part and the metadata information attached to this geometry."
-    identifier = "Buildings3D::BuildingGeometry3DLoD"
-    tableName = "BU_CORE3D_BuildingGeometry3DLoD"
-    geometryMultiSurface MULTISURFACE
-    geometrySolid GM_Solid
-    horizontalGeometryEstimatedAccuracy TEXT
-    horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    id INTEGER NOT NULL PRIMARY KEY
-    terrainIntersection GM_MultiCurve
-    verticalGeometryEstimatedAccuracy TEXT
-    verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
+  Class "BuildingGeometry3DLoD" {
+    geometryMultiSurface: MULTISURFACE [0..1]
+    geometrySolid: BLOB [0..1]
+    geometrySolid_content_type: TEXT [0..1]
+    horizontalGeometryEstimatedAccuracy: TEXT [0..1]
+    horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
+    terrainIntersection: MULTICURVE [0..1]
+    verticalGeometryEstimatedAccuracy: TEXT [0..1]
+    verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
+    verticalGeometryReference3DBottom: TEXT [0..1]
   }
   Attributes "BU_CORE3D_BuildingGeometry3DLoD1" {
     description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD 1 representation."
     identifier = "Buildings3D::BuildingGeometry3DLoD1"
     tableName = "BU_CORE3D_BuildingGeometry3DLoD1"
-    geometryMultiSurface MULTISURFACE
-    geometrySolid GM_Solid
-    horizontalGeometryEstimatedAccuracy TEXT
-    horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    geometryMultiSurface: MULTISURFACE [0..1]
+    geometrySolid: BLOB [0..1]
+    geometrySolid_content_type: TEXT [0..1]
+    horizontalGeometryEstimatedAccuracy: TEXT [0..1]
+    horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
     id INTEGER NOT NULL PRIMARY KEY
-    terrainIntersection GM_MultiCurve
-    verticalGeometryEstimatedAccuracy TEXT
-    verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    terrainIntersection: MULTICURVE [0..1]
+    verticalGeometryEstimatedAccuracy: TEXT [0..1]
+    verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
+    verticalGeometryReference3DBottom: TEXT [0..1]
     verticalGeometryReference3DTop TEXT CHECK(BU_BASE_ElevationReferenceValue)
   }
   Class "Building" {
@@ -106,37 +109,41 @@ Container <<applicationSchema>>  "Buildings3D" {
     conditionOfConstruction: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry3DLoD1_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD1_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD1_geometrySolid: BLOB [0..1]
+    geometry3DLoD1_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD1_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD1_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD1_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD1_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD1_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD1_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD1_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD1_verticalGeometryReference3DBottom: TEXT [0..1]
     geometry3DLoD1_verticalGeometryReference3DTop: TEXT [0..1]
     geometry3DLoD2_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD2_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD2_geometrySolid: BLOB [0..1]
+    geometry3DLoD2_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD2_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD2_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD2_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD2_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD2_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD2_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD2_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD2_verticalGeometryReference3DBottom: TEXT [0..1]
     geometry3DLoD3_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD3_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD3_geometrySolid: BLOB [0..1]
+    geometry3DLoD3_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD3_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD3_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD3_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD3_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD3_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD3_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD3_verticalGeometryReference3DBottom: TEXT [0..1]
     geometry3DLoD4_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD4_geometrySolid: GM_Solid [0..1]
+    geometry3DLoD4_geometrySolid: BLOB [0..1]
+    geometry3DLoD4_geometrySolid_content_type: TEXT [0..1]
     geometry3DLoD4_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD4_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD4_terrainIntersection: GM_MultiCurve [0..1]
+    geometry3DLoD4_terrainIntersection: MULTICURVE [0..1]
     geometry3DLoD4_verticalGeometryEstimatedAccuracy: TEXT [0..1]
     geometry3DLoD4_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
     geometry3DLoD4_verticalGeometryReference3DBottom: TEXT [0..1]
@@ -185,38 +192,6 @@ Container <<applicationSchema>>  "Buildings3D" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "BU_BASE_HorizontalGeometryReferenceValue" {
     obligation = "implementingRule"
@@ -336,77 +311,6 @@ Container <<applicationSchema>>  "Buildings3D" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
-  }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
-  }
   Constraint Enum "BU_BASE_CurrentUseValue" {
     extensiblity = "narrower"
     obligation = "implementingRule"
@@ -440,70 +344,5 @@ Container <<applicationSchema>>  "Buildings3D" {
     dual
     plural
     singular
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
-  }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
   }
 }

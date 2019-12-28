@@ -30,7 +30,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
   Class "HydroPointOfInterest" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
@@ -47,7 +47,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -66,7 +66,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -88,7 +88,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -100,7 +100,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
   Class "SurfaceWater" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
@@ -142,7 +142,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     delineationKnown BOOLEAN
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
     length TEXT
     length_uom TEXT CHECK(GML_UomIdentifier)
@@ -193,7 +193,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     basinOrder_scope TEXT
     beginLifespanVersion DATETIME
     endLifespanVersion DATETIME
-    geometry GM_Surface NOT NULL
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     origin TEXT CHECK(HY_P_OriginValue)
@@ -201,7 +201,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     ref hydroId: HY_HydroIdentifier[0..*]
     ref outlet: SurfaceWater[0..*] inv drainsBasin[0..*]
   }
-  Attributes "HY_P_Wetland" {
+  Feature "HY_P_Wetland" {
     description = "A poorly drained or periodically flooded area where the soil is saturated with water, and vegetation is supported.
   
     SOURCE [EuroRegionalMap].
@@ -213,7 +213,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     tableName = "HY_P_Wetland"
     beginLifespanVersion DATETIME
     endLifespanVersion DATETIME
-    geometry GM_Surface NOT NULL
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
@@ -233,7 +233,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -251,7 +251,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -263,7 +263,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
   Class "FluvialPoint" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
@@ -275,7 +275,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
@@ -296,7 +296,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -313,7 +313,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     tableName = "HY_P_Rapids"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -346,7 +346,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     elevation TEXT
     elevation_uom TEXT CHECK(GML_UomIdentifier)
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive
+    geometry: GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -417,7 +417,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     tableName = "HY_P_Falls"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     height TEXT
     height_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
@@ -437,7 +437,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     beginLifespanVersion: DATETIME [0..1]
     condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Primitive [0..1]
+    geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
@@ -455,7 +455,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     orderScheme TEXT NOT NULL
     scope TEXT NOT NULL
   }
-  Attributes "HY_P_DrainageBasin" {
+  Feature "HY_P_DrainageBasin" {
     description = "Area having a common outlet for its surface runoff.
   
     SOURCE [UNESCO/WMO International Glossary of Hydrology].
@@ -474,7 +474,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     basinOrder_scope TEXT
     beginLifespanVersion DATETIME
     endLifespanVersion DATETIME
-    geometry GM_Surface NOT NULL
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     origin TEXT CHECK(HY_P_OriginValue)
@@ -504,7 +504,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "HY_P_DrainageBasin_containsBasin" {
-    profile = "attributes"
+    profile = "features"
     tableName = "HY_P_DrainageBasin_containsBasin"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
@@ -552,38 +552,6 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "BASE_ConditionOfFacilityValue" {
@@ -735,77 +703,6 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     text TEXT NOT NULL
     transliterationScheme TEXT
   }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
-  }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
-  }
   Constraint Enum "GN_NativenessValue" {
     identifier = "Geographical Names::NativenessValue"
     endonym
@@ -830,83 +727,5 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     dual
     plural
     singular
-  }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
-  }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
   }
 }

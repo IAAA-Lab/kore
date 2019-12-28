@@ -123,14 +123,14 @@ Container <<applicationSchema>>  "EnvironmentalMonitoringFacilities" {
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
     ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
   }
-  Attributes "EF_EnvironmentalMonitoringActivity" {
+  Feature "EF_EnvironmentalMonitoringActivity" {
     description = "Specific set of AbstractMonitoringFeatures used for a given domain in a coherent and concise timeframe, area and purpose. Usually the information collected is treated as one time step in a long term monitoring programme. It is a concrete realisation of a given EnvironmentalMonitoringProgramme.
   
     For example a vessel could be equipped with a collection of EnvironmentalMonitoringFacilities for a given campaign (= EnvironmentalMonitoringActivity) fulfilling an EnvironmentalMonitoringProgramme requirements. Then, after a given period this exact same vessel could be equipped with another set of EnvironmentalMonitoringFacilities for another campaign fulfilling another EnvironmentalMonitoringProgramme requirements."
     identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringActivity"
     tableName = "EF_EnvironmentalMonitoringActivity"
     activityConditions TEXT
-    boundingBox GM_Boundary
+    boundingBox POLYGON
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     responsibleParty INTEGER
@@ -228,7 +228,7 @@ Container <<applicationSchema>>  "EnvironmentalMonitoringFacilities" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ResultAcquisitionSourceValue(id)
   }
   Relation "EF_EnvironmentalMonitoringProgramme_triggers" {
-    profile = "attributes"
+    profile = "features"
     tableName = "EF_EnvironmentalMonitoringProgramme_triggers"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)

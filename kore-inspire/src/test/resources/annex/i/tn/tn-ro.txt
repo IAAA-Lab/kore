@@ -23,7 +23,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     tableName = "TN_RO_RoadServiceArea"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -182,7 +182,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     tableName = "TN_RO_RoadArea"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -275,7 +275,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     tableName = "TN_RO_VehicleTrafficArea"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
-    geometry: GM_Surface
+    geometry: SURFACE
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -918,11 +918,6 @@ Container <<applicationSchema>>  "Road Transport Network" {
     plural
     singular
   }
-  Constraint Enum "GCO_Sign" {
-    identifier = "Enumerations::Sign"
-    Negative
-    Positve
-  }
   Constraint Enum <<Enumeration>>  "GML_Sign" {
     identifier = "basicTypes::Sign"
     "+"
@@ -1111,33 +1106,5 @@ Container <<applicationSchema>>  "Road Transport Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
-  }
-  Constraint Enum "GM_SurfaceInterpolation" {
-    identifier = "Geometric primitive::GM_SurfaceInterpolation"
-    conic
-    elliptical
-    none
-    parametricCurve
-    planar
-    polynomialSpline
-    rationalSpline
-    spherical
-    tin
-    triangulatedSpline
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
   }
 }

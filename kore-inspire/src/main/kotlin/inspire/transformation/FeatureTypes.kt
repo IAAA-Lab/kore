@@ -34,7 +34,7 @@ val `Feature types`: List<Transform> = listOf(
 fun canToFeature(name: String): (KoreObject) -> Boolean = {
     if (it.references(name) && it is KoreClass) {
         !it.isAbstract && it.attributes
-            .filter { att -> GeometryType.isInstance(att.type) }
+            .filter { att -> GeometryType.isInstance(att.type) || GeometryType == att.type?.metaClass }
             .run { size == 1 && all { att -> att.upperBound == 1 } }
     } else {
         false
@@ -46,7 +46,7 @@ fun canToFeature(name: String): (KoreObject) -> Boolean = {
  */
 fun canToAttribute(name: String): (KoreObject) -> Boolean = {
     if (it.references(name) && it is KoreClass) {
-        !it.isAbstract && it.attributes.none { att -> GeometryType.isInstance(att.type) }
+        !it.isAbstract && it.attributes.none { att -> GeometryType.isInstance(att.type) || GeometryType == att.type?.metaClass }
     } else {
         false
     }
