@@ -16,7 +16,7 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     id INTEGER NOT NULL PRIMARY KEY
     localDepthDatum: ChartDatum [0..1]
     propertyType: TEXT
-    propertyValue_coordinate Sequence<Number> NOT NULL
+    propertyValue_coordinate <<missing>> NOT NULL
     propertyValue_dimension INTEGER NOT NULL
   }
   Class "ElevationVectorObject" {
@@ -113,7 +113,7 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     id INTEGER NOT NULL PRIMARY KEY
     localDepthDatum: ChartDatum [0..1]
     propertyType: TEXT
-    propertyValue_coordinate Sequence<Number> NOT NULL
+    propertyValue_coordinate <<missing>> NOT NULL
     propertyValue_dimension INTEGER NOT NULL
     spotElevationType TEXT CHECK(EL_VEC_SpotElevationTypeValue)
   }
@@ -422,7 +422,7 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     tin
     triangulatedSpline
   }
-  Constraint Enum "UM_MeasureType" {
+  Constraint Enum "GML_MeasureType" {
     identifier = "Units of Measure::MeasureType"
     angle
     area

@@ -458,12 +458,11 @@ Container <<applicationSchema>>  "Sea Regions" {
     Description: axml attribute xml:lang shall be generated for the type representing the class
     "
     description = "An observation is an act that results in the estimation of the value of a feature property, and involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. Use of a common model allows observation data using different procedures to be combined unambiguously. Observation details are also important for data discovery and for data quality estimation. Observation feature types are defined by the properties that support these applications.
-
+  
     An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. The result of an observation is an estimate of the value of a property of some feature, so the details of the observation are metadata concerning the value of the feature property. The observation itself is also a feature, since it has properties and identity."
     identifier = "observation::OM_Observation"
     tableName = "_OM_Observation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -683,6 +682,12 @@ Container <<applicationSchema>>  "Sea Regions" {
     utf7
     utf8
   }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
   Attributes "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
@@ -819,12 +824,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     id INTEGER NOT NULL PRIMARY KEY
     name TEXT
     protocol TEXT
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
   }
   Constraint Enum "MEI_MD_ObligationCode" {
     identifier = "Metadata extension information::MD_ObligationCode"

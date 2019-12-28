@@ -646,7 +646,6 @@ Container <<applicationSchema>>  "Geophysics" {
     identifier = "observation::OM_Observation"
     tableName = "_OM_Observation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -680,7 +679,6 @@ Container <<applicationSchema>>  "Geophysics" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    website URL
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
@@ -1250,7 +1248,7 @@ Container <<applicationSchema>>  "Geophysics" {
     identifier = "BuildingsBase::Elevation"
     tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }

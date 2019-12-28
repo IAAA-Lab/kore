@@ -6,7 +6,6 @@ Container <<applicationSchema>>  "Base Types 2" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    website URL
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
@@ -61,8 +60,16 @@ Container <<applicationSchema>>  "Base Types 2" {
     officialJournalIdentification TEXT NOT NULL
   }
   Class "LegislationCitation" {
-    dateEnteredIntoForce: TM_Position [0..1]
-    dateRepealed: TM_Position [0..1]
+    dateEnteredIntoForce_anyOther_indeterminatePosition: TEXT [0..1]
+    dateEnteredIntoForce_date8601: DATE [0..1]
+    dateEnteredIntoForce_dateTime8601: DATETIME [0..1]
+    dateEnteredIntoForce_time8601: TEXT [0..1]
+    dateEnteredIntoForce_time8601_uom: TEXT [0..1]
+    dateRepealed_anyOther_indeterminatePosition: TEXT [0..1]
+    dateRepealed_date8601: DATE [0..1]
+    dateRepealed_dateTime8601: DATETIME [0..1]
+    dateRepealed_time8601: TEXT [0..1]
+    dateRepealed_time8601_uom: TEXT [0..1]
     date_date: DATE
     date_dateType: TEXT
     identificationNumber: TEXT [0..1]
@@ -428,6 +435,15 @@ Container <<applicationSchema>>  "Base Types 2" {
     publication
     revision
   }
+  Constraint Enum "TRS_TM_IndeterminateValue" {
+    identifier = "Temporal Reference System::TM_IndeterminateValue"
+    after
+    before
+    name
+    now
+    unknow
+  }
+  Constraint Enum "GML_UomIdentifier" {}
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
   
@@ -844,13 +860,12 @@ Container <<applicationSchema>>  "Base Types 2" {
     utf7
     utf8
   }
-  Constraint Enum "GML_UomIdentifier" {}
   Attributes "BU_BASE_Elevation" {
     description = "This data types includes the elevation value itself  and information on how this elevation was measured."
     identifier = "BuildingsBase::Elevation"
     tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }

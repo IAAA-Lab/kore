@@ -15,6 +15,8 @@
  */
 package es.iaaa.kore.resource
 
+import es.iaaa.kore.KoreClassifier
+import es.iaaa.kore.KoreTypedElement
 import es.iaaa.kore.resource.impl.EnterpriseArchitectUml13Factory
 import java.io.File
 
@@ -26,8 +28,8 @@ object ResourceFactory {
         "EA-UML1.3" to EnterpriseArchitectUml13Factory
     )
 
-    fun createResource(file: File, format: String, alias: Map<String, String>): Resource {
-        return factories[format]?.createResource(file, alias) ?: throw IllegalArgumentException("Unknown $format")
+    fun createResource(file: File, format: String, helper: ResourceHelper = ResourceHelper()): Resource {
+        return factories[format]?.createResource(file, helper) ?: throw IllegalArgumentException("Unknown $format")
     }
 }
 
@@ -35,5 +37,15 @@ object ResourceFactory {
  * Common interface for factories.
  */
 interface Factory {
-    fun createResource(file: File, alias: Map<String, String>): Resource
+    fun createResource(file: File, resourceHelper: ResourceHelper): Resource
 }
+
+data class ResourceHelper(
+    val alias: Map<String, String> = emptyMap(),
+    val selectType: (KoreTypedElement, List<KoreClassifier>) -> Pair<KoreClassifier?, List<String>> = { _, _ ->
+        Pair(
+            null,
+            emptyList()
+        )
+    }
+)

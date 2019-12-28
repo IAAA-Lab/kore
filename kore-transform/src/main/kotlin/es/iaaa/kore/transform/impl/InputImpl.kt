@@ -16,6 +16,7 @@
 package es.iaaa.kore.transform.impl
 
 import es.iaaa.kore.KorePackage
+import es.iaaa.kore.resource.ResourceHelper
 import es.iaaa.kore.transform.Input
 import es.iaaa.kore.transform.Property
 
@@ -26,5 +27,5 @@ class InputImpl(
     override var file: Property<String> = Property("file"),
     override var type: Property<String> = Property("type"),
     override var selector: Property<(KorePackage) -> Boolean> = Property("selector") { _ -> true },
-    override var alias: Property<Map<String, String>> = Property("alias")
+    override var helper: Property<ResourceHelper> = Property("helper")
 ) : Input

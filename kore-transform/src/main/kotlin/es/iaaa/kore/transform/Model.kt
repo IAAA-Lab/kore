@@ -33,7 +33,7 @@ class Model(val input: Input) : Validable {
 
     fun load() {
         with(input) {
-            resource = ResourceFactory.createResource(File(file.get()), type.get(), alias.get())
+            resource = ResourceFactory.createResource(File(file.get()), type.get(), helper.get())
         }
     }
 

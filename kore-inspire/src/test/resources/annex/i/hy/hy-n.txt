@@ -182,7 +182,7 @@ Container <<applicationSchema>>  "Hydro - Network" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "GN_SpellingOfName" {
@@ -222,5 +222,10 @@ Container <<applicationSchema>>  "Hydro - Network" {
     dual
     plural
     singular
+  }
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
   }
 }

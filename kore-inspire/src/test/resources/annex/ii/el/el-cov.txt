@@ -14,7 +14,8 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     identifier = "ElevationGridCoverage::ElevationGridCoverage"
     tableName = "EL_COV_ElevationGridCoverage"
     beginLifespanVersion DATETIME
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     endLifespanVersion DATETIME
     id INTEGER NOT NULL PRIMARY KEY
@@ -24,6 +25,7 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     rangeSet: Any [0..*]
     rangeType: RecordType
     surfaceType TEXT NOT NULL CHECK(EL_BAS_SurfaceTypeValue)
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref domainExtent: EX_Extent[1..*]
   }
   Relation "EL_COV_ElevationGridCoverage_contributingElevationGridCoverage" {
@@ -104,6 +106,15 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     identifier = "ElevationBaseTypes::SurfaceTypeValue"
     DSM
     DTM
+  }
+  Attributes "GMLCOV_GridFunction" {
+    description = "An explicit mapping rule for grid geometries"
+    identifier = "Coverages (Domain and Range)::GridFunction"
+    tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    ref startPoint: INTEGER[0..*]
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
@@ -190,6 +201,15 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     postalCode TEXT
     ref deliveryPoint: TEXT[0..*]
     ref electronicMailAddress: TEXT[0..*]
+  }
+  Constraint Enum "CIS_CV_SequenceType" {
+    identifier = "Quadrilateral Grid::CV_SequenceType"
+    CantorDiagonal
+    Hilbert
+    Morton
+    boustrophedonic
+    linear
+    spiral
   }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"

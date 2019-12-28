@@ -24,7 +24,8 @@ Container <<applicationSchema>>  "Orthoimagery" {
     beginLifespanVersion_dateTime8601 DATETIME
     beginLifespanVersion_time8601 TEXT
     beginLifespanVersion_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     endLifespanVersion_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     endLifespanVersion_date8601 DATE
@@ -39,6 +40,7 @@ Container <<applicationSchema>>  "Orthoimagery" {
     name TEXT
     rangeSet: Any [0..*]
     rangeType: RecordType
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref domainExtent: EX_Extent[1..*]
   }
   Attributes "OI_SingleMosaicElement" {
@@ -160,6 +162,15 @@ Container <<applicationSchema>>  "Orthoimagery" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
+  Attributes "GMLCOV_GridFunction" {
+    description = "An explicit mapping rule for grid geometries"
+    identifier = "Coverages (Domain and Range)::GridFunction"
+    tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    ref startPoint: INTEGER[0..*]
+  }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
     identifier = "Citation and responsible party information::CI_Citation"
@@ -230,6 +241,15 @@ Container <<applicationSchema>>  "Orthoimagery" {
     postalCode TEXT
     ref deliveryPoint: TEXT[0..*]
     ref electronicMailAddress: TEXT[0..*]
+  }
+  Constraint Enum "CIS_CV_SequenceType" {
+    identifier = "Quadrilateral Grid::CV_SequenceType"
+    CantorDiagonal
+    Hilbert
+    Morton
+    boustrophedonic
+    linear
+    spiral
   }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"

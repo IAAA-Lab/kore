@@ -250,7 +250,9 @@ Container <<applicationSchema>>  "Soil" {
     inspireId INTEGER
     locatedOn INTEGER
     soilPlotLocation_geometryLocation GEOMETRY
-    soilPlotLocation_nameLocation EX_GeographicDescription
+    soilPlotLocation_nameLocation_extentTypeCode BOOLEAN DEFAULT '1'
+    soilPlotLocation_nameLocation_geographicIdentifier_authority INTEGER
+    soilPlotLocation_nameLocation_geographicIdentifier_code TEXT
     soilPlotType TEXT NOT NULL CHECK(SO_SoilPlotTypeValue)
   }
   Constraint Enum "SO_SoilPlotTypeValue" {
@@ -284,7 +286,8 @@ Container <<applicationSchema>>  "Soil" {
     identifier = "Soil::SoilThemeDescriptiveCoverage"
     tableName = "SO_SoilThemeDescriptiveCoverage"
     beginLifespanVersion DATETIME NOT NULL
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     endLifespanVersion DATETIME
     id INTEGER NOT NULL PRIMARY KEY
@@ -300,6 +303,7 @@ Container <<applicationSchema>>  "Soil" {
     soilThemeDescriptiveParameter_uom_scaleToStandardUnit DOUBLE
     soilThemeDescriptiveParameter_uom_uomName TEXT
     soilThemeDescriptiveParameter_uom_uomSymbol TEXT
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref domainExtent: EX_Extent[1..*]
   }
   Class "ProfileElement" {
@@ -346,7 +350,8 @@ Container <<applicationSchema>>  "Soil" {
     identifier = "Soil::SoilThemeCoverage"
     tableName = "SO_SoilThemeCoverage"
     beginLifespanVersion DATETIME NOT NULL
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     endLifespanVersion DATETIME
     id INTEGER NOT NULL PRIMARY KEY
@@ -363,6 +368,7 @@ Container <<applicationSchema>>  "Soil" {
     soilThemeParameter_uom_uomSymbol TEXT
     validTimeFrom DATE
     validTimeTo DATE
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref domainExtent: EX_Extent[1..*]
   }
   Attributes "SO_ParticleSizeFractionType" {
@@ -591,6 +597,13 @@ Container <<applicationSchema>>  "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "SO_SoilPlot_soilPlotLocation_nameLocation_geographicIdentifier_authority" {
+    profile = "attributes"
+    relatedReference = "SO_SoilPlot#soilPlotLocation_nameLocation_geographicIdentifier_authority"
+    tableName = "SO_SoilPlot_soilPlotLocation_nameLocation_geographicIdentifier_authority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilPlot(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Citation(id)
+  }
   Relation "SO_SoilThemeDescriptiveCoverage_isDescribing" {
     profile = "attributes"
     relatedReference = "SO_SoilThemeDescriptiveCoverage#isDescribing"
@@ -679,20 +692,6 @@ Container <<applicationSchema>>  "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
   }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
-  }
   Relation "GMD_CI_Citation_date" {
     profile = "attributes"
     tableName = "GMD_CI_Citation_date"
@@ -710,6 +709,20 @@ Container <<applicationSchema>>  "Soil" {
     tableName = "GMD_CI_Citation_presentationForm"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "GML_MeasureType" {
     identifier = "Units of Measure::MeasureType"
@@ -739,7 +752,6 @@ Container <<applicationSchema>>  "Soil" {
     identifier = "observation::OM_Observation"
     tableName = "_OM_Observation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -764,6 +776,15 @@ Container <<applicationSchema>>  "Soil" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
+  Attributes "GMLCOV_GridFunction" {
+    description = "An explicit mapping rule for grid geometries"
+    identifier = "Coverages (Domain and Range)::GridFunction"
+    tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    ref startPoint: INTEGER[0..*]
+  }
   Attributes "GE_LithologyValue" {
     description = "Terms describing the lithology.
   
@@ -773,6 +794,24 @@ Container <<applicationSchema>>  "Soil" {
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(GE_LithologyValue)
   }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
+  }
   Attributes "_NamedValue" {
     description = "The class <i>NamedValue</i> provides for a generic soft-typed parameter value. NamedValue shall support two attributes."
     identifier = "observation::NamedValue"
@@ -780,6 +819,13 @@ Container <<applicationSchema>>  "Soil" {
     id INTEGER NOT NULL PRIMARY KEY
     name GenericName NOT NULL
     value Any NOT NULL
+  }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "GMD_CI_ResponsibleParty" {
     description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
@@ -799,6 +845,13 @@ Container <<applicationSchema>>  "Soil" {
     organisationName TEXT
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
   }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
@@ -820,38 +873,6 @@ Container <<applicationSchema>>  "Soil" {
     ref deliveryPoint: TEXT[0..*]
     ref electronicMailAddress: TEXT[0..*]
   }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
     after
@@ -861,8 +882,23 @@ Container <<applicationSchema>>  "Soil" {
     unknow
   }
   Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "CIS_CV_SequenceType" {
+    identifier = "Quadrilateral Grid::CV_SequenceType"
+    CantorDiagonal
+    Hilbert
+    Morton
+    boustrophedonic
+    linear
+    spiral
+  }
   Constraint Enum "GE_LithologyValue" {
     identifier = "Geology::LithologyValue"
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
   }
   Constraint Enum "GMD_CI_OnLineFunctionCode" {
     identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
@@ -885,12 +921,6 @@ Container <<applicationSchema>>  "Soil" {
     publisher
     resourceProvider
     user
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "GMD_CI_PresentationFormCode" {
     identifier = "Citation and responsible party information::CI_PresentationFormCode"
@@ -969,6 +999,12 @@ Container <<applicationSchema>>  "Soil" {
     utf16
     utf7
     utf8
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
   }
   Attributes "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
@@ -1130,12 +1166,6 @@ Container <<applicationSchema>>  "Soil" {
     specifiedClass
     typeClass
     unionClass
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
   }
   Constraint Enum "GMD_MD_KeywordTypeCode" {
     identifier = "Identification information::MD_KeywordTypeCode"

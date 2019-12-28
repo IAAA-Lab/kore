@@ -427,7 +427,8 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     identifier = "Activity Complex::Capacity"
     tableName = "ACT_CORE_Capacity"
     id INTEGER NOT NULL PRIMARY KEY
-    time Time
+    time TEXT
+    time_uom TEXT CHECK(GML_UomIdentifier)
   }
   Attributes "ACT_CORE_Permission" {
     description = "Official Decision (formal consent) granting authorization to operate all or part of an Activity Complex, subject to certain conditions which guarantee that the installations or parts of installations on the same site operated by the same operator comply with the requirements fixed by a competent authority. A permit may cover one or more functions and fix parameters of capacity. The term could be extended to other kind of certificates or documents of special relevance depending of the scope (e.g. ISO, EMAS, National Quality Standards, etc).
@@ -466,7 +467,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    website URL
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
@@ -485,7 +485,13 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     NOTE Depending on the thematic scope it can refer to different terms as Biomass, Bio-Waste, Fuel, Organic Solvents, Waste Water, Waste for disposal or recovery, Primary Materials, etc."
     identifier = "Activity Complex::InputOutputAmount"
     tableName = "ACT_CORE_InputOutputAmount"
-    amount_unitOfMeasure UnitOfMeasure NOT NULL
+    amount_unitOfMeasure_formula TEXT
+    amount_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    amount_unitOfMeasure_nameStandardUnit TEXT
+    amount_unitOfMeasure_offsetToStandardUnit DOUBLE
+    amount_unitOfMeasure_scaleToStandardUnit DOUBLE
+    amount_unitOfMeasure_uomName TEXT NOT NULL
+    amount_unitOfMeasure_uomSymbol TEXT NOT NULL
     amount_value TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inputOutput TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
@@ -724,8 +730,20 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "ACT_CORE_InputOutputValue" {
     identifier = "Activity Complex::InputOutputValue"
+  }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
   }
   Constraint Enum "ACT_CORE_EconomicActivityValue" {
     identifier = "Activity Complex::EconomicActivityValue"
@@ -954,13 +972,12 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     utf7
     utf8
   }
-  Constraint Enum "GML_UomIdentifier" {}
   Attributes "BU_BASE_Elevation" {
     description = "This data types includes the elevation value itself  and information on how this elevation was measured."
     identifier = "BuildingsBase::Elevation"
     tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }

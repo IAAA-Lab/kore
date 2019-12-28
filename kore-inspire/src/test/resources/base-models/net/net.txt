@@ -59,7 +59,7 @@ Container <<applicationSchema>>  "Network" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "NET_SimplePointReference" {
@@ -355,6 +355,11 @@ Container <<applicationSchema>>  "Network" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
+  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
@@ -585,6 +590,11 @@ Container <<applicationSchema>>  "Network" {
     ref deliveryPoint: TEXT[0..*]
     ref electronicMailAddress: TEXT[0..*]
   }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
@@ -793,5 +803,33 @@ Container <<applicationSchema>>  "Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

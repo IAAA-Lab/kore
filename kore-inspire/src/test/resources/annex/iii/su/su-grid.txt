@@ -12,7 +12,7 @@ Container <<applicationSchema>>  "Statistical Units Grid" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     lower INTEGER
-    origin_coordinate Sequence<Number>
+    origin_coordinate <<missing>>
     origin_dimension INTEGER
     resolution_angleResolution TEXT
     resolution_angleResolution_uom TEXT CHECK(GML_UomIdentifier)
@@ -41,7 +41,7 @@ Container <<applicationSchema>>  "Statistical Units Grid" {
     identifier = "Statistical Units Grid::StatisticalGridCell"
     tableName = "SU_GRID_StatisticalGridCell"
     code TEXT
-    geographicalPosition_coordinate Sequence<Number> NOT NULL
+    geographicalPosition_coordinate <<missing>> NOT NULL
     geographicalPosition_dimension INTEGER NOT NULL
     geometry GM_Polygon
     grid INTEGER

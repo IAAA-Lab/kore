@@ -50,7 +50,7 @@ Container <<applicationSchema>>  "Air Transport Network" {
     NOTE A collection of air link sequences and or individual air links that are characterized by one or more thematic identifiers and /or properties, which perform a Route."
     identifier = "Air Transport Network::AirRoute"
     tableName = "TN_A_AirRoute"
-    airRouteType AirRouteTypeValue
+    airRouteType TEXT CHECK(TN_A_AirRouteTypeValue)
     beginLifespanVersion: DATETIME [0..1]
     designator TEXT
     endLifespanVersion: DATETIME [0..1]
@@ -68,7 +68,8 @@ Container <<applicationSchema>>  "Air Transport Network" {
     NOTE When applied to an AirRouteLink it corresponds to the Lowest Safe Altitude, which is defined in order to provide safety for navigation."
     identifier = "Air Transport Network::LowerAltitudeLimit"
     tableName = "TN_A_LowerAltitudeLimit"
-    altitude Measure NOT NULL
+    altitude TEXT NOT NULL
+    altitude_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -162,7 +163,7 @@ Container <<applicationSchema>>  "Air Transport Network" {
     endLifespanVersion: DATETIME [0..1]
     geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
-    pointRole PointRoleValue NOT NULL
+    pointRole TEXT NOT NULL CHECK(TN_A_PointRoleValue)
     significantPoint: BOOLEAN
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -229,7 +230,8 @@ Container <<applicationSchema>>  "Air Transport Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    length Measure NOT NULL
+    length TEXT NOT NULL
+    length_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref inspireId: BASE_Identifier[0..1]
@@ -293,7 +295,8 @@ Container <<applicationSchema>>  "Air Transport Network" {
     description = "Altitude that defines the upper limit of an air transport network object."
     identifier = "Air Transport Network::UpperAltitudeLimit"
     tableName = "TN_A_UpperAltitudeLimit"
-    altitude Measure NOT NULL
+    altitude TEXT NOT NULL
+    altitude_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -338,7 +341,8 @@ Container <<applicationSchema>>  "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    width Measure NOT NULL
+    width TEXT NOT NULL
+    width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     ref inspireId: BASE_Identifier[0..1]
     ref networkRef: NET_NetworkReference[0..*]
   }
@@ -478,7 +482,8 @@ Container <<applicationSchema>>  "Air Transport Network" {
     NOTE This might be different from the elevation of the Aerodrome Reference Point."
     identifier = "Air Transport Network::FieldElevation"
     tableName = "TN_A_FieldElevation"
-    altitude Measure NOT NULL
+    altitude TEXT NOT NULL
+    altitude_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -827,6 +832,7 @@ Container <<applicationSchema>>  "Air Transport Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "BASE_ConditionOfFacilityValue" {
     identifier = "Base Types::ConditionOfFacilityValue"
     decommissioned
@@ -902,7 +908,7 @@ Container <<applicationSchema>>  "Air Transport Network" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "GN_SpellingOfName" {
@@ -1131,7 +1137,16 @@ Container <<applicationSchema>>  "Air Transport Network" {
     plural
     singular
   }
-  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
+  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
@@ -1315,5 +1330,33 @@ Container <<applicationSchema>>  "Air Transport Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

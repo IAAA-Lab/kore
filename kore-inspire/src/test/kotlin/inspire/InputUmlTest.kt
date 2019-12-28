@@ -17,6 +17,7 @@ package inspire
 
 import es.iaaa.kore.*
 import es.iaaa.kore.resource.ResourceFactory
+import es.iaaa.kore.resource.ResourceHelper
 import es.iaaa.kore.util.toPrettyString
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
@@ -121,7 +122,7 @@ class InputUmlTest {
         @JvmStatic
         internal fun beforeAll() {
             val file = File("src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL")
-            val resource = ResourceFactory.createResource(file, "EA-UML1.3", emptyMap())
+            val resource = ResourceFactory.createResource(file, "EA-UML1.3", ResourceHelper())
             if (resource.errors.size > 0) {
                 println("Errors:")
                 resource.errors.forEach { println(it) }

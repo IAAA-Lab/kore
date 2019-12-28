@@ -175,7 +175,7 @@ Container <<applicationSchema>>  "Geology" {
   Class "Borehole" {
     boreholeLength: Quantity [0..1]
     downholeGeometry: CURVE [0..1]
-    elevation_coordinate: Sequence<Number>
+    elevation_coordinate
     elevation_dimension: INTEGER
     location: POINT
     ref inspireId: BASE_Identifier
@@ -328,7 +328,6 @@ Container <<applicationSchema>>  "Geology" {
     identifier = "observation::OM_Observation"
     tableName = "_OM_Observation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -455,6 +454,17 @@ Container <<applicationSchema>>  "Geology" {
     publisher
     resourceProvider
     user
+  }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
   }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"

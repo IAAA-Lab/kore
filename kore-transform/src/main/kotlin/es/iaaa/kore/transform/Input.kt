@@ -17,6 +17,7 @@ package es.iaaa.kore.transform
 
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.impl.*
+import es.iaaa.kore.resource.ResourceHelper
 
 /**
  * An input consist of a file, a file type and a package selector.
@@ -38,9 +39,9 @@ interface Input : Validable {
     val selector: Property<(KorePackage) -> Boolean>
 
     /**
-     * Aliases.
+     * The helper.
      */
-    val alias: Property<Map<String, String>>
+    val helper: Property<ResourceHelper>
 
     /**
      * Returns a [Violations] object indicating if this input

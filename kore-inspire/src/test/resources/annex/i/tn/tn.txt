@@ -48,7 +48,7 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     description = "The authority owning the transport element."
     identifier = "Common Transport Elements::OwnerAuthority"
     tableName = "TN_OwnerAuthority"
-    authority CI_Citation NOT NULL
+    authority INTEGER
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -87,7 +87,8 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    measure Measure NOT NULL
+    measure TEXT NOT NULL
+    measure_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     restrictionType TEXT NOT NULL CHECK(TN_RestrictionTypeValue)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -98,7 +99,7 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     description = "The authority responsible for maintenance of the transport element."
     identifier = "Common Transport Elements::MaintenanceAuthority"
     tableName = "TN_MaintenanceAuthority"
-    authority CI_Citation NOT NULL
+    authority INTEGER
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -226,6 +227,20 @@ Container <<applicationSchema>>  "Common Transport Elements" {
   Class "TransportObject" {
     ref geographicalName: GN_GeographicalName[0..1]
   }
+  Relation "TN_OwnerAuthority_authority" {
+    profile = "attributes"
+    relatedReference = "TN_OwnerAuthority#authority"
+    tableName = "TN_OwnerAuthority_authority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_OwnerAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Citation(id)
+  }
+  Relation "TN_MaintenanceAuthority_authority" {
+    profile = "attributes"
+    relatedReference = "TN_MaintenanceAuthority#authority"
+    tableName = "TN_MaintenanceAuthority_authority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MaintenanceAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Citation(id)
+  }
   Relation "TN_TransportNetwork_inspireId" {
     profile = "attributes"
     relatedReference = "TN_TransportNetwork#inspireId"
@@ -275,6 +290,24 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
   }
+  Relation "GMD_CI_Citation_date" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_date"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
+  }
+  Relation "GMD_CI_Citation_citedResponsibleParty" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_citedResponsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
+  }
+  Relation "GMD_CI_Citation_presentationForm" {
+    profile = "attributes"
+    tableName = "GMD_CI_Citation_presentationForm"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
+  }
   Relation "HH_SA_Event_additionalInformation" {
     profile = "attributes"
     relatedReference = "HH_SA_Event#additionalInformation"
@@ -308,6 +341,20 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     tableName = "HH_SA_Event_locationUnit_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    profile = "attributes"
+    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
+    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Relation "AU_admUnit_boundary" {
     profile = "features"
@@ -360,24 +407,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
   }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
     relatedReference = "AU_AdministrativeBoundary#inspireId"
@@ -416,20 +445,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     tableName = "AU_ResidenceOfAuthority_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "BASE_VerticalPositionValue" {
     identifier = "Base Types::VerticalPositionValue"
@@ -500,8 +515,26 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_Citation" {
+    description = "Standardized resource reference"
+    identifier = "Citation and responsible party information::CI_Citation"
+    tableName = "GMD_CI_Citation"
+    ISBN TEXT
+    ISSN TEXT
+    collectiveTitle TEXT
+    edition TEXT
+    editionDate DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    otherCitationDetails TEXT
+    series_issueIdentification TEXT
+    series_name TEXT
+    series_page TEXT
+    title TEXT NOT NULL
+    ref alternateTitle: TEXT[0..*]
+    ref identifier: MD_Identifier[0..*]
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
@@ -536,6 +569,39 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
     ref causeOfEvent: PT_FreeText[0..*]
   }
+  Attributes "GMD_CI_Date" {
+    identifier = "Citation and responsible party information::CI_Date"
+    tableName = "GMD_CI_Date"
+    date DATE NOT NULL
+    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes "GMD_CI_ResponsibleParty" {
+    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_address INTEGER
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    contactInfo_phone INTEGER
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  }
+  Attributes "GMD_CI_PresentationFormCode" {
+    description = "Mode in which the data is represented"
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    tableName = "GMD_CI_PresentationFormCode"
+    id INTEGER NOT NULL PRIMARY KEY
+    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
   Feature "HH_SA_Event" {
     description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
     identifier = "Safety::Event"
@@ -561,23 +627,25 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     tableName = "HH_SA_EventInformation"
     id INTEGER NOT NULL PRIMARY KEY
   }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
+  Attributes "GMD_CI_Telephone" {
+    description = "Telephone numbers for contacting the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Telephone"
+    tableName = "GMD_CI_Telephone"
     id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
-    ref identifier: MD_Identifier[0..*]
+    ref facsimile: TEXT[0..*]
+    ref voice: TEXT[0..*]
+  }
+  Attributes "GMD_CI_Address" {
+    description = "Location of the responsible individual or organisation"
+    identifier = "Citation and responsible party information::CI_Address"
+    tableName = "GMD_CI_Address"
+    administrativeArea TEXT
+    city TEXT
+    country TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    postalCode TEXT
+    ref deliveryPoint: TEXT[0..*]
+    ref electronicMailAddress: TEXT[0..*]
   }
   Feature "AU_AdministrativeUnit" {
     description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
@@ -632,39 +700,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     value DOUBLE NOT NULL
   }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Attributes "AU_AdministrativeHierarchyLevel" {
     description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
     identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
@@ -683,26 +718,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
-  }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Constraint Enum "GN_NativenessValue" {
     identifier = "Geographical Names::NativenessValue"
@@ -729,8 +744,63 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     plural
     singular
   }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
+  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
+  }
+  Constraint Enum "GMD_CI_DateTypeCode" {
+    identifier = "Citation and responsible party information::CI_DateTypeCode"
+    creation
+    publication
+    revision
+  }
+  Constraint Enum "GMD_CI_OnLineFunctionCode" {
+    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+  Constraint Enum "GMD_CI_RoleCode" {
+    identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum "GMD_CI_PresentationFormCode" {
+    identifier = "Citation and responsible party information::CI_PresentationFormCode"
+    documentDigital
+    documentHardcopy
+    imageDigital
+    imageHardcopy
+    mapDigital
+    mapHardcopy
+    modelDigital
+    modelHardcopy
+    profileDigital
+    profileHardcopy
+    tableDigital
+    tableHardcopy
+    videoDigital
+    videoHardcopy
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
@@ -868,49 +938,32 @@ Container <<applicationSchema>>  "Common Transport Elements" {
   Constraint Enum "HH_SA_ConsequenceTypeValue" {
     identifier = "Safety::ConsequenceTypeValue"
   }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
   }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

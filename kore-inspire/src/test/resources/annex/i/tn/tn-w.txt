@@ -343,7 +343,8 @@ Container <<applicationSchema>>  "Water Transport Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    measure: Measure
+    measure: TEXT
+    measure_uom: TEXT
     restrictionType: TEXT
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
@@ -602,6 +603,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     maximumTripleAxleWeight
     maximumWidth
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "NET_LinkDirectionValue" {
     identifier = "Network::LinkDirectionValue"
     bothDirections
@@ -675,7 +677,7 @@ Container <<applicationSchema>>  "Water Transport Network" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "GN_SpellingOfName" {
@@ -904,7 +906,16 @@ Container <<applicationSchema>>  "Water Transport Network" {
     plural
     singular
   }
-  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
+  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
@@ -1088,5 +1099,33 @@ Container <<applicationSchema>>  "Water Transport Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

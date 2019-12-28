@@ -5,7 +5,13 @@ Container <<applicationSchema>>  "Activity Complex" {
     NOTE Depending on the thematic scope it can refer to different terms as Biomass, Bio-Waste, Fuel, Organic Solvents, Waste Water, Waste for disposal or recovery, Primary Materials, etc."
     identifier = "Activity Complex::InputOutputAmount"
     tableName = "ACT_CORE_InputOutputAmount"
-    amount_unitOfMeasure UnitOfMeasure NOT NULL
+    amount_unitOfMeasure_formula TEXT
+    amount_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    amount_unitOfMeasure_nameStandardUnit TEXT
+    amount_unitOfMeasure_offsetToStandardUnit DOUBLE
+    amount_unitOfMeasure_scaleToStandardUnit DOUBLE
+    amount_unitOfMeasure_uomName TEXT NOT NULL
+    amount_unitOfMeasure_uomSymbol TEXT NOT NULL
     amount_value TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inputOutput TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
@@ -42,7 +48,8 @@ Container <<applicationSchema>>  "Activity Complex" {
     identifier = "Activity Complex::Capacity"
     tableName = "ACT_CORE_Capacity"
     id INTEGER NOT NULL PRIMARY KEY
-    time Time
+    time TEXT
+    time_uom TEXT CHECK(GML_UomIdentifier)
   }
   Constraint Enum "ACT_CORE_EconomicActivityValue" {
     identifier = "Activity Complex::EconomicActivityValue"
@@ -447,6 +454,18 @@ Container <<applicationSchema>>  "Activity Complex" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
+  Constraint Enum "GML_UomIdentifier" {}
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
   
@@ -467,7 +486,6 @@ Container <<applicationSchema>>  "Activity Complex" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    website URL
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
@@ -937,13 +955,12 @@ Container <<applicationSchema>>  "Activity Complex" {
     utf7
     utf8
   }
-  Constraint Enum "GML_UomIdentifier" {}
   Attributes "BU_BASE_Elevation" {
     description = "This data types includes the elevation value itself  and information on how this elevation was measured."
     identifier = "BuildingsBase::Elevation"
     tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }

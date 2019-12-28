@@ -40,7 +40,8 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    speed Velocity NOT NULL
+    speed TEXT NOT NULL
+    speed_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref inspireId: BASE_Identifier[0..1]
@@ -215,8 +216,9 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    nominalGauge Measure
+    nominalGauge TEXT
     nominalGaugeCategory TEXT CHECK(TN_RA_TrackGaugeCategoryValue)
+    nominalGauge_uom TEXT CHECK(GML_UomIdentifier)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref inspireId: BASE_Identifier[0..1]
@@ -480,6 +482,7 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Attributes "NET_NetworkReference" {
     description = "A reference to a network element."
     identifier = "Network::NetworkReference"
@@ -519,7 +522,7 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "NET_Network" {
@@ -776,7 +779,16 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     plural
     singular
   }
-  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
+  }
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
@@ -960,5 +972,33 @@ Container <<applicationSchema>>  "Railway Transport Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

@@ -45,7 +45,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::Crossing"
     tableName = "HY_P_Crossing"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -64,7 +64,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::Lock"
     tableName = "HY_P_Lock"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -86,7 +86,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::ShorelineConstruction"
     tableName = "HY_P_ShorelineConstruction"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -231,7 +231,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::Sluice"
     tableName = "HY_P_Sluice"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -249,7 +249,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::Ford"
     tableName = "HY_P_Ford"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -273,7 +273,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
   }
   Class "ManMadeObject" {
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     levelOfDetail_distance: TEXT [0..1]
@@ -294,7 +294,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::Embankment"
     tableName = "HY_P_Embankment"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -435,7 +435,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     identifier = "Hydro - Physical Waters::DamOrWeir"
     tableName = "HY_P_DamOrWeir"
     beginLifespanVersion: DATETIME [0..1]
-    condition: ConditionOfFacilityValue [0..1]
+    condition: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GM_Primitive [0..1]
     id INTEGER NOT NULL PRIMARY KEY
@@ -586,6 +586,14 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "BASE_ConditionOfFacilityValue" {
+    identifier = "Base Types::ConditionOfFacilityValue"
+    decommissioned
+    disused
+    functional
+    projected
+    underConstruction
+  }
   Constraint Enum "GMD_LanguageCode" {
     identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
@@ -667,14 +675,6 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     utf16
     utf7
     utf8
-  }
-  Constraint Enum "BASE_ConditionOfFacilityValue" {
-    identifier = "Base Types::ConditionOfFacilityValue"
-    decommissioned
-    disused
-    functional
-    projected
-    underConstruction
   }
   Constraint Enum "BASE_VerticalPositionValue" {
     identifier = "Base Types::VerticalPositionValue"

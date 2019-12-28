@@ -28,7 +28,6 @@ val `UoM is added as a separate property`: Transform = { conversion, _ ->
     }
 
     val uom by lazy {
-        uomPackage.getAnnotation()?.details?.put("xmlns", "gml")
         uomPackage.enumConstraint("UomIdentifier")
     }
 

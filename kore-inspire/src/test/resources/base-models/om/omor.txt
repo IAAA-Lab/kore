@@ -101,7 +101,6 @@ Container <<applicationSchema>>  "Observation References" {
     identifier = "observation::OM_Observation"
     tableName = "_OM_Observation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -320,6 +319,12 @@ Container <<applicationSchema>>  "Observation References" {
     utf7
     utf8
   }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
   Attributes "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
@@ -480,12 +485,6 @@ Container <<applicationSchema>>  "Observation References" {
     specifiedClass
     typeClass
     unionClass
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
   }
   Constraint Enum "GMD_MD_KeywordTypeCode" {
     identifier = "Identification information::MD_KeywordTypeCode"

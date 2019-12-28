@@ -6,7 +6,8 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     identifier = "LandCoverRaster::LandCoverGridCoverage"
     tableName = "LCR_LandCoverGridCoverage"
     beginLifespanVersion DATETIME
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     endLifespanVersion DATETIME
     extent_description TEXT
@@ -19,6 +20,7 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     rangeType: RecordType
     validFrom DATE
     validTo DATE
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
   }
   Relation "LCR_LandCoverGridCoverage_inspireId" {
     profile = "attributes"
@@ -283,6 +285,15 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Attributes "GMLCOV_GridFunction" {
+    description = "An explicit mapping rule for grid geometries"
+    identifier = "Coverages (Domain and Range)::GridFunction"
+    tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    ref startPoint: INTEGER[0..*]
+  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
@@ -336,7 +347,6 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    website URL
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
@@ -566,6 +576,15 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     class TEXT NOT NULL CHECK(LCN_LandCoverClassValue)
     coveredPercentage INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+  }
+  Constraint Enum "CIS_CV_SequenceType" {
+    identifier = "Quadrilateral Grid::CV_SequenceType"
+    CantorDiagonal
+    Hilbert
+    Morton
+    boustrophedonic
+    linear
+    spiral
   }
   Constraint Enum "LCN_LandCoverClassValue" {
     identifier = "LandCoverNomenclature::LandCoverClassValue"
@@ -800,7 +819,7 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     identifier = "BuildingsBase::Elevation"
     tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }

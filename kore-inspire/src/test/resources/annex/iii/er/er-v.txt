@@ -4,15 +4,22 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     identifier = "Energy Resources Vector::CalorificRangeType"
     tableName = "ER_V_CalorificRangeType"
     id INTEGER NOT NULL PRIMARY KEY
-    lowerBound Measure NOT NULL
-    upperBound Measure NOT NULL
+    lowerBound TEXT NOT NULL
+    lowerBound_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    upperBound TEXT NOT NULL
+    upperBound_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
   Attributes "ER_V_FossilFuelMeasure" {
     description = "Amount of resources according to the specific categorisation."
     identifier = "Energy Resources Vector::FossilFuelMeasure"
     tableName = "ER_V_FossilFuelMeasure"
-    amount Measure NOT NULL
-    dateOfDetermination TM_Position NOT NULL
+    amount TEXT NOT NULL
+    amount_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    dateOfDetermination_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    dateOfDetermination_date8601 DATE
+    dateOfDetermination_dateTime8601 DATETIME
+    dateOfDetermination_time8601 TEXT
+    dateOfDetermination_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
     resourceClass TEXT NOT NULL CHECK(ER_B_FossilFuelClassValue)
   }
@@ -20,9 +27,12 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     description = "Type and amount of resource according to specific categorisation."
     identifier = "Energy Resources Vector::FossilFuelResourceType"
     tableName = "ER_V_FossilFuelResourceType"
-    calorificValue_calorificRange_lowerBound Measure
-    calorificValue_calorificRange_upperBound Measure
-    calorificValue_calorificScalar Measure
+    calorificValue_calorificRange_lowerBound TEXT
+    calorificValue_calorificRange_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
+    calorificValue_calorificRange_upperBound TEXT
+    calorificValue_calorificRange_upperBound_uom TEXT CHECK(GML_UomIdentifier)
+    calorificValue_calorificScalar TEXT
+    calorificValue_calorificScalar_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
     typeOfResource TEXT NOT NULL CHECK(ER_B_FossilFuelValue)
   }
@@ -32,17 +42,25 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     <font color="#222226">Renewable energy is energy that is naturally occurring and theoretically inexhausatable that is not derived from fossil or nuclear fuel. Waste is a fuel that may consist of many materials coming from combustible industrial, institutional, hospital and household wastes such as rubber, plastics, waste fossil oils and other similar commodities. It is either solid or liquid in form, renewable or non-renewable, biodegradable or non-biodegradable.</font>"
     identifier = "Energy Resources Vector::RenewableAndWasteResource"
     tableName = "ER_V_RenewableAndWasteResource"
-    Capacity Measure
+    Capacity TEXT
+    Capacity_uom TEXT CHECK(GML_UomIdentifier)
     ClassificationAndQuantificationFramework: TEXT [0..1]
     beginLifespanVersion: DATETIME [0..1]
-    dateOfDetermination TM_Position
+    dateOfDetermination_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    dateOfDetermination_date8601 DATE
+    dateOfDetermination_dateTime8601 DATETIME
+    dateOfDetermination_time8601 TEXT
+    dateOfDetermination_time8601_uom TEXT CHECK(GML_UomIdentifier)
     endLifespanVersion: DATETIME [0..1]
     geometry: GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
     typeOfResource TEXT NOT NULL CHECK(ER_B_RenewableAndWasteValue)
-    verticalExtent_verticalExtent_range_lowerBound: Length [0..1]
-    verticalExtent_verticalExtent_range_upperBound: Length [0..1]
-    verticalExtent_verticalExtent_scalar: Length [0..1]
+    verticalExtent_verticalExtent_range_lowerBound: TEXT [0..1]
+    verticalExtent_verticalExtent_range_lowerBound_uom: TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound: TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound_uom: TEXT [0..1]
+    verticalExtent_verticalExtent_scalar: TEXT [0..1]
+    verticalExtent_verticalExtent_scalar_uom: TEXT [0..1]
     verticalExtent_verticalReference: TEXT [0..1]
     ref exploitationPeriod: ER_V_ExploitationPeriodType[0..*]
     ref inspireId: BASE_Identifier
@@ -57,13 +75,20 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     tableName = "ER_V_FossilFuelResource"
     ClassificationAndQuantificationFramework: TEXT [0..1]
     beginLifespanVersion: DATETIME [0..1]
-    dateOfDiscovery TM_Position
+    dateOfDiscovery_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    dateOfDiscovery_date8601 DATE
+    dateOfDiscovery_dateTime8601 DATETIME
+    dateOfDiscovery_time8601 TEXT
+    dateOfDiscovery_time8601_uom TEXT CHECK(GML_UomIdentifier)
     endLifespanVersion: DATETIME [0..1]
     geometry: GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    verticalExtent_verticalExtent_range_lowerBound: Length [0..1]
-    verticalExtent_verticalExtent_range_upperBound: Length [0..1]
-    verticalExtent_verticalExtent_scalar: Length [0..1]
+    verticalExtent_verticalExtent_range_lowerBound: TEXT [0..1]
+    verticalExtent_verticalExtent_range_lowerBound_uom: TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound: TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound_uom: TEXT [0..1]
+    verticalExtent_verticalExtent_scalar: TEXT [0..1]
+    verticalExtent_verticalExtent_scalar_uom: TEXT [0..1]
     verticalExtent_verticalReference: TEXT [0..1]
     ref exploitationPeriod: ER_V_ExploitationPeriodType[0..*]
     ref inspireId: BASE_Identifier
@@ -75,9 +100,12 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry: GEOMETRY
-    verticalExtent_verticalExtent_range_lowerBound: Length [0..1]
-    verticalExtent_verticalExtent_range_upperBound: Length [0..1]
-    verticalExtent_verticalExtent_scalar: Length [0..1]
+    verticalExtent_verticalExtent_range_lowerBound: TEXT [0..1]
+    verticalExtent_verticalExtent_range_lowerBound_uom: TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound: TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound_uom: TEXT [0..1]
+    verticalExtent_verticalExtent_scalar: TEXT [0..1]
+    verticalExtent_verticalExtent_scalar_uom: TEXT [0..1]
     verticalExtent_verticalReference: TEXT [0..1]
     ref exploitationPeriod: ER_V_ExploitationPeriodType[0..*]
     ref inspireId: BASE_Identifier
@@ -88,14 +116,25 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     description = "The exploitationPeriod defines the start and, if applicable, the end date of the exploitation or application."
     identifier = "Energy Resources Vector::ExploitationPeriodType"
     tableName = "ER_V_ExploitationPeriodType"
-    beginTime TM_Position NOT NULL
-    endTime TM_Position
+    beginTime_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    beginTime_date8601 DATE
+    beginTime_dateTime8601 DATETIME
+    beginTime_time8601 TEXT
+    beginTime_time8601_uom TEXT CHECK(GML_UomIdentifier)
+    endTime_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    endTime_date8601 DATE
+    endTime_dateTime8601 DATETIME
+    endTime_time8601 TEXT
+    endTime_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Class <<union>>  "CalorificValueType" {
-    calorificRange_lowerBound: Measure
-    calorificRange_upperBound: Measure
-    calorificScalar: Measure
+    calorificRange_lowerBound: TEXT
+    calorificRange_lowerBound_uom: TEXT
+    calorificRange_upperBound: TEXT
+    calorificRange_upperBound_uom: TEXT
+    calorificScalar: TEXT
+    calorificScalar_uom: TEXT
   }
   Relation "ER_V_FossilFuelResourceType_quantity" {
     profile = "attributes"
@@ -337,11 +376,20 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "ER_B_FossilFuelClassValue" {
     identifier = "Energy Resources Base::FossilFuelClassValue"
     contingentResources
     provenReserves
     resourcesInitiallyInPlace
+  }
+  Constraint Enum "TRS_TM_IndeterminateValue" {
+    identifier = "Temporal Reference System::TM_IndeterminateValue"
+    after
+    before
+    name
+    now
+    unknow
   }
   Constraint Enum "ER_B_FossilFuelValue" {
     identifier = "Energy Resources Base::FossilFuelValue"
@@ -431,7 +479,6 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    website URL
     ref telephoneFacsimile: TEXT[0..*]
     ref telephoneVoice: TEXT[0..*]
   }
@@ -864,13 +911,12 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     utf7
     utf8
   }
-  Constraint Enum "GML_UomIdentifier" {}
   Attributes "BU_BASE_Elevation" {
     description = "This data types includes the elevation value itself  and information on how this elevation was measured."
     identifier = "BuildingsBase::Elevation"
     tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate Sequence<Number> NOT NULL
+    elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }

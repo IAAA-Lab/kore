@@ -35,7 +35,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Gridded Observations::GridSeriesObservation"
     tableName = "OMSO_GridSeriesObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -54,7 +53,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Gridded Observations::GridObservation"
     tableName = "OMSO_GridObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -83,7 +81,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Point Observations::MultiPointObservation"
     tableName = "OMSO_MultiPointObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -100,7 +97,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Point Observations::PointObservation"
     tableName = "OMSO_PointObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -117,7 +113,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Point Observations::PointTimeSeriesObservation"
     tableName = "OMSO_PointTimeSeriesObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -131,15 +126,19 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     description = "A triple set of Time, location, value (measurement). For example, at a point along a trajectory."
     identifier = "Trajectory and Profile Observations::TimeLocationValueTriple"
     tableName = "OMSO_TimeLocationValueTriple"
-    geometry TM_Instant NOT NULL
     geometry: CV_DomainObject
     geometry_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     geometry_date8601 DATE
     geometry_dateTime8601 DATETIME
+    geometry_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    geometry_position_date8601 DATE
+    geometry_position_dateTime8601 DATETIME
+    geometry_position_time8601 TEXT
+    geometry_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     geometry_time8601 TEXT
     geometry_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    location_direct_coordinate Sequence<Number>
+    location_direct_coordinate <<missing>>
     location_direct_dimension INTEGER
     value Record NOT NULL
     value: Record
@@ -155,7 +154,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Trajectory and Profile Observations::TrajectoryObservation"
     tableName = "OMSO_TrajectoryObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -172,7 +170,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Trajectory and Profile Observations::ProfileObservation"
     tableName = "OMSO_ProfileObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -221,12 +218,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
-  Relation "WML2_TimeseriesMetadata_extension" {
-    profile = "attributes"
-    tableName = "WML2_TimeseriesMetadata_extension"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES WML2_TimeseriesMetadata(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
-  }
   Relation "GMD_CI_Citation_date" {
     profile = "attributes"
     tableName = "GMD_CI_Citation_date"
@@ -245,6 +236,12 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
+  Relation "WML2_TimeseriesMetadata_extension" {
+    profile = "attributes"
+    tableName = "WML2_TimeseriesMetadata_extension"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES WML2_TimeseriesMetadata(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
+  }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
     after
@@ -260,12 +257,11 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     Description: axml attribute xml:lang shall be generated for the type representing the class
     "
     description = "An observation is an act that results in the estimation of the value of a feature property, and involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. Use of a common model allows observation data using different procedures to be combined unambiguously. Observation details are also important for data discovery and for data quality estimation. Observation feature types are defined by the properties that support these applications.
-
+  
     An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. The result of an observation is an estimate of the value of a property of some feature, so the details of the observation are metadata concerning the value of the feature property. The observation itself is also a feature, since it has properties and identity."
     identifier = "observation::OM_Observation"
     tableName = "_OM_Observation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime TM_Object NOT NULL
     resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     resultTime_position_date8601 DATE
     resultTime_position_dateTime8601 DATETIME
@@ -301,11 +297,15 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
   Attributes "WML2_AnnotatedTimeValuePair" {
     identifier = "Timeseries::AnnotatedTimeValuePair"
     tableName = "WML2_AnnotatedTimeValuePair"
-    geometry TM_Instant NOT NULL
     geometry: CV_DomainObject
     geometry_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     geometry_date8601 DATE
     geometry_dateTime8601 DATETIME
+    geometry_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    geometry_position_date8601 DATE
+    geometry_position_dateTime8601 DATETIME
+    geometry_position_time8601 TEXT
+    geometry_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     geometry_time8601 TEXT
     geometry_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
@@ -328,8 +328,8 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     id INTEGER NOT NULL PRIMARY KEY
     nilReason_NilReasonEnumeration <<missing>>
     nilReason_URI <<missing>>
-    processing ProcessingCode
-    quality DataQualityCode
+    processing TEXT CHECK(WML2_ProcessingCode)
+    quality TEXT CHECK(WML2_DataQualityCode)
     relatedObservation INTEGER
     source MD_DataIdentification
     ref qualifier: Quality[0..*]
@@ -373,24 +373,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     ref deliveryPoint: TEXT[0..*]
     ref electronicMailAddress: TEXT[0..*]
   }
-  Attributes "WML2_TimeseriesMetadata" {
-    identifier = "Timeseries::TimeseriesMetadata"
-    tableName = "WML2_TimeseriesMetadata"
-    baseTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    baseTime_position_date8601 DATE
-    baseTime_position_dateTime8601 DATETIME
-    baseTime_position_time8601 TEXT
-    baseTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    id INTEGER NOT NULL PRIMARY KEY
-    spacing_days TEXT
-    spacing_designator TEXT DEFAULT 'P'
-    spacing_hours TEXT
-    spacing_minutes TEXT
-    spacing_months TEXT
-    spacing_seconds TEXT
-    spacing_timeIndicator TEXT DEFAULT 'T'
-    spacing_years TEXT
-  }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
     identifier = "Citation and responsible party information::CI_Citation"
@@ -422,6 +404,24 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     tableName = "GMD_CI_PresentationFormCode"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
+  }
+  Attributes "WML2_TimeseriesMetadata" {
+    identifier = "Timeseries::TimeseriesMetadata"
+    tableName = "WML2_TimeseriesMetadata"
+    baseTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    baseTime_position_date8601 DATE
+    baseTime_position_dateTime8601 DATETIME
+    baseTime_position_time8601 TEXT
+    baseTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
+    id INTEGER NOT NULL PRIMARY KEY
+    spacing_days TEXT
+    spacing_designator TEXT DEFAULT 'P'
+    spacing_hours TEXT
+    spacing_minutes TEXT
+    spacing_months TEXT
+    spacing_seconds TEXT
+    spacing_timeIndicator TEXT DEFAULT 'T'
+    spacing_years TEXT
   }
   Attributes "GMD_PT_Locale" {
     identifier = "Cultural and linguistic adapdability::PT_Locale"
@@ -474,7 +474,12 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     description = "#NOTES#Description: Normative documentation association with this element"
     identifier = "Temporal Coverage::CVT_TimeInstantValuePair"
     tableName = "_CVT_TimeInstantValuePair"
-    geometry TM_Instant NOT NULL
+    geometry: CV_DomainObject
+    geometry_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
+    geometry_position_date8601 DATE
+    geometry_position_dateTime8601 DATETIME
+    geometry_position_time8601 TEXT
+    geometry_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
     value: Record
     ref collection: CVT_DiscreteTimeInstantCoverage[0..*] inv element[0..*]
@@ -520,6 +525,24 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     utf16
     utf7
     utf8
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "WML2_DataQualityCode" {
+    identifier = "Timeseries::DataQualityCode"
+    Estimate
+    Good
+    Missing
+    Poor
+    Suspect
+    Unchecked
+  }
+  Constraint Enum "WML2_ProcessingCode" {
+    identifier = "Timeseries::ProcessingCode"
   }
   Constraint Enum "GMD_CI_OnLineFunctionCode" {
     identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
@@ -614,12 +637,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     tableName = "MI_MD_ScopeCode"
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
   }
   Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
     identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
@@ -752,6 +769,17 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     id INTEGER NOT NULL PRIMARY KEY
     name TEXT
     protocol TEXT
+  }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
   }
   Constraint Enum "GMD_MD_SpatialRepresentationTypeCode" {
     identifier = "Identification information::MD_SpatialRepresentationTypeCode"

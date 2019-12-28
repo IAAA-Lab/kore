@@ -4,9 +4,12 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     identifier = "Energy Resources Base::VerticalExtentType"
     tableName = "ER_B_VerticalExtentType"
     id INTEGER NOT NULL PRIMARY KEY
-    verticalExtent_range_lowerBound Length
-    verticalExtent_range_upperBound Length
-    verticalExtent_scalar Length
+    verticalExtent_range_lowerBound TEXT
+    verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_range_upperBound TEXT
+    verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_scalar TEXT
+    verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
     verticalReference TEXT NOT NULL CHECK(ER_B_VerticalReferenceValue)
   }
   Constraint Enum "ER_B_ClassificationAndQuantificationFrameworkValue" {
@@ -28,13 +31,15 @@ Container <<applicationSchema>>  "Energy Resources Base" {
   }
   Attributes "ER_B_VerticalExtentRangeType" {
     description = "Value indicating the upper and lower bounds of the height/depth range.
-
+  
     In the case of depth, the range between the deepest (lower bound) and most shallow (upper bound) aspect of the deposit body, where the depth is true vertical depth below a chosen vertical reference level."
     identifier = "Energy Resources Base::VerticalExtentRangeType"
     tableName = "ER_B_VerticalExtentRangeType"
     id INTEGER NOT NULL PRIMARY KEY
-    lowerBound Length
-    upperBound Length NOT NULL
+    lowerBound TEXT
+    lowerBound_uom TEXT CHECK(GML_UomIdentifier)
+    upperBound TEXT NOT NULL
+    upperBound_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
   Constraint Enum "ER_B_RenewableAndWasteValue" {
     identifier = "Energy Resources Base::RenewableAndWasteValue"
@@ -58,9 +63,12 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     seafloor
   }
   Class <<union>>  "VerticalExtentValue" {
-    range_lowerBound: Length [0..1]
-    range_upperBound: Length
-    scalar: Length
+    range_lowerBound: TEXT [0..1]
+    range_lowerBound_uom: TEXT [0..1]
+    range_upperBound: TEXT
+    range_upperBound_uom: TEXT
+    scalar: TEXT
+    scalar_uom: TEXT
   }
   Constraint Enum "ER_B_FossilFuelValue" {
     identifier = "Energy Resources Base::FossilFuelValue"
@@ -97,4 +105,5 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
+  Constraint Enum "GML_UomIdentifier" {}
 }

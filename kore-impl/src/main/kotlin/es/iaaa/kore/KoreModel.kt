@@ -13,13 +13,12 @@ fun KoreAttribute.toReference(remove: Boolean = true): KoreReference =
 /**
  * Copy an annotation.
  */
-fun KoreAnnotation.copy(modelElement: KoreModelElement? = this.modelElement): KoreAnnotation =
-    koreAnnotation {
+fun KoreAnnotation.copy(modelElement: KoreModelElement): KoreAnnotation =
+    modelElement.koreAnnotation {
         source = this@copy.source
         details.putAll(this@copy.details)
-        this.modelElement = modelElement
         references.addAll(this@copy.references)
-        this@copy.annotations.map { ann -> ann.copy(this) }
+        this@copy.annotations.forEach { ann -> ann.copy(this) }
     }
 
 fun KoreAttribute.copy(target: KoreClass? = this.containingClass): KoreAttribute =
@@ -34,6 +33,7 @@ fun koreClass(meta: KoreClass, block: KoreClass.() -> Unit): KoreClass = KoreMod
 }
 
 fun koreDataType(block: KoreDataType.() -> Unit): KoreDataType = KoreModel.createDataType().apply(block)
+fun koreClassifier(block: KoreClassifier.() -> Unit): KoreClassifier = KoreModel.createClassifier().apply(block)
 
 fun koreAttribute(block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply(block)
 fun koreAttribute(meta: KoreClass, block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {
@@ -62,26 +62,31 @@ fun koreReference(meta: KoreClass, block: KoreReference.() -> Unit) = KoreModel.
     verify(metaClass == meta) { "The metaclass property has muted within the block"}
 }
 
-fun koreAnnotation(block: KoreAnnotation.() -> Unit): KoreAnnotation = KoreModel.createAnnotation().apply(block)
-
-fun copyFromTo(
-    other: KoreStructuralFeature,
-    target: KoreClass?,
-    remove: Boolean = false
-): KoreStructuralFeature.() -> Unit = {
-    metaClass = other.metaClass
-    isChangeable = other.isChangeable
-    isUnsettable = other.isUnsettable
-    defaultValueLiteral = other.defaultValueLiteral
-    ordered = other.ordered
-    lowerBound = other.lowerBound
-    upperBound = other.upperBound
-    type = other.type
-    name = other.name
-    other.annotations.map { ann -> ann.copy(this) }
-    if (remove) {
-        other.containingClass = null
-    }
-    containingClass = target
+fun KoreModelElement.koreAnnotation(block: KoreAnnotation.() -> Unit): KoreAnnotation = KoreModel.createAnnotation().apply {
+    modelElement = this@koreAnnotation
+    block()
+    verify(modelElement == this@koreAnnotation) { "The modelElement property has muted within the block"}
 }
+
+    fun copyFromTo(
+        other: KoreStructuralFeature,
+        target: KoreClass?,
+        remove: Boolean = false
+    ): KoreStructuralFeature.() -> Unit = {
+        metaClass = other.metaClass
+        isChangeable = other.isChangeable
+        isUnsettable = other.isUnsettable
+        defaultValueLiteral = other.defaultValueLiteral
+        ordered = other.ordered
+        lowerBound = other.lowerBound
+        upperBound = other.upperBound
+        type = other.type
+        name = other.name
+        other.annotations.map { ann -> ann.copy(this) }
+        if (remove) {
+            other.containingClass = null
+        }
+        containingClass = target
+    }
+
 

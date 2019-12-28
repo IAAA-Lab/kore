@@ -770,6 +770,17 @@ Container <<applicationSchema>>  "MineralResources" {
     qualifier TEXT NOT NULL CHECK(CGU_ValueQualifierCode)
     value TEXT NOT NULL CHECK(CGU_CodeListValue)
   }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
     creation

@@ -1,9 +1,9 @@
 Container <<applicationSchema>>  "Planned Land Use" {
   Feature "PLU_SupplementaryRegulation" {
     description = "A spatial object (point, line or polygon) of a spatial plan that provides supplementary information and/or limitation of the use of land/water necessary for spatial planning reasons or to formalise external rules defined in legal text.
-
+  
     NOTE the supplementary regulations affects all land use that overlap with the geometry
-
+  
     EXAMPLE an air field generates restriction in its surroundings regarding aircraft landing, radar and telecommunication devices. It is the buffer around these artefacts that generates the supplementary regulation on the Land Use."
     identifier = "Planned Land Use::SupplementaryRegulation"
     tableName = "PLU_SupplementaryRegulation"
@@ -58,12 +58,18 @@ Container <<applicationSchema>>  "Planned Land Use" {
     tableName = "PLU_DimensioningIndicationMeasureValue"
     id INTEGER NOT NULL PRIMARY KEY
     indicationReference TEXT NOT NULL
-    value_unitOfMeasure UnitOfMeasure NOT NULL
+    value_unitOfMeasure_formula TEXT
+    value_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    value_unitOfMeasure_nameStandardUnit TEXT
+    value_unitOfMeasure_offsetToStandardUnit DOUBLE
+    value_unitOfMeasure_scaleToStandardUnit DOUBLE
+    value_unitOfMeasure_uomName TEXT NOT NULL
+    value_unitOfMeasure_uomSymbol TEXT NOT NULL
     value_value TEXT NOT NULL
   }
   Feature "PLU_ZoningElement" {
     description = "A spatial object which is homogeneous regarding the permitted uses of land based on zoning which separate one set of land uses from another.
-
+  
     Zoning elements refer to the regulation of the kinds of activities which will be acceptable on particular lots (such as open space, residential, agricultural, commercial or industrial).  The intensity of use at which those activities can be performed (from low-density housing such as single family homes to high-density such as high-rise apartment buildings), the height of buildings, the amount of space that structures may occupy, the proportions of the types of space on a lot, such as how much landscaped space, impervious surface, traffic lanes, and parking may be provided."
     identifier = "Planned Land Use::ZoningElement"
     tableName = "PLU_ZoningElement"
@@ -142,9 +148,9 @@ Container <<applicationSchema>>  "Planned Land Use" {
   }
   Attributes "PLU_OfficialDocumentation" {
     description = "The official documentation that composes the spatial plan; it may be composed of, the applicable legislation, the regulations, cartographic elements, descriptive elements that may be associated with the complete spatial plan, a zoning element or a supplementary regulation . In some Member States the actual textual regulation will be part of the data set (and can be put in the regulationText attribute), in other Member States the text will not be part of the data set and will be referenced via a reference to a document or a legal act.
-
+  
     At least one of the three voidable values shall be provided.
-
+  
     NOTE: The LegislationCitation is the value type of the attribute regulation reference. An example of a regulation reference would be: http://www2.vlaanderen.be /ruimtelijk/grup/00350/00362_00001/data/ 212_00362_00001_d_0BVR.pdf."
     identifier = "Planned Land Use::OfficialDocumentation"
     tableName = "PLU_OfficialDocumentation"
@@ -163,9 +169,9 @@ Container <<applicationSchema>>  "Planned Land Use" {
   }
   Attributes "PLU_SpecificSupplementaryRegulationValue" {
     description = "Category of supplementary regulation provided in a specific nomenclature of supplementary
-
+  
     regulations provided by the data provider.
-
+  
     The allowed values for this code list comprise any values defined by data providers."
     identifier = "Planned Land Use::SpecificSupplementaryRegulationValue"
     tableName = "PLU_SpecificSupplementaryRegulationValue"
@@ -174,7 +180,7 @@ Container <<applicationSchema>>  "Planned Land Use" {
   }
   Attributes "PLU_SupplementaryRegulationValue" {
     description = "Types of conditions and constraints in spatial plans.
-
+  
     This list is populated with the categories of the Hierarchical Supplementary Regulation Code List (HSRCL)."
     identifier = "Planned Land Use::SupplementaryRegulationValue"
     tableName = "PLU_SupplementaryRegulationValue"
@@ -308,6 +314,17 @@ Container <<applicationSchema>>  "Planned Land Use" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
+  Constraint Enum "GML_MeasureType" {
+    identifier = "Units of Measure::MeasureType"
+    angle
+    area
+    length
+    scale
+    time
+    velocity
+    volume
+    weight
+  }
   Constraint Enum "LUNOM_HILUCSValue" {
     identifier = "Land Use Nomenclature::HILUCSValue"
   }
@@ -316,11 +333,11 @@ Container <<applicationSchema>>  "Planned Land Use" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -331,9 +348,9 @@ Container <<applicationSchema>>  "Planned Land Use" {
   }
   Attributes "LUNOM_HILUCSValue" {
     description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
-
+  
     This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
-
+  
     The elements of the list should be both applicable to existing land use and planned land use."
     identifier = "Land Use Nomenclature::HILUCSValue"
     tableName = "LUNOM_HILUCSValue"
@@ -342,7 +359,7 @@ Container <<applicationSchema>>  "Planned Land Use" {
   }
   Attributes "LUNOM_LandUseClassificationValue" {
     description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
-
+  
     This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
     identifier = "Land Use Nomenclature::LandUseClassificationValue"
     tableName = "LUNOM_LandUseClassificationValue"
@@ -356,6 +373,15 @@ Container <<applicationSchema>>  "Planned Land Use" {
     national
     sub-national
   }
+  Constraint Enum "TRS_TM_IndeterminateValue" {
+    identifier = "Temporal Reference System::TM_IndeterminateValue"
+    after
+    before
+    name
+    now
+    unknow
+  }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
     creation

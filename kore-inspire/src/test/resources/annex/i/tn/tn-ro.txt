@@ -353,11 +353,11 @@ Container <<applicationSchema>>  "Road Transport Network" {
     laneExtension INTEGER
     speedLimitMinMaxType TEXT NOT NULL CHECK(TN_RO_SpeedLimitMinMaxValue) DEFAULT 'Maximum'
     speedLimitSource TEXT CHECK(TN_RO_SpeedLimitSourceValue)
-    speedLimitValue Velocity NOT NULL
+    speedLimitValue TEXT NOT NULL
+    speedLimitValue_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     startLane INTEGER
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    validityPeriod TM_Period
     vehicleType TEXT CHECK(TN_RO_VehicleTypeValue)
     weatherCondition TEXT CHECK(TN_RO_WeatherConditionValue)
     ref inspireId: BASE_Identifier[0..1]
@@ -375,7 +375,8 @@ Container <<applicationSchema>>  "Road Transport Network" {
     measuredRoadPart TEXT CHECK(TN_RO_RoadPartValue)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    width Measure NOT NULL
+    width TEXT NOT NULL
+    width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     ref inspireId: BASE_Identifier[0..1]
     ref networkRef: NET_NetworkReference[0..*]
   }
@@ -620,6 +621,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     inDirection
     inOppositeDirection
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
     identifier = "Geographical Names::GeographicalName"
@@ -668,7 +670,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     description = "A link either in its positive or negative direction."
     identifier = "Network::DirectedLink"
     tableName = "NET_DirectedLink"
-    direction Sign NOT NULL
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "TN_MarkerPost" {
@@ -916,7 +918,16 @@ Container <<applicationSchema>>  "Road Transport Network" {
     plural
     singular
   }
-  Constraint Enum "GML_UomIdentifier" {}
+  Constraint Enum "GCO_Sign" {
+    identifier = "Enumerations::Sign"
+    Negative
+    Positve
+  }
+  Constraint Enum <<Enumeration>>  "GML_Sign" {
+    identifier = "basicTypes::Sign"
+    "+"
+    "-"
+  }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"
   }
@@ -1100,5 +1111,33 @@ Container <<applicationSchema>>  "Road Transport Network" {
     tableHardcopy
     videoDigital
     videoHardcopy
+  }
+  Constraint Enum "GM_SurfaceInterpolation" {
+    identifier = "Geometric primitive::GM_SurfaceInterpolation"
+    conic
+    elliptical
+    none
+    parametricCurve
+    planar
+    polynomialSpline
+    rationalSpline
+    spherical
+    tin
+    triangulatedSpline
+  }
+  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
+    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+    directExternal
+    directInternal
+    indirect
+  }
+  Constraint Enum "SC_CV_CommonPointRule" {
+    identifier = "Segmented Curve::CV_CommonPointRule"
+    all
+    average
+    end
+    high
+    low
+    start
   }
 }

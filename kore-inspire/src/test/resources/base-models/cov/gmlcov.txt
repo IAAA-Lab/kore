@@ -7,11 +7,13 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     NOTE This type can be used for both discrete and continuous coverages."
     identifier = "Coverages (Domain and Range)::RectifiedGridCoverage"
     tableName = "GMLCOV_RectifiedGridCoverage"
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     id INTEGER NOT NULL PRIMARY KEY
     metadata: Any [0..*]
     rangeType: RecordType
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref rangeSet: Any[0..*]
   }
   Attributes "GMLCOV_ReferenceableGridCoverage" {
@@ -22,11 +24,13 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     NOTE This type can be used for both discrete and continuous coverages."
     identifier = "Coverages (Domain and Range)::ReferenceableGridCoverage"
     tableName = "GMLCOV_ReferenceableGridCoverage"
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     id INTEGER NOT NULL PRIMARY KEY
     metadata: Any [0..*]
     rangeType: RecordType
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref rangeSet: Any[0..*]
   }
   Class <<union>>  "CoverageFunction" {
@@ -35,10 +39,12 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     ref gridFunction: GMLCOV_GridFunction
   }
   Class "CoverageByDomainAndRange" {
-    coverageFunction: CoverageFunction [0..1]
+    coverageFunction_ruleDefinition: TEXT [0..1]
+    coverageFunction_ruleReference: TEXT [0..1]
     domainSet: Any
     metadata: Any [0..*]
     rangeType: RecordType
+    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
     ref rangeSet: Any[0..*]
   }
   Attributes "GMLCOV_GridFunction" {
@@ -46,7 +52,8 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     identifier = "Coverages (Domain and Range)::GridFunction"
     tableName = "GMLCOV_GridFunction"
     id INTEGER NOT NULL PRIMARY KEY
-    sequenceRule CV_SequenceRule
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
     ref startPoint: INTEGER[0..*]
   }
   Metadata "Unknown" {
@@ -72,5 +79,14 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     mimeType = "text/xml"
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Constraint Enum "CIS_CV_SequenceType" {
+    identifier = "Quadrilateral Grid::CV_SequenceType"
+    CantorDiagonal
+    Hilbert
+    Morton
+    boustrophedonic
+    linear
+    spiral
   }
 }

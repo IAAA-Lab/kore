@@ -69,6 +69,21 @@ val `standardize featureType`: Transform = fixStrereotype(Stereotypes.featureTyp
  */
 val `standardize dataType`: Transform = fixStrereotype(Stereotypes.dataType)
 
+/**
+ * Patch add missing xmlns
+ */
+val `add missing xmlns`: Transform = { _, _ ->
+    patch<KoreNamedElement>( predicate = { name == "Units of Measure" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "gml")
+    }
+    patch<KoreNamedElement>( predicate = { name == "ISO 19136 GML" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "gml")
+    }
+    patch<KoreNamedElement>( predicate = { name == "Quadrilateral Grid" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "cis")
+    }
+}
+
 fun fixStrereotype(value: String): Transform = { _, _ ->
     patch<KoreClass>(predicate = {
         getAnnotation()
@@ -95,6 +110,7 @@ val `Before rules`: List<Transform> = listOf(
     `standardize codeList`,
     `standardize union`,
     `standardize featureType`,
-    `standardize dataType`
+    `standardize dataType`,
+    `add missing xmlns`
 )
 

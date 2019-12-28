@@ -18,6 +18,7 @@ package es.iaaa.kore.resource.impl
 import es.iaaa.kore.*
 import es.iaaa.kore.resource.Factory
 import es.iaaa.kore.resource.Resource
+import es.iaaa.kore.resource.ResourceHelper
 import org.jdom2.Attribute
 import org.jdom2.Document
 import org.jdom2.Element
@@ -28,7 +29,7 @@ import org.jdom2.xpath.XPathFactory
 import java.io.File
 
 object EnterpriseArchitectUml13Factory : Factory {
-    override fun createResource(file: File, alias: Map<String, String>): Resource {
+    override fun createResource(file: File, resourceHelper: ResourceHelper): Resource {
         val builder = SAXBuilder()
         val document = runCatching { builder.build(file) }.getOrElse {
             return EnterpriseArchitectUml13Resource(
@@ -36,7 +37,7 @@ object EnterpriseArchitectUml13Factory : Factory {
                 errors = mutableListOf("Can't load document: ${it.message}")
             )
         }
-        val helper = EnterpriseArchitectUml13FactoryHelper(alias)
+        val helper = EnterpriseArchitectUml13FactoryHelper(resourceHelper)
         val rootElement = document.rootElement
         val modelXPath = "/XMI/XMI.content/*[local-name()='Model']"
         val ns = Namespace.getNamespace("omg.org/UML1.3")
@@ -48,9 +49,6 @@ object EnterpriseArchitectUml13Factory : Factory {
                 }
             }
         }
-        helper.fixReferences()
-        helper.fixTaggedStereotypes(packages)
-
         val taggedValueXPath = "/XMI//*[local-name()='TaggedValue' and @modelElement]"
         val taggedValuePath = XPathFactory.instance().compile(taggedValueXPath, Filters.element())
         taggedValuePath.evaluate(rootElement).map {
@@ -61,6 +59,10 @@ object EnterpriseArchitectUml13Factory : Factory {
                 getAnnotation()?.details?.put(tag, value)
             }
         }
+
+        helper.fixReferences()
+        helper.fixTaggedStereotypes(packages)
+
 
 
         return EnterpriseArchitectUml13Resource(
@@ -82,7 +84,7 @@ data class EnterpriseArchitectUml13Resource(
 ) : Resource
 
 class EnterpriseArchitectUml13FactoryHelper(
-    private val alias: Map<String, String>
+    private val resourceHelper: ResourceHelper
 ) {
 
     private fun KoreAnnotation.fillDetails(element: Element, ns: Namespace) {
@@ -99,17 +101,18 @@ class EnterpriseArchitectUml13FactoryHelper(
     private val pendingGeneralizations: MutableList<Pair<String, String>> = mutableListOf()
     private val pendingRealizations: MutableList<Pair<String, String>> = mutableListOf()
     private val pendingAssociations: MutableList<Pair<Element, Namespace>> = mutableListOf()
+    private val knownNamedTypes: MutableMap<String, MutableList<KoreClassifier>> = mutableMapOf()
     val errors: MutableList<String> = mutableListOf()
     val warnings: MutableList<String> = mutableListOf()
 
     private fun KoreObject.fillObject(element: Element) {
         element.getAttribute("xmi.id")?.asId?.let {
-            id = alias.getOrDefault(it, it)
+            id = resourceHelper.alias.getOrDefault(it, it)
             isLink = false
             resolved[it] = this
         }
         element.getAttribute("xmi.idref")?.asId?.let {
-            id = alias.getOrDefault(it, it)
+            id = resourceHelper.alias.getOrDefault(it, it)
             isLink = true
         }
     }
@@ -117,24 +120,19 @@ class EnterpriseArchitectUml13FactoryHelper(
     private fun KoreModelElement.fillModelElement(element: Element, ns: Namespace) {
         fillObject(element)
         if (!isLink) {
-            val references =
+            val children =
                 element.getChildren("ModelElement.stereotype", ns)
                     .flatMap { it.getChildren("Stereotype", ns) }
-                    .map {
-                        val result = KoreModel.createClass()
-                        result.fillClass(it, ns)
-                        result
-                    }
-            missingStereotypes += references.filter { it.isLink }.map { Pair(this, it) }
+                    .map { koreClass { fillClass(it, ns) } }
+            missingStereotypes += children.filter { it.isLink }.map { Pair(this, it) }
+
             val tagVal = element.getChildren("ModelElement.taggedValue", ns).firstOrNull()
 
-            if (references.isNotEmpty() || tagVal != null) {
-                val result = KoreModel.createAnnotation()
-                if (tagVal != null) {
-                    result.fillDetails(tagVal, ns)
+            if (children.isNotEmpty() || tagVal != null) {
+                koreAnnotation {
+                    tagVal?.let { fillDetails(it, ns) }
+                    references.addAll(children)
                 }
-                result.references.addAll(references)
-                result.modelElement = this
             }
         }
     }
@@ -148,6 +146,8 @@ class EnterpriseArchitectUml13FactoryHelper(
 
     private fun KoreClassifier.fillClassifier(element: Element, ns: Namespace) {
         fillNamedElement(element, ns)
+        knownNamedTypes.putIfAbsent(this.name ?: "", mutableListOf())
+        knownNamedTypes[this.name ?: ""]?.add(this)
     }
 
     fun KorePackage.fillPackage(element: Element, ns: Namespace) {
@@ -201,11 +201,12 @@ class EnterpriseArchitectUml13FactoryHelper(
         if (!isLink) {
             lowerBound = tagToInt(element, "lowerBound", 0, KoreTypedElement.UNSPECIFIED_MULTIPLICITY)
             upperBound = tagToInt(element, "upperBound", 1, KoreTypedElement.UNSPECIFIED_MULTIPLICITY)
-            type = element.getChildren("StructuralFeature.type", ns).flatMap { it.getChildren("Classifier", ns) }
+            type = element.getChildren("StructuralFeature.type", ns)
+                .flatMap { it.getChildren("Classifier", ns) }
                 .map {
-                    val result = KoreModel.createClassifier()
-                    result.fillClassifier(it, ns)
-                    result
+                    koreClassifier {
+                        fillClassifier(it, ns)
+                    }
                 }.firstOrNull()?.also {
                     if (it.isLink) {
                         missingTypes.add(Pair(this, it))
@@ -219,16 +220,13 @@ class EnterpriseArchitectUml13FactoryHelper(
         if (!isLink) {
             lowerBound = tagToInt(element, "lowerBound", 0, KoreTypedElement.UNSPECIFIED_MULTIPLICITY)
             upperBound = tagToInt(element, "upperBound", 1, KoreTypedElement.UNSPECIFIED_MULTIPLICITY)
-            type = element.getChildren("StructuralFeature.type", ns).flatMap { it.getChildren("Classifier", ns) }
+            type = element.getChildren("StructuralFeature.type", ns)
+                .flatMap { it.getChildren("Classifier", ns) }
                 .map {
                     if (isAttribute) {
-                        val result = KoreModel.createDataType()
-                        result.fillDataType(it, ns)
-                        result
+                        koreDataType { fillDataType(it, ns) }
                     } else {
-                        val result = KoreModel.createClass()
-                        result.fillClass(it, ns)
-                        result
+                        koreClass { fillClass(it, ns) }
                     }
                 }.firstOrNull()?.also {
                     if (it.isLink) {
@@ -297,7 +295,7 @@ class EnterpriseArchitectUml13FactoryHelper(
             upperBound = KoreTypedElement.UNBOUNDED_MULTIPLICITY
             element.getAttribute("type")?.asId?.let {
                 type = koreClass {
-                    id = alias.getOrDefault(it, it)
+                    id = resourceHelper.alias.getOrDefault(it, it)
                     isLink = true
                 }
             }
@@ -408,13 +406,33 @@ class EnterpriseArchitectUml13FactoryHelper(
     }
 
     private fun fixTypes() {
+
         missingTypes.forEach { (target, typeRef) ->
             val type = resolved[typeRef.id] as? KoreClassifier?
-            if (type != null) {
-                target.type = type
-                typeRef.container = null
-            } else {
-                warnings.add("$target has an unresolved type with id ${typeRef.id}")
+            when {
+                type?.id?.startsWith("eaxmiid") == true -> {
+                    val candidates = knownNamedTypes[type.name ?: ""]?.filter { it.id != type.id } ?: mutableListOf()
+                    when (candidates.size) {
+                        0 -> target.type = null
+                        1 -> {
+                            target.type = candidates[0]
+                            typeRef.container = null
+                        }
+                        else -> {
+                            val (selectedType, selectWarnings) = resourceHelper.selectType(target, candidates)
+                            target.type = selectedType
+                            typeRef.container = null
+                            warnings.addAll(selectWarnings)
+                        }
+                    }
+                }
+                type != null -> {
+                    target.type = type
+                    typeRef.container = null
+                }
+                else -> {
+                    warnings.add("$target has an unresolved type with id ${typeRef.id}")
+                }
             }
         }
     }
@@ -489,8 +507,9 @@ class EnterpriseArchitectUml13FactoryHelper(
             val namedRefs = refs?.filterIsInstance<KoreNamedElement>()
             findTaggedValue(tag)?.let { candidate ->
                 if (namedRefs?.find { it.name == candidate } == null) {
-                    val stereotype = KoreModel.createClass()
-                    stereotype.name = candidate
+                    val stereotype = koreClass {
+                        name = candidate
+                    }
                     // FIXME class without container
                     refs?.add(stereotype)
                 }
@@ -522,4 +541,6 @@ class EnterpriseArchitectUml13FactoryHelper(
 }
 
 val Attribute.asId: String
-    get() = this.value.takeLast(36)
+    get() = value.takeLast(36)
+
+

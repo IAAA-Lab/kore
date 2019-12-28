@@ -24,7 +24,11 @@ val `default package prefixes`: Transform = { _, _ ->
         requireNotNull(term) {
             "Error found in a U2G class: we expect here a not null value in '${if (isRelationTable()) "tableName" else "name"}'"
         }
-        val prefixedTerm = runCatching { lookupPrefix() }.getOrElse { assignPrefix() } + term
+        val prefixedTerm = runCatching {
+            runCatching { lookupPrefix() }.getOrElse { assignPrefix() } + term
+        }.getOrElse {
+            throw Exception("Failed computing prefix for $fullName ($id)", it)
+        }
         if (hasTable()) {
             tableName = prefixedTerm
         }
@@ -55,7 +59,7 @@ private fun KoreClass.assignPrefix(): String = when (container?.name) {
     "Identification information" -> "GMD_"                     // ISO 19139 identification.xsd
     "Citation and responsible party information" -> "GMD_"     // ISO 19139 citation.xsd
     "Data quality information" -> "GMD_"                       // ISO 19139 dataQuality.xsd
-    "Units of Measure" -> "UM_"                                // TODO Discover why this is required by Evlevation - vector elemsnts
+//    "Units of Measure" -> "UM_"                                // TODO Discover why this is required by Evlevation - vector elemsnts
     "Temporal Reference System" -> "TRS_"
     "Maintenance information" -> "MI_"
     "Metadata extension information" -> "MEI_"
