@@ -6,6 +6,7 @@ import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
+import java.lang.Exception
 
 val `ensure that arrays are treated as references from now`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = { type?.metaClass == AttributesTable }) {

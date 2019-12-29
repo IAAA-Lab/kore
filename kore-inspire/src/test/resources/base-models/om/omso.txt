@@ -126,7 +126,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     description = "A triple set of Time, location, value (measurement). For example, at a point along a trajectory."
     identifier = "Trajectory and Profile Observations::TimeLocationValueTriple"
     tableName = "OMSO_TimeLocationValueTriple"
-    geometry: CV_DomainObject
     geometry_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     geometry_date8601 DATE
     geometry_dateTime8601 DATETIME
@@ -140,8 +139,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     id INTEGER NOT NULL PRIMARY KEY
     location_direct_coordinate <<missing>>
     location_direct_dimension INTEGER
-    value Record NOT NULL
-    value: Record
     ref collection: Timeseries[0..*] inv point[0..*]
     ref collection: CVT_DiscreteTimeInstantCoverage[0..*] inv element[0..*]
     ref collection: CV_DiscreteCoverage[0..*] inv element[0..*]
@@ -291,13 +288,10 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Attributes "WML2_AnnotatedTimeValuePair" {
     identifier = "Timeseries::AnnotatedTimeValuePair"
     tableName = "WML2_AnnotatedTimeValuePair"
-    geometry: CV_DomainObject
     geometry_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     geometry_date8601 DATE
     geometry_dateTime8601 DATETIME
@@ -309,7 +303,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     geometry_time8601 TEXT
     geometry_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    value Record NOT NULL
     ref collection: Timeseries[0..*] inv point[0..*]
     ref extension: CV_ValueObject[0..*] inv controlValue[1..*]
   }
@@ -474,14 +467,12 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     description = "#NOTES#Description: Normative documentation association with this element"
     identifier = "Temporal Coverage::CVT_TimeInstantValuePair"
     tableName = "_CVT_TimeInstantValuePair"
-    geometry: CV_DomainObject
     geometry_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     geometry_position_date8601 DATE
     geometry_position_dateTime8601 DATETIME
     geometry_position_time8601 TEXT
     geometry_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    value: Record
     ref collection: CVT_DiscreteTimeInstantCoverage[0..*] inv element[0..*]
     ref extension: CV_ValueObject[0..*] inv controlValue[1..*]
   }
@@ -899,7 +890,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     identifier = "Basic Types::NilValue"
     tableName = "SWE_NilValue"
     id INTEGER NOT NULL PRIMARY KEY
-    reason ScopedName NOT NULL
     value TEXT NOT NULL
   }
   Attributes "DI_MD_MediumFormatCode" {

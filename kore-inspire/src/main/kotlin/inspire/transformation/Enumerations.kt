@@ -15,7 +15,7 @@ import es.iaaa.kore.transform.rules.setTypeWhen
 val Enumerations: Transform = { _, options ->
     val withDescription = options["description"] == true
     val patched = mutableListOf<KoreClass>()
-    patch<KoreClass>(predicate = { references("enumeration") }) {
+    patch<KoreClass>(predicate = { references(Stereotypes.enumeration) }) {
         metaClass = EnumConstraint
         attributes.forEach {
             it.metaClass = EnumConstraintValue

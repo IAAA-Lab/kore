@@ -1044,7 +1044,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
   Constraint Enum "US_GOVSERV_ServiceTypeValue" {
     identifier = "AdministrativeAndSocialGovernmentalServices::ServiceTypeValue"
   }
-  Constraint Enum <<Enumeration>>  "GML_Sign" {
+  Constraint Enum "GML_Sign" {
     identifier = "basicTypes::Sign"
     "+"
     "-"

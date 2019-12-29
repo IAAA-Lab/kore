@@ -342,8 +342,6 @@ Container <<applicationSchema>>  "Geology" {
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
@@ -497,7 +495,6 @@ Container <<applicationSchema>>  "Geology" {
     identifier = "Basic Types::NilValue"
     tableName = "SWE_NilValue"
     id INTEGER NOT NULL PRIMARY KEY
-    reason ScopedName NOT NULL
     value TEXT NOT NULL
   }
   Attributes "GMD_PT_Locale" {

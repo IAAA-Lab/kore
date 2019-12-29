@@ -22,10 +22,12 @@ import es.iaaa.kore.copy
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
+import mu.KotlinLogging
 
 internal class FlattenTypes(
     val predicate: (KoreNamedElement) -> Boolean,
     val postFlatten: (KoreTypedElement, KoreTypedElement) -> Unit,
+    val debugPredicate: (KoreNamedElement) -> String,
     val global: Boolean,
     private val maxIterations: Int = 4
 ) : Transformation {
@@ -38,23 +40,42 @@ internal class FlattenTypes(
             content.filterIsInstance<KoreClass>().forEach { cls ->
                 val toFlatten = cls.attributes.filter { ref ->
                     with(ref) {
-                        upperBound == 1 &&
-                                type?.let { type -> predicate(type) } == true &&
-                                // (type as? KoreClass)?.allReferences()?.isEmpty() == true &&
-                                (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
+                        val withinLimits = upperBound == 1
+                        val typeFulfillsPredicate = type?.let { type ->
+                            val msg = debugPredicate(type)
+                            if (msg.isNotEmpty()) {
+                                logger.debug { "Debug predicate:\n$msg" }
+                            }
+                            predicate(type)
+                        } == true
+                        val typeAttributesMultiplicity = (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
+
+                        if (withinLimits && typeFulfillsPredicate && !typeAttributesMultiplicity) {
+                            logger.debug { "Debug predicate:\nisClass=${(type as? KoreClass) != null}" }
+
+                            (type as? KoreClass)?.allAttributes()?.filter { att -> att.upperBound != 1 }
+                                ?.joinToString { "${it.name}:${it.upperBound}" }
+                                ?.let {
+                                logger.debug { "Debug predicate:\noffendingAttributes=$it"}
+                            }
+                        }
+                        withinLimits && typeFulfillsPredicate && typeAttributesMultiplicity
                     }
                 }
                 if (toFlatten.isNotEmpty()) {
-                    val atts = cls.attributes
-                    atts.forEach { it.containingClass = null }
-                    atts.forEach { att ->
-                        if (att in toFlatten) {
-                            (att.type as KoreClass).allAttributes().forEach { newAtt ->
-                                postFlatten(att, newAtt.copy(cls))
+                    cls.attributes.also {
+                        it.forEach { att -> att.containingClass = null }
+                        it.forEach { att ->
+                            if (att in toFlatten) {
+                                val attributesToBeCopied = (att.type as KoreClass).allAttributes()
+                                attributesToBeCopied.forEach { attSrc ->
+                                    val attNew = attSrc.copy(cls)
+                                    postFlatten(att, attNew)
+                                }
+                                changes++
+                            } else {
+                                att.containingClass = cls
                             }
-                            changes++
-                        } else {
-                            att.containingClass = cls
                         }
                     }
                 }
@@ -67,7 +88,10 @@ internal class FlattenTypes(
 fun Transformations.flattenTypes(
     predicate: (KoreNamedElement) -> Boolean,
     postFlatten: (KoreTypedElement, KoreTypedElement) -> Unit,
+    debugPredicate: (KoreNamedElement) -> String = { "" },
     global: Boolean = false
 ) {
-    add(FlattenTypes(predicate, postFlatten, global))
+    add(FlattenTypes(predicate, postFlatten, debugPredicate, global))
 }
+
+private val logger = KotlinLogging.logger {}

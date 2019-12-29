@@ -660,8 +660,6 @@ Container <<applicationSchema>>  "Geophysics" {
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Attributes "BASE2_RelatedParty" {
     description = "An organisation or a person with a role related to a resource.

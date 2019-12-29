@@ -4,6 +4,7 @@ package inspire.transformation
 
 import es.iaaa.kore.KoreAttribute
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreObject
 import es.iaaa.kore.findTaggedValue
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
@@ -29,15 +30,7 @@ val `copy documentation to column description`: Transform = { _, _ ->
 
     patch<KoreAttribute>(predicate = { metaClass == Column && description == null }) {
         findTaggedValue("description")?.let { text ->
-            val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
-            val idx = tokens.indexOf("-- Name --")
-            description = tokens.mapIndexed { pos, str ->
-                when {
-                    str.startsWith("--") -> ""
-                    pos == idx + 1 && idx >= 0 -> ""
-                    else -> str
-                }
-            }.filter { it.isNotBlank() }.joinToString("\n\n")
+            description = processText(text)
         }
     }
 }
@@ -45,17 +38,21 @@ val `copy documentation to column description`: Transform = { _, _ ->
 val `copy documentation to table description`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { hasTable() }) {
         findTaggedValue("documentation")?.let { text ->
-            val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
-            val idx = tokens.indexOf("-- Name --")
-            description = tokens.mapIndexed { pos, str ->
-                when {
-                    str.startsWith("--") -> ""
-                    pos == idx + 1 && idx >= 0 -> ""
-                    else -> str
-                }
-            }.filter { it.isNotBlank() }.joinToString("\n\n")
+            description = processText(text)
         }
     }
+}
+
+private fun processText(text: String): String {
+    val tokens = text.split("\n").map { it.trim() }.filter { it.isNotBlank() }
+    val idx = tokens.indexOf("-- Name --")
+    return tokens.mapIndexed { pos, str ->
+        when {
+            str.startsWith("--") -> ""
+            pos == idx + 1 && idx >= 0 -> ""
+            else -> str
+        }
+    }.filter { it.isNotBlank() }.joinToString("\n\n")
 }
 
 val `move to the selected package`: Transform = { conversion, _ ->
@@ -113,6 +110,15 @@ val `remove stereotypes`: Transform = { _, _ ->
     )
 }
 
+val `audit`: Transform = { _, _ ->
+    patch<KoreAttribute>(predicate = {
+        !GpkgDataType.isInstance(type) &&
+        metaClass != EnumConstraintValue
+    }) {
+//        println("${containingClass?.container?.name} ${containingClass?.name} $name ${type?.name} ${type?.id}")
+    }
+}
+
 private fun KoreClass?.isMoveable(): Boolean =
     isFeaturesTable() || isAttributesTable() || isRelationTable() || isEnumConstraint()
 
@@ -123,5 +129,6 @@ val `After rules`: List<Transform> = listOf(
     `move to the selected package`,
     `remove dangling references`,
     `remove unused tags`,
-    `remove stereotypes`
+    `remove stereotypes`,
+    `audit`
 )

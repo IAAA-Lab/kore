@@ -477,8 +477,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Attributes "GMD_CI_ResponsibleParty" {
     description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"

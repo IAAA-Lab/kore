@@ -142,7 +142,6 @@ class DryRunTest {
 
     @Test
     fun `Annex II Geology - hydrogeology - draft`() {
-        // TODO Union types that includes a feature type flatten the feature type as relation [0..1].
         checkSchema("Hydrogeology", "annex/ii/ge/ge-hg")
     }
 

@@ -1137,7 +1137,7 @@ Container <<applicationSchema>>  "Air Transport Network" {
     plural
     singular
   }
-  Constraint Enum <<Enumeration>>  "GML_Sign" {
+  Constraint Enum "GML_Sign" {
     identifier = "basicTypes::Sign"
     "+"
     "-"

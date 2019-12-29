@@ -1,6 +1,6 @@
 Container <<applicationSchema>>  "Coverages (Base)" {
   Class "Coverage" {
-    rangeType: RecordType
+    rangeType_typeName_aName: TEXT
     ref metadata: Any[0..*]
   }
   Metadata "Unknown" {

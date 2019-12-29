@@ -6,7 +6,10 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::HydrogeologicalObjectNatural"
     tableName = "GE_HG_HydrogeologicalObjectNatural"
     approximateQuantityOfFlow_quantityInterval QuantityRange
-    approximateQuantityOfFlow_singleQuantity Quantity
+    approximateQuantityOfFlow_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateQuantityOfFlow_singleQuantity_value_nilReason_URI <<missing>>
+    approximateQuantityOfFlow_singleQuantity_value_value TEXT
+    approximateQuantityOfFlow_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     geometry: GEOMETRY
     groundWaterBody INTEGER
     id INTEGER NOT NULL PRIMARY KEY
@@ -26,9 +29,15 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::Aquifer"
     tableName = "GE_HG_Aquifer"
     approximateDepth_quantityInterval: QuantityRange [0..1]
-    approximateDepth_singleQuantity: Quantity [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
+    approximateDepth_singleQuantity_value_value: TEXT [0..1]
+    approximateDepth_singleQuantity_value_value_uom: TEXT [0..1]
     approximateThickness_quantityInterval: QuantityRange [0..1]
-    approximateThickness_singleQuantity: Quantity [0..1]
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
+    approximateThickness_singleQuantity_value_value: TEXT [0..1]
+    approximateThickness_singleQuantity_value_value_uom: TEXT [0..1]
     aquiferSystem INTEGER
     aquiferType TEXT NOT NULL CHECK(GE_HG_AquiferTypeValue)
     geologicUnitType: TEXT
@@ -39,18 +48,30 @@ Container <<applicationSchema>>  "Hydrogeology" {
     mediaType TEXT NOT NULL CHECK(GE_HG_AquiferMediaTypeValue)
     name: TEXT [0..1]
     permeabilityCoefficient_quantityInterval QuantityRange
-    permeabilityCoefficient_singleQuantity Quantity
+    permeabilityCoefficient_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    permeabilityCoefficient_singleQuantity_value_nilReason_URI <<missing>>
+    permeabilityCoefficient_singleQuantity_value_value TEXT
+    permeabilityCoefficient_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     storativityCoefficient_quantityInterval QuantityRange
-    storativityCoefficient_singleQuantity Quantity
+    storativityCoefficient_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    storativityCoefficient_singleQuantity_value_nilReason_URI <<missing>>
+    storativityCoefficient_singleQuantity_value_value TEXT
+    storativityCoefficient_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     vulnerabilityToPollution_quantityInterval QuantityRange
-    vulnerabilityToPollution_singleQuantity Quantity
+    vulnerabilityToPollution_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    vulnerabilityToPollution_singleQuantity_value_nilReason_URI <<missing>>
+    vulnerabilityToPollution_singleQuantity_value_value TEXT
+    vulnerabilityToPollution_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     <<lifeCycleInfo - voidable>> beginLifespanVersion: DATETIME
     <<lifeCycleInfo - voidable>> endLifespanVersion: DATETIME [0..1]
     ref inspireId: BASE_Identifier
   }
   Class <<union>>  "QuantityValue" {
     quantityInterval: QuantityRange
-    singleQuantity: Quantity
+    singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    singleQuantity_value_nilReason_URI [0..1]
+    singleQuantity_value_value: TEXT [0..1]
+    singleQuantity_value_value_uom: TEXT [0..1]
   }
   Constraint Enum "GE_HG_StatusCodeTypeValue" {
     identifier = "Hydrogeology::StatusCodeTypeValue"
@@ -105,9 +126,15 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::Aquiclude"
     tableName = "GE_HG_Aquiclude"
     approximateDepth_quantityInterval: QuantityRange [0..1]
-    approximateDepth_singleQuantity: Quantity [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
+    approximateDepth_singleQuantity_value_value: TEXT [0..1]
+    approximateDepth_singleQuantity_value_value_uom: TEXT [0..1]
     approximateThickness_quantityInterval: QuantityRange [0..1]
-    approximateThickness_singleQuantity: Quantity [0..1]
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
+    approximateThickness_singleQuantity_value_value: TEXT [0..1]
+    approximateThickness_singleQuantity_value_value_uom: TEXT [0..1]
     geologicUnitType: TEXT
     id INTEGER NOT NULL PRIMARY KEY
     name: TEXT [0..1]
@@ -124,9 +151,15 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::AquiferSystem"
     tableName = "GE_HG_AquiferSystem"
     approximateDepth_quantityInterval: QuantityRange [0..1]
-    approximateDepth_singleQuantity: Quantity [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
+    approximateDepth_singleQuantity_value_value: TEXT [0..1]
+    approximateDepth_singleQuantity_value_value_uom: TEXT [0..1]
     approximateThickness_quantityInterval: QuantityRange [0..1]
-    approximateThickness_singleQuantity: Quantity [0..1]
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
+    approximateThickness_singleQuantity_value_value: TEXT [0..1]
+    approximateThickness_singleQuantity_value_value_uom: TEXT [0..1]
     geologicUnitType: TEXT
     id INTEGER NOT NULL PRIMARY KEY
     isLayered BOOLEAN
@@ -166,13 +199,25 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::Aquitard"
     tableName = "GE_HG_Aquitard"
     approximateDepth_quantityInterval: QuantityRange [0..1]
-    approximateDepth_singleQuantity: Quantity [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
+    approximateDepth_singleQuantity_value_value: TEXT [0..1]
+    approximateDepth_singleQuantity_value_value_uom: TEXT [0..1]
     approximatePermeabilityCoefficient_quantityInterval QuantityRange
-    approximatePermeabilityCoefficient_singleQuantity Quantity
+    approximatePermeabilityCoefficient_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximatePermeabilityCoefficient_singleQuantity_value_nilReason_URI <<missing>>
+    approximatePermeabilityCoefficient_singleQuantity_value_value TEXT
+    approximatePermeabilityCoefficient_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     approximateStorativityCoefficient_quantityInterval QuantityRange
-    approximateStorativityCoefficient_singleQuantity Quantity
+    approximateStorativityCoefficient_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateStorativityCoefficient_singleQuantity_value_nilReason_URI <<missing>>
+    approximateStorativityCoefficient_singleQuantity_value_value TEXT
+    approximateStorativityCoefficient_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     approximateThickness_quantityInterval: QuantityRange [0..1]
-    approximateThickness_singleQuantity: Quantity [0..1]
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
+    approximateThickness_singleQuantity_value_value: TEXT [0..1]
+    approximateThickness_singleQuantity_value_value_uom: TEXT [0..1]
     aquiferSystem INTEGER
     geologicUnitType: TEXT
     id INTEGER NOT NULL PRIMARY KEY
@@ -183,9 +228,15 @@ Container <<applicationSchema>>  "Hydrogeology" {
   }
   Class "HydrogeologicalUnit" {
     approximateDepth_quantityInterval: QuantityRange [0..1]
-    approximateDepth_singleQuantity: Quantity [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
+    approximateDepth_singleQuantity_value_value: TEXT [0..1]
+    approximateDepth_singleQuantity_value_value_uom: TEXT [0..1]
     approximateThickness_quantityInterval: QuantityRange [0..1]
-    approximateThickness_singleQuantity: Quantity [0..1]
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
+    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
+    approximateThickness_singleQuantity_value_value: TEXT [0..1]
+    approximateThickness_singleQuantity_value_value_uom: TEXT [0..1]
     geologicUnitType: TEXT
     name: TEXT [0..1]
     <<lifeCycleInfo - voidable>> beginLifespanVersion: DATETIME
@@ -688,6 +739,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
+  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "GE_GeologicUnitTypeValue" {
     identifier = "Geology::GeologicUnitTypeValue"
   }
@@ -883,8 +935,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Feature "EF_EnvironmentalMonitoringActivity" {
     description = "Specific set of AbstractMonitoringFeatures used for a given domain in a coherent and concise timeframe, area and purpose. Usually the information collected is treated as one time step in a long term monitoring programme. It is a concrete realisation of a given EnvironmentalMonitoringProgramme.
@@ -1304,7 +1354,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL CHECK(EF_PurposeOfCollectionValue)
   }
-  Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "GML_MeasureType" {
     identifier = "Units of Measure::MeasureType"
     angle
@@ -1635,7 +1684,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Basic Types::NilValue"
     tableName = "SWE_NilValue"
     id INTEGER NOT NULL PRIMARY KEY
-    reason ScopedName NOT NULL
     value TEXT NOT NULL
   }
   Attributes "GMD_PT_Locale" {

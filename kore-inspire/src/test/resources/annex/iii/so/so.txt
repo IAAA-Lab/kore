@@ -817,8 +817,6 @@ Container <<applicationSchema>>  "Soil" {
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Attributes "GMD_CI_Date" {
     identifier = "Citation and responsible party information::CI_Date"

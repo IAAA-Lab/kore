@@ -633,8 +633,14 @@ Container <<applicationSchema>>  "MineralResources" {
     tableName = "CGU_CGI_LinearOrientation"
     determinationMethod: TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    plunge_estimatedValue Quantity NOT NULL
-    trend_estimatedValue Quantity NOT NULL
+    plunge_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    plunge_estimatedValue_value_nilReason_URI <<missing>>
+    plunge_estimatedValue_value_value TEXT
+    plunge_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    trend_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    trend_estimatedValue_value_nilReason_URI <<missing>>
+    trend_estimatedValue_value_value TEXT
+    trend_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
     directed TEXT NOT NULL CHECK(CGU_LinearDirectedCode)
     ref <<estimatedProperty>> descriptiveOrientation: CGU_CGI_Term
   }
@@ -642,10 +648,16 @@ Container <<applicationSchema>>  "MineralResources" {
     description = "Description of the geometry of a plane."
     identifier = "CGI_Value::CGI_PlanarOrientation"
     tableName = "CGU_CGI_PlanarOrientation"
-    azimuth_estimatedValue Quantity NOT NULL
+    azimuth_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    azimuth_estimatedValue_value_nilReason_URI <<missing>>
+    azimuth_estimatedValue_value_value TEXT
+    azimuth_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
     convention TEXT NOT NULL CHECK(CGU_ConventionCode)
     determinationMethod: TEXT
-    dip_estimatedValue Quantity NOT NULL
+    dip_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    dip_estimatedValue_value_nilReason_URI <<missing>>
+    dip_estimatedValue_value_value TEXT
+    dip_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
     polarity TEXT NOT NULL CHECK(CGU_PlanarPolarityCode)
     ref <<estimatedProperty>> descriptiveOrientation: CGU_CGI_Term
@@ -866,7 +878,6 @@ Container <<applicationSchema>>  "MineralResources" {
     identifier = "Basic Types::NilValue"
     tableName = "SWE_NilValue"
     id INTEGER NOT NULL PRIMARY KEY
-    reason ScopedName NOT NULL
     value TEXT NOT NULL
   }
   Constraint Enum "CGU_ValueQualifierCode" {

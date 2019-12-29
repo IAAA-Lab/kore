@@ -355,7 +355,7 @@ Container <<applicationSchema>>  "Network" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum <<Enumeration>>  "GML_Sign" {
+  Constraint Enum "GML_Sign" {
     identifier = "basicTypes::Sign"
     "+"
     "-"

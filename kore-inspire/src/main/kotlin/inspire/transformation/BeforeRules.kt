@@ -52,22 +52,32 @@ val `standardize edgeMatched default value`: Transform = { _, _ ->
 /**
  * Patch: fix typo in CodeList
  */
-val `standardize codeList`: Transform = fixStrereotype(Stereotypes.codeList)
+val `standardize codeList`: Transform = fixStereotype(Stereotypes.codeList)
 
 /**
  * Patch: fix typo in Union
  */
-val `standardize union`: Transform = fixStrereotype(Stereotypes.union)
+val `standardize union`: Transform = fixStereotype(Stereotypes.union)
 
 /**
  * Patch: fix typo in FeatureType
  */
-val `standardize featureType`: Transform = fixStrereotype(Stereotypes.featureType)
+val `standardize featureType`: Transform = fixStereotype(Stereotypes.featureType)
 
 /**
  * Patch: fix typo in DataType
  */
-val `standardize dataType`: Transform = fixStrereotype(Stereotypes.dataType)
+val `standardize dataType`: Transform = fixStereotype(Stereotypes.dataType)
+
+/**
+ * Patch: fix typo in enumeration
+ */
+val `standardize enumeration`: Transform = fixStereotype(Stereotypes.enumeration)
+
+/**
+ * Patch: fix typo in types
+ */
+val `standardize type`: Transform = fixStereotype(Stereotypes.type)
 
 /**
  * Patch add missing xmlns
@@ -84,14 +94,14 @@ val `add missing xmlns`: Transform = { _, _ ->
     }
 }
 
-fun fixStrereotype(value: String): Transform = { _, _ ->
-    patch<KoreClass>(predicate = {
+fun fixStereotype(value: String): Transform = { _, _ ->
+    patch<KoreModelElement>(predicate = {
         getAnnotation()
             ?.references
             ?.filterIsInstance<KoreNamedElement>()
             ?.any {  value.equals(it.name, true) }
             ?: false
-    }) {
+    }, global = true) {
         getAnnotation()
             ?.references
             ?.filterIsInstance<KoreNamedElement>()
@@ -111,6 +121,8 @@ val `Before rules`: List<Transform> = listOf(
     `standardize union`,
     `standardize featureType`,
     `standardize dataType`,
+    `standardize type`,
+    `standardize enumeration`,
     `add missing xmlns`
 )
 

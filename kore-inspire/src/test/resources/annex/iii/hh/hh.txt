@@ -232,15 +232,32 @@ Container <<applicationSchema>>  "HumanHealth" {
     refersTo INTEGER
   }
   Class <<type>>  "Concentration" {
-    uom: UomConcentration
+    uom_component: TEXT
+    uom_formula: TEXT [0..1]
+    uom_measureType: TEXT
+    uom_media: TEXT
+    uom_nameStandardUnit: TEXT [0..1]
+    uom_offsetToStandardUnit: DOUBLE [0..1]
+    uom_scaleToStandardUnit: DOUBLE [0..1]
+    uom_uomName: TEXT
+    uom_uomSymbol: TEXT
     value: TEXT
+    ref uom: UnitOfMeasureinv measure[0..*]
   }
   Constraint Enum "HH_ICDValue" {
     identifier = "HumanHealth::ICDValue"
   }
   Class <<type>>  "NoiseMeasure" {
-    uom: UomNoise
+    uom_formula: TEXT [0..1]
+    uom_measureType: TEXT
+    uom_nameStandardUnit: TEXT [0..1]
+    uom_offsetToStandardUnit: DOUBLE [0..1]
+    uom_scaleToStandardUnit: DOUBLE [0..1]
+    uom_source: TEXT
+    uom_uomName: TEXT
+    uom_uomSymbol: TEXT
     value: TEXT
+    ref uom: UnitOfMeasureinv measure[0..*]
   }
   Class <<type>>  "UomConcentration" {
     component: TEXT

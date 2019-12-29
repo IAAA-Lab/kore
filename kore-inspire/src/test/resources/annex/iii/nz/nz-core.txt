@@ -141,7 +141,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     likelihoodOfOccurrence_assessmentMethod DocumentCitation
     likelihoodOfOccurrence_qualitativeLikelihood TEXT
-    likelihoodOfOccurrence_quantitativeLikelihood_probabilityOfOccurrence Probability
+    likelihoodOfOccurrence_quantitativeLikelihood_probabilityOfOccurrence_value DOUBLE NOT NULL
     likelihoodOfOccurrence_quantitativeLikelihood_returnPeriod TEXT
     typeOfHazard_hazardCategory: TEXT
     typeOfHazard_specificHazardType: TEXT [0..1]
@@ -235,7 +235,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     identifier = "NaturalRiskZones::QuantitativeLikelihood"
     tableName = "NZ_CORE_QuantitativeLikelihood"
     id INTEGER NOT NULL PRIMARY KEY
-    probabilityOfOccurrence Probability
+    probabilityOfOccurrence_value DOUBLE NOT NULL
     returnPeriod TEXT
   }
   Constraint Enum "NZ_CORE_ExposedElementCategoryValue" {
@@ -259,7 +259,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     assessmentMethod DocumentCitation
     id INTEGER NOT NULL PRIMARY KEY
     qualitativeLikelihood TEXT
-    quantitativeLikelihood_probabilityOfOccurrence Probability
+    quantitativeLikelihood_probabilityOfOccurrence_value DOUBLE NOT NULL
     quantitativeLikelihood_returnPeriod TEXT
   }
   Attributes "NZ_CORE_ObservedEventCoverage" {
@@ -727,8 +727,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     identifier = "observation::NamedValue"
     tableName = "_NamedValue"
     id INTEGER NOT NULL PRIMARY KEY
-    name GenericName NOT NULL
-    value Any NOT NULL
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
