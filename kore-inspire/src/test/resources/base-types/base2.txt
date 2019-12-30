@@ -8,14 +8,15 @@ Container <<applicationSchema>>  "Base Types 2" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Class "DocumentCitation" {
     date_date: DATE
     date_dateType: TEXT
+    links: TEXT [0..1]
     name: TEXT
     shortName: TEXT [0..1]
     specificReferences: TEXT [0..1]
-    ref link: URL[0..*]
   }
   Constraint Enum "BASE2_GenderValue" {
     identifier = "Base Types 2::GenderValue"
@@ -58,6 +59,7 @@ Container <<applicationSchema>>  "Base Types 2" {
     ISBN TEXT
     ISSN TEXT
     id INTEGER NOT NULL PRIMARY KEY
+    linkToJournal TEXT
     officialJournalIdentification TEXT NOT NULL
   }
   Class "LegislationCitation" {
@@ -76,13 +78,14 @@ Container <<applicationSchema>>  "Base Types 2" {
     identificationNumber: TEXT [0..1]
     journalCitation_ISBN: TEXT [0..1]
     journalCitation_ISSN: TEXT [0..1]
+    journalCitation_linkToJournal: TEXT [0..1]
     journalCitation_officialJournalIdentification: TEXT [0..1]
     level: TEXT
+    links: TEXT [0..1]
     name: TEXT
     officialDocumentNumber: TEXT [0..1]
     shortName: TEXT [0..1]
     specificReferences: TEXT [0..1]
-    ref link: URL[0..*]
   }
   Constraint Enum "BASE2_LegislationLevelValue" {
     identifier = "Base Types 2::LegislationLevelValue"
@@ -194,6 +197,20 @@ Container <<applicationSchema>>  "Base Types 2" {
   }
   Constraint Enum "BASE2_CFStandardNamesValue" {
     identifier = "Base Types 2::CFStandardNamesValue"
+  }
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
+  }
+  Attributes "BASE2_SimpleCitation" {
+    tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
   Relation "BASE2_Contact_address" {
     profile = "attributes"

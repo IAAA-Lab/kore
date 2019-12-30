@@ -78,7 +78,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     identifier = "NaturalRiskZones::VulnerabilityAssessment"
     tableName = "NZ_CORE_VulnerabilityAssessment"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfVulnerability_assessmentMethod DocumentCitation
+    levelOfVulnerability_assessmentMethod_date DATE
+    levelOfVulnerability_assessmentMethod_level LegislationLevelValue
+    levelOfVulnerability_assessmentMethod_link TEXT
+    levelOfVulnerability_assessmentMethod_name TEXT
+    levelOfVulnerability_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     levelOfVulnerability_qualitativeValue TEXT
     levelOfVulnerability_quantitativeValue_unitOfMeasure_formula TEXT
     levelOfVulnerability_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
@@ -88,7 +92,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     levelOfVulnerability_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
     levelOfVulnerability_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
     levelOfVulnerability_quantitativeValue_value TEXT NOT NULL
-    magnitudeOrIntensityOfHazard_assessmentMethod DocumentCitation
+    magnitudeOrIntensityOfHazard_assessmentMethod_date DATE
+    magnitudeOrIntensityOfHazard_assessmentMethod_level LegislationLevelValue
+    magnitudeOrIntensityOfHazard_assessmentMethod_link TEXT
+    magnitudeOrIntensityOfHazard_assessmentMethod_name TEXT
+    magnitudeOrIntensityOfHazard_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     magnitudeOrIntensityOfHazard_qualitativeValue TEXT
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_formula TEXT
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
@@ -118,7 +126,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     Common concept for assessing the level of risk, or the level of hazard, or the level of vulnerability."
     identifier = "NaturalRiskZones::LevelOrIntensity"
     tableName = "NZ_CORE_LevelOrIntensity"
-    assessmentMethod DocumentCitation
+    assessmentMethod_date DATE
+    assessmentMethod_level LegislationLevelValue
+    assessmentMethod_link TEXT
+    assessmentMethod_name TEXT
+    assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     id INTEGER NOT NULL PRIMARY KEY
     qualitativeValue TEXT
     quantitativeValue_unitOfMeasure_formula TEXT
@@ -139,7 +151,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     endLifeSpanVersion: DATETIME [0..1]
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    likelihoodOfOccurrence_assessmentMethod DocumentCitation
+    likelihoodOfOccurrence_assessmentMethod_date DATE
+    likelihoodOfOccurrence_assessmentMethod_level LegislationLevelValue
+    likelihoodOfOccurrence_assessmentMethod_link TEXT
+    likelihoodOfOccurrence_assessmentMethod_name TEXT
+    likelihoodOfOccurrence_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     likelihoodOfOccurrence_qualitativeLikelihood TEXT
     likelihoodOfOccurrence_quantitativeLikelihood_probabilityOfOccurrence_value DOUBLE NOT NULL
     likelihoodOfOccurrence_quantitativeLikelihood_returnPeriod TEXT
@@ -170,7 +186,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     endLifeSpanVersion: DATETIME [0..1]
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfRisk_assessmentMethod DocumentCitation
+    levelOfRisk_assessmentMethod_date DATE
+    levelOfRisk_assessmentMethod_level LegislationLevelValue
+    levelOfRisk_assessmentMethod_link TEXT
+    levelOfRisk_assessmentMethod_name TEXT
+    levelOfRisk_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     levelOfRisk_qualitativeValue TEXT
     levelOfRisk_quantitativeValue_unitOfMeasure_formula TEXT
     levelOfRisk_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
@@ -256,7 +276,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     Likelihood is generally expressed as a probability or a frequency. [EXCIFF]."
     identifier = "NaturalRiskZones::LikelihoodOfOccurrence"
     tableName = "NZ_CORE_LikelihoodOfOccurrence"
-    assessmentMethod DocumentCitation
+    assessmentMethod_date DATE
+    assessmentMethod_level LegislationLevelValue
+    assessmentMethod_link TEXT
+    assessmentMethod_name TEXT
+    assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     id INTEGER NOT NULL PRIMARY KEY
     qualitativeLikelihood TEXT
     quantitativeLikelihood_probabilityOfOccurrence_value DOUBLE NOT NULL
@@ -454,18 +478,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
     tableName = "AD_AddressLocator_designator"
@@ -586,6 +598,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     volume
     weight
   }
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
+  }
   Attributes "EF_EnvironmentalMonitoringProgramme" {
     description = "Framework based on policy relevant documents defining the target of a collection of observations and/or the deployment of AbstractMonitoringFeatures on the field.
   
@@ -597,12 +614,12 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     mediaMonitoreds: TEXT
     names: TEXT [0..1]
+    onlineResources: TEXT [0..1]
     purposes: TEXT [0..1]
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
-    ref legalBackground: LegislationCitation[0..*]
+    ref legalBackground: BASE2_SimpleCitation[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
-    ref onlineResource: URL[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
     ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
@@ -641,8 +658,8 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     boundingBox POLYGON
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
+    onlineResources TEXT
     responsibleParty INTEGER
-    ref onlineResource: URL[0..*]
     ref uses: AbstractMonitoringFeature[0..*] inv involvedIn[0..*]
   }
   Attributes "BASE2_RelatedParty" {
@@ -664,6 +681,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -756,6 +774,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     contactInfo_onlineResource_applicationProfile TEXT
     contactInfo_onlineResource_description TEXT
     contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_linkage TEXT
     contactInfo_onlineResource_name TEXT
     contactInfo_onlineResource_protocol TEXT
     contactInfo_phone INTEGER
@@ -830,32 +849,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    alternateTitles TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    presentationForms TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "AD_LocatorDesignator" {
     description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
@@ -967,8 +960,18 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     identifier = "EnvironmentalMonitoringFacilities::ObservingCapability"
     tableName = "EF_ObservingCapability"
     id INTEGER NOT NULL PRIMARY KEY
+    onlineResource TEXT
     processType TEXT CHECK(EF_ProcessTypeValue)
     resultNature TEXT CHECK(EF_ResultNatureValue)
+  }
+  Attributes "BASE2_SimpleCitation" {
+    tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
   Constraint Enum "CIS_CV_SequenceType" {
     identifier = "Quadrilateral Grid::CV_SequenceType"
@@ -978,12 +981,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     boustrophedonic
     linear
     spiral
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
@@ -1245,7 +1242,11 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     tableName = "EF_ReportToLegalAct"
     description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    legalAct LegislationCitation NOT NULL
+    legalAct_date DATE
+    legalAct_level LegislationLevelValue
+    legalAct_link TEXT
+    legalAct_name TEXT NOT NULL
+    legalAct_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
     observationRequired BOOLEAN
     observingCapabilityRequired BOOLEAN
     reportDate DATETIME
@@ -1292,13 +1293,6 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
   }
   Constraint Enum "EF_ResultNatureValue" {
     identifier = "EnvironmentalMonitoringFacilities::ResultNatureValue"
-  }
-  Constraint Enum "BASE2_LegislationLevelValue" {
-    identifier = "Base Types 2::LegislationLevelValue"
-    european
-    international
-    national
-    sub-national
   }
   Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
@@ -1347,6 +1341,7 @@ Container <<applicationSchema>>  "NaturalRiskZones" {
     description TEXT
     function TEXT CHECK(GMD_CI_OnLineFunctionCode)
     id INTEGER NOT NULL PRIMARY KEY
+    linkage TEXT NOT NULL
     name TEXT
     protocol TEXT
   }

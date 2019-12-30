@@ -428,6 +428,7 @@ Container <<applicationSchema>>  "Activity Complex" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Attributes "BASE2_RelatedParty" {
     description = "An organisation or a person with a role related to a resource.

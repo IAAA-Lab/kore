@@ -470,6 +470,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.

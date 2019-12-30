@@ -160,8 +160,16 @@ Container <<applicationSchema>>  "Planned Land Use" {
     tableName = "PLU_OfficialDocumentation"
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-    legislationCitation LegislationCitation
-    planDocument DocumentCitation
+    legislationCitation_date DATE
+    legislationCitation_level LegislationLevelValue
+    legislationCitation_link TEXT
+    legislationCitation_name TEXT
+    legislationCitation_type TEXT CHECK(BASE2_SimpleCitationType)
+    planDocument_date DATE
+    planDocument_level LegislationLevelValue
+    planDocument_link TEXT
+    planDocument_name TEXT
+    planDocument_type TEXT CHECK(BASE2_SimpleCitationType)
     regulationText TEXT
     null INTEGER
   }
@@ -291,6 +299,11 @@ Container <<applicationSchema>>  "Planned Land Use" {
   Constraint Enum "LUNOM_LandUseClassificationValue" {
     identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
+  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
@@ -305,27 +318,5 @@ Container <<applicationSchema>>  "Planned Land Use" {
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
     versionId TEXT
-  }
-  Constraint Enum "BASE2_LegislationLevelValue" {
-    identifier = "Base Types 2::LegislationLevelValue"
-    european
-    international
-    national
-    sub-national
-  }
-  Constraint Enum "TRS_TM_IndeterminateValue" {
-    identifier = "Temporal Reference System::TM_IndeterminateValue"
-    after
-    before
-    name
-    now
-    unknow
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
 }

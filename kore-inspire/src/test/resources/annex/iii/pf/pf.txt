@@ -78,7 +78,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     names TEXT
     thematicId_identifier TEXT
     thematicId_identifierScheme TEXT
-    ref sitePlan: DocumentCitation[0..*]
   }
   Feature "PF_ProductionPlot" {
     description = "A portion of land or water part of a production facility destined to functional purposes.
@@ -145,6 +144,12 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     tableName = "PF_ProductionSite_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionSite_sitePlan" {
+    profile = "attributes"
+    tableName = "PF_ProductionSite_sitePlan"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
   Relation "PF_ProductionSite_status" {
     profile = "attributes"
@@ -253,6 +258,15 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     inputs TEXT
     outputs TEXT
   }
+  Attributes "BASE2_SimpleCitation" {
+    tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+  }
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
     identifier = "Geographical Names::GeographicalName"
@@ -329,11 +343,10 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
   }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
   Constraint Enum "GN_NativenessValue" {
     identifier = "Geographical Names::NativenessValue"

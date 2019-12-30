@@ -16,6 +16,7 @@
 package es.iaaa.kore.transform.rules
 
 import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreNamedElement
 import es.iaaa.kore.KoreObject
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation

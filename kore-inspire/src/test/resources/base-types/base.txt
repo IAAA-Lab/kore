@@ -91,18 +91,6 @@ Container <<applicationSchema>>  "Base Types" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
   Attributes "GMD_CI_ResponsibleParty" {
     description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
     identifier = "Citation and responsible party information::CI_ResponsibleParty"
@@ -113,6 +101,7 @@ Container <<applicationSchema>>  "Base Types" {
     contactInfo_onlineResource_applicationProfile TEXT
     contactInfo_onlineResource_description TEXT
     contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_linkage TEXT
     contactInfo_onlineResource_name TEXT
     contactInfo_onlineResource_protocol TEXT
     contactInfo_phone INTEGER
@@ -141,32 +130,6 @@ Container <<applicationSchema>>  "Base Types" {
     electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-  }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    alternateTitles TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    presentationForms TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "GMD_PT_Locale" {
     identifier = "Cultural and linguistic adapdability::PT_Locale"
@@ -230,11 +193,19 @@ Container <<applicationSchema>>  "Base Types" {
     resourceProvider
     user
   }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
+  Attributes "BASE2_SimpleCitation" {
+    tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+  }
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
   Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
     identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
@@ -309,6 +280,7 @@ Container <<applicationSchema>>  "Base Types" {
     description TEXT
     function TEXT CHECK(GMD_CI_OnLineFunctionCode)
     id INTEGER NOT NULL PRIMARY KEY
+    linkage TEXT NOT NULL
     name TEXT
     protocol TEXT
   }

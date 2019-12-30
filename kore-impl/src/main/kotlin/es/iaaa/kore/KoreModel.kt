@@ -89,4 +89,9 @@ fun KoreModelElement.koreAnnotation(block: KoreAnnotation.() -> Unit): KoreAnnot
         containingClass = target
     }
 
+fun KoreModelElement.stereotype(stereotype: String) {
+    if (!references(stereotype)) {
+        findOrCreateAnnotation().references.add(koreClass { name = stereotype })
+    }
+}
 

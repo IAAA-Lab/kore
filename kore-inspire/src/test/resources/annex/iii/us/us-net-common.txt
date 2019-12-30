@@ -699,6 +699,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.

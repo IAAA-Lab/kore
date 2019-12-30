@@ -74,6 +74,12 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES LCN_LandCoverNomenclature(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "LCN_LandCoverNomenclature_externalDescription" {
+    profile = "attributes"
+    tableName = "LCN_LandCoverNomenclature_externalDescription"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES LCN_LandCoverNomenclature(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
   Relation "LCN_LandCoverNomenclature_responsibleParty" {
     profile = "attributes"
     relatedReference = "LCN_LandCoverNomenclature#responsibleParty"
@@ -307,7 +313,6 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     inspireId INTEGER
     nomenclatureCodeList TEXT NOT NULL
     responsibleParty INTEGER
-    ref externalDescription: DocumentCitation[0..*]
   }
   Attributes "LCE_LandCoverObservation" {
     description = "Land Cover extended information interpreted at a specific time and place, according a nomenclature."
@@ -318,6 +323,15 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     id INTEGER NOT NULL PRIMARY KEY
     observationDate: DATETIME [0..1]
     ref mosaic: LCV_LandCoverValue[0..*]
+  }
+  Attributes "BASE2_SimpleCitation" {
+    tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
   Attributes "BASE2_RelatedParty" {
     description = "An organisation or a person with a role related to a resource.
@@ -338,6 +352,7 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -564,6 +579,11 @@ Container <<applicationSchema>>  "LandCoverRaster" {
   }
   Constraint Enum "LCN_LandCoverClassValue" {
     identifier = "LandCoverNomenclature::LandCoverClassValue"
+  }
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"
@@ -814,12 +834,6 @@ Container <<applicationSchema>>  "LandCoverRaster" {
     status TEXT CHECK(BU_BASE_HeightStatusValue)
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"

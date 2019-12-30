@@ -32,8 +32,10 @@ val transformation = { options: Map<String, Any> ->
         }
         transformation {
             manipulation(`Before rules`)
+            rule(`Simple Citation`)
             rule(`ISO 19103 - Basic types`)
             rule(`ISO 19107 - Geometry types`)
+            rule(`ISO 19115 - Basic types`)
             rule(`ISO 19139 - Metadata XML Implementation Types`)
             rule(`Flatten union types`)
             rule(`UoM is added as a separate property`)

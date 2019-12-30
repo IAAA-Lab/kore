@@ -496,18 +496,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "GMD_CI_Citation_date" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_date"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Date(id)
-  }
-  Relation "GMD_CI_Citation_citedResponsibleParty" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_citedResponsibleParty"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
   Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
     profile = "attributes"
     relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
@@ -802,6 +790,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     mediaMonitoreds: TEXT
     mobile BOOLEAN
     names: TEXT [0..1]
+    onlineResources: TEXT [0..1]
     purposes: TEXT [0..1]
     representativePoint POINT
     resultAcquisitionSources TEXT
@@ -809,9 +798,8 @@ Container <<applicationSchema>>  "Hydrogeology" {
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
     ref involvedIn: EF_EnvironmentalMonitoringActivity[0..*] inv uses[0..*]
-    ref legalBackground: LegislationCitation[0..*]
+    ref legalBackground: BASE2_SimpleCitation[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
-    ref onlineResource: URL[0..*]
     ref reportedTo: EF_ReportToLegalAct[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
@@ -832,14 +820,14 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     mediaMonitoreds: TEXT
     names: TEXT [0..1]
+    onlineResources: TEXT [0..1]
     organisationLevel TEXT CHECK(BASE2_LegislationLevelValue)
     purposes: TEXT [0..1]
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
     ref involvedIn: EF_EnvironmentalMonitoringActivity[0..*] inv uses[0..*]
-    ref legalBackground: LegislationCitation[0..*]
+    ref legalBackground: BASE2_SimpleCitation[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
-    ref onlineResource: URL[0..*]
     ref reportedTo: EF_ReportToLegalAct[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
@@ -881,8 +869,8 @@ Container <<applicationSchema>>  "Hydrogeology" {
     boundingBox POLYGON
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
+    onlineResources TEXT
     responsibleParty INTEGER
-    ref onlineResource: URL[0..*]
     ref uses: AbstractMonitoringFeature[0..*] inv involvedIn[0..*]
   }
   Attributes "EF_EnvironmentalMonitoringProgramme" {
@@ -896,12 +884,12 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     mediaMonitoreds: TEXT
     names: TEXT [0..1]
+    onlineResources: TEXT [0..1]
     purposes: TEXT [0..1]
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
-    ref legalBackground: LegislationCitation[0..*]
+    ref legalBackground: BASE2_SimpleCitation[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
-    ref onlineResource: URL[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
     ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
@@ -925,6 +913,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
+    website TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -939,32 +928,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     locatorDesignators TEXT
     postCode TEXT
   }
-  Attributes "GMD_CI_Citation" {
-    description = "Standardized resource reference"
-    identifier = "Citation and responsible party information::CI_Citation"
-    tableName = "GMD_CI_Citation"
-    ISBN TEXT
-    ISSN TEXT
-    alternateTitles TEXT
-    collectiveTitle TEXT
-    edition TEXT
-    editionDate DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    otherCitationDetails TEXT
-    presentationForms TEXT
-    series_issueIdentification TEXT
-    series_name TEXT
-    series_page TEXT
-    title TEXT NOT NULL
-    ref identifier: MD_Identifier[0..*]
-  }
-  Attributes "GMD_CI_Date" {
-    identifier = "Citation and responsible party information::CI_Date"
-    tableName = "GMD_CI_Date"
-    date DATE NOT NULL
-    dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
   Attributes "GMD_CI_ResponsibleParty" {
     description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
     identifier = "Citation and responsible party information::CI_ResponsibleParty"
@@ -975,6 +938,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     contactInfo_onlineResource_applicationProfile TEXT
     contactInfo_onlineResource_description TEXT
     contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_linkage TEXT
     contactInfo_onlineResource_name TEXT
     contactInfo_onlineResource_protocol TEXT
     contactInfo_phone INTEGER
@@ -1234,7 +1198,11 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "EF_ReportToLegalAct"
     description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    legalAct LegislationCitation NOT NULL
+    legalAct_date DATE
+    legalAct_level LegislationLevelValue
+    legalAct_link TEXT
+    legalAct_name TEXT NOT NULL
+    legalAct_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
     observationRequired BOOLEAN
     observingCapabilityRequired BOOLEAN
     reportDate DATETIME
@@ -1245,8 +1213,18 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "EnvironmentalMonitoringFacilities::ObservingCapability"
     tableName = "EF_ObservingCapability"
     id INTEGER NOT NULL PRIMARY KEY
+    onlineResource TEXT
     processType TEXT CHECK(EF_ProcessTypeValue)
     resultNature TEXT CHECK(EF_ResultNatureValue)
+  }
+  Attributes "BASE2_SimpleCitation" {
+    tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
   Constraint Enum "GML_MeasureType" {
     identifier = "Units of Measure::MeasureType"
@@ -1297,12 +1275,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     name
     now
     unknow
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
-    creation
-    publication
-    revision
   }
   Constraint Enum "GMD_CI_OnLineFunctionCode" {
     identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
@@ -1602,6 +1574,11 @@ Container <<applicationSchema>>  "Hydrogeology" {
     linear
     spiral
   }
+  Constraint Enum "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
+  }
   Constraint Enum "EF_ProcessTypeValue" {
     identifier = "EnvironmentalMonitoringFacilities::ProcessTypeValue"
   }
@@ -1655,6 +1632,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     description TEXT
     function TEXT CHECK(GMD_CI_OnLineFunctionCode)
     id INTEGER NOT NULL PRIMARY KEY
+    linkage TEXT NOT NULL
     name TEXT
     protocol TEXT
   }
