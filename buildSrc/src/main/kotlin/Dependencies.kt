@@ -23,4 +23,6 @@ object Libs {
     const val unitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:5.5.1"
     const val kotlinLogging = "io.github.microutils:kotlin-logging:1.7.7"
     const val slf4j = "org.slf4j:slf4j-simple:1.7.26"
+    const val evo = "org.atteo:evo-inflector:1.2.2"
+
 }

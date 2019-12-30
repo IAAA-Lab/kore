@@ -27,10 +27,12 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     tableName = "AM_ManagementRestrictionOrRegulationZone"
     beginLifespanVersion DATETIME
     endLifespanVersion DATETIME
+    environmentalDomains TEXT NOT NULL
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     specialisedZoneType TEXT CHECK(AM_SpecialisedZoneTypeCode)
+    zoneTypes TEXT NOT NULL
   }
   Constraint Enum "AM_EnvironmentalDomain" {
     identifier = "Area Management Restriction and Regulation Zones::EnvironmentalDomain"
@@ -48,20 +50,6 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
   }
   Constraint Enum "AM_SpecialisedZoneTypeCode" {
     identifier = "Area Management Restriction and Regulation Zones::SpecialisedZoneTypeCode"
-  }
-  Attributes "AM_ZoneTypeCode" {
-    description = "High-level classification defining the type of Management, Restriction or Regulation Zone."
-    identifier = "Area Management Restriction and Regulation Zones::ZoneTypeCode"
-    tableName = "AM_ZoneTypeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AM_ZoneTypeCode)
-  }
-  Attributes "AM_EnvironmentalDomain" {
-    description = "Environmental domain, for which environmental objectives can be defined."
-    identifier = "Area Management Restriction and Regulation Zones::EnvironmentalDomain"
-    tableName = "AM_EnvironmentalDomain"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AM_EnvironmentalDomain)
   }
   Relation "AM_ManagementRestrictionOrRegulationZone_relatedZone" {
     profile = "features"
@@ -93,18 +81,6 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     tableName = "AM_ManagementRestrictionOrRegulationZone_competentAuthority"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AM_ManagementRestrictionOrRegulationZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
-  }
-  Relation "AM_ManagementRestrictionOrRegulationZone_zoneType" {
-    profile = "attributes"
-    tableName = "AM_ManagementRestrictionOrRegulationZone_zoneType"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AM_ManagementRestrictionOrRegulationZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AM_ZoneTypeCode(id)
-  }
-  Relation "AM_ManagementRestrictionOrRegulationZone_environmentalDomain" {
-    profile = "attributes"
-    tableName = "AM_ManagementRestrictionOrRegulationZone_environmentalDomain"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AM_ManagementRestrictionOrRegulationZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AM_EnvironmentalDomain(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -142,12 +118,6 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
-  }
-  Relation "BASE2_RelatedParty_role" {
-    profile = "attributes"
-    tableName = "BASE2_RelatedParty_role"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
   }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
@@ -302,12 +272,6 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
     tableName = "AU_Condominium_admUnit"
@@ -383,6 +347,7 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     tableName = "BASE2_RelatedParty"
     contact INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    roles TEXT
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
@@ -404,15 +369,8 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref telephoneFacsimile: TEXT[0..*]
-    ref telephoneVoice: TEXT[0..*]
-  }
-  Attributes "BASE2_PartyRoleValue" {
-    description = "Roles of parties related to or responsible for a resource."
-    identifier = "Base Types 2::PartyRoleValue"
-    tableName = "BASE2_PartyRoleValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
+    telephoneFacsimiles TEXT
+    telephoneVoices TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -424,8 +382,8 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     tableName = "AD_AddressRepresentation"
     addressFeature INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    locatorDesignators TEXT
     postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -536,6 +494,7 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -579,13 +538,6 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     nationalCadastralReference TEXT NOT NULL
     validFrom DATETIME
     validTo DATETIME
-  }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
@@ -645,9 +597,6 @@ Container <<applicationSchema>>  "Area Management Restriction and Regulation Zon
     dual
     plural
     singular
-  }
-  Constraint Enum "BASE2_PartyRoleValue" {
-    identifier = "Base Types 2::PartyRoleValue"
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"

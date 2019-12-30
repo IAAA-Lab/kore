@@ -57,7 +57,7 @@ Container <<applicationSchema>>  "Gridded Land Use" {
     id INTEGER NOT NULL PRIMARY KEY
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    ref startPoint: INTEGER[0..*]
+    startPoints TEXT
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.

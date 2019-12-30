@@ -4,16 +4,16 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
   }
   Class "ProductionInstallationPart" {
+    descriptions: TEXT [0..1]
+    names: TEXT [0..1]
     pointGeometry: POINT [0..1]
     surfaceGeometry: SURFACE [0..1]
     technique: TEXT [0..1]
     thematicId_identifier: TEXT [0..1]
     thematicId_identifierScheme: TEXT [0..1]
     type: TEXT [0..1]
-    ref description: TEXT[0..*]
     ref groupingInstallation: ProductionInstallationinv groupedInstallationPart[0..*]
     ref inspireId: BASE_Identifier
-    ref name: TEXT[0..*]
     ref status: PF_StatusType[0..*]
   }
   Attributes "PF_StatusType" {
@@ -51,16 +51,16 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
   }
   Class "TechnicalUnit" {}
   Class "ProductionInstallation" {
+    descriptions: TEXT [0..1]
+    names: TEXT [0..1]
     pointGeometry: POINT [0..1]
     surfaceGeometry: SURFACE [0..1]
     thematicId_identifier: TEXT [0..1]
     thematicId_identifierScheme: TEXT [0..1]
     type: TEXT [0..1]
-    ref description: TEXT[0..*]
     ref groupedInstallationPart: ProductionInstallationPart[0..*] inv groupingInstallation
     ref groupingFacility: PF_ProductionFacilityinv groupedInstallation[0..*]
     ref inspireId: BASE_Identifier
-    ref name: TEXT[0..*]
     ref status: PF_StatusType[0..*]
   }
   Feature "PF_ProductionSite" {
@@ -71,13 +71,13 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     A continuous surface, maritime or terrestrial in which production facilities have been already implanted or urban and/or engineering activities have been developed for production purposes. The location will be defined by means of geographical boundaries within which activities under the control of an organization may be carried out. The geographical boundaries may be on land and in water, and include above and below surface structures, both natural and man-made."
     identifier = "ProductionAndIndustrialFacilities::ProductionSite"
     tableName = "PF_ProductionSite"
+    descriptions TEXT
     geometry MULTISURFACE
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
+    names TEXT
     thematicId_identifier TEXT
     thematicId_identifierScheme TEXT
-    ref description: TEXT[0..*]
-    ref name: TEXT[0..*]
     ref sitePlan: DocumentCitation[0..*]
   }
   Feature "PF_ProductionPlot" {
@@ -201,24 +201,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "ACT_CORE_Function_activity" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_activity"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityValue(id)
-  }
-  Relation "ACT_CORE_Function_input" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_input"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
-  }
-  Relation "ACT_CORE_Function_output" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_output"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
-  }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
     tableName = "GN_GeographicalName_spelling"
@@ -266,28 +248,10 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
     identifier = "Activity Complex::Function"
     tableName = "ACT_CORE_Function"
+    activities TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "ACT_CORE_EconomicActivityValue" {
-    description = "Classification of economic activities."
-    identifier = "Activity Complex::EconomicActivityValue"
-    tableName = "ACT_CORE_EconomicActivityValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
+    inputs TEXT
+    outputs TEXT
   }
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
@@ -323,20 +287,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
     id INTEGER NOT NULL PRIMARY KEY
     percentage INTEGER
-  }
-  Attributes "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    description = "Values indicating the nature of a building.
-  
-    NOTE 1 : This code list does not aim to be exhaustive as the attribute buildingNature addresses only noticeable buildings.
-  
-    NOTE 2: The values included in this code list address mainly (but not only) two international use cases: air flights where buildings may be obstacles and marine navigation where buildings may be landmarks.
-  
-    NOTE 3: This code list should only be applied for buildings, even if it may be applicable to other constructions (for example, not all dams are buildings)."
-    identifier = "BuildingsBase::BuildingNatureValue"
-    tableName = "BU_BASE_BuildingNatureValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BU_BASE_BuildingNatureValue)
   }
   Attributes "BU_BASE_DateOfEvent" {
     description = "This data type includes the different possible ways to define the date of an event."
@@ -385,12 +335,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     publication
     revision
   }
-  Constraint Enum "ACT_CORE_EconomicActivityValue" {
-    identifier = "Activity Complex::EconomicActivityValue"
-  }
-  Constraint Enum "ACT_CORE_InputOutputValue" {
-    identifier = "Activity Complex::InputOutputValue"
-  }
   Constraint Enum "GN_NativenessValue" {
     identifier = "Geographical Names::NativenessValue"
     endonym
@@ -420,10 +364,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     extensiblity = "narrower"
     obligation = "implementingRule"
     identifier = "BuildingsBase::CurrentUseValue"
-  }
-  Constraint Enum "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::BuildingNatureValue"
   }
   Constraint Enum "BU_BASE_ElevationReferenceValue" {
     obligation = "implementingRule"

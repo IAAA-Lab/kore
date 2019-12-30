@@ -89,7 +89,8 @@ Container <<applicationSchema>>  "Hydrogeology" {
     inspireId INTEGER
     mineralization TEXT CHECK(GE_HG_WaterSalinityValue)
     piezometricState_observationTime DATETIME NOT NULL
-    piezometricState_piezometricSurface_surfacePointCollection INTEGER
+    piezometricState_piezometricSurface_surfacePointCollection_extent_description TEXT
+    piezometricState_piezometricSurface_surfacePointCollection_inspireId INTEGER
     piezometricState_piezometricSurface_surfaceRectifiedGrid INTEGER
     piezometricState_piezometricSurface_surfaceReferencableGrid INTEGER
     beginLifespanVersion DATETIME NOT NULL
@@ -179,6 +180,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     NOTE: ActiveWell by extracting, recharging or dewatering influences and changes the state of groundwater resources."
     identifier = "Hydrogeology::ActiveWell"
     tableName = "GE_HG_ActiveWell"
+    activityTypes TEXT NOT NULL
     environmentalMonitoringFacility INTEGER
     geometry: GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
@@ -254,7 +256,8 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "GE_HG_PiezometricState"
     id INTEGER NOT NULL PRIMARY KEY
     observationTime DATETIME NOT NULL
-    piezometricSurface_surfacePointCollection INTEGER
+    piezometricSurface_surfacePointCollection_extent_description TEXT
+    piezometricSurface_surfacePointCollection_inspireId INTEGER
     piezometricSurface_surfaceRectifiedGrid INTEGER
     piezometricSurface_surfaceReferencableGrid INTEGER
   }
@@ -262,16 +265,10 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Hydrogeology::ActiveWellTypeValue"
   }
   Class <<union>>  "HydrogeologicalSurface" {
-    ref surfacePointCollection: OMSO_PointObservationCollection
+    surfacePointCollection_extent_description: TEXT [0..1]
+    ref surfacePointCollection_inspireId: BASE_Identifier
     ref surfaceRectifiedGrid: GMLCOV_RectifiedGridCoverage
     ref surfaceReferencableGrid: GMLCOV_ReferenceableGridCoverage
-  }
-  Attributes "GE_HG_ActiveWellTypeValue" {
-    description = "Types of active wells."
-    identifier = "Hydrogeology::ActiveWellTypeValue"
-    tableName = "GE_HG_ActiveWellTypeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_HG_ActiveWellTypeValue)
   }
   Relation "GE_HG_HydrogeologicalObjectNatural_groundWaterBody" {
     profile = "features"
@@ -339,12 +336,12 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_GroundWaterBody(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_ReferenceableGridCoverage(id)
   }
-  Relation "GE_HG_GroundWaterBody_piezometricState_piezometricSurface_surfacePointCollection" {
+  Relation "GE_HG_GroundWaterBody_piezometricState_piezometricSurface_surfacePointCollection_inspireId" {
     profile = "attributes"
-    relatedReference = "GE_HG_GroundWaterBody#piezometricState_piezometricSurface_surfacePointCollection"
-    tableName = "GE_HG_GroundWaterBody_piezometricState_piezometricSurface_surfacePointCollection"
+    relatedReference = "GE_HG_GroundWaterBody#piezometricState_piezometricSurface_surfacePointCollection_inspireId"
+    tableName = "GE_HG_GroundWaterBody_piezometricState_piezometricSurface_surfacePointCollection_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_GroundWaterBody(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMSO_PointObservationCollection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "GE_HG_AquiferSystem_aquifer" {
     profile = "attributes"
@@ -377,12 +374,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_ActiveWell(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
   }
-  Relation "GE_HG_ActiveWell_activityType" {
-    profile = "attributes"
-    tableName = "GE_HG_ActiveWell_activityType"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_ActiveWell(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_HG_ActiveWellTypeValue(id)
-  }
   Relation "GE_HG_Aquitard_aquifer" {
     profile = "attributes"
     tableName = "GE_HG_Aquitard_aquifer"
@@ -410,12 +401,12 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_PiezometricState(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_ReferenceableGridCoverage(id)
   }
-  Relation "GE_HG_PiezometricState_piezometricSurface_surfacePointCollection" {
+  Relation "GE_HG_PiezometricState_piezometricSurface_surfacePointCollection_inspireId" {
     profile = "attributes"
-    relatedReference = "GE_HG_PiezometricState#piezometricSurface_surfacePointCollection"
-    tableName = "GE_HG_PiezometricState_piezometricSurface_surfacePointCollection"
+    relatedReference = "GE_HG_PiezometricState#piezometricSurface_surfacePointCollection_inspireId"
+    tableName = "GE_HG_PiezometricState_piezometricSurface_surfacePointCollection_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_HG_PiezometricState(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMSO_PointObservationCollection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -441,12 +432,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GE_GeologicEvent_eventProcess" {
-    profile = "attributes"
-    tableName = "GE_GeologicEvent_eventProcess"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicEvent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_EventProcessValue(id)
-  }
   Relation "EF_EnvironmentalMonitoringFacility_operationalActivityPeriod" {
     profile = "attributes"
     tableName = "EF_EnvironmentalMonitoringFacility_operationalActivityPeriod"
@@ -464,12 +449,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "EF_EnvironmentalMonitoringFacility_relatedTo"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
-  }
-  Relation "EF_EnvironmentalMonitoringFacility_resultAcquisitionSource" {
-    profile = "attributes"
-    tableName = "EF_EnvironmentalMonitoringFacility_resultAcquisitionSource"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ResultAcquisitionSourceValue(id)
   }
   Relation "_OM_Observation_relatedObservation" {
     profile = "attributes"
@@ -510,12 +489,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "BASE2_RelatedParty_role" {
-    profile = "attributes"
-    tableName = "BASE2_RelatedParty_role"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
-  }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
     relatedReference = "BASE2_Contact#address"
@@ -534,12 +507,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "GMD_CI_Citation_citedResponsibleParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
   Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
     profile = "attributes"
@@ -707,12 +674,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
     tableName = "AU_Condominium_admUnit"
@@ -774,6 +735,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Geology::GeologicEvent"
     tableName = "GE_GeologicEvent"
     eventEnvironment TEXT CHECK(GE_EventEnvironmentValue)
+    eventProcesses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     name TEXT
     olderNamedAge TEXT CHECK(GE_GeochronologicEraValue)
@@ -823,18 +785,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     rangeType: RecordType
     ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
   }
-  Attributes "OMSO_PointObservationCollection" {
-    description = "A collection of Point Observations.
-  
-    The PointObservationCollection is a collection of separate PointObservations. In the case where it is useful to group together a set of otherwise independent PointObservations the PointObservationCollection should be used to make this grouping. The grouping may be made on any basis e.g. it may be useful to group together PointObservations made by the same instrument or Environmental Facility, or in a particular measurement campaign. Each member of the PointObservationCollection must be a single PointObservation."
-    identifier = "Point Observations::PointObservationCollection"
-    tableName = "OMSO_PointObservationCollection"
-    extent: EX_Extent
-    id INTEGER NOT NULL PRIMARY KEY
-    ref inspireId: BASE_Identifier
-    ref MarineContour inv sourceObservations[0..*]
-    ref SpeciesDistributionUnit inv observations[0..*]
-  }
   Feature "EF_EnvironmentalMonitoringFacility" {
     description = "A georeferenced object directly collecting or processing data about objects whose properties (e.g. physical, chemical, biological or other aspects of environmental conditions) are repeatedly observed or measured. An environmental monitoring facility can also host other environmental monitoring facilities.
   
@@ -849,31 +799,23 @@ Container <<applicationSchema>>  "Hydrogeology" {
     geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     measurementRegime TEXT CHECK(EF_MeasurementRegimeValue)
+    mediaMonitoreds: TEXT
     mobile BOOLEAN
+    names: TEXT [0..1]
+    purposes: TEXT [0..1]
     representativePoint POINT
+    resultAcquisitionSources TEXT
     specialisedEMFType TEXT CHECK(EF_SpecialisedEMFTypeValue)
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
     ref involvedIn: EF_EnvironmentalMonitoringActivity[0..*] inv uses[0..*]
     ref legalBackground: LegislationCitation[0..*]
-    ref mediaMonitored: EF_MediaValue[1..*]
-    ref name: TEXT[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
     ref onlineResource: URL[0..*]
-    ref purpose: EF_PurposeOfCollectionValue[0..*]
     ref reportedTo: EF_ReportToLegalAct[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
     ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
-  }
-  Attributes "GE_EventProcessValue" {
-    description = "Terms specifying the process or processes that occurred during an event.
-  
-    EXAMPLE: deposition, extrusion, intrusion, cooling."
-    identifier = "Geology::EventProcessValue"
-    tableName = "GE_EventProcessValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_EventProcessValue)
   }
   Attributes "EF_OperationalActivityPeriod" {
     description = "Corresponds to a period during which the EnvironmentalMonitoringFacility has been up and running."
@@ -888,27 +830,20 @@ Container <<applicationSchema>>  "Hydrogeology" {
     additionalDescription: TEXT [0..1]
     geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
+    mediaMonitoreds: TEXT
+    names: TEXT [0..1]
     organisationLevel TEXT CHECK(BASE2_LegislationLevelValue)
+    purposes: TEXT [0..1]
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
     ref involvedIn: EF_EnvironmentalMonitoringActivity[0..*] inv uses[0..*]
     ref legalBackground: LegislationCitation[0..*]
-    ref mediaMonitored: EF_MediaValue[1..*]
-    ref name: TEXT[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
     ref onlineResource: URL[0..*]
-    ref purpose: EF_PurposeOfCollectionValue[0..*]
     ref reportedTo: EF_ReportToLegalAct[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
     ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
-  }
-  Attributes "EF_ResultAcquisitionSourceValue" {
-    description = "Categories for different types of the ResultAcquisitionSource."
-    identifier = "EnvironmentalMonitoringFacilities::ResultAcquisitionSourceValue"
-    tableName = "EF_ResultAcquisitionSourceValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(EF_ResultAcquisitionSourceValue)
   }
   Attributes "_OM_Observation" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -959,14 +894,14 @@ Container <<applicationSchema>>  "Hydrogeology" {
     additionalDescription: TEXT [0..1]
     geometry: GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
+    mediaMonitoreds: TEXT
+    names: TEXT [0..1]
+    purposes: TEXT [0..1]
     ref broader: AbstractMonitoringObject[0..1] inv narrower[0..*]
     ref inspireId: BASE_Identifier
     ref legalBackground: LegislationCitation[0..*]
-    ref mediaMonitored: EF_MediaValue[1..*]
-    ref name: TEXT[0..*]
     ref narrower: AbstractMonitoringObject[0..*] inv broader[0..1]
     ref onlineResource: URL[0..*]
-    ref purpose: EF_PurposeOfCollectionValue[0..*]
     ref responsibleParty: BASE2_RelatedParty[0..*]
     ref supersededBy: AbstractMonitoringObject[0..*] inv supersedes[0..*]
     ref supersedes: AbstractMonitoringObject[0..*] inv supersededBy[0..*]
@@ -979,6 +914,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "BASE2_RelatedParty"
     contact INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    roles TEXT
   }
   Attributes "BASE2_Contact" {
     description = "Communication channels by which it is possible to gain access to someone or something."
@@ -987,15 +923,8 @@ Container <<applicationSchema>>  "Hydrogeology" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref telephoneFacsimile: TEXT[0..*]
-    ref telephoneVoice: TEXT[0..*]
-  }
-  Attributes "BASE2_PartyRoleValue" {
-    description = "Roles of parties related to or responsible for a resource."
-    identifier = "Base Types 2::PartyRoleValue"
-    tableName = "BASE2_PartyRoleValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
+    telephoneFacsimiles TEXT
+    telephoneVoices TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -1007,8 +936,8 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "AD_AddressRepresentation"
     addressFeature INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    locatorDesignators TEXT
     postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
   }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
@@ -1016,16 +945,17 @@ Container <<applicationSchema>>  "Hydrogeology" {
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "GMD_CI_Date" {
@@ -1054,20 +984,13 @@ Container <<applicationSchema>>  "Hydrogeology" {
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -1076,10 +999,10 @@ Container <<applicationSchema>>  "Hydrogeology" {
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -1217,6 +1140,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -1261,13 +1185,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     validFrom DATETIME
     validTo DATETIME
   }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-  }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
   
@@ -1289,7 +1206,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     identifier = "Basic Types::RealPair"
     tableName = "SWE_RealPair"
     id INTEGER NOT NULL PRIMARY KEY
-    ref <<property>> item: DOUBLE[2..2]
+    items TEXT
   }
   Attributes "GE_MappedInterval" {
     description = "A special kind of mapped feature whose shape is a 1-D interval and which uses the SRS of the containing borehole."
@@ -1300,15 +1217,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     shape: GEOMETRY
     ref GeologicCollection inv mapMember[1..*]
   }
-  Attributes "GE_BoreholePurposeValue" {
-    description = "Purposes for which a borehole was drilled.
-  
-    EXAMPLE: mineral exploration, water pumping, site evaluation, stratigraphic research, etc."
-    identifier = "Geology::BoreholePurposeValue"
-    tableName = "GE_BoreholePurposeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_BoreholePurposeValue)
-  }
   Attributes "GMLCOV_GridFunction" {
     description = "An explicit mapping rule for grid geometries"
     identifier = "Coverages (Domain and Range)::GridFunction"
@@ -1316,7 +1224,7 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    ref startPoint: INTEGER[0..*]
+    startPoints TEXT
   }
   Attributes "EF_ReportToLegalAct" {
     description = "Information on the involvement of an AbstractMonitoringFeature in reporting. The information is specific per submitted reporting envelope and not per obligation/agreement.
@@ -1339,20 +1247,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     processType TEXT CHECK(EF_ProcessTypeValue)
     resultNature TEXT CHECK(EF_ResultNatureValue)
-  }
-  Attributes "EF_MediaValue" {
-    description = "Categories for different types of media."
-    identifier = "EnvironmentalMonitoringFacilities::MediaValue"
-    tableName = "EF_MediaValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(EF_MediaValue)
-  }
-  Attributes "EF_PurposeOfCollectionValue" {
-    description = "Categories for different purposes of collections."
-    identifier = "EnvironmentalMonitoringFacilities::PurposeOfCollectionValue"
-    tableName = "EF_PurposeOfCollectionValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(EF_PurposeOfCollectionValue)
   }
   Constraint Enum "GML_MeasureType" {
     identifier = "Units of Measure::MeasureType"
@@ -1389,18 +1283,12 @@ Container <<applicationSchema>>  "Hydrogeology" {
   Constraint Enum "EF_SpecialisedEMFTypeValue" {
     identifier = "EnvironmentalMonitoringFacilities::SpecialisedEMFTypeValue"
   }
-  Constraint Enum "GE_EventProcessValue" {
-    identifier = "Geology::EventProcessValue"
-  }
   Constraint Enum "BASE2_LegislationLevelValue" {
     identifier = "Base Types 2::LegislationLevelValue"
     european
     international
     national
     sub-national
-  }
-  Constraint Enum "EF_ResultAcquisitionSourceValue" {
-    identifier = "EnvironmentalMonitoringFacilities::ResultAcquisitionSourceValue"
   }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
@@ -1409,9 +1297,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     name
     now
     unknow
-  }
-  Constraint Enum "BASE2_PartyRoleValue" {
-    identifier = "Base Types 2::PartyRoleValue"
   }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
@@ -1440,23 +1325,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     publisher
     resourceProvider
     user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"
@@ -1694,27 +1562,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     id INTEGER NOT NULL PRIMARY KEY
     languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
   }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
   Attributes "BU_BASE_Elevation" {
     description = "This data types includes the elevation value itself  and information on how this elevation was measured."
     identifier = "BuildingsBase::Elevation"
@@ -1746,9 +1593,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
   Constraint Enum "GE_MappingFrameValue" {
     identifier = "Geology::MappingFrameValue"
   }
-  Constraint Enum "GE_BoreholePurposeValue" {
-    identifier = "Geology::BoreholePurposeValue"
-  }
   Constraint Enum "CIS_CV_SequenceType" {
     identifier = "Quadrilateral Grid::CV_SequenceType"
     CantorDiagonal
@@ -1764,12 +1608,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
   Constraint Enum "EF_ResultNatureValue" {
     identifier = "EnvironmentalMonitoringFacilities::ResultNatureValue"
   }
-  Constraint Enum "EF_MediaValue" {
-    identifier = "EnvironmentalMonitoringFacilities::MediaValue"
-  }
-  Constraint Enum "EF_PurposeOfCollectionValue" {
-    identifier = "EnvironmentalMonitoringFacilities::PurposeOfCollectionValue"
-  }
   Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -1779,34 +1617,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
-  Attributes "GMD_MD_ProgressCode" {
-    description = "Status of the dataset or progress of a review"
-    identifier = "Identification information::MD_ProgressCode"
-    tableName = "GMD_MD_ProgressCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_ProgressCode)
   }
   Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
     identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
@@ -1822,6 +1632,31 @@ Container <<applicationSchema>>  "Hydrogeology" {
     quarterly
     unknown
     weekly
+  }
+  Constraint Enum "CP_CadastralZoningLevelValue" {
+    identifier = "CadastralParcels::CadastralZoningLevelValue"
+    1stOrder
+    2ndOrder
+    3rdOrder
+  }
+  Constraint Enum "BU_BASE_ElevationReferenceValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::ElevationReferenceValue"
+  }
+  Constraint Enum "BU_BASE_HeightStatusValue" {
+    obligation = "implementingRule"
+    identifier = "BuildingsBase::HeightStatusValue"
+  }
+  Attributes "GMD_CI_OnlineResource" {
+    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
+    identifier = "Citation and responsible party information::CI_OnlineResource"
+    tableName = "GMD_CI_OnlineResource"
+    applicationProfile TEXT
+    description TEXT
+    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    name TEXT
+    protocol TEXT
   }
   Constraint Enum "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
@@ -1855,31 +1690,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     service
     software
     tile
-  }
-  Constraint Enum "CP_CadastralZoningLevelValue" {
-    identifier = "CadastralParcels::CadastralZoningLevelValue"
-    1stOrder
-    2ndOrder
-    3rdOrder
-  }
-  Constraint Enum "BU_BASE_ElevationReferenceValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ElevationReferenceValue"
-  }
-  Constraint Enum "BU_BASE_HeightStatusValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::HeightStatusValue"
-  }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    name TEXT
-    protocol TEXT
   }
   Constraint Enum "MEI_MD_ObligationCode" {
     identifier = "Metadata extension information::MD_ObligationCode"
@@ -1953,23 +1763,6 @@ Container <<applicationSchema>>  "Hydrogeology" {
     task
     trial
   }
-  Constraint Enum "GMD_MD_ProgressCode" {
-    identifier = "Identification information::MD_ProgressCode"
-    completed
-    historicalArchive
-    obsolete
-    onGoing
-    planned
-    required
-    underDevelopment
-  }
-  Attributes "DI_MD_MediumFormatCode" {
-    description = ""
-    identifier = "Distribution information::MD_MediumFormatCode"
-    tableName = "DI_MD_MediumFormatCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(DI_MD_MediumFormatCode)
-  }
   Constraint Enum "DI_MD_MediumNameCode" {
     identifier = "Distribution information::MD_MediumNameCode"
     1quarterInchCartridgeTape
@@ -2005,14 +1798,5 @@ Container <<applicationSchema>>  "Hydrogeology" {
     directExternal
     directInternal
     indirect
-  }
-  Constraint Enum "DI_MD_MediumFormatCode" {
-    identifier = "Distribution information::MD_MediumFormatCode"
-    cpio
-    highSierra
-    iso9660
-    iso9660AppleHFS
-    iso9660RockRidge
-    tar
   }
 }

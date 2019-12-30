@@ -17,7 +17,7 @@ Container <<applicationSchema>>  "Buildings3D" {
   }
   Class "BuildingPart" {
     beginLifespanVersion: DATETIME [0..1]
-    buildingNature: TEXT [0..*]
+    buildingNatures: TEXT [0..1]
     conditionOfConstruction: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry3DLoD1_geometryMultiSurface: MULTISURFACE [0..1]
@@ -105,7 +105,7 @@ Container <<applicationSchema>>  "Buildings3D" {
   }
   Class "Building" {
     beginLifespanVersion: DATETIME [0..1]
-    buildingNature: TEXT [0..*]
+    buildingNatures: TEXT [0..1]
     conditionOfConstruction: TEXT [0..1]
     endLifespanVersion: DATETIME [0..1]
     geometry3DLoD1_geometryMultiSurface: MULTISURFACE [0..1]
@@ -202,10 +202,6 @@ Container <<applicationSchema>>  "Buildings3D" {
     identifier = "BuildingsBase::ElevationReferenceValue"
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::BuildingNatureValue"
-  }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"

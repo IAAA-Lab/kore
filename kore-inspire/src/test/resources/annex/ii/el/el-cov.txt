@@ -77,12 +77,6 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
   }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
   Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
     profile = "attributes"
     relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
@@ -114,7 +108,7 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     id INTEGER NOT NULL PRIMARY KEY
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    ref startPoint: INTEGER[0..*]
+    startPoints TEXT
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
@@ -137,16 +131,17 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "GMD_CI_Date" {
@@ -175,20 +170,13 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -197,10 +185,10 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Constraint Enum "CIS_CV_SequenceType" {
     identifier = "Quadrilateral Grid::CV_SequenceType"
@@ -238,23 +226,6 @@ Container <<applicationSchema>>  "ElevationGridCoverage" {
     publisher
     resourceProvider
     user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
   }
   Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality information::DQ_EvaluationMethodTypeCode"

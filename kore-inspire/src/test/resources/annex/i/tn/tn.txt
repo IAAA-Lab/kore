@@ -302,12 +302,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
   }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
   Relation "HH_SA_Event_additionalInformation" {
     profile = "attributes"
     relatedReference = "HH_SA_Event#additionalInformation"
@@ -414,12 +408,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
     tableName = "AU_Condominium_admUnit"
@@ -524,16 +512,17 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "GN_SpellingOfName" {
@@ -595,13 +584,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Feature "HH_SA_Event" {
     description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
     identifier = "Safety::Event"
@@ -631,9 +613,9 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -642,10 +624,10 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Feature "AU_AdministrativeUnit" {
     description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
@@ -672,6 +654,7 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -699,13 +682,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     event INTEGER
     id INTEGER NOT NULL PRIMARY KEY
     value DOUBLE NOT NULL
-  }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
@@ -779,23 +755,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     publisher
     resourceProvider
     user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"

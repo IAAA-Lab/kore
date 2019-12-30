@@ -6,16 +6,16 @@ Container <<applicationSchema>>  "Base Types 2" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref telephoneFacsimile: TEXT[0..*]
-    ref telephoneVoice: TEXT[0..*]
+    telephoneFacsimiles TEXT
+    telephoneVoices TEXT
   }
   Class "DocumentCitation" {
     date_date: DATE
     date_dateType: TEXT
     name: TEXT
     shortName: TEXT [0..1]
+    specificReferences: TEXT [0..1]
     ref link: URL[0..*]
-    ref specificReference: TEXT[0..*]
   }
   Constraint Enum "BASE2_GenderValue" {
     identifier = "Base Types 2::GenderValue"
@@ -37,6 +37,7 @@ Container <<applicationSchema>>  "Base Types 2" {
     tableName = "BASE2_RelatedParty"
     contact INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    roles TEXT
   }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.
@@ -80,8 +81,8 @@ Container <<applicationSchema>>  "Base Types 2" {
     name: TEXT
     officialDocumentNumber: TEXT [0..1]
     shortName: TEXT [0..1]
+    specificReferences: TEXT [0..1]
     ref link: URL[0..*]
-    ref specificReference: TEXT[0..*]
   }
   Constraint Enum "BASE2_LegislationLevelValue" {
     identifier = "Base Types 2::LegislationLevelValue"
@@ -194,13 +195,6 @@ Container <<applicationSchema>>  "Base Types 2" {
   Constraint Enum "BASE2_CFStandardNamesValue" {
     identifier = "Base Types 2::CFStandardNamesValue"
   }
-  Attributes "BASE2_PartyRoleValue" {
-    description = "Roles of parties related to or responsible for a resource."
-    identifier = "Base Types 2::PartyRoleValue"
-    tableName = "BASE2_PartyRoleValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
-  }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
     relatedReference = "BASE2_Contact#address"
@@ -214,12 +208,6 @@ Container <<applicationSchema>>  "Base Types 2" {
     tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
-  }
-  Relation "BASE2_RelatedParty_role" {
-    profile = "attributes"
-    tableName = "BASE2_RelatedParty_role"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -397,12 +385,6 @@ Container <<applicationSchema>>  "Base Types 2" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
     tableName = "AU_Condominium_admUnit"
@@ -454,8 +436,8 @@ Container <<applicationSchema>>  "Base Types 2" {
     tableName = "AD_AddressRepresentation"
     addressFeature INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    locatorDesignators TEXT
     postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -608,6 +590,7 @@ Container <<applicationSchema>>  "Base Types 2" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -651,13 +634,6 @@ Container <<applicationSchema>>  "Base Types 2" {
     nationalCadastralReference TEXT NOT NULL
     validFrom DATETIME
     validTo DATETIME
-  }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.

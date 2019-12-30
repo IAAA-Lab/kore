@@ -19,7 +19,7 @@ Container <<applicationSchema>>  "Geographical Names" {
   }
   Attributes "GN_PronunciationOfName" {
     description = "Proper, correct or standard (standard within the linguistic community concerned) pronunciation of a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006]."
     identifier = "Geographical Names::PronunciationOfName"
     tableName = "GN_PronunciationOfName"
@@ -29,9 +29,9 @@ Container <<applicationSchema>>  "Geographical Names" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -67,6 +67,7 @@ Container <<applicationSchema>>  "Geographical Names" {
     mostDetailedViewingResolution_distance TEXT
     mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
+    types TEXT
   }
   Constraint Enum "GN_GrammaticalGenderValue" {
     identifier = "Geographical Names::GrammaticalGenderValue"
@@ -88,13 +89,6 @@ Container <<applicationSchema>>  "Geographical Names" {
     pronunciation_pronunciationIPA TEXT
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
-  }
-  Attributes "GN_NamedPlaceTypeValue" {
-    description = "The type of a named place."
-    identifier = "Geographical Names::NamedPlaceTypeValue"
-    tableName = "GN_NamedPlaceTypeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
   }
   Relation "GN_NamedPlace_inspireId" {
     profile = "attributes"
@@ -120,12 +114,6 @@ Container <<applicationSchema>>  "Geographical Names" {
     tableName = "GN_NamedPlace_relatedSpatialObject"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "GN_NamedPlace_type" {
-    profile = "attributes"
-    tableName = "GN_NamedPlace_type"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
   }
   Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
@@ -160,11 +148,11 @@ Container <<applicationSchema>>  "Geographical Names" {
   Constraint Enum "GML_UomIdentifier" {}
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"

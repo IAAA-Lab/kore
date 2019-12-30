@@ -14,6 +14,7 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     id INTEGER NOT NULL PRIMARY KEY
     name: TEXT [0..1]
     status TEXT CHECK(BASE_ConditionOfFacilityValue)
+    types TEXT
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref function: ACT_CORE_Function[1..*]
@@ -22,13 +23,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
   }
   Constraint Enum "US_EMF_EnvironmentalManagementFacilityTypeValue" {
     identifier = "Environmental Management Facilities::EnvironmentalManagementFacilityTypeValue"
-  }
-  Attributes "US_EMF_EnvironmentalManagementFacilityTypeValue" {
-    description = "Classification of environmental facilities, such as into sites and installations."
-    identifier = "Environmental Management Facilities::EnvironmentalManagementFacilityTypeValue"
-    tableName = "US_EMF_EnvironmentalManagementFacilityTypeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(US_EMF_EnvironmentalManagementFacilityTypeValue)
   }
   Relation "US_EMF_EnvironmentalManagementFacility_parentFacility" {
     profile = "attributes"
@@ -54,12 +48,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     tableName = "US_EMF_EnvironmentalManagementFacility_permission"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Permission(id)
-  }
-  Relation "US_EMF_EnvironmentalManagementFacility_type" {
-    profile = "attributes"
-    tableName = "US_EMF_EnvironmentalManagementFacility_type"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_EMF_EnvironmentalManagementFacilityTypeValue(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -117,12 +105,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Capacity(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputAmount(id)
   }
-  Relation "ACT_CORE_Capacity_activity" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Capacity_activity"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Capacity(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityValue(id)
-  }
   Relation "ACT_CORE_Permission_Id" {
     profile = "attributes"
     tableName = "ACT_CORE_Permission_Id"
@@ -146,24 +128,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     tableName = "ACT_CORE_Permission_permittedCapacity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Capacity(id)
-  }
-  Relation "ACT_CORE_Function_activity" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_activity"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityValue(id)
-  }
-  Relation "ACT_CORE_Function_input" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_input"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
-  }
-  Relation "ACT_CORE_Function_output" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_output"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
   }
   Relation "AD_AddressRepresentation_addressFeature" {
     profile = "attributes"
@@ -215,12 +179,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
-  }
-  Relation "BASE2_RelatedParty_role" {
-    profile = "attributes"
-    tableName = "BASE2_RelatedParty_role"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
   }
   Relation "AD_Address_parentAddress" {
     profile = "attributes"
@@ -337,12 +295,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
     tableName = "AU_Condominium_admUnit"
@@ -410,7 +362,10 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
     identifier = "Activity Complex::Function"
     tableName = "ACT_CORE_Function"
+    activities TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    inputs TEXT
+    outputs TEXT
   }
   Attributes "ACT_CORE_ActivityComplexDescription" {
     description = "Additional information about an activity complex, including its description, address, contact and related parties."
@@ -426,6 +381,7 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     NOTE  Capacity could refer depending of the thematic scope to different concepts included on the legislation as “emission limits”, “capacity incineration”, “livestock units”, “nominal capacity”, “objective estimation data”, “rate of desulphurization” or “recycling rate”."
     identifier = "Activity Complex::Capacity"
     tableName = "ACT_CORE_Capacity"
+    activities TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     time TEXT
     time_uom TEXT CHECK(GML_UomIdentifier)
@@ -457,8 +413,8 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     tableName = "AD_AddressRepresentation"
     addressFeature INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    locatorDesignators TEXT
     postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
   }
   Attributes "BASE2_Contact" {
     description = "Communication channels by which it is possible to gain access to someone or something."
@@ -467,8 +423,8 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref telephoneFacsimile: TEXT[0..*]
-    ref telephoneVoice: TEXT[0..*]
+    telephoneFacsimiles TEXT
+    telephoneVoices TEXT
   }
   Attributes "BASE2_RelatedParty" {
     description = "An organisation or a person with a role related to a resource.
@@ -478,6 +434,7 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     tableName = "BASE2_RelatedParty"
     contact INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    roles TEXT
   }
   Attributes "ACT_CORE_InputOutputAmount" {
     description = "Type and, where available, measurable amount of a classified or registered material that enters or leaves a technical and economical unit.
@@ -495,34 +452,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     amount_value TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inputOutput TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
-  }
-  Attributes "ACT_CORE_EconomicActivityValue" {
-    description = "Classification of economic activities."
-    identifier = "Activity Complex::EconomicActivityValue"
-    tableName = "ACT_CORE_EconomicActivityValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityValue)
-  }
-  Attributes "ACT_CORE_EconomicActivityValue" {
-    description = "Classification of economic activities."
-    identifier = "Activity Complex::EconomicActivityValue"
-    tableName = "ACT_CORE_EconomicActivityValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -565,13 +494,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     pronunciation_pronunciationIPA TEXT
     pronunciation_pronunciationSoundLink TEXT
     sourceOfName TEXT
-  }
-  Attributes "BASE2_PartyRoleValue" {
-    description = "Roles of parties related to or responsible for a resource."
-    identifier = "Base Types 2::PartyRoleValue"
-    tableName = "BASE2_PartyRoleValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
   }
   Attributes "AD_AddressLocator" {
     description = "Human readable designator or name that allows a user or application to reference and distinguish the address from neighbour addresses, within the scope of a thoroughfare name, address area name, administrative unit name or postal designator, in which the address is situated.
@@ -667,6 +589,7 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -711,13 +634,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     validFrom DATETIME
     validTo DATETIME
   }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-  }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
   
@@ -744,9 +660,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     velocity
     volume
     weight
-  }
-  Constraint Enum "ACT_CORE_EconomicActivityValue" {
-    identifier = "Activity Complex::EconomicActivityValue"
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"
@@ -780,9 +693,6 @@ Container <<applicationSchema>>  "Environmental Management Facilities" {
     dual
     plural
     singular
-  }
-  Constraint Enum "BASE2_PartyRoleValue" {
-    identifier = "Base Types 2::PartyRoleValue"
   }
   Constraint Enum "AD_LocatorLevelValue" {
     identifier = "Addresses::LocatorLevelValue"

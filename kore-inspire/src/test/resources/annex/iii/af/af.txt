@@ -1,37 +1,37 @@
 Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model" {
   Attributes "AF_Holding" {
     description = "The whole area and all infrastructures included on it, covering the same or different  "sites", under the control  of an operator to perform  agricultural or aquaculture activities.
-
+  
     The holding includes one specialisation of ActivityComplex, ie. Activity. the values of ActivityType are expressed conform the classification of the economic activity of the holding, according to the NACE rev. 2.0 coding.
-
+  
     Holding is a thematic extension of the generic Class &ldquo;Activity Complex&rdquo; shared with other thematic areas describing entities related with Economical Activities (Legal Entity Class &ndash; Business).
-
+  
     Accessible at Eurostat repository from URL
-
+  
     http://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?
-
+  
     TargetUrl=LST_CLS_DLD&amp;StrNom=NACE_REV2
-
+  
     &amp;StrLanguageCode=EN&amp;StrLayoutCode=HIERARCHIC.
-
+  
     The valid nace codes are
-
+  
     first level
-
+  
     01 and 03
-
+  
     second level
-
+  
     01.1 - 01.6  and 03.2
-
+  
     third level
-
+  
     01.11 -  01.64  and 03.21 - 03.22
-
+  
     01.7  hunting trapping an related services is exclude.
-
+  
     02.    forestry and logging are excluded
-
+  
     03.1  fishing is excluded."
     identifier = "Agricultural and Aquaculture Facilities Model::Holding"
     tableName = "AF_Holding"
@@ -48,12 +48,13 @@ Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model"
   }
   Feature "AF_Site" {
     description = "All land  at a same or distinct geographic location under the management control of a holding covering activities, products and services. This includes all infrastructure, equipment and materials. The geometry of the site  must be a point or a surface. Mulitpoint or multisurface is not allowed.
-
+  
     The  site  can be represented by a point or by a surface.
-
+  
     the site can have only one geometry."
     identifier = "Agricultural and Aquaculture Facilities Model::Site"
     tableName = "AF_Site"
+    activities TEXT NOT NULL
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     null INTEGER
@@ -68,23 +69,9 @@ Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model"
     description = "Identifies an animal or group of animals of the same species kept on the specific site."
     identifier = "Agricultural and Aquaculture Facilities Model::FarmAnimalSpecies"
     tableName = "AF_FarmAnimalSpecies"
+    aquacultures TEXT
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "AF_LivestockSpeciesValue" {
-    description = "Express the species name by using a codevalue."
-    identifier = "Agricultural and Aquaculture Facilities Model::LivestockSpeciesValue"
-    tableName = "AF_LivestockSpeciesValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AF_LivestockSpeciesValue)
-  }
-  Attributes "AF_AquacultureSpeciesValue" {
-    description = "The name of the species , coded according to the FAO ISCAAP 3 alfa code list.
-
-    ftp://ftp.fao.org/FI/STAT/DATA/ASFIS_structure.pdf"
-    identifier = "Agricultural and Aquaculture Facilities Model::AquacultureSpeciesValue"
-    tableName = "AF_AquacultureSpeciesValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AF_AquacultureSpeciesValue)
+    livestocks TEXT
   }
   Relation "AF_null_contains" {
     profile = "features"
@@ -98,24 +85,6 @@ Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model"
     tableName = "AF_Site_includesAnimal"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Site(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AF_FarmAnimalSpecies(id)
-  }
-  Relation "AF_Site_activity" {
-    profile = "attributes"
-    tableName = "AF_Site_activity"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Site(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityNACEValue(id)
-  }
-  Relation "AF_FarmAnimalSpecies_livestock" {
-    profile = "attributes"
-    tableName = "AF_FarmAnimalSpecies_livestock"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_FarmAnimalSpecies(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AF_LivestockSpeciesValue(id)
-  }
-  Relation "AF_FarmAnimalSpecies_aquaculture" {
-    profile = "attributes"
-    tableName = "AF_FarmAnimalSpecies_aquaculture"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_FarmAnimalSpecies(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AF_AquacultureSpeciesValue(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -141,31 +110,13 @@ Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model"
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "ACT_CORE_Function_activity" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_activity"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityValue(id)
-  }
-  Relation "ACT_CORE_Function_input" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_input"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
-  }
-  Relation "ACT_CORE_Function_output" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_output"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
-  }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -176,9 +127,9 @@ Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model"
   }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.
-
+  
     Some spatial objects may be assigned multiple unique identifiers.
-
+  
     These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
     identifier = "Base Types 2::ThematicIdentifier"
     tableName = "BASE2_ThematicIdentifier"
@@ -188,47 +139,13 @@ Container <<applicationSchema>>  "Agricultural and Aquaculture Facilities Model"
   }
   Attributes "ACT_CORE_Function" {
     description = "The function of something expressed as an activity and optional input and/or output.
-
+  
     NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
     identifier = "Activity Complex::Function"
     tableName = "ACT_CORE_Function"
+    activities TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "ACT_CORE_EconomicActivityNACEValue" {
-    description = "Classification of economic activities according to Eurostat NACE."
-    identifier = "Activity Complex::EconomicActivityNACEValue"
-    tableName = "ACT_CORE_EconomicActivityNACEValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityNACEValue)
-  }
-  Attributes "ACT_CORE_EconomicActivityValue" {
-    description = "Classification of economic activities."
-    identifier = "Activity Complex::EconomicActivityValue"
-    tableName = "ACT_CORE_EconomicActivityValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
-  }
-  Constraint Enum "ACT_CORE_EconomicActivityNACEValue" {
-    identifier = "Activity Complex::EconomicActivityNACEValue"
-  }
-  Constraint Enum "ACT_CORE_EconomicActivityValue" {
-    identifier = "Activity Complex::EconomicActivityValue"
-  }
-  Constraint Enum "ACT_CORE_InputOutputValue" {
-    identifier = "Activity Complex::InputOutputValue"
+    inputs TEXT
+    outputs TEXT
   }
 }

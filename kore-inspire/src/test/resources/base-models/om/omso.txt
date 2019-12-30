@@ -227,12 +227,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
   }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
   Relation "WML2_TimeseriesMetadata_extension" {
     profile = "attributes"
     tableName = "WML2_TimeseriesMetadata_extension"
@@ -350,9 +344,9 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -361,10 +355,10 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
@@ -372,16 +366,17 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "GMD_CI_Date" {
@@ -390,13 +385,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     date DATE NOT NULL
     dateType TEXT NOT NULL CHECK(GMD_CI_DateTypeCode)
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
   }
   Attributes "WML2_TimeseriesMetadata" {
     identifier = "Timeseries::TimeseriesMetadata"
@@ -423,27 +411,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     country TEXT CHECK(GMD_CountryCode)
     id INTEGER NOT NULL PRIMARY KEY
     languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
   }
   Attributes "_CVT_TimeInstantValuePair" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -563,72 +530,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     publication
     revision
   }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
-  Attributes "GMD_MD_SpatialRepresentationTypeCode" {
-    description = "Method used to represent geographic information in the dataset"
-    identifier = "Identification information::MD_SpatialRepresentationTypeCode"
-    tableName = "GMD_MD_SpatialRepresentationTypeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_SpatialRepresentationTypeCode)
-  }
-  Attributes "GMD_MD_CharacterSetCode" {
-    description = ""
-    identifier = "Identification information::MD_CharacterSetCode"
-    tableName = "GMD_MD_CharacterSetCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_CharacterSetCode)
-  }
-  Attributes "GMD_MD_TopicCategoryCode" {
-    description = "High-level geospatial data thematic classification to assist in the grouping and search of available geospatial datasets"
-    identifier = "Identification information::MD_TopicCategoryCode"
-    tableName = "GMD_MD_TopicCategoryCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_TopicCategoryCode)
-  }
-  Attributes "GMD_MD_ProgressCode" {
-    description = "Status of the dataset or progress of a review"
-    identifier = "Identification information::MD_ProgressCode"
-    tableName = "GMD_MD_ProgressCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_ProgressCode)
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
   Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
     identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
     annually
@@ -694,6 +595,40 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
   Constraint Enum "GMD_CountryCode" {
     identifier = "ISO 03166 Country Codes::CountryCode"
   }
+  Constraint Enum "CC_CV_InterpolationMethod" {
+    identifier = "Coverage Core::CV_InterpolationMethod"
+    barycentric
+    bicubic
+    bilinear
+    biquadratic
+    cubic
+    linear
+    lostarea
+    nearestneighbor
+    quadratic
+  }
+  Attributes "SWE_RealPair" {
+    asXMLList = "true"
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    identifier = "Basic Types::RealPair"
+    tableName = "SWE_RealPair"
+    id INTEGER NOT NULL PRIMARY KEY
+    items TEXT
+  }
+  Attributes "GMD_CI_OnlineResource" {
+    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
+    identifier = "Citation and responsible party information::CI_OnlineResource"
+    tableName = "GMD_CI_OnlineResource"
+    applicationProfile TEXT
+    description TEXT
+    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    name TEXT
+    protocol TEXT
+  }
   Constraint Enum "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
@@ -727,40 +662,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     software
     tile
   }
-  Constraint Enum "CC_CV_InterpolationMethod" {
-    identifier = "Coverage Core::CV_InterpolationMethod"
-    barycentric
-    bicubic
-    bilinear
-    biquadratic
-    cubic
-    linear
-    lostarea
-    nearestneighbor
-    quadratic
-  }
-  Attributes "SWE_RealPair" {
-    asXMLList = "true"
-    xsdDerivation = "true#NOTES#Values: true | false
-    Default: true
-    Description: class implemented as new type + element, or by applying constraints only
-    "
-    identifier = "Basic Types::RealPair"
-    tableName = "SWE_RealPair"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref <<property>> item: DOUBLE[2..2]
-  }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    name TEXT
-    protocol TEXT
-  }
   Constraint Enum "GML_MeasureType" {
     identifier = "Units of Measure::MeasureType"
     angle
@@ -771,37 +672,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     velocity
     volume
     weight
-  }
-  Constraint Enum "GMD_MD_SpatialRepresentationTypeCode" {
-    identifier = "Identification information::MD_SpatialRepresentationTypeCode"
-    grid
-    stereoModel
-    textTable
-    tin
-    vector
-    video
-  }
-  Constraint Enum "GMD_MD_TopicCategoryCode" {
-    identifier = "Identification information::MD_TopicCategoryCode"
-    biota
-    boundaries
-    climatologyMeteorologyAtmosphere
-    economy
-    elevation
-    environment
-    farming
-    geoscientificInformation
-    health
-    imageryBaseMapsEarthCover
-    inlandWaters
-    intelligenceMilitary
-    location
-    oceans
-    planningCadastre
-    society
-    structure
-    transportation
-    utilitiesCommunication
   }
   Constraint Enum "GMD_MD_KeywordTypeCode" {
     identifier = "Identification information::MD_KeywordTypeCode"
@@ -851,16 +721,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     task
     trial
   }
-  Constraint Enum "GMD_MD_ProgressCode" {
-    identifier = "Identification information::MD_ProgressCode"
-    completed
-    historicalArchive
-    obsolete
-    onGoing
-    planned
-    required
-    underDevelopment
-  }
   Constraint Enum "MEI_MD_ObligationCode" {
     identifier = "Metadata extension information::MD_ObligationCode"
     conditional
@@ -892,13 +752,6 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL
   }
-  Attributes "DI_MD_MediumFormatCode" {
-    description = ""
-    identifier = "Distribution information::MD_MediumFormatCode"
-    tableName = "DI_MD_MediumFormatCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(DI_MD_MediumFormatCode)
-  }
   Constraint Enum "DI_MD_MediumNameCode" {
     identifier = "Distribution information::MD_MediumNameCode"
     1quarterInchCartridgeTape
@@ -925,14 +778,5 @@ Container <<leaf>>  "Specialised Observations::Trajectory and Profile Observatio
     directExternal
     directInternal
     indirect
-  }
-  Constraint Enum "DI_MD_MediumFormatCode" {
-    identifier = "Distribution information::MD_MediumFormatCode"
-    cpio
-    highSierra
-    iso9660
-    iso9660AppleHFS
-    iso9660RockRidge
-    tar
   }
 }

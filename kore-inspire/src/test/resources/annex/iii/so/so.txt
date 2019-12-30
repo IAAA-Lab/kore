@@ -57,6 +57,7 @@ Container <<applicationSchema>>  "Soil" {
     layerGenesisEnvironment TEXT CHECK(GE_EventEnvironmentValue)
     layerGenesisProcess TEXT CHECK(GE_EventProcessValue)
     layerGenesisProcessState TEXT CHECK(SO_LayerGenesisProcessStateValue)
+    layerRockTypes TEXT
     layerType TEXT NOT NULL CHECK(SO_LayerTypeValue)
     profileElementDepthRange_lowerValue: DOUBLE [0..1]
     profileElementDepthRange_uom_formula: TEXT [0..1]
@@ -224,6 +225,7 @@ Container <<applicationSchema>>  "Soil" {
     tableName = "SO_FAOHorizonNotationType"
     FAOHorizonDiscontinuity INTEGER
     FAOHorizonMaster TEXT NOT NULL CHECK(SO_FAOHorizonMasterValue)
+    FAOHorizonSubordinates TEXT
     FAOHorizonVertical INTEGER
     FAOPrime TEXT NOT NULL CHECK(SO_FAOPrimeValue)
     id INTEGER NOT NULL PRIMARY KEY
@@ -439,6 +441,7 @@ Container <<applicationSchema>>  "Soil" {
     identifier = "Soil::WRBQualifierGroupType"
     tableName = "SO_WRBQualifierGroupType"
     WRBqualifier TEXT NOT NULL CHECK(SO_WRBQualifierValue)
+    WRBspecifiers TEXT
     id INTEGER NOT NULL PRIMARY KEY
     qualifierPlace TEXT NOT NULL CHECK(SO_WRBQualifierPlaceValue)
     qualifierPosition INTEGER NOT NULL
@@ -487,32 +490,6 @@ Container <<applicationSchema>>  "Soil" {
     ref isDescribedBy: ProfileElement[0..*] inv isPartOf
     ref otherSoilName: SO_OtherSoilNameType[0..*]
   }
-  Attributes "SO_FAOHorizonSubordinateValue" {
-    description = "A code list of designations of subordinate distinctions and features within the master horizons and layers which are based on profile characteristics observable in the field and are applied during the description of the soil at the site.
-  
-    The allowed values for this code list comprise only the values specified in <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006, pp. 67-77.
-  
-    Lower case letters are used as suffixes to designate specific kinds of master horizons and layers, and other features.
-  
-    SOURCE <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006, pp. 67-77, table 85"
-    identifier = "Soil::FAOHorizonSubordinateValue"
-    tableName = "SO_FAOHorizonSubordinateValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(SO_FAOHorizonSubordinateValue)
-  }
-  Attributes "SO_WRBSpecifierValue" {
-    genfile = "C:\temp\SpecifierValue.java"
-    genoptions = "nKill=0;nLang=1;sLang=Java;bConstructor=1;bConInline=0;sConScope=Public;bCpyConstructor=0;bCpyConInline=0;sCpyConScope=Public;bDestructor=1;bDesVirtual=1;bDesInline=0;sDesScope=Public;CHeader=.h;CBody=.cpp;JBody=.java;VBody=.cls;VBNetBody=.vb;sAssocName=m_$LinkClass;bGetSet=1;bGenInterfaces=1;JCol=Vector;CCol=[];VCol=Collection;bVMultiuse=1;bVPersist=0;bVDatabind=0;bVDatasource=0;bVGlobal=0;bVCreatable=1;bVExposed=0;sMTS=0;sCRefType=*;sCGetPrefix=Get;sCSetPrefix=Set;sJGetPrefix=get;sJSetPrefix=set;sCSGetPrefix=Get;sCSSetPrefix=Set;sVVersion=6.0;CSBody=.cs;DBody=.pas;bJInnerClasses=1;sJCollection=;sCodePage=;sPHPBody=.php;sPHPVersion=;sPHPGetPrefix=get;sPHPSetPrefix=set;ASBody=.as;PyBody=.py;CPPVersion=;ASVersion=2.0;ANSICHeader=.h;ANSICBody=.c;ANSIC_OOSupport=0;ANSIC_NSDLMT=_;ANSIC_RefParam=1;ANSIC_RefStyle=*;ANSIC_RefName=this;ANSIC_ConstructorName=new;ANSIC_DestructorName=delete;"
-    description = "list of possible specifiers. The allowed values for this code list comprise only the values specified in “World reference base for soil resources 2006, first update 2007”.
-  
-    SOURCE <i>World reference base for soil resources 2006</i>, <i>first update 2007</i>, World Soil Resources Reports No. 103, Food and Agriculture Organization of the United Nations, Rome, 2007.
-  
-    Specifiers are name elements in WRB restricting the meaning of qualifiers."
-    identifier = "Soil::WRBSpecifierValue"
-    tableName = "SO_WRBSpecifierValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(SO_WRBSpecifierValue)
-  }
   Relation "SO_SoilBody_isDescribedBy" {
     profile = "attributes"
     tableName = "SO_SoilBody_isDescribedBy"
@@ -525,12 +502,6 @@ Container <<applicationSchema>>  "Soil" {
     tableName = "SO_SoilBody_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilBody(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "SO_SoilLayer_layerRockType" {
-    profile = "attributes"
-    tableName = "SO_SoilLayer_layerRockType"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilLayer(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_LithologyValue(id)
   }
   Relation "SO_observedProfile_location" {
     profile = "features"
@@ -584,12 +555,6 @@ Container <<applicationSchema>>  "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SO_FAOHorizonNotationType_FAOHorizonSubordinate" {
-    profile = "attributes"
-    tableName = "SO_FAOHorizonNotationType_FAOHorizonSubordinate"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_FAOHorizonNotationType(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_FAOHorizonSubordinateValue(id)
-  }
   Relation "SO_SoilPlot_inspireId" {
     profile = "attributes"
     relatedReference = "SO_SoilPlot#inspireId"
@@ -630,12 +595,6 @@ Container <<applicationSchema>>  "Soil" {
     tableName = "SO_SoilSite_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "SO_WRBQualifierGroupType_WRBspecifier" {
-    profile = "attributes"
-    tableName = "SO_WRBQualifierGroupType_WRBspecifier"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_WRBQualifierGroupType(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBSpecifierValue(id)
   }
   Relation "SO_SoilHorizon_FAOHorizonNotation" {
     profile = "attributes"
@@ -703,12 +662,6 @@ Container <<applicationSchema>>  "Soil" {
     tableName = "GMD_CI_Citation_citedResponsibleParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
   Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
     profile = "attributes"
@@ -783,16 +736,7 @@ Container <<applicationSchema>>  "Soil" {
     id INTEGER NOT NULL PRIMARY KEY
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    ref startPoint: INTEGER[0..*]
-  }
-  Attributes "GE_LithologyValue" {
-    description = "Terms describing the lithology.
-  
-    EXAMPLE: granite, sandstone, schist."
-    identifier = "Geology::LithologyValue"
-    tableName = "GE_LithologyValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_LithologyValue)
+    startPoints TEXT
   }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
@@ -800,16 +744,17 @@ Container <<applicationSchema>>  "Soil" {
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "_NamedValue" {
@@ -844,20 +789,13 @@ Container <<applicationSchema>>  "Soil" {
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -866,10 +804,10 @@ Container <<applicationSchema>>  "Soil" {
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Constraint Enum "TRS_TM_IndeterminateValue" {
     identifier = "Temporal Reference System::TM_IndeterminateValue"
@@ -888,9 +826,6 @@ Container <<applicationSchema>>  "Soil" {
     boustrophedonic
     linear
     spiral
-  }
-  Constraint Enum "GE_LithologyValue" {
-    identifier = "Geology::LithologyValue"
   }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
@@ -920,23 +855,6 @@ Container <<applicationSchema>>  "Soil" {
     resourceProvider
     user
   }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
   Attributes "GMD_PT_Locale" {
     identifier = "Cultural and linguistic adapdability::PT_Locale"
     tableName = "GMD_PT_Locale"
@@ -944,27 +862,6 @@ Container <<applicationSchema>>  "Soil" {
     country TEXT CHECK(GMD_CountryCode)
     id INTEGER NOT NULL PRIMARY KEY
     languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
   }
   Constraint Enum "GMD_MD_CharacterSetCode" {
     identifier = "Identification information::MD_CharacterSetCode"
@@ -1003,34 +900,6 @@ Container <<applicationSchema>>  "Soil" {
     directExternal
     directInternal
     indirect
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
-  Attributes "GMD_MD_ProgressCode" {
-    description = "Status of the dataset or progress of a review"
-    identifier = "Identification information::MD_ProgressCode"
-    tableName = "GMD_MD_ProgressCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_ProgressCode)
   }
   Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
     identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
@@ -1097,6 +966,17 @@ Container <<applicationSchema>>  "Soil" {
   Constraint Enum "GMD_CountryCode" {
     identifier = "ISO 03166 Country Codes::CountryCode"
   }
+  Attributes "GMD_CI_OnlineResource" {
+    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
+    identifier = "Citation and responsible party information::CI_OnlineResource"
+    tableName = "GMD_CI_OnlineResource"
+    applicationProfile TEXT
+    description TEXT
+    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    name TEXT
+    protocol TEXT
+  }
   Constraint Enum "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
@@ -1129,17 +1009,6 @@ Container <<applicationSchema>>  "Soil" {
     service
     software
     tile
-  }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    name TEXT
-    protocol TEXT
   }
   Constraint Enum "MEI_MD_ObligationCode" {
     identifier = "Metadata extension information::MD_ObligationCode"
@@ -1213,23 +1082,6 @@ Container <<applicationSchema>>  "Soil" {
     task
     trial
   }
-  Constraint Enum "GMD_MD_ProgressCode" {
-    identifier = "Identification information::MD_ProgressCode"
-    completed
-    historicalArchive
-    obsolete
-    onGoing
-    planned
-    required
-    underDevelopment
-  }
-  Attributes "DI_MD_MediumFormatCode" {
-    description = ""
-    identifier = "Distribution information::MD_MediumFormatCode"
-    tableName = "DI_MD_MediumFormatCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(DI_MD_MediumFormatCode)
-  }
   Constraint Enum "DI_MD_MediumNameCode" {
     identifier = "Distribution information::MD_MediumNameCode"
     1quarterInchCartridgeTape
@@ -1256,15 +1108,6 @@ Container <<applicationSchema>>  "Soil" {
     directExternal
     directInternal
     indirect
-  }
-  Constraint Enum "DI_MD_MediumFormatCode" {
-    identifier = "Distribution information::MD_MediumFormatCode"
-    cpio
-    highSierra
-    iso9660
-    iso9660AppleHFS
-    iso9660RockRidge
-    tar
   }
   Constraint Enum "SC_CV_CommonPointRule" {
     identifier = "Segmented Curve::CV_CommonPointRule"

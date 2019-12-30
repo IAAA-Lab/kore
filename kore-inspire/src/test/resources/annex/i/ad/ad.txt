@@ -272,8 +272,8 @@ Container <<applicationSchema>>  "Addresses" {
     tableName = "AD_AddressRepresentation"
     addressFeature INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    locatorDesignators TEXT
     postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
   }
   Feature "AD_GeographicPosition" {
     description = "The position of a characteristic point which represents the location of the address according to a certain specification, including information on the origin of the position."
@@ -516,24 +516,12 @@ Container <<applicationSchema>>  "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "GN_NamedPlace_type" {
-    profile = "attributes"
-    tableName = "GN_NamedPlace_type"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
-  }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
     relatedReference = "AU_AdministrativeBoundary#inspireId"
     tableName = "AU_AdministrativeBoundary_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
   }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
@@ -648,6 +636,7 @@ Container <<applicationSchema>>  "Addresses" {
     mostDetailedViewingResolution_distance TEXT
     mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
+    types TEXT
   }
   Feature "AU_AdministrativeBoundary" {
     description = "A line of demarcation between administrative units."
@@ -660,6 +649,7 @@ Container <<applicationSchema>>  "Addresses" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -691,20 +681,6 @@ Container <<applicationSchema>>  "Addresses" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Attributes "GN_NamedPlaceTypeValue" {
-    description = "The type of a named place."
-    identifier = "Geographical Names::NamedPlaceTypeValue"
-    tableName = "GN_NamedPlaceTypeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
-  }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
@@ -933,18 +909,6 @@ Container <<applicationSchema>>  "Addresses" {
     utf16
     utf7
     utf8
-  }
-  Constraint Enum "GN_NamedPlaceTypeValue" {
-    identifier = "Geographical Names::NamedPlaceTypeValue"
-    administrativeUnit
-    building
-    hydrography
-    landcover
-    landform
-    other
-    populatedPlace
-    protectedSite
-    transportNetwork
   }
   Constraint Enum "CP_CadastralZoningLevelValue" {
     identifier = "CadastralParcels::CadastralZoningLevelValue"

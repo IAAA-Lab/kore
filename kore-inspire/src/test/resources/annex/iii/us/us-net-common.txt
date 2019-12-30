@@ -372,12 +372,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "BASE2_RelatedParty_role" {
-    profile = "attributes"
-    tableName = "BASE2_RelatedParty_role"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_PartyRoleValue(id)
-  }
   Relation "ACT_CORE_ActivityComplex_inspireId" {
     profile = "attributes"
     relatedReference = "ACT_CORE_ActivityComplex#inspireId"
@@ -472,36 +466,12 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "GN_NamedPlace_type" {
-    profile = "attributes"
-    tableName = "GN_NamedPlace_type"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_NamedPlaceTypeValue(id)
-  }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
     relatedReference = "BASE2_Contact#address"
     tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
-  }
-  Relation "ACT_CORE_Function_activity" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_activity"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_EconomicActivityValue(id)
-  }
-  Relation "ACT_CORE_Function_input" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_input"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
-  }
-  Relation "ACT_CORE_Function_output" {
-    profile = "attributes"
-    tableName = "ACT_CORE_Function_output"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputValue(id)
   }
   Relation "AD_Address_parentAddress" {
     profile = "attributes"
@@ -535,12 +505,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     tableName = "AU_AdministrativeBoundary_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
   }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
@@ -710,6 +674,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     tableName = "BASE2_RelatedParty"
     contact INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    roles TEXT
   }
   Attributes "GN_GeographicalName" {
     description = "Proper noun applied to a real world entity."
@@ -732,15 +697,8 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     address INTEGER
     electronicMailAddress TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref telephoneFacsimile: TEXT[0..*]
-    ref telephoneVoice: TEXT[0..*]
-  }
-  Attributes "BASE2_PartyRoleValue" {
-    description = "Roles of parties related to or responsible for a resource."
-    identifier = "Base Types 2::PartyRoleValue"
-    tableName = "BASE2_PartyRoleValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BASE2_PartyRoleValue)
+    telephoneFacsimiles TEXT
+    telephoneVoices TEXT
   }
   Attributes "BASE2_ThematicIdentifier" {
     description = "Thematic identifier to uniquely identify the spatial object.
@@ -760,7 +718,10 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
     identifier = "Activity Complex::Function"
     tableName = "ACT_CORE_Function"
+    activities TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    inputs TEXT
+    outputs TEXT
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
@@ -800,6 +761,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Attributes "GMD_LocalisedCharacterString" {
@@ -834,13 +796,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     mostDetailedViewingResolution_distance TEXT
     mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
-  }
-  Attributes "GN_NamedPlaceTypeValue" {
-    description = "The type of a named place."
-    identifier = "Geographical Names::NamedPlaceTypeValue"
-    tableName = "GN_NamedPlaceTypeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GN_NamedPlaceTypeValue)
+    types TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -852,29 +808,8 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     tableName = "AD_AddressRepresentation"
     addressFeature INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    locatorDesignators TEXT
     postCode TEXT
-    ref locatorDesignator: TEXT[0..*]
-  }
-  Attributes "ACT_CORE_EconomicActivityValue" {
-    description = "Classification of economic activities."
-    identifier = "Activity Complex::EconomicActivityValue"
-    tableName = "ACT_CORE_EconomicActivityValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_EconomicActivityValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
-  }
-  Attributes "ACT_CORE_InputOutputValue" {
-    description = "Classification of inputs or outputs."
-    identifier = "Activity Complex::InputOutputValue"
-    tableName = "ACT_CORE_InputOutputValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
   }
   Attributes "AD_Address" {
     description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -936,13 +871,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     method TEXT CHECK(AD_GeometryMethodValue)
     specification TEXT CHECK(AD_GeometrySpecificationValue)
-  }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
@@ -1009,7 +937,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     identifier = "Buildings2D::Building"
     tableName = "BU_CORE2D_Building"
     beginLifespanVersion: DATETIME [0..1]
-    buildingNature: TEXT [0..*]
+    buildingNatures: TEXT [0..1]
     conditionOfConstruction: TEXT [0..1]
     dateOfConstruction_anyPoint: DATETIME [0..1]
     dateOfConstruction_beginning: DATETIME [0..1]
@@ -1073,9 +1001,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     dual
     plural
     singular
-  }
-  Constraint Enum "BASE2_PartyRoleValue" {
-    identifier = "Base Types 2::PartyRoleValue"
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
@@ -1210,24 +1135,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     utf7
     utf8
   }
-  Constraint Enum "GN_NamedPlaceTypeValue" {
-    identifier = "Geographical Names::NamedPlaceTypeValue"
-    administrativeUnit
-    building
-    hydrography
-    landcover
-    landform
-    other
-    populatedPlace
-    protectedSite
-    transportNetwork
-  }
-  Constraint Enum "ACT_CORE_EconomicActivityValue" {
-    identifier = "Activity Complex::EconomicActivityValue"
-  }
-  Constraint Enum "ACT_CORE_InputOutputValue" {
-    identifier = "Activity Complex::InputOutputValue"
-  }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"
     alternative
@@ -1334,10 +1241,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
   Constraint Enum "BU_BASE_ElevationReferenceValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ElevationReferenceValue"
-  }
-  Constraint Enum "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::BuildingNatureValue"
   }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"

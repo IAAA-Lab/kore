@@ -51,7 +51,7 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     id INTEGER NOT NULL PRIMARY KEY
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    ref startPoint: INTEGER[0..*]
+    startPoints TEXT
   }
   Metadata "Unknown" {
     metadata = ""

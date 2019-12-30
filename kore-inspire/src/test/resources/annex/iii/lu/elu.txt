@@ -20,12 +20,14 @@ Container <<applicationSchema>>  "Existing Land Use" {
     dataset INTEGER
     endLifespanVersion DATETIME
     geometry MULTISURFACE NOT NULL
+    hilucsLandUses TEXT NOT NULL
     hilucsPresence_orderedList TEXT CHECK(LUNOM_HILUCSValue)
     hilucsPresence_percentageList_hilucsValue TEXT CHECK(LUNOM_HILUCSValue)
     hilucsPresence_percentageList_percentage INTEGER
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     observationDate DATE
+    specificLandUses TEXT
     specificPresence_orderedList TEXT CHECK(LUNOM_LandUseClassificationValue)
     specificPresence_percentageList_percentage INTEGER
     specificPresence_percentageList_specificValue TEXT CHECK(LUNOM_LandUseClassificationValue)
@@ -52,18 +54,6 @@ Container <<applicationSchema>>  "Existing Land Use" {
     tableName = "ELU_ExistingLandUseObject_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "ELU_ExistingLandUseObject_hilucsLandUse" {
-    profile = "attributes"
-    tableName = "ELU_ExistingLandUseObject_hilucsLandUse"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LUNOM_HILUCSValue(id)
-  }
-  Relation "ELU_ExistingLandUseObject_specificLandUse" {
-    profile = "attributes"
-    tableName = "ELU_ExistingLandUseObject_specificLandUse"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ELU_ExistingLandUseObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LUNOM_LandUseClassificationValue(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -109,25 +99,5 @@ Container <<applicationSchema>>  "Existing Land Use" {
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
     versionId TEXT
-  }
-  Attributes "LUNOM_HILUCSValue" {
-    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
-  
-    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
-  
-    The elements of the list should be both applicable to existing land use and planned land use."
-    identifier = "Land Use Nomenclature::HILUCSValue"
-    tableName = "LUNOM_HILUCSValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
-  }
-  Attributes "LUNOM_LandUseClassificationValue" {
-    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
-  
-    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
-    identifier = "Land Use Nomenclature::LandUseClassificationValue"
-    tableName = "LUNOM_LandUseClassificationValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
   }
 }

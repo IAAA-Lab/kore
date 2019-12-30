@@ -18,7 +18,7 @@ Container <<applicationSchema>>  "CadastralParcels" {
   }
   Feature "CP_CadastralBoundary" {
     description = "Part of the outline of a cadastral parcel. One cadastral boundary may be shared by two neighbouring cadastral parcels.
-
+  
     NOTE In the INSPIRE context, cadastral boundaries are to be made available by member states where absolute positional accuracy information is recorded for the cadastral boundary (attribute estimated accuracy)."
     identifier = "CadastralParcels::CadastralBoundary"
     tableName = "CP_CadastralBoundary"
@@ -54,15 +54,15 @@ Container <<applicationSchema>>  "CadastralParcels" {
   }
   Attributes "CP_BasicPropertyUnit" {
     description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
-
+  
     SOURCE Adapted from UN ECE 2004.
-
+  
     NOTE 1 In the INSPIRE context, basic property units are to be made available by member states where unique cadastral references are given only for basic property units and not for parcels.
-
+  
     NOTE 2 In many (but not all) countries, the area of the basic property unit corresponds to the cadastral parcel itself.
-
+  
     NOTE 3 Some countries, such as Finland, may also register officially basic property units without any area. These basic property units are considered out of the INSPIRE scope.
-
+  
     NOTE 4 Some countries, such as Norway, may have parcels which belong to several basic property units."
     identifier = "CadastralParcels::BasicPropertyUnit"
     tableName = "CP_BasicPropertyUnit"
@@ -179,12 +179,6 @@ Container <<applicationSchema>>  "CadastralParcels" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeBoundary_nationalLevel" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeBoundary_nationalLevel"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeHierarchyLevel(id)
-  }
   Relation "AU_Condominium_admUnit" {
     profile = "features"
     tableName = "AU_Condominium_admUnit"
@@ -214,11 +208,11 @@ Container <<applicationSchema>>  "CadastralParcels" {
   Constraint Enum "GML_UomIdentifier" {}
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -266,9 +260,9 @@ Container <<applicationSchema>>  "CadastralParcels" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"
@@ -288,6 +282,7 @@ Container <<applicationSchema>>  "CadastralParcels" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
   Feature "AU_ResidenceOfAuthority" {
@@ -298,16 +293,9 @@ Container <<applicationSchema>>  "CadastralParcels" {
     id INTEGER NOT NULL PRIMARY KEY
     name INTEGER
   }
-  Attributes "AU_AdministrativeHierarchyLevel" {
-    description = "Levels of administration in the national administrative hierarchy. This code list reflects the level in the hierarchical pyramid of the administrative structures, which is based on geometric aggregation of territories and does not necessarily describe the subordination between the related administrative authorities."
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    tableName = "AU_AdministrativeHierarchyLevel"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-  }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-
+  
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
     identifier = "AdministrativeUnits::Condominium"
     tableName = "AU_Condominium"

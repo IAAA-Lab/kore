@@ -25,7 +25,7 @@ Container <<applicationSchema>>  "Observable Properties" {
     uom_scaleToStandardUnit DOUBLE
     uom_uomName TEXT
     uom_uomSymbol TEXT
-    ref value: DOUBLE[1..*]
+    values TEXT NOT NULL
   }
   Constraint Enum "OMOP_StatisticalFunctionTypeValue" {
     identifier = "Observable Properties::StatisticalFunctionTypeValue"
@@ -64,7 +64,7 @@ Container <<applicationSchema>>  "Observable Properties" {
   GF_PropertyType <<type>>  "AbstractObservableProperty" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    ref label: TEXT[0..*]
+    labels: TEXT [0..1]
   }
   Attributes "OMOP_RangeBounds" {
     description = "The start and end bounding values of a numerical range (e.g. start &gt;=50, end &lt;=99)"
@@ -88,13 +88,13 @@ Container <<applicationSchema>>  "Observable Properties" {
     constrainedProperty TEXT CHECK(OMOP_PhenomenonTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
     label TEXT
-    ref value: TEXT[1..*]
+    values TEXT NOT NULL
   }
   Class <<type>>  "CompositeObservableProperty" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     count: INTEGER
-    ref label: TEXT[0..*]
+    labels: TEXT [0..1]
   }
   Attributes "OMOP_OtherConstraint" {
     description = "A constraint, not modelled in a structured way, but may be described using the freetext 'description' attribute."
@@ -130,6 +130,7 @@ Container <<applicationSchema>>  "Observable Properties" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     basePhenomenon: TEXT
+    labels: TEXT [0..1]
     uom_formula: TEXT [0..1]
     uom_measureType: TEXT [0..1]
     uom_nameStandardUnit: TEXT [0..1]
@@ -137,7 +138,6 @@ Container <<applicationSchema>>  "Observable Properties" {
     uom_scaleToStandardUnit: DOUBLE [0..1]
     uom_uomName: TEXT [0..1]
     uom_uomSymbol: TEXT [0..1]
-    ref label: TEXT[0..*]
   }
   Relation "OMOP_RangeConstraint_value" {
     profile = "attributes"

@@ -57,8 +57,8 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    ref mineralDepositGroup: MR_CORE_MineralDepositGroupValue[1..*]
-    ref mineralDepositType: MR_CORE_MineralDepositTypeValue[0..*]
+    mineralDepositGroups: TEXT
+    mineralDepositTypes: TEXT [0..1]
   }
   Constraint Enum "MR_CORE_ResourceCategoryValue" {
     identifier = "MineralResources::ResourceCategoryValue"
@@ -177,6 +177,7 @@ Container <<applicationSchema>>  "MineralResources" {
     identifier = "MineralResources::ExplorationActivity"
     tableName = "MR_CORE_ExplorationActivity"
     activityType TEXT NOT NULL CHECK(MR_CORE_ExplorationActivityTypeValue)
+    explorationResults TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }
   Attributes "MR_CORE_Reserve" {
@@ -404,6 +405,7 @@ Container <<applicationSchema>>  "MineralResources" {
     tableName = "MR_CORE_MineralOccurrence"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanversion: DATETIME [0..1]
+    endusePotentials TEXT
     id INTEGER NOT NULL PRIMARY KEY
     name: TEXT [0..1]
     type TEXT NOT NULL CHECK(MR_CORE_MineralOccurrenceTypeValue)
@@ -460,44 +462,6 @@ Container <<applicationSchema>>  "MineralResources" {
   Constraint Enum "MR_CORE_ReserveCategoryValue" {
     identifier = "MineralResources::ReserveCategoryValue"
   }
-  Attributes "MR_CORE_MineralDepositGroupValue" {
-    description = "Values indicating the grouping of mineral deposits on the basis of their generic characteristics.
-  
-    EXAMPLE: host rock, host structure, commodity, association with similar mineral processes e.g. porphyry."
-    identifier = "MineralResources::MineralDepositGroupValue"
-    tableName = "MR_CORE_MineralDepositGroupValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MR_CORE_MineralDepositGroupValue)
-  }
-  Attributes "MR_CORE_MineralDepositTypeValue" {
-    description = "Values indicating the style of mineral occurrence or deposit.
-  
-    Generally a local or regional term. Should be referenced for definitions and descriptions. Single deposit terms may form member of a Mineral Deposit Group in local and regional schemas."
-    identifier = "MineralResources::MineralDepositTypeValue"
-    tableName = "MR_CORE_MineralDepositTypeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MR_CORE_MineralDepositTypeValue)
-  }
-  Attributes "MR_CORE_ExplorationResultValue" {
-    description = "Values indicating the result of the exploration activity."
-    identifier = "MineralResources::ExplorationResultValue"
-    tableName = "MR_CORE_ExplorationResultValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MR_CORE_ExplorationResultValue)
-  }
-  Attributes "MR_CORE_EndusePotentialValue" {
-    description = "Values indicating the end-use potential of the mineral.
-  
-    <font color="#211d1e">EXAMPLE: </font>for energy, fertilizer, building raw material etc.
-  
-    <font color="#211d1e">
-  
-    </font>"
-    identifier = "MineralResources::EndusePotentialValue"
-    tableName = "MR_CORE_EndusePotentialValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MR_CORE_EndusePotentialValue)
-  }
   Relation "MR_CORE_MiningActivity_associatedMine" {
     profile = "attributes"
     relatedReference = "MR_CORE_MiningActivity#associatedMine"
@@ -510,12 +474,6 @@ Container <<applicationSchema>>  "MineralResources" {
     tableName = "MR_CORE_CommodityMeasure_commodityOfInterest"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_CommodityMeasure(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Commodity(id)
-  }
-  Relation "MR_CORE_ExplorationActivity_explorationResult" {
-    profile = "attributes"
-    tableName = "MR_CORE_ExplorationActivity_explorationResult"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_ExplorationActivity(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_ExplorationResultValue(id)
   }
   Relation "MR_CORE_Mine_relatedActivity" {
     profile = "attributes"
@@ -534,12 +492,6 @@ Container <<applicationSchema>>  "MineralResources" {
     tableName = "MR_CORE_Mine_mineName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_Mine(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_MineName(id)
-  }
-  Relation "MR_CORE_MineralOccurrence_endusePotential" {
-    profile = "attributes"
-    tableName = "MR_CORE_MineralOccurrence_endusePotential"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MineralOccurrence(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_EndusePotentialValue(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -565,12 +517,6 @@ Container <<applicationSchema>>  "MineralResources" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GE_GeologicEvent_eventProcess" {
-    profile = "attributes"
-    tableName = "GE_GeologicEvent_eventProcess"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicEvent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_EventProcessValue(id)
-  }
   Relation "GMD_CI_Citation_date" {
     profile = "attributes"
     tableName = "GMD_CI_Citation_date"
@@ -582,12 +528,6 @@ Container <<applicationSchema>>  "MineralResources" {
     tableName = "GMD_CI_Citation_citedResponsibleParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
-  }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
   }
   Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
     profile = "attributes"
@@ -669,6 +609,7 @@ Container <<applicationSchema>>  "MineralResources" {
     identifier = "Geology::GeologicEvent"
     tableName = "GE_GeologicEvent"
     eventEnvironment TEXT CHECK(GE_EventEnvironmentValue)
+    eventProcesses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     name TEXT
     olderNamedAge TEXT CHECK(GE_GeochronologicEraValue)
@@ -684,31 +625,23 @@ Container <<applicationSchema>>  "MineralResources" {
     themeClass TEXT NOT NULL CHECK(GE_ThematicClassValue)
     themeClassification TEXT NOT NULL CHECK(GE_ThematicClassificationValue)
   }
-  Attributes "GE_EventProcessValue" {
-    description = "Terms specifying the process or processes that occurred during an event.
-  
-    EXAMPLE: deposition, extrusion, intrusion, cooling."
-    identifier = "Geology::EventProcessValue"
-    tableName = "GE_EventProcessValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_EventProcessValue)
-  }
   Attributes "GMD_CI_Citation" {
     description = "Standardized resource reference"
     identifier = "Citation and responsible party information::CI_Citation"
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "GMD_CI_Date" {
@@ -737,20 +670,13 @@ Container <<applicationSchema>>  "MineralResources" {
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -759,10 +685,10 @@ Container <<applicationSchema>>  "MineralResources" {
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Attributes "SWE_RealPair" {
     asXMLList = "true"
@@ -773,7 +699,7 @@ Container <<applicationSchema>>  "MineralResources" {
     identifier = "Basic Types::RealPair"
     tableName = "SWE_RealPair"
     id INTEGER NOT NULL PRIMARY KEY
-    ref <<property>> item: DOUBLE[2..2]
+    items TEXT
   }
   Attributes "CGU_CGI_Term" {
     identifier = "CGI_Value::CGI_Term"
@@ -831,9 +757,6 @@ Container <<applicationSchema>>  "MineralResources" {
   Constraint Enum "GE_ThematicClassValue" {
     identifier = "Geology::ThematicClassValue"
   }
-  Constraint Enum "GE_EventProcessValue" {
-    identifier = "Geology::EventProcessValue"
-  }
   Constraint Enum "GMD_CI_OnLineFunctionCode" {
     identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
     download
@@ -855,23 +778,6 @@ Container <<applicationSchema>>  "MineralResources" {
     publisher
     resourceProvider
     user
-  }
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
   }
   Attributes "SWE_NilValue" {
     xsdDerivation = "false"

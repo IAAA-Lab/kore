@@ -12,9 +12,9 @@ Container <<applicationSchema>>  "Land Use Nomenclature" {
   }
   Attributes "LUNOM_HILUCSPercentage" {
     description = "Percentage of land use object that is covered by this HILUCS presence.
-
+  
     NOTE1:The percentage is according to the socio-economic or functional importance of the use.
-
+  
     NOTE2:examples are provided in the narrative description part of the data specification."
     identifier = "Land Use Nomenclature::HILUCSPercentage"
     tableName = "LUNOM_HILUCSPercentage"
@@ -26,32 +26,12 @@ Container <<applicationSchema>>  "Land Use Nomenclature" {
     identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
   Class <<union>>  "HILUCSPresence" {
-    ref orderedList: LUNOM_HILUCSValue[1..*]
+    orderedLists: TEXT
     ref percentageList: LUNOM_HILUCSPercentage[1..*]
   }
   Class <<union>>  "SpecificPresence" {
-    ref orderedList: LUNOM_LandUseClassificationValue[1..*]
+    orderedLists: TEXT
     ref percentageList: LUNOM_SpecificPercentage[1..*]
-  }
-  Attributes "LUNOM_HILUCSValue" {
-    description = "List of land use categories to be used in INSPIRE Land Use and agreed at the European level.
-
-    This list is populated with the land use categories of the Hierarchical INSPIRE Land Use Classification System (HILUCS).
-
-    The elements of the list should be both applicable to existing land use and planned land use."
-    identifier = "Land Use Nomenclature::HILUCSValue"
-    tableName = "LUNOM_HILUCSValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
-  }
-  Attributes "LUNOM_LandUseClassificationValue" {
-    description = "List of land use categories to be used in INSPIRE Land Use and agreed at a national or local level.
-
-    This CodeList is empty in the INSPIRE context and must be extended by each data provider in their national codeList register."
-    identifier = "Land Use Nomenclature::LandUseClassificationValue"
-    tableName = "LUNOM_LandUseClassificationValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
   }
   Metadata "Unknown" {
     metadata = ""

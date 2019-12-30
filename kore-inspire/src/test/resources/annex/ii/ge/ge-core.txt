@@ -92,6 +92,7 @@ Container <<applicationSchema>>  "Geology" {
     identifier = "Geology::GeologicEvent"
     tableName = "GE_GeologicEvent"
     eventEnvironment TEXT CHECK(GE_EventEnvironmentValue)
+    eventProcesses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     name TEXT
     olderNamedAge TEXT CHECK(GE_GeochronologicEraValue)
@@ -178,8 +179,8 @@ Container <<applicationSchema>>  "Geology" {
     elevation_coordinate
     elevation_dimension: INTEGER
     location: POINT
+    purposes: TEXT [0..1]
     ref inspireId: BASE_Identifier
-    ref purpose: GE_BoreholePurposeValue[0..*]
   }
   Attributes "GE_ThematicClass" {
     description = "A generic thematic classifier to enable the reclassification of Geologic Features with user defined classes appropriate to thematic maps.
@@ -191,35 +192,11 @@ Container <<applicationSchema>>  "Geology" {
     themeClass TEXT NOT NULL CHECK(GE_ThematicClassValue)
     themeClassification TEXT NOT NULL CHECK(GE_ThematicClassificationValue)
   }
-  Attributes "GE_EventProcessValue" {
-    description = "Terms specifying the process or processes that occurred during an event.
-  
-    EXAMPLE: deposition, extrusion, intrusion, cooling."
-    identifier = "Geology::EventProcessValue"
-    tableName = "GE_EventProcessValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_EventProcessValue)
-  }
-  Attributes "GE_BoreholePurposeValue" {
-    description = "Purposes for which a borehole was drilled.
-  
-    EXAMPLE: mineral exploration, water pumping, site evaluation, stratigraphic research, etc."
-    identifier = "Geology::BoreholePurposeValue"
-    tableName = "GE_BoreholePurposeValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GE_BoreholePurposeValue)
-  }
   Relation "GE_GeologicUnit_composition" {
     profile = "attributes"
     tableName = "GE_GeologicUnit_composition"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_CompositionPart(id)
-  }
-  Relation "GE_GeologicEvent_eventProcess" {
-    profile = "attributes"
-    tableName = "GE_GeologicEvent_eventProcess"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicEvent(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_EventProcessValue(id)
   }
   Relation "GE_GeologicCollection_mapMember" {
     profile = "features"
@@ -282,12 +259,6 @@ Container <<applicationSchema>>  "Geology" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_ResponsibleParty(id)
   }
-  Relation "GMD_CI_Citation_presentationForm" {
-    profile = "attributes"
-    tableName = "GMD_CI_Citation_presentationForm"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_Citation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_PresentationFormCode(id)
-  }
   Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
     profile = "attributes"
     relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
@@ -349,16 +320,17 @@ Container <<applicationSchema>>  "Geology" {
     tableName = "GMD_CI_Citation"
     ISBN TEXT
     ISSN TEXT
+    alternateTitles TEXT
     collectiveTitle TEXT
     edition TEXT
     editionDate DATE
     id INTEGER NOT NULL PRIMARY KEY
     otherCitationDetails TEXT
+    presentationForms TEXT
     series_issueIdentification TEXT
     series_name TEXT
     series_page TEXT
     title TEXT NOT NULL
-    ref alternateTitle: TEXT[0..*]
     ref identifier: MD_Identifier[0..*]
   }
   Attributes "GMD_CI_Date" {
@@ -387,20 +359,13 @@ Container <<applicationSchema>>  "Geology" {
     positionName TEXT
     role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
   }
-  Attributes "GMD_CI_PresentationFormCode" {
-    description = "Mode in which the data is represented"
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    tableName = "GMD_CI_PresentationFormCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_CI_PresentationFormCode)
-  }
   Attributes "GMD_CI_Telephone" {
     description = "Telephone numbers for contacting the responsible individual or organisation"
     identifier = "Citation and responsible party information::CI_Telephone"
     tableName = "GMD_CI_Telephone"
+    facsimiles TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    ref facsimile: TEXT[0..*]
-    ref voice: TEXT[0..*]
+    voices TEXT
   }
   Attributes "GMD_CI_Address" {
     description = "Location of the responsible individual or organisation"
@@ -409,10 +374,10 @@ Container <<applicationSchema>>  "Geology" {
     administrativeArea TEXT
     city TEXT
     country TEXT
+    deliveryPoints TEXT
+    electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-    ref deliveryPoint: TEXT[0..*]
-    ref electronicMailAddress: TEXT[0..*]
   }
   Attributes "SWE_RealPair" {
     asXMLList = "true"
@@ -423,7 +388,7 @@ Container <<applicationSchema>>  "Geology" {
     identifier = "Basic Types::RealPair"
     tableName = "SWE_RealPair"
     id INTEGER NOT NULL PRIMARY KEY
-    ref <<property>> item: DOUBLE[2..2]
+    items TEXT
   }
   Constraint Enum "GMD_CI_DateTypeCode" {
     identifier = "Citation and responsible party information::CI_DateTypeCode"
@@ -473,23 +438,6 @@ Container <<applicationSchema>>  "Geology" {
     unknow
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "GMD_CI_PresentationFormCode" {
-    identifier = "Citation and responsible party information::CI_PresentationFormCode"
-    documentDigital
-    documentHardcopy
-    imageDigital
-    imageHardcopy
-    mapDigital
-    mapHardcopy
-    modelDigital
-    modelHardcopy
-    profileDigital
-    profileHardcopy
-    tableDigital
-    tableHardcopy
-    videoDigital
-    videoHardcopy
-  }
   Attributes "SWE_NilValue" {
     xsdDerivation = "false"
     identifier = "Basic Types::NilValue"
@@ -504,27 +452,6 @@ Container <<applicationSchema>>  "Geology" {
     country TEXT CHECK(GMD_CountryCode)
     id INTEGER NOT NULL PRIMARY KEY
     languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
   }
   Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
     identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
@@ -563,34 +490,6 @@ Container <<applicationSchema>>  "Geology" {
     utf16
     utf7
     utf8
-  }
-  Attributes "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    description = "Class of information to which the referencing entity applies."
-    identifier = "Maintenance information::MD_ScopeCode"
-    tableName = "MI_MD_ScopeCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(MI_MD_ScopeCode)
-  }
-  Attributes "GMD_MD_ProgressCode" {
-    description = "Status of the dataset or progress of a review"
-    identifier = "Identification information::MD_ProgressCode"
-    tableName = "GMD_MD_ProgressCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(GMD_MD_ProgressCode)
   }
   Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
     identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
@@ -657,6 +556,17 @@ Container <<applicationSchema>>  "Geology" {
   Constraint Enum "GMD_CountryCode" {
     identifier = "ISO 03166 Country Codes::CountryCode"
   }
+  Attributes "GMD_CI_OnlineResource" {
+    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
+    identifier = "Citation and responsible party information::CI_OnlineResource"
+    tableName = "GMD_CI_OnlineResource"
+    applicationProfile TEXT
+    description TEXT
+    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    name TEXT
+    protocol TEXT
+  }
   Constraint Enum "MI_MD_ScopeCode" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
@@ -689,17 +599,6 @@ Container <<applicationSchema>>  "Geology" {
     service
     software
     tile
-  }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    name TEXT
-    protocol TEXT
   }
   Constraint Enum "MEI_MD_ObligationCode" {
     identifier = "Metadata extension information::MD_ObligationCode"
@@ -773,23 +672,6 @@ Container <<applicationSchema>>  "Geology" {
     task
     trial
   }
-  Constraint Enum "GMD_MD_ProgressCode" {
-    identifier = "Identification information::MD_ProgressCode"
-    completed
-    historicalArchive
-    obsolete
-    onGoing
-    planned
-    required
-    underDevelopment
-  }
-  Attributes "DI_MD_MediumFormatCode" {
-    description = ""
-    identifier = "Distribution information::MD_MediumFormatCode"
-    tableName = "DI_MD_MediumFormatCode"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(DI_MD_MediumFormatCode)
-  }
   Constraint Enum "DI_MD_MediumNameCode" {
     identifier = "Distribution information::MD_MediumNameCode"
     1quarterInchCartridgeTape
@@ -825,14 +707,5 @@ Container <<applicationSchema>>  "Geology" {
     directExternal
     directInternal
     indirect
-  }
-  Constraint Enum "DI_MD_MediumFormatCode" {
-    identifier = "Distribution information::MD_MediumFormatCode"
-    cpio
-    highSierra
-    iso9660
-    iso9660AppleHFS
-    iso9660RockRidge
-    tar
   }
 }

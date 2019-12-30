@@ -14,6 +14,7 @@ dependencies {
         exclude("org.jetbrains.kotlin")
         exclude("org.jetbrains.spek")
     }
+    implementation(Libs.evo)
 
     testImplementation(Libs.unitJupiterApi)
     testRuntimeOnly(Libs.unitJupiterEngine)

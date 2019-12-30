@@ -6,6 +6,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
   Class "AbstractBuilding" {
     Governance = "<<missing>>"
     beginLifespanVersion: DATETIME [0..1]
+    buildingNatures: TEXT [0..1]
     conditionOfConstruction: TEXT [0..1]
     dateOfConstruction_anyPoint: DATETIME [0..1]
     dateOfConstruction_beginning: DATETIME [0..1]
@@ -20,7 +21,6 @@ Container <<applicationSchema>>  "BuildingsBase" {
     numberOfBuildingUnits: INTEGER [0..1]
     numberOfDwellings: INTEGER [0..1]
     numberOfFloorsAboveGround: INTEGER [0..1]
-    ref buildingNature: BU_BASE_BuildingNatureValue[0..*]
     ref currentUse: BU_BASE_CurrentUse[0..*]
     ref elevation: BU_BASE_Elevation[0..*]
     ref externalReference: BU_BASE_ExternalReference[0..*]
@@ -34,6 +34,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
   }
   Class "Building" {
     beginLifespanVersion: DATETIME [0..1]
+    buildingNatures: TEXT [0..1]
     conditionOfConstruction: TEXT [0..1]
     dateOfConstruction_anyPoint: DATETIME [0..1]
     dateOfConstruction_beginning: DATETIME [0..1]
@@ -48,7 +49,6 @@ Container <<applicationSchema>>  "BuildingsBase" {
     numberOfBuildingUnits: INTEGER [0..1]
     numberOfDwellings: INTEGER [0..1]
     numberOfFloorsAboveGround: INTEGER [0..1]
-    ref buildingNature: BU_BASE_BuildingNatureValue[0..*]
     ref currentUse: BU_BASE_CurrentUse[0..*]
     ref elevation: BU_BASE_Elevation[0..*]
     ref externalReference: BU_BASE_ExternalReference[0..*]
@@ -62,6 +62,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
   }
   Class "BuildingPart" {
     beginLifespanVersion: DATETIME [0..1]
+    buildingNatures: TEXT [0..1]
     conditionOfConstruction: TEXT [0..1]
     dateOfConstruction_anyPoint: DATETIME [0..1]
     dateOfConstruction_beginning: DATETIME [0..1]
@@ -76,7 +77,6 @@ Container <<applicationSchema>>  "BuildingsBase" {
     numberOfBuildingUnits: INTEGER [0..1]
     numberOfDwellings: INTEGER [0..1]
     numberOfFloorsAboveGround: INTEGER [0..1]
-    ref buildingNature: BU_BASE_BuildingNatureValue[0..*]
     ref currentUse: BU_BASE_CurrentUse[0..*]
     ref elevation: BU_BASE_Elevation[0..*]
     ref externalReference: BU_BASE_ExternalReference[0..*]
@@ -174,20 +174,6 @@ Container <<applicationSchema>>  "BuildingsBase" {
     status TEXT CHECK(BU_BASE_HeightStatusValue)
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
-  Attributes "BU_BASE_BuildingNatureValue" {
-    obligation = "implementingRule"
-    description = "Values indicating the nature of a building.
-  
-    NOTE 1 : This code list does not aim to be exhaustive as the attribute buildingNature addresses only noticeable buildings.
-  
-    NOTE 2: The values included in this code list address mainly (but not only) two international use cases: air flights where buildings may be obstacles and marine navigation where buildings may be landmarks.
-  
-    NOTE 3: This code list should only be applied for buildings, even if it may be applicable to other constructions (for example, not all dams are buildings)."
-    identifier = "BuildingsBase::BuildingNatureValue"
-    tableName = "BU_BASE_BuildingNatureValue"
-    id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL CHECK(BU_BASE_BuildingNatureValue)
   }
   Metadata "Unknown" {
     metadata = ""
