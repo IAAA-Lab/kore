@@ -107,7 +107,7 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     profile = "attributes"
     tableName = "SU_VECTOR_VectorStatisticalUnit_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "SU_VECTOR_StatisticalTessellation_lower" {
     profile = "attributes"
@@ -190,12 +190,6 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Relation "AU_admUnit_boundary" {
     profile = "features"
     tableName = "AU_admUnit_boundary"
@@ -226,7 +220,7 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -264,14 +258,7 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AU_ResidenceOfAuthority_name" {
-    profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
@@ -333,19 +320,11 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     identifier TEXT NOT NULL
     identifierScheme TEXT NOT NULL
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Feature "AU_AdministrativeUnit" {
     description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
@@ -360,19 +339,6 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     nationalCode TEXT NOT NULL
     nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
     upperLevelUnit INTEGER
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
   }
   Feature "AU_AdministrativeBoundary" {
     description = "A line of demarcation between administrative units."
@@ -403,7 +369,8 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
@@ -416,31 +383,6 @@ Container <<applicationSchema>>  "Statistical Units Vector" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "AU_AdministrativeHierarchyLevel" {
     identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"

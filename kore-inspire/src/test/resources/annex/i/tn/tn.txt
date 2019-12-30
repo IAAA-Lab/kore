@@ -2,10 +2,11 @@ Container <<applicationSchema>>  "Common Transport Elements" {
   Class "TransportArea" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     geometry: SURFACE
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
   }
@@ -77,9 +78,10 @@ Container <<applicationSchema>>  "Common Transport Elements" {
   Class "TransportLinkSequence" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref link: NET_DirectedLink[1..*]
@@ -124,13 +126,14 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     tableName = "TN_MarkerPost"
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     geometry: POINT
     id INTEGER NOT NULL PRIMARY KEY
     location TEXT NOT NULL
     location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref route: TransportLinkSet[0..1] inv post[0..*]
@@ -138,19 +141,21 @@ Container <<applicationSchema>>  "Common Transport Elements" {
   Class "TransportPoint" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     geometry: POINT
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
   }
   Class "TransportLinkSet" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref post: TN_MarkerPost[0..*] inv route[0..1]
@@ -158,10 +163,11 @@ Container <<applicationSchema>>  "Common Transport Elements" {
   Class "TransportNode" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     geometry: POINT
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref spokeEnd: Link[0..*] inv endNode[0..1]
@@ -203,10 +209,11 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     centrelineGeometry: CURVE
     endLifespanVersion: DATETIME [0..1]
     fictitious: BOOLEAN
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref endNode: Node[0..1] inv spokeEnd[0..*]
-    ref geographicalName: GN_GeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref startNode: Node[0..1] inv spokeStart[0..*]
@@ -233,7 +240,8 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     ref elements: NetworkElement[0..*] inv inNetwork[0..*]
   }
   Class "TransportObject" {
-    ref geographicalName: GN_GeographicalName[0..1]
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT [0..1]
   }
   Relation "TN_TransportNetwork_inspireId" {
     profile = "attributes"
@@ -270,13 +278,7 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "NET_NetworkReference_involves" {
     profile = "attributes"
@@ -311,13 +313,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
-  Relation "HH_SA_Event_locationUnit_geographicalName" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#locationUnit_geographicalName"
-    tableName = "HH_SA_Event_locationUnit_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
   Relation "AU_admUnit_boundary" {
     profile = "features"
     tableName = "AU_admUnit_boundary"
@@ -348,7 +343,7 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -393,14 +388,7 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AU_ResidenceOfAuthority_name" {
-    profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "BASE_VerticalPositionValue" {
     identifier = "Base Types::VerticalPositionValue"
@@ -428,20 +416,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     inOppositeDirection
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
-  }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
   
@@ -479,18 +453,11 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
+    language TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "HH_SA_TrafficRelatedEvent" {
     description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
@@ -506,7 +473,8 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
@@ -526,7 +494,8 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
@@ -589,7 +558,8 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Attributes "HH_SA_EventConsequence" {
     description = "The harm an event caused for humans, propriety."
@@ -611,31 +581,6 @@ Container <<applicationSchema>>  "Common Transport Elements" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "GML_Sign" {
     identifier = "basicTypes::Sign"

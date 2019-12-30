@@ -33,6 +33,7 @@ val transformation = { options: Map<String, Any> ->
         transformation {
             manipulation(`Before rules`)
             rule(`Simple Citation`)
+            rule(`Simple Geographical Name`)
             rule(`ISO 19103 - Basic types`)
             rule(`ISO 19107 - Geometry types`)
             rule(`ISO 19115 - Basic types`)

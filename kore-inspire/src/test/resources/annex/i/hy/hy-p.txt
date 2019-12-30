@@ -14,7 +14,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "HY_P_WidthRange" {
@@ -34,7 +34,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -53,7 +53,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
     type TEXT CHECK(HY_P_CrossingTypeValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -71,7 +71,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -93,7 +93,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -112,7 +112,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     persistence: TEXT [0..1]
     tidal: BOOLEAN [0..1]
     ref drainsBasin: HY_P_DrainageBasin[0..*] inv outlet[0..*]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -165,7 +165,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     width_upper TEXT NOT NULL
     width_upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     ref drainsBasin: HY_P_DrainageBasin[0..*] inv outlet[0..*]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -197,7 +197,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     origin TEXT CHECK(HY_P_OriginValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref outlet: SurfaceWater[0..*] inv drainsBasin[0..*]
   }
@@ -221,7 +221,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     localType_languageCode TEXT CHECK(GMD_LanguageCode)
     localType_text TEXT
     tidal BOOLEAN
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "HY_P_Sluice" {
@@ -238,7 +238,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -256,7 +256,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -267,7 +267,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -279,7 +279,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -301,7 +301,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -318,7 +318,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -363,7 +363,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     surfaceArea_uom TEXT CHECK(GML_UomIdentifier)
     tidal: BOOLEAN [0..1]
     ref drainsBasin: HY_P_DrainageBasin[0..*] inv outlet[0..*]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -424,7 +424,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -442,7 +442,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     levelOfDetail_distance: TEXT [0..1]
     levelOfDetail_distance_uom: TEXT [0..1]
     levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
   }
@@ -478,7 +478,7 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     origin TEXT CHECK(HY_P_OriginValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref outlet: SurfaceWater[0..*] inv drainsBasin[0..*]
   }
@@ -546,12 +546,6 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     mimeType = "text/xml"
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "BASE_ConditionOfFacilityValue" {
@@ -650,19 +644,11 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     suspendedOrElevated
     underground
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "HY_HydroIdentifier" {
     description = "A hydrographic thematic identifier.
@@ -689,43 +675,5 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
     versionId TEXT
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
 }

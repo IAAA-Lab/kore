@@ -16,7 +16,8 @@ Container <<applicationSchema>>  "Safety" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
@@ -32,8 +33,9 @@ Container <<applicationSchema>>  "Safety" {
   }
   Class <<union>>  "LocationUnitType" {
     administrativeUnit: AU_AdministrativeUnit
+    geographicalName_language: TEXT [0..1]
+    geographicalName_spelling_text: TEXT
     geometry: GEOMETRY
-    ref geographicalName: GN_GeographicalName
   }
   Constraint Enum "HH_SA_HazardousMaterialTypeValue" {
     identifier = "Safety::HazardousMaterialTypeValue"
@@ -52,7 +54,8 @@ Container <<applicationSchema>>  "Safety" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
@@ -71,7 +74,8 @@ Container <<applicationSchema>>  "Safety" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     naturalHazardType TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     startTime DATETIME NOT NULL
@@ -103,7 +107,8 @@ Container <<applicationSchema>>  "Safety" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
@@ -124,7 +129,8 @@ Container <<applicationSchema>>  "Safety" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
@@ -169,13 +175,6 @@ Container <<applicationSchema>>  "Safety" {
     tableName = "HH_SA_Event_sourceReference"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
-  }
-  Relation "HH_SA_Event_locationUnit_geographicalName" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#locationUnit_geographicalName"
-    tableName = "HH_SA_Event_locationUnit_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Relation "HH_SA_EventConsequence_event" {
     profile = "features"
@@ -244,7 +243,7 @@ Container <<applicationSchema>>  "Safety" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -257,12 +256,6 @@ Container <<applicationSchema>>  "Safety" {
     tableName = "AU_AdministrativeUnit_residenceOfAuthority"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
-  }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
@@ -288,20 +281,13 @@ Container <<applicationSchema>>  "Safety" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AU_ResidenceOfAuthority_name" {
-    profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "NZ_CORE_NaturalHazardCategoryValue" {
     obligation = "implementingRule"
@@ -320,20 +306,6 @@ Container <<applicationSchema>>  "Safety" {
     nationalCode TEXT NOT NULL
     nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
     upperLevelUnit INTEGER
-  }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
@@ -379,6 +351,12 @@ Container <<applicationSchema>>  "Safety" {
     nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
   Attributes "GMD_LocalisedCharacterString" {
     identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
     tableName = "GMD_LocalisedCharacterString"
@@ -394,20 +372,8 @@ Container <<applicationSchema>>  "Safety" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Feature "AU_Condominium" {
     description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
@@ -470,31 +436,6 @@ Container <<applicationSchema>>  "Safety" {
     4thOrder
     5thOrder
     6thOrder
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "BASE2_SimpleCitationType" {
     CI_Citation

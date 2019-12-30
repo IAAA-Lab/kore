@@ -8,7 +8,7 @@ Container <<applicationSchema>>  "Hydro - Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
@@ -33,7 +33,7 @@ Container <<applicationSchema>>  "Hydro - Network" {
     geometry: POINT
     hydroNodeCategory TEXT CHECK(HY_N_HydroNodeCategoryValue)
     id INTEGER NOT NULL PRIMARY KEY
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
@@ -65,7 +65,7 @@ Container <<applicationSchema>>  "Hydro - Network" {
     length TEXT
     length_uom TEXT CHECK(GML_UomIdentifier)
     ref endNode: Node[0..1] inv spokeEnd[0..*]
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
@@ -79,7 +79,7 @@ Container <<applicationSchema>>  "Hydro - Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
@@ -110,17 +110,11 @@ Container <<applicationSchema>>  "Hydro - Network" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "NET_LinkDirectionValue" {
     identifier = "Network::LinkDirectionValue"
@@ -129,19 +123,11 @@ Container <<applicationSchema>>  "Hydro - Network" {
     inOppositeDirection
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "HY_HydroIdentifier" {
     description = "A hydrographic thematic identifier.
@@ -184,44 +170,6 @@ Container <<applicationSchema>>  "Hydro - Network" {
     tableName = "NET_DirectedLink"
     direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "GML_Sign" {
     identifier = "basicTypes::Sign"

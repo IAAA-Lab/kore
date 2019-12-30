@@ -138,7 +138,7 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     profile = "attributes"
     tableName = "MU_MaritimeZone_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -194,12 +194,6 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     tableName = "SR_SeaArea_extent"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
-  }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Constraint Enum "AU_LegalStatusValue" {
     identifier = "AdministrativeUnits::LegalStatusValue"
@@ -264,7 +258,7 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     tableName = "SR_Shoreline"
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "SR_SeaArea" {
@@ -280,7 +274,7 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Feature "SR_Sea" {
@@ -296,22 +290,14 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Feature "SR_ShoreSegment" {
     description = "A Shore Segment is a section of shore line.
@@ -342,19 +328,6 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
   }
   Attributes "HY_HydroIdentifier" {
     description = "A hydrographic thematic identifier.
@@ -409,31 +382,6 @@ Container <<applicationSchema>>  "MaritimeUnits" {
   }
   Constraint Enum "SR_SeaAreaTypeClassificationValue" {
     identifier = "Sea Regions::SeaAreaTypeClassificationValue"
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "SR_ShoreTypeClassificationValue" {
     identifier = "Sea Regions::ShoreTypeClassificationValue"

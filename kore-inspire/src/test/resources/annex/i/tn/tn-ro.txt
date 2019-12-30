@@ -27,7 +27,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
   }
@@ -42,7 +42,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref spokeEnd: Link[0..*] inv endNode[0..1]
@@ -187,7 +187,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
   }
@@ -226,7 +226,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref endNode: Node[0..1] inv spokeEnd[0..*]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref startNode: Node[0..1] inv spokeStart[0..*]
@@ -241,7 +241,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref link: NET_DirectedLink[1..*]
@@ -264,7 +264,8 @@ Container <<applicationSchema>>  "Road Transport Network" {
     beginLifespanVersion: DATETIME [0..1]
     endLifespanVersion: DATETIME [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
     ref inspireId: BASE_Identifier[0..1]
@@ -280,7 +281,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
   }
@@ -310,7 +311,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     nationalRoadCode TEXT
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref post: TN_MarkerPost[0..*] inv route[0..1]
@@ -393,17 +394,10 @@ Container <<applicationSchema>>  "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref post: TN_MarkerPost[0..*] inv route[0..1]
-  }
-  Relation "TN_RO_RoadName_name" {
-    profile = "attributes"
-    relatedReference = "TN_RO_RoadName#name"
-    tableName = "TN_RO_RoadName_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Metadata "Unknown" {
     metadata = ""
@@ -429,17 +423,11 @@ Container <<applicationSchema>>  "Road Transport Network" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Relation "NET_Network_geographicalName" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "NET_NetworkReference_involves" {
     profile = "attributes"
@@ -474,13 +462,6 @@ Container <<applicationSchema>>  "Road Transport Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
-  Relation "HH_SA_Event_locationUnit_geographicalName" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#locationUnit_geographicalName"
-    tableName = "HH_SA_Event_locationUnit_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
   Relation "AU_admUnit_boundary" {
     profile = "features"
     tableName = "AU_admUnit_boundary"
@@ -511,7 +492,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -556,14 +537,7 @@ Container <<applicationSchema>>  "Road Transport Network" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AU_ResidenceOfAuthority_name" {
-    profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "NET_LinkDirectionValue" {
     identifier = "Network::LinkDirectionValue"
@@ -572,19 +546,11 @@ Container <<applicationSchema>>  "Road Transport Network" {
     inOppositeDirection
   }
   Constraint Enum "GML_UomIdentifier" {}
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "NET_Network" {
     description = "A network is a collection of network elements.
@@ -637,23 +603,10 @@ Container <<applicationSchema>>  "Road Transport Network" {
     location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     validFrom: DATETIME [0..1]
     validTo: DATETIME [0..1]
-    ref geographicalName: GN_GeographicalName[0..1]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
     ref inNetwork: NET_Network[0..*] inv elements[0..*]
     ref inspireId: BASE_Identifier[0..1]
     ref route: TransportLinkSet[0..1] inv post[0..*]
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
   }
   Attributes "HH_SA_TrafficRelatedEvent" {
     description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
@@ -669,7 +622,8 @@ Container <<applicationSchema>>  "Road Transport Network" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
@@ -689,7 +643,8 @@ Container <<applicationSchema>>  "Road Transport Network" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
@@ -752,7 +707,8 @@ Container <<applicationSchema>>  "Road Transport Network" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Attributes "HH_SA_EventConsequence" {
     description = "The harm an event caused for humans, propriety."
@@ -774,31 +730,6 @@ Container <<applicationSchema>>  "Road Transport Network" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "GML_Sign" {
     identifier = "basicTypes::Sign"

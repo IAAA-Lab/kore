@@ -147,7 +147,7 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -211,12 +211,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_LocatorName(id)
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
     relatedReference = "AU_AdministrativeBoundary#inspireId"
@@ -241,14 +235,13 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AU_ResidenceOfAuthority_name" {
+  Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Relation "AD_AddressRepresentation_addressFeature" {
     profile = "attributes"
@@ -261,31 +254,31 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_adminUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_locatorName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_locatorName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_addressArea" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_postName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_thoroughfare" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "HH_SA_Event_additionalInformation" {
     profile = "attributes"
@@ -314,13 +307,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
-  Relation "HH_SA_Event_locationUnit_geographicalName" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#locationUnit_geographicalName"
-    tableName = "HH_SA_Event_locationUnit_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
   Relation "CP_BasicPropertyUnit_administrativeUnit" {
     profile = "features"
     relatedReference = "CP_BasicPropertyUnit#administrativeUnit"
@@ -339,7 +325,7 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     profile = "attributes"
     tableName = "AD_LocatorName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_LocatorName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "HH_SA_EventConsequence_event" {
     profile = "features"
@@ -352,7 +338,7 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "BASE_ConditionOfFacilityValue" {
     identifier = "Base Types::ConditionOfFacilityValue"
@@ -464,7 +450,7 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
     ref ProductionBuilding inv building[0..*]
   }
   Feature "AU_AdministrativeUnit" {
@@ -585,19 +571,11 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     nationalLevels TEXT NOT NULL
     technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "GMD_LocalisedCharacterString" {
     identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
@@ -614,7 +592,22 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -643,7 +636,8 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
@@ -672,6 +666,18 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     id INTEGER NOT NULL PRIMARY KEY
     type TEXT NOT NULL CHECK(AD_LocatorNameTypeValue)
   }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+  
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
   
@@ -684,18 +690,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-  
-    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
   }
   Feature "HH_SA_Event" {
     description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
@@ -711,7 +705,8 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     isIntentional BOOLEAN
     isMajor BOOLEAN
     locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName INTEGER
+    locationUnit_geographicalName_language TEXT
+    locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     ref causeOfEvent: PT_FreeText[0..*]
@@ -913,31 +908,6 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     edgeMatched
     notEdgeMatched
   }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
-  }
   Constraint Enum "GMD_LanguageCode" {
     identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
@@ -1019,6 +989,31 @@ Container <<applicationSchema>>  "AdministrativeAndSocialGovernmentalServices" {
     utf16
     utf7
     utf8
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
   }
   Constraint Enum "HH_SA_TrafficTypeValue" {
     identifier = "Safety::TrafficTypeValue"

@@ -206,12 +206,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Constraint Enum "BASE_ConditionOfFacilityValue" {
     identifier = "Base Types::ConditionOfFacilityValue"
     decommissioned
@@ -267,33 +261,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
-  }
   Attributes "BU_BASE_CurrentUse" {
     description = "This data type enables to detail the current use(s)."
     identifier = "BuildingsBase::CurrentUse"
@@ -339,6 +306,12 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
   Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
     obligation = "implementingRule"
     identifier = "BuildingsBase::ConditionOfConstructionValue"
@@ -347,31 +320,6 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     CI_Citation
     DocumentCitation
     LegislationCitation
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "BU_BASE_CurrentUseValue" {
     extensiblity = "narrower"

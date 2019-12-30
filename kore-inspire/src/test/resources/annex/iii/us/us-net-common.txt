@@ -363,7 +363,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "BASE2_RelatedParty_contact" {
     profile = "attributes"
@@ -390,12 +390,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     tableName = "ACT_CORE_ActivityComplex_function"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_ActivityComplex(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Function(id)
-  }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Relation "AU_admUnit_boundary" {
     profile = "features"
@@ -427,7 +421,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -523,14 +517,13 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AU_ResidenceOfAuthority_name" {
+  Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Relation "AD_AddressRepresentation_addressFeature" {
     profile = "attributes"
@@ -543,31 +536,31 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_adminUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_locatorName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_locatorName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_addressArea" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_postName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_thoroughfare" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
@@ -599,7 +592,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     profile = "attributes"
     tableName = "AD_LocatorName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_LocatorName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "BASE_ConditionOfFacilityValue" {
     identifier = "Base Types::ConditionOfFacilityValue"
@@ -676,19 +669,11 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     roles TEXT
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "BASE2_Contact" {
     description = "Communication channels by which it is possible to gain access to someone or something."
@@ -723,19 +708,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     inputs TEXT
     outputs TEXT
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
   }
   Feature "AU_AdministrativeUnit" {
     description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
@@ -780,7 +752,8 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Feature "GN_NamedPlace" {
     description = "Any real world entity referred to by one or several proper nouns."
@@ -798,6 +771,20 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
     types TEXT
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -885,6 +872,19 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
   }
+  Attributes "GN_SpellingOfName" {
+    description = "Proper way of writing a name.
+  
+    SOURCE Adapted from [UNGEGN Manual 2006].
+  
+    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
+    identifier = "Geographical Names::SpellingOfName"
+    tableName = "GN_SpellingOfName"
+    id INTEGER NOT NULL PRIMARY KEY
+    script TEXT
+    text TEXT NOT NULL
+    transliterationScheme TEXT
+  }
   Attributes "AD_LocatorDesignator" {
     description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
   
@@ -967,7 +967,7 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
     ref ProductionBuilding inv building[0..*]
   }
   Constraint Enum "US_GOVSERV_ServiceTypeValue" {
@@ -977,31 +977,6 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     identifier = "basicTypes::Sign"
     "+"
     "-"
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
@@ -1135,6 +1110,31 @@ Container <<applicationSchema>>  "Common Utility Network Elements" {
     utf16
     utf7
     utf8
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"

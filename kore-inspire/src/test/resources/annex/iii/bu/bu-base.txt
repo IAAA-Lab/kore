@@ -26,7 +26,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
   }
   Constraint Enum "BU_BASE_HorizontalGeometryReferenceValue" {
     obligation = "implementingRule"
@@ -54,7 +54,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
   }
   Constraint Enum "BU_BASE_ElevationReferenceValue" {
     obligation = "implementingRule"
@@ -82,7 +82,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
   }
   Constraint Enum "BU_BASE_BuildingNatureValue" {
     obligation = "implementingRule"
@@ -162,7 +162,7 @@ Container <<applicationSchema>>  "BuildingsBase" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
   }
   Attributes "BU_BASE_HeightAboveGround" {
     description = "Vertical distance (measured or estimated) between a low reference and a high reference."
@@ -199,12 +199,6 @@ Container <<applicationSchema>>  "BuildingsBase" {
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Constraint Enum "GML_UomIdentifier" {}
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
@@ -221,56 +215,10 @@ Container <<applicationSchema>>  "BuildingsBase" {
     namespace TEXT NOT NULL
     versionId TEXT
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
+    spelling_text TEXT NOT NULL
   }
 }

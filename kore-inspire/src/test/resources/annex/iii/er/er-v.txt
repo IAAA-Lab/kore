@@ -65,7 +65,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     ref exploitationPeriod: ER_V_ExploitationPeriodType[0..*]
     ref inspireId: BASE_Identifier
     ref reportingAuthority: BASE2_RelatedParty[0..*]
-    ref resourceName: GN_GeographicalName[0..*]
+    ref resourceName: BASE2_SimpleGeographicalName[0..*]
   }
   Attributes "ER_V_FossilFuelResource" {
     description = "A spatial object defining an inferred or observable spatial extent of a resource that can be, or has been used as a source of fossil fuel energy.  The most common fossil fuel types are coal, natural gas and crude oil.
@@ -93,7 +93,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     ref exploitationPeriod: ER_V_ExploitationPeriodType[0..*]
     ref inspireId: BASE_Identifier
     ref reportingAuthority: BASE2_RelatedParty[0..*]
-    ref resourceName: GN_GeographicalName[0..*]
+    ref resourceName: BASE2_SimpleGeographicalName[0..*]
   }
   Class "VectorEnergyResource" {
     ClassificationAndQuantificationFramework: TEXT [0..1]
@@ -110,7 +110,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     ref exploitationPeriod: ER_V_ExploitationPeriodType[0..*]
     ref inspireId: BASE_Identifier
     ref reportingAuthority: BASE2_RelatedParty[0..*]
-    ref resourceName: GN_GeographicalName[0..*]
+    ref resourceName: BASE2_SimpleGeographicalName[0..*]
   }
   Attributes "ER_V_ExploitationPeriodType" {
     description = "The exploitationPeriod defines the start and, if applicable, the end date of the exploitation or application."
@@ -179,12 +179,6 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Relation "BASE2_Contact_address" {
     profile = "attributes"
     relatedReference = "BASE2_Contact#address"
@@ -203,31 +197,31 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_adminUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_locatorName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_locatorName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_addressArea" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_postName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_thoroughfare" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_Address_parentAddress" {
     profile = "attributes"
@@ -297,7 +291,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -329,7 +323,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     profile = "attributes"
     tableName = "AD_LocatorName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_LocatorName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
@@ -355,14 +349,7 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
-  }
-  Relation "AU_ResidenceOfAuthority_name" {
-    profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "ER_B_FossilFuelClassValue" {
@@ -447,19 +434,11 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     id INTEGER NOT NULL PRIMARY KEY
     roles TEXT
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "BASE2_Contact" {
     description = "Communication channels by which it is possible to gain access to someone or something."
@@ -471,19 +450,6 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     telephoneFacsimiles TEXT
     telephoneVoices TEXT
     website TEXT
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
   }
   Attributes "AD_AddressRepresentation" {
     description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -625,7 +591,8 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Attributes "CP_BasicPropertyUnit" {
     description = "The basic unit of ownership that is recorded in the land books, land registers or equivalent. It is defined by unique ownership and homogeneous real property rights, and may consist of one or more adjacent or geographically separate parcels.
@@ -663,31 +630,6 @@ Container <<applicationSchema>>  "Energy Resources Vector" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"

@@ -134,7 +134,7 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     profile = "attributes"
     tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_admUnit_boundary" {
     profile = "features"
@@ -166,7 +166,7 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     profile = "attributes"
     tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
     profile = "attributes"
@@ -238,12 +238,6 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_GeographicPosition(id)
   }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
-  }
   Relation "AU_AdministrativeBoundary_inspireId" {
     profile = "attributes"
     relatedReference = "AU_AdministrativeBoundary#inspireId"
@@ -268,14 +262,13 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     profile = "attributes"
     tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AU_ResidenceOfAuthority_name" {
+  Relation "GN_GeographicalName_spelling" {
     profile = "attributes"
-    relatedReference = "AU_ResidenceOfAuthority#name"
-    tableName = "AU_ResidenceOfAuthority_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_ResidenceOfAuthority(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    tableName = "GN_GeographicalName_spelling"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Relation "AD_AddressRepresentation_addressFeature" {
     profile = "attributes"
@@ -288,31 +281,31 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_adminUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_locatorName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_locatorName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_addressArea" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_postName" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressRepresentation_thoroughfare" {
     profile = "attributes"
     tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AD_AddressLocator_designator" {
     profile = "attributes"
@@ -344,7 +337,7 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     profile = "attributes"
     tableName = "AD_LocatorName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_LocatorName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Constraint Enum "GML_UomIdentifier" {}
   Constraint Enum "US_NET_COMMON_UtilityDeliveryTypeValue" {
@@ -464,19 +457,11 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     inputs TEXT
     outputs TEXT
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Feature "AU_AdministrativeUnit" {
     description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
@@ -521,7 +506,8 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     tableName = "AU_ResidenceOfAuthority"
     geometry POINT
     id INTEGER NOT NULL PRIMARY KEY
-    name INTEGER
+    name_language TEXT
+    name_spelling_text TEXT NOT NULL
   }
   Feature "GN_NamedPlace" {
     description = "Any real world entity referred to by one or several proper nouns."
@@ -539,6 +525,20 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
     types TEXT
+  }
+  Attributes "GN_GeographicalName" {
+    description = "Proper noun applied to a real world entity."
+    identifier = "Geographical Names::GeographicalName"
+    tableName = "GN_GeographicalName"
+    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    nameStatus TEXT CHECK(GN_NameStatusValue)
+    nativeness TEXT CHECK(GN_NativenessValue)
+    pronunciation_pronunciationIPA TEXT
+    pronunciation_pronunciationSoundLink TEXT
+    sourceOfName TEXT
   }
   Attributes "BASE2_Contact" {
     description = "Communication channels by which it is possible to gain access to someone or something."
@@ -625,6 +625,18 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     method TEXT CHECK(AD_GeometryMethodValue)
     specification TEXT CHECK(AD_GeometrySpecificationValue)
   }
+  Feature "AU_Condominium" {
+    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+  
+    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
+    identifier = "AdministrativeUnits::Condominium"
+    tableName = "AU_Condominium"
+    beginLifespanVersion DATETIME
+    endLifespanVersion DATETIME
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    inspireId INTEGER
+  }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
   
@@ -637,18 +649,6 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     script TEXT
     text TEXT NOT NULL
     transliterationScheme TEXT
-  }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-  
-    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
   }
   Attributes "AD_LocatorDesignator" {
     description = "A number or a sequence of characters that uniquely identifies the locator within the relevant scope(s). The full identification of the locator could include one or more locator designators.
@@ -732,36 +732,11 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     ref externalReference: BU_BASE_ExternalReference[0..*]
     ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
     ref inspireId: BASE_Identifier
-    ref name: GN_GeographicalName[0..*]
+    ref name: BASE2_SimpleGeographicalName[0..*]
     ref ProductionBuilding inv building[0..*]
   }
   Constraint Enum "US_GOVSERV_ServiceTypeValue" {
     identifier = "AdministrativeAndSocialGovernmentalServices::ServiceTypeValue"
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "BASE2_CountryCode" {
     identifier = "Base Types 2::CountryCode"
@@ -895,6 +870,31 @@ Container <<applicationSchema>>  "Oil-Gas-Chemicals Network" {
     utf16
     utf7
     utf8
+  }
+  Constraint Enum "GN_NativenessValue" {
+    identifier = "Geographical Names::NativenessValue"
+    endonym
+    exonym
+  }
+  Constraint Enum "GN_NameStatusValue" {
+    identifier = "Geographical Names::NameStatusValue"
+    historical
+    official
+    other
+    standardised
+  }
+  Constraint Enum "GN_GrammaticalGenderValue" {
+    identifier = "Geographical Names::GrammaticalGenderValue"
+    common
+    feminine
+    masculine
+    neuter
+  }
+  Constraint Enum "GN_GrammaticalNumberValue" {
+    identifier = "Geographical Names::GrammaticalNumberValue"
+    dual
+    plural
+    singular
   }
   Constraint Enum "AD_StatusValue" {
     identifier = "Addresses::StatusValue"

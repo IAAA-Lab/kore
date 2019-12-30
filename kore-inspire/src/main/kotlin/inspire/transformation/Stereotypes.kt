@@ -8,5 +8,6 @@ class Stereotypes {
         const val type: String = "type"
         const val featureType: String = "featureType"
         const val union: String = "union"
+        const val applicationSchema: String = "applicationSchema"
     }
 }

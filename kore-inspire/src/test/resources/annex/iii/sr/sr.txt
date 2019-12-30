@@ -33,7 +33,7 @@ Container <<applicationSchema>>  "Sea Regions" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Constraint Enum "SR_ShoreTypeClassificationValue" {
@@ -82,7 +82,7 @@ Container <<applicationSchema>>  "Sea Regions" {
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "SR_Shoreline" {
@@ -91,7 +91,7 @@ Container <<applicationSchema>>  "Sea Regions" {
     tableName = "SR_Shoreline"
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Attributes "SR_Coastline" {
@@ -102,7 +102,7 @@ Container <<applicationSchema>>  "Sea Regions" {
     tableName = "SR_Coastline"
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Constraint Enum "SR_ShoreStabilityValue" {
@@ -122,7 +122,7 @@ Container <<applicationSchema>>  "Sea Regions" {
     inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
     zoneType TEXT NOT NULL CHECK(SR_ZoneTypeValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
   }
   Constraint Enum "SR_SeaBedCoverValue" {
@@ -151,7 +151,7 @@ Container <<applicationSchema>>  "Sea Regions" {
     highWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
     lowWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: GN_GeographicalName[0..*]
+    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
     ref hydroId: HY_HydroIdentifier[0..*]
     ref inspireId: BASE_Identifier
     ref SurfaceWater inv bank[0..*]
@@ -249,12 +249,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     mimeType = "text/xml"
     scope = "attributeType"
     standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
   Relation "OMOR_ObservationSet_member" {
     profile = "attributes"
@@ -355,19 +349,11 @@ Container <<applicationSchema>>  "Sea Regions" {
     now
     unknow
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes "BASE2_SimpleGeographicalName" {
+    tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    spelling_text TEXT NOT NULL
   }
   Attributes "HY_HydroIdentifier" {
     description = "A hydrographic thematic identifier.
@@ -404,19 +390,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
     inspireId INTEGER
-  }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
-  
-    SOURCE Adapted from [UNGEGN Manual 2006].
-  
-    NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
-    id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
-    text TEXT NOT NULL
-    transliterationScheme TEXT
   }
   Attributes "_OM_Observation" {
     hasXmlLang = "false#NOTES#Values: true | false
@@ -483,31 +456,6 @@ Container <<applicationSchema>>  "Sea Regions" {
     electronicMailAddresses TEXT
     id INTEGER NOT NULL PRIMARY KEY
     postalCode TEXT
-  }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
-    endonym
-    exonym
-  }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
-    historical
-    official
-    other
-    standardised
-  }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
-    common
-    feminine
-    masculine
-    neuter
-  }
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
-    dual
-    plural
-    singular
   }
   Constraint Enum "GMD_CI_OnLineFunctionCode" {
     identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
