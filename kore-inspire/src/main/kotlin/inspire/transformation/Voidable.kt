@@ -47,10 +47,8 @@ val `load authoritative descriptions of the reasons for void values as metadata`
                     name = def.second
                     scope = def.third
                     standardUri = "http://www.isotc211.org/2005/gmd"
-                    mimeType = "text/xml"
-                    val url =
-                        "http://inspire.ec.europa.eu/codelist/$parentName/${def.second}/${def.second}.en.iso19135xml"
-                    metadata = if (withMetadata) URL(url).openStream().use { it.bufferedReader().readText() } else ""
+                    mimeType = "text/plain"
+                    metadata = "http://inspire.ec.europa.eu/codelist/$parentName/${def.second}/${def.second}.en.iso19135xml"
                 }
             }
         }
