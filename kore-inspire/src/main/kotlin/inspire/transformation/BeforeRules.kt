@@ -18,7 +18,7 @@ val `remove references to undefined Data Type`: Transform = { _, _ ->
  */
 val `add Data Type tag to PT_Locale`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
-        findOrCreateAnnotation().references.add(koreClass { name = Stereotypes.dataType })
+        addStereotype(Stereotypes.dataType)
     }
 }
 
@@ -27,16 +27,7 @@ val `add Data Type tag to PT_Locale`: Transform = { _, _ ->
  */
 val `add Data Type tag to LocalisedCharacterString`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { id == "AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
-        findOrCreateAnnotation().references.add(koreClass { name = Stereotypes.dataType })
-    }
-}
-
-/**
- * Patch: add dataType refinement to Identifier (CB20C133_5AA4_4671_80C7_8ED2879AB0D9)
- */
-val `add Data Type tag to Identifier`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { id == "CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }) {
-        findOrCreateAnnotation().references.add(koreClass { name = Stereotypes.dataType })
+        addStereotype(Stereotypes.dataType)
     }
 }
 
@@ -92,6 +83,35 @@ val `add missing xmlns`: Transform = { _, _ ->
     patch<KoreNamedElement>( predicate = { name == "Quadrilateral Grid" }, global = true ) {
         getAnnotation()?.details?.put("xmlns", "cis")
     }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19156:2011 Observations and Measurements" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "")
+    }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19133 Tracking and Navigation" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "")
+    }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19110 Methodology for feature cataloguing" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "")
+    }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19115-2:2009 Metadata - Imagery" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "")
+    }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19119 Services" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "")
+    }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19115:2006 Metadata (Corrigendum)" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "gmd")
+    }
+    // TODO Review
+    patch<KoreNamedElement>( predicate = { name == "ISO 19103:2005 Schema Language" }, global = true ) {
+        getAnnotation()?.details?.put("xmlns", "")
+    }
+
 }
 
 fun fixStereotype(value: String): Transform = { _, _ ->
@@ -115,7 +135,6 @@ val `Before rules`: List<Transform> = listOf(
     `remove references to undefined Data Type`,
     `add Data Type tag to PT_Locale`,
     `add Data Type tag to LocalisedCharacterString`,
-    `add Data Type tag to Identifier`,
     `standardize edgeMatched default value`,
     `standardize codeList`,
     `standardize union`,
@@ -126,3 +145,5 @@ val `Before rules`: List<Transform> = listOf(
     `add missing xmlns`
 )
 
+
+fun KoreModelElement.addStereotype(stereotype: String) = findOrCreateAnnotation().references.add(koreClass { name = stereotype })

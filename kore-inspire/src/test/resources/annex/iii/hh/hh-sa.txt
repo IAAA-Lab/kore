@@ -1,329 +1,212 @@
-Container <<applicationSchema>>  "Safety" {
-  Attributes "HH_SA_FireOrExplosionRelatedEvent" {
-    description = "Incident in which fire or explosion harms humans, property or the environment."
-    identifier = "Safety::FireOrExplosionRelatedEvent"
-    tableName = "HH_SA_FireOrExplosionRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+Container <<applicationSchema>> "Safety" {
+  * fileName = "Safety"
+  Attributes <<featureType>> "HH_SA_FireOrExplosionRelatedEvent" {
+    * description = "Incident in which fire or explosion harms humans, property or the environment."
+    * identifier = "Safety::FireOrExplosionRelatedEvent"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent"
     endTime DATETIME
     fireOrExplosionLocality_buildingUse TEXT NOT NULL CHECK(HH_SA_BuildingUseValue)
     fireOrExplosionLocality_inBuilding BOOLEAN NOT NULL
     fireOrExplosionType TEXT NOT NULL CHECK(HH_SA_FireOrExplosionTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
     locationUnit_geographicalName_language TEXT
     locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> additionalInformation INTEGER
+    <<reference>> aggregation INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> isIntentional BOOLEAN
+    <<voidable>> isMajor BOOLEAN
+    <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
+    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
-  Constraint Enum "HH_SA_BuildingUseValue" {
-    identifier = "Safety::BuildingUseValue"
+  Constraint Enum <<codeList>> "HH_SA_BuildingUseValue" {
+    * identifier = "Safety::BuildingUseValue"
   }
-  Constraint Enum "HH_SA_ConsequenceTypeValue" {
-    identifier = "Safety::ConsequenceTypeValue"
+  Constraint Enum <<codeList>> "HH_SA_ConsequenceTypeValue" {
+    * identifier = "Safety::ConsequenceTypeValue"
   }
-  Constraint Enum "HH_SA_TrafficTypeValue" {
-    identifier = "Safety::TrafficTypeValue"
+  Constraint Enum <<codeList>> "HH_SA_TrafficTypeValue" {
+    * identifier = "Safety::TrafficTypeValue"
   }
-  Class <<union>>  "LocationUnitType" {
-    administrativeUnit: AU_AdministrativeUnit
-    geographicalName_language: TEXT [0..1]
-    geographicalName_spelling_text: TEXT
-    geometry: GEOMETRY
+  Class <<union>> "LocationUnitType" {
+    geographicalName_language : TEXT [0..1]
+    geographicalName_spelling_text : TEXT
+    geometry : GEOMETRY
+    administrativeUnit_AdministrativeUnit BASE_Identifier as ref
   }
-  Constraint Enum "HH_SA_HazardousMaterialTypeValue" {
-    identifier = "Safety::HazardousMaterialTypeValue"
+  Constraint Enum <<codeList>> "HH_SA_HazardousMaterialTypeValue" {
+    * identifier = "Safety::HazardousMaterialTypeValue"
   }
-  Feature "HH_SA_Event" {
-    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
-    identifier = "Safety::Event"
-    tableName = "HH_SA_Event"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Feature <<featureType>> "HH_SA_Event" {
+    * description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
+    * identifier = "Safety::Event"
+    * tableName = "HH_SA_Event"
     endTime DATETIME
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
     locationUnit_geographicalName_language TEXT
     locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> additionalInformation INTEGER
+    <<reference>> aggregation INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> isIntentional BOOLEAN
+    <<voidable>> isMajor BOOLEAN
+    <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
+    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
-  Attributes "HH_SA_NaturalHazardRelatedEvent" {
-    description = "A natural incident resulting in a negative effect on humans, property or the environment."
-    identifier = "Safety::NaturalHazardRelatedEvent"
-    tableName = "HH_SA_NaturalHazardRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Attributes <<featureType>> "HH_SA_NaturalHazardRelatedEvent" {
+    * description = "A natural incident resulting in a negative effect on humans, property or the environment."
+    * identifier = "Safety::NaturalHazardRelatedEvent"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent"
     endTime DATETIME
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
     locationUnit_geographicalName_language TEXT
     locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     naturalHazardType TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> additionalInformation INTEGER
+    <<reference>> aggregation INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> isIntentional BOOLEAN
+    <<voidable>> isMajor BOOLEAN
+    <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
+    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
-  Attributes "HH_SA_EventConsequence" {
-    description = "The harm an event caused for humans, propriety."
-    identifier = "Safety::EventConsequence"
-    tableName = "HH_SA_EventConsequence"
+  Attributes <<dataType>> "HH_SA_EventConsequence" {
+    * description = "The harm an event caused for humans, propriety."
+    * identifier = "Safety::EventConsequence"
+    * tableName = "HH_SA_EventConsequence"
     consequenceType TEXT NOT NULL CHECK(HH_SA_ConsequenceTypeValue)
-    event INTEGER
     id INTEGER NOT NULL PRIMARY KEY
     value DOUBLE NOT NULL
+    <<reference>> event INTEGER
   }
-  Constraint Enum "HH_SA_FireOrExplosionTypeValue" {
-    identifier = "Safety::FireOrExplosionTypeValue"
+  Constraint Enum <<codeList>> "HH_SA_FireOrExplosionTypeValue" {
+    * identifier = "Safety::FireOrExplosionTypeValue"
   }
-  Attributes "HH_SA_TrafficRelatedEvent" {
-    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
-    identifier = "Safety::TrafficRelatedEvent"
-    tableName = "HH_SA_TrafficRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Attributes <<featureType>> "HH_SA_TrafficRelatedEvent" {
+    * description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
+    * identifier = "Safety::TrafficRelatedEvent"
+    * tableName = "HH_SA_TrafficRelatedEvent"
     endTime DATETIME
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
     locationUnit_geographicalName_language TEXT
     locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
     trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
-    ref causeOfEvent: PT_FreeText[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> additionalInformation INTEGER
+    <<reference>> aggregation INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> isIntentional BOOLEAN
+    <<voidable>> isMajor BOOLEAN
+    <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
+    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
-  Attributes "HH_SA_HazardousMaterialRelatedEvent" {
-    description = "An event resulted by<b> </b>substances that have the ability to harm humans, property, or the environment."
-    identifier = "Safety::HazardousMaterialRelatedEvent"
-    tableName = "HH_SA_HazardousMaterialRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Attributes <<featureType>> "HH_SA_HazardousMaterialRelatedEvent" {
+    * description = "An event resulted by<b> </b>substances that have the ability to harm humans, property, or the environment."
+    * identifier = "Safety::HazardousMaterialRelatedEvent"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent"
     endTime DATETIME
     hazardousMaterialType TEXT NOT NULL CHECK(HH_SA_HazardousMaterialTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
     locationUnit_geographicalName_language TEXT
     locationUnit_geographicalName_spelling_text TEXT
     locationUnit_geometry GEOMETRY
     startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> additionalInformation INTEGER
+    <<reference>> aggregation INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> isIntentional BOOLEAN
+    <<voidable>> isMajor BOOLEAN
+    <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
+    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
-  Attributes "HH_SA_FireOrExplosionLocalityType" {
-    description = "Characteristics of the place where the fire or explosion occurs."
-    identifier = "Safety::FireOrExplosionLocalityType"
-    tableName = "HH_SA_FireOrExplosionLocalityType"
+  Attributes <<dataType>> "HH_SA_FireOrExplosionLocalityType" {
+    * description = "Characteristics of the place where the fire or explosion occurs."
+    * identifier = "Safety::FireOrExplosionLocalityType"
+    * tableName = "HH_SA_FireOrExplosionLocalityType"
     buildingUse TEXT NOT NULL CHECK(HH_SA_BuildingUseValue)
     id INTEGER NOT NULL PRIMARY KEY
     inBuilding BOOLEAN NOT NULL
   }
-  Attributes "HH_SA_EventInformation" {
-    description = "All available information about the  event."
-    identifier = "Safety::EventInformation"
-    tableName = "HH_SA_EventInformation"
+  Attributes <<dataType>> "HH_SA_EventInformation" {
+    * description = "All available information about the  event."
+    * identifier = "Safety::EventInformation"
+    * tableName = "HH_SA_EventInformation"
     id INTEGER NOT NULL PRIMARY KEY
   }
   Relation "HH_SA_Event_additionalInformation" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#additionalInformation"
-    tableName = "HH_SA_Event_additionalInformation"
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_Event#additionalInformation"
+    * tableName = "HH_SA_Event_additionalInformation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
   }
   Relation "HH_SA_Event_part" {
-    profile = "features"
-    relatedReference = "HH_SA_Event#aggregation"
-    tableName = "HH_SA_Event_part"
+    * profile = "features"
+    * relatedReference = "attribute HH_SA_Event#aggregation"
+    * tableName = "HH_SA_Event_part"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
   }
   Relation "HH_SA_Event_inspireId" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#inspireId"
-    tableName = "HH_SA_Event_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_Event#inspireId"
+    * tableName = "HH_SA_Event_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "HH_SA_Event_sourceReference" {
-    profile = "attributes"
-    tableName = "HH_SA_Event_sourceReference"
+    * profile = "attributes"
+    * tableName = "HH_SA_Event_sourceReference"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
+  Relation "HH_SA_Event_locationUnit_administrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_Event#locationUnit_administrativeUnit_AdministrativeUnit"
+    * tableName = "HH_SA_Event_locationUnit_administrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "HH_SA_EventConsequence_event" {
-    profile = "features"
-    relatedReference = "HH_SA_EventConsequence#event"
-    tableName = "HH_SA_EventConsequence_event"
+    * profile = "features"
+    * relatedReference = "attribute HH_SA_EventConsequence#event"
+    * tableName = "HH_SA_EventConsequence_event"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
   }
   Relation "HH_SA_TrafficRelatedEvent_involvedIn" {
-    profile = "attributes"
-    tableName = "HH_SA_TrafficRelatedEvent_involvedIn"
+    * profile = "attributes"
+    * tableName = "HH_SA_TrafficRelatedEvent_involvedIn"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "AU_admUnit_boundary" {
-    profile = "features"
-    tableName = "AU_admUnit_boundary"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
-  }
-  Relation "AU_AdministrativeUnit_administeredBy" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_administeredBy"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
-    profile = "features"
-    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
-    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeUnit#inspireId"
-    tableName = "AU_AdministrativeUnit_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_AdministrativeUnit_name" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Relation "AU_AdministrativeUnit_nationalLevelName" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_nationalLevelName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
-  }
-  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
-  }
-  Relation "AU_AdministrativeBoundary_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeBoundary#inspireId"
-    tableName = "AU_AdministrativeBoundary_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_admUnit" {
-    profile = "features"
-    tableName = "AU_Condominium_admUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_Condominium_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_Condominium#inspireId"
-    tableName = "AU_Condominium_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_name" {
-    profile = "attributes"
-    tableName = "AU_Condominium_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Relation "NET_Network_geographicalName" {
-    profile = "attributes"
-    tableName = "NET_Network_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Constraint Enum "NZ_CORE_NaturalHazardCategoryValue" {
-    obligation = "implementingRule"
-    identifier = "NaturalRiskZones::NaturalHazardCategoryValue"
-  }
-  Feature "AU_AdministrativeUnit" {
-    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
-    identifier = "AdministrativeUnits::AdministrativeUnit"
-    tableName = "AU_AdministrativeUnit"
-    beginLifespanVersion DATETIME
-    country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    nationalCode TEXT NOT NULL
-    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-    upperLevelUnit INTEGER
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "BASE2_SimpleCitation" {
+    * tableName = "BASE2_SimpleCitation"
     date DATE
     id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
@@ -331,129 +214,18 @@ Container <<applicationSchema>>  "Safety" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
-  Attributes "NET_NetworkReference" {
-    description = "A reference to a network element."
-    identifier = "Network::NetworkReference"
-    tableName = "NET_NetworkReference"
-    id INTEGER NOT NULL PRIMARY KEY
+}
+Container <<applicationSchema>> "NaturalRiskZones" {
+  * fileName = "NaturalRiskZones"
+  Constraint Enum <<codeList>> "NZ_CORE_NaturalHazardCategoryValue" {
+    * identifier = "NaturalRiskZones::NaturalHazardCategoryValue"
+    obligation = "implementingRule"
   }
-  Feature "AU_AdministrativeBoundary" {
-    description = "A line of demarcation between administrative units."
-    identifier = "AdministrativeUnits::AdministrativeBoundary"
-    tableName = "AU_AdministrativeBoundary"
-    beginLifespanVersion DATETIME
-    country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
-    geometry CURVE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
-    nationalLevels TEXT NOT NULL
-    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
-  }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
-  }
-  Attributes "GMD_LocalisedCharacterString" {
-    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
-    tableName = "GMD_LocalisedCharacterString"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-    text TEXT NOT NULL
-  }
-  Feature "AU_ResidenceOfAuthority" {
-    description = "Data type representing the name and position of a residence of authority."
-    identifier = "AdministrativeUnits::ResidenceOfAuthority"
-    tableName = "AU_ResidenceOfAuthority"
-    geometry POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    name_language TEXT
-    name_spelling_text TEXT NOT NULL
-  }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-  
-    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Attributes "NET_Network" {
-    description = "A network is a collection of network elements.
-  
-    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
-    identifier = "Network::Network"
-    tableName = "NET_Network"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
-  }
-  Constraint Enum "BASE2_CountryCode" {
-    identifier = "Base Types 2::CountryCode"
-    AT
-    BE
-    BG
-    CY
-    CZ
-    DE
-    DK
-    EE
-    EL
-    ES
-    FI
-    FR
-    HR
-    HU
-    IE
-    IT
-    LT
-    LU
-    LV
-    MT
-    NL
-    PL
-    PT
-    RO
-    SE
-    SI
-    SK
-    TR
-    UK
-  }
-  Constraint Enum "AU_AdministrativeHierarchyLevel" {
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    1stOrder
-    2ndOrder
-    3rdOrder
-    4thOrder
-    5thOrder
-    6thOrder
-  }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
-  }
-  Constraint Enum "AU_LegalStatusValue" {
-    identifier = "AdministrativeUnits::LegalStatusValue"
-    agreed
-    notAgreed
-  }
-  Constraint Enum "AU_TechnicalStatusValue" {
-    identifier = "AdministrativeUnits::TechnicalStatusValue"
-    edgeMatched
-    notEdgeMatched
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
+}
+Container "ISO 00639 Language Codes" {
+  * fileName = "ISO 00639 Language Codes"
+  Constraint Enum <<codeList>> "GMD_LanguageCode" {
+    * identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
     Albanian
     Arabic
@@ -499,11 +271,17 @@ Container <<applicationSchema>>  "Safety" {
     Turkish
     Ukranian
   }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
+}
+Container "ISO 03166 Country Codes" {
+  * fileName = "ISO 03166 Country Codes"
+  Constraint Enum <<codeList>> "GMD_CountryCode" {
+    * identifier = "ISO 03166 Country Codes::CountryCode"
   }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
+}
+Container "Identification information" {
+  * fileName = "Identification information"
+  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
+    * identifier = "Identification information::MD_CharacterSetCode"
     (reservedforfutureuse)
     8859part1
     8859part10
@@ -535,3 +313,88 @@ Container <<applicationSchema>>  "Safety" {
     utf8
   }
 }
+Container "Text" {
+  * fileName = "Text"
+  Class <<type>>, <<type>> "Character" {}
+  Class <<type>>, <<type>> "CharacterString" {
+    characterSet : TEXT
+    maxLength : INTEGER
+    size : INTEGER
+    elements Character [-2..*] as ref
+  }
+  Constraint Enum <<codeList>> "_CharacterSetCode" {
+    * identifier = "Text::CharacterSetCode"
+    ISO10646-1
+    ISO10646-2
+    ISO8859
+  }
+}
+Container <<applicationSchema>> "Network" {
+  * fileName = "Network"
+  Attributes <<dataType>> "NET_NetworkReference" {
+    * description = "A reference to a network element."
+    * identifier = "Network::NetworkReference"
+    * tableName = "NET_NetworkReference"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<version>>, <<reference>> element_NetworkElement INTEGER
+  }
+  Relation "NET_NetworkReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
+    * tableName = "NET_NetworkReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container "Cultural and linguistic adapdability" {
+  * fileName = "Cultural and linguistic adapdability"
+  CharacterString "PT_FreeText" {}
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+

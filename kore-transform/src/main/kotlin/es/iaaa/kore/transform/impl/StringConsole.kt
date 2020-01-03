@@ -15,6 +15,9 @@
  */
 package es.iaaa.kore.transform.impl
 
+import es.iaaa.kore.KoreClassifier
+import es.iaaa.kore.KoreModelElement
+import es.iaaa.kore.KorePackage
 import es.iaaa.kore.impl.Violations
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.OutputWriter
@@ -22,8 +25,14 @@ import es.iaaa.kore.util.toPrettyString
 
 class StringConsole(private val out: StringBuffer = StringBuffer()) : OutputWriter {
     override fun write(resource: Model, context: Map<String, Any>) {
-        resource.selectedPackages().forEach {
-            out.appendln(it.toPrettyString())
+        resource.allRelevantContent().mapNotNull {
+            when (it) {
+                is KorePackage -> it
+                is KoreClassifier -> it.container
+                else -> null
+            }
+        }.distinct().forEach {
+            out.appendln(it.toPrettyString(resource.allRelevantContent()))
         }
     }
 

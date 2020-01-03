@@ -43,6 +43,7 @@ private fun KoreReference?.copyAsRefAttribute(): KoreAttribute? = this?.toAttrib
     type = IntegerType()
     lowerBound = 0
     upperBound = 1
+    addStereotype(Stereotypes.reference)
 }
 
 private fun KoreReference.toRelation(
@@ -66,12 +67,14 @@ private fun KorePackage.toRelation(
         name = "base_id"
         columnName = "base_id"
         type = base
+        isNavigable = true
         findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(BaseTable)
     }
     foreignColumn {
         name = "related_id"
         columnName = "related_id"
         type = related
+        isNavigable = true
         findOrCreateAnnotation(GeoPackageSpec.SOURCE).references.add(RelatedTable)
     }
 }

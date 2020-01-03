@@ -1,593 +1,242 @@
-Container <<applicationSchema>>  "Network" {
-  Class "Node" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: POINT
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref spokeEnd: Link[0..*] inv endNode[0..1]
-    ref spokeStart: Link[0..*] inv startNode[0..1]
+Container <<applicationSchema>> "Network" {
+  * fileName = "Network"
+  Class <<featureType>> "Node" {
+    geometry : POINT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
+    <<voidable>> spokeEnd Link [0..*] as ref
+    <<voidable>> spokeStart Link [0..*] as ref
   }
-  Class "NetworkArea" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: SURFACE
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+  Class <<featureType>> "NetworkArea" {
+    geometry : SURFACE
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Attributes "NET_NetworkConnection" {
-    description = "Represents a logical connection between two or more network elements in different networks.
+  Attributes <<featureType>> "NET_NetworkConnection" {
+    * description = "Represents a logical connection between two or more network elements in different networks.
   
     In the case where the networks are in different spatial data sets, a network connection object may exist in both data sets."
-    identifier = "Network::NetworkConnection"
-    tableName = "NET_NetworkConnection"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Network::NetworkConnection"
+    * tableName = "NET_NetworkConnection"
     id INTEGER NOT NULL PRIMARY KEY
-    type TEXT CHECK(NET_ConnectionTypeValue)
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> type TEXT CHECK(NET_ConnectionTypeValue)
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Attributes "NET_LinkReference" {
-    description = "A network reference to a linear network element."
-    identifier = "Network::LinkReference"
-    tableName = "NET_LinkReference"
-    applicableDirection TEXT CHECK(NET_LinkDirectionValue)
+  Attributes <<dataType>> "NET_LinkReference" {
+    * description = "A network reference to a linear network element."
+    * identifier = "Network::LinkReference"
+    * tableName = "NET_LinkReference"
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
+    involves TrafficRelatedEvent [0..*] as ref
   }
-  Class "LinkSequence" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref link: NET_DirectedLink[1..*]
+  Class <<featureType>> "LinkSequence" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    link NET_DirectedLink [1..*] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Attributes "NET_SimpleLinearReference" {
-    description = "A network reference that is restricted to part of a linear network element. The part is the part of the network element between fromPosition and toPosition."
-    identifier = "Network::SimpleLinearReference"
-    tableName = "NET_SimpleLinearReference"
-    applicableDirection TEXT CHECK(NET_LinkDirectionValue)
+  Attributes <<dataType>> "NET_SimpleLinearReference" {
+    * description = "A network reference that is restricted to part of a linear network element. The part is the part of the network element between fromPosition and toPosition."
+    * identifier = "Network::SimpleLinearReference"
+    * tableName = "NET_SimpleLinearReference"
     fromPosition TEXT NOT NULL
     fromPosition_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    offset TEXT
-    offset_uom TEXT CHECK(GML_UomIdentifier)
     toPosition TEXT NOT NULL
     toPosition_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
+    <<voidable>> offset TEXT
+    <<voidable>> offset_uom TEXT CHECK(GML_UomIdentifier)
+    involves TrafficRelatedEvent [0..*] as ref
   }
-  Attributes "NET_DirectedLink" {
-    description = "A link either in its positive or negative direction."
-    identifier = "Network::DirectedLink"
-    tableName = "NET_DirectedLink"
+  Attributes <<dataType>> "NET_DirectedLink" {
+    * description = "A link either in its positive or negative direction."
+    * identifier = "Network::DirectedLink"
+    * tableName = "NET_DirectedLink"
     direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
   }
-  Attributes "NET_SimplePointReference" {
-    description = "A network reference that is restricted to a point on a linear network element. The point is the location on the network element at the position atPosition along the network."
-    identifier = "Network::SimplePointReference"
-    tableName = "NET_SimplePointReference"
-    applicableDirection TEXT CHECK(NET_LinkDirectionValue)
+  Attributes <<dataType>> "NET_SimplePointReference" {
+    * description = "A network reference that is restricted to a point on a linear network element. The point is the location on the network element at the position atPosition along the network."
+    * identifier = "Network::SimplePointReference"
+    * tableName = "NET_SimplePointReference"
     atPosition TEXT NOT NULL
     atPosition_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    offset TEXT
-    offset_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
+    <<voidable>> offset TEXT
+    <<voidable>> offset_uom TEXT CHECK(GML_UomIdentifier)
+    involves TrafficRelatedEvent [0..*] as ref
   }
-  Class "GeneralisedLink" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+  Class <<featureType>> "GeneralisedLink" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Class "NetworkProperty" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+  Class <<featureType>> "NetworkProperty" {
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Constraint Enum "NET_LinkDirectionValue" {
-    identifier = "Network::LinkDirectionValue"
+  Constraint Enum <<codeList>> "NET_LinkDirectionValue" {
+    * identifier = "Network::LinkDirectionValue"
     bothDirections
     inDirection
     inOppositeDirection
   }
-  Constraint Enum "NET_ConnectionTypeValue" {
-    identifier = "Network::ConnectionTypeValue"
+  Constraint Enum <<codeList>> "NET_ConnectionTypeValue" {
+    * identifier = "Network::ConnectionTypeValue"
     crossBorderConnected
     crossBorderIdentical
     intermodal
   }
-  Attributes "NET_CrossReference" {
-    description = "Represents a reference between two elements in the same network.
+  Attributes <<featureType>> "NET_CrossReference" {
+    * description = "Represents a reference between two elements in the same network.
   
     The cross reference may represent the case where two elements are different representations of the same spatial object."
-    identifier = "Network::CrossReference"
-    tableName = "NET_CrossReference"
+    * identifier = "Network::CrossReference"
+    * tableName = "NET_CrossReference"
     id INTEGER NOT NULL PRIMARY KEY
   }
-  Attributes "NET_GradeSeparatedCrossing" {
-    description = "Indicator which of two or more intersecting elements is/are below and which is/are above, to be used if elevation coordinates are not present or cannot be trusted.
+  Attributes <<featureType>> "NET_GradeSeparatedCrossing" {
+    * description = "Indicator which of two or more intersecting elements is/are below and which is/are above, to be used if elevation coordinates are not present or cannot be trusted.
   
     NOTE 1 In most cases, the number of elements will be two.
   
     NOTE 2 In the normal case this is when elements intersect in the x/y-plane when the z coordinate is not present or is not accurate enough."
-    identifier = "Network::GradeSeparatedCrossing"
-    tableName = "NET_GradeSeparatedCrossing"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Network::GradeSeparatedCrossing"
+    * tableName = "NET_GradeSeparatedCrossing"
     id INTEGER NOT NULL PRIMARY KEY
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Class "Link" {
-    beginLifespanVersion: DATETIME [0..1]
-    centrelineGeometry: CURVE
-    endLifespanVersion: DATETIME [0..1]
-    fictitious: BOOLEAN
-    ref endNode: Node[0..1] inv spokeEnd[0..*]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref startNode: Node[0..1] inv spokeStart[0..*]
+  Class <<featureType>> "Link" {
+    centrelineGeometry : CURVE
+    fictitious : BOOLEAN
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    endNode Node [0..1] as ref
+    inspireId BASE_Identifier [0..1] as ref
+    startNode Node [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Class "NetworkElement" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+  Class <<featureType>> "NetworkElement" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Attributes "NET_NetworkReference" {
-    description = "A reference to a network element."
-    identifier = "Network::NetworkReference"
-    tableName = "NET_NetworkReference"
+  Attributes <<dataType>> "NET_NetworkReference" {
+    * description = "A reference to a network element."
+    * identifier = "Network::NetworkReference"
+    * tableName = "NET_NetworkReference"
     id INTEGER NOT NULL PRIMARY KEY
+    involves TrafficRelatedEvent [0..*] as ref
   }
-  Class "LinkSet" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+  Class <<featureType>> "LinkSet" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Attributes "NET_Network" {
-    description = "A network is a collection of network elements.
+  Attributes <<featureType>> "NET_Network" {
+    * description = "A network is a collection of network elements.
   
     The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
-    identifier = "Network::Network"
-    tableName = "NET_Network"
+    * identifier = "Network::Network"
+    * tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
-    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
-  }
-  Relation "NET_NetworkReference_involves" {
-    profile = "attributes"
-    tableName = "NET_NetworkReference_involves"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    elements NetworkElement [0..*] as ref
   }
   Relation "NET_Network_geographicalName" {
-    profile = "attributes"
-    tableName = "NET_Network_geographicalName"
+    * profile = "attributes"
+    * tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "HH_SA_Event_additionalInformation" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#additionalInformation"
-    tableName = "HH_SA_Event_additionalInformation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
-  }
-  Relation "HH_SA_Event_part" {
-    profile = "features"
-    relatedReference = "HH_SA_Event#aggregation"
-    tableName = "HH_SA_Event_part"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
-  }
-  Relation "HH_SA_Event_inspireId" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#inspireId"
-    tableName = "HH_SA_Event_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "HH_SA_Event_sourceReference" {
-    profile = "attributes"
-    tableName = "HH_SA_Event_sourceReference"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
-  }
-  Relation "AU_admUnit_boundary" {
-    profile = "features"
-    tableName = "AU_admUnit_boundary"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
-  }
-  Relation "AU_AdministrativeUnit_administeredBy" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_administeredBy"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
-    profile = "features"
-    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
-    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeUnit#inspireId"
-    tableName = "AU_AdministrativeUnit_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_AdministrativeUnit_name" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Relation "AU_AdministrativeUnit_nationalLevelName" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_nationalLevelName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
-  }
-  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
-  }
-  Relation "HH_SA_EventConsequence_event" {
-    profile = "features"
-    relatedReference = "HH_SA_EventConsequence#event"
-    tableName = "HH_SA_EventConsequence_event"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
-  }
-  Relation "AU_AdministrativeBoundary_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeBoundary#inspireId"
-    tableName = "AU_AdministrativeBoundary_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_admUnit" {
-    profile = "features"
-    tableName = "AU_Condominium_admUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_Condominium_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_Condominium#inspireId"
-    tableName = "AU_Condominium_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_name" {
-    profile = "attributes"
-    tableName = "AU_Condominium_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "GML_Sign" {
-    identifier = "basicTypes::Sign"
+}
+Container "basicTypes" {
+  * fileName = "basicTypes"
+  Constraint Enum <<enumeration>>, <<enumeration>> "GML_Sign" {
+    * identifier = "basicTypes::Sign"
     "+"
     "-"
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
+  }
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "HH_SA_TrafficRelatedEvent" {
-    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
-    identifier = "Safety::TrafficRelatedEvent"
-    tableName = "HH_SA_TrafficRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    endTime DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName_language TEXT
-    locationUnit_geographicalName_spelling_text TEXT
-    locationUnit_geometry GEOMETRY
-    startTime DATETIME NOT NULL
-    trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
-    ref causeOfEvent: PT_FreeText[0..*]
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Feature "HH_SA_Event" {
-    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
-    identifier = "Safety::Event"
-    tableName = "HH_SA_Event"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    endTime DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName_language TEXT
-    locationUnit_geographicalName_spelling_text TEXT
-    locationUnit_geometry GEOMETRY
-    startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "HH_SA_EventInformation" {
-    description = "All available information about the  event."
-    identifier = "Safety::EventInformation"
-    tableName = "HH_SA_EventInformation"
-    id INTEGER NOT NULL PRIMARY KEY
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
-    date DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    level LegislationLevelValue
-    link TEXT
-    name TEXT NOT NULL
-    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-  }
-  Feature "AU_AdministrativeUnit" {
-    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
-    identifier = "AdministrativeUnits::AdministrativeUnit"
-    tableName = "AU_AdministrativeUnit"
-    beginLifespanVersion DATETIME
-    country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    nationalCode TEXT NOT NULL
-    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-    upperLevelUnit INTEGER
-  }
-  Feature "AU_AdministrativeBoundary" {
-    description = "A line of demarcation between administrative units."
-    identifier = "AdministrativeUnits::AdministrativeBoundary"
-    tableName = "AU_AdministrativeBoundary"
-    beginLifespanVersion DATETIME
-    country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
-    geometry CURVE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
-    nationalLevels TEXT NOT NULL
-    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
-  }
-  Attributes "GMD_LocalisedCharacterString" {
-    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
-    tableName = "GMD_LocalisedCharacterString"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-    text TEXT NOT NULL
-  }
-  Feature "AU_ResidenceOfAuthority" {
-    description = "Data type representing the name and position of a residence of authority."
-    identifier = "AdministrativeUnits::ResidenceOfAuthority"
-    tableName = "AU_ResidenceOfAuthority"
-    geometry POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    name_language TEXT
-    name_spelling_text TEXT NOT NULL
-  }
-  Attributes "HH_SA_EventConsequence" {
-    description = "The harm an event caused for humans, propriety."
-    identifier = "Safety::EventConsequence"
-    tableName = "HH_SA_EventConsequence"
-    consequenceType TEXT NOT NULL CHECK(HH_SA_ConsequenceTypeValue)
-    event INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    value DOUBLE NOT NULL
-  }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
-  
-    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Constraint Enum "HH_SA_TrafficTypeValue" {
-    identifier = "Safety::TrafficTypeValue"
-  }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
-  }
-  Constraint Enum "BASE2_CountryCode" {
-    identifier = "Base Types 2::CountryCode"
-    AT
-    BE
-    BG
-    CY
-    CZ
-    DE
-    DK
-    EE
-    EL
-    ES
-    FI
-    FR
-    HR
-    HU
-    IE
-    IT
-    LT
-    LU
-    LV
-    MT
-    NL
-    PL
-    PT
-    RO
-    SE
-    SI
-    SK
-    TR
-    UK
-  }
-  Constraint Enum "AU_AdministrativeHierarchyLevel" {
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    1stOrder
-    2ndOrder
-    3rdOrder
-    4thOrder
-    5thOrder
-    6thOrder
-  }
-  Constraint Enum "AU_LegalStatusValue" {
-    identifier = "AdministrativeUnits::LegalStatusValue"
-    agreed
-    notAgreed
-  }
-  Constraint Enum "AU_TechnicalStatusValue" {
-    identifier = "AdministrativeUnits::TechnicalStatusValue"
-    edgeMatched
-    notEdgeMatched
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
-  }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-  Constraint Enum "HH_SA_ConsequenceTypeValue" {
-    identifier = "Safety::ConsequenceTypeValue"
-  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

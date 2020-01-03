@@ -1,292 +1,310 @@
-Container <<applicationSchema>>  "Buildings3D" {
-  Attributes "BU_CORE3D_BuildingGeometry3DLoD2" {
-    description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD2 representation."
-    identifier = "Buildings3D::BuildingGeometry3DLoD2"
-    tableName = "BU_CORE3D_BuildingGeometry3DLoD2"
-    geometryMultiSurface: MULTISURFACE [0..1]
-    geometrySolid: BLOB [0..1]
-    geometrySolid_content_type: TEXT [0..1]
-    horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
+Container <<applicationSchema>> "Buildings3D" {
+  * fileName = "Buildings3D"
+  Attributes <<dataType>> "BU_CORE3D_BuildingGeometry3DLoD2" {
+    * description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD2 representation."
+    * identifier = "Buildings3D::BuildingGeometry3DLoD2"
+    * tableName = "BU_CORE3D_BuildingGeometry3DLoD2"
+    geometryMultiSurface : MULTISURFACE [0..1]
+    geometrySolid : BLOB [0..1]
+    geometrySolid_content_type : TEXT [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    terrainIntersection: MULTICURVE [0..1]
-    verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    verticalGeometryReference3DBottom: TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
+    <<voidable>> terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
   }
-  Class "BuildingPart" {
-    beginLifespanVersion: DATETIME [0..1]
-    buildingNatures: TEXT [0..1]
-    conditionOfConstruction: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry3DLoD1_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD1_geometrySolid: BLOB [0..1]
-    geometry3DLoD1_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD1_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD1_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD1_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD1_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD1_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD1_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD1_verticalGeometryReference3DBottom: TEXT [0..1]
-    geometry3DLoD1_verticalGeometryReference3DTop: TEXT [0..1]
-    geometry3DLoD2_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD2_geometrySolid: BLOB [0..1]
-    geometry3DLoD2_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD2_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD2_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD2_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD2_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD2_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD2_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD2_verticalGeometryReference3DBottom: TEXT [0..1]
-    geometry3DLoD3_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD3_geometrySolid: BLOB [0..1]
-    geometry3DLoD3_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD3_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD3_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD3_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD3_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD3_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD3_verticalGeometryReference3DBottom: TEXT [0..1]
-    geometry3DLoD4_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD4_geometrySolid: BLOB [0..1]
-    geometry3DLoD4_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD4_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD4_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD4_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD4_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD4_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD4_verticalGeometryReference3DBottom: TEXT [0..1]
-    numberOfBuildingUnits: INTEGER [0..1]
-    numberOfDwellings: INTEGER [0..1]
-    numberOfFloorsAboveGround: INTEGER [0..1]
-    ref currentUse: BU_BASE_CurrentUse[0..*]
-    ref dateOfConstruction: BU_BASE_DateOfEvent[0..1]
-    ref dateOfDemolition: BU_BASE_DateOfEvent[0..1]
-    ref dateOfRenovation: BU_BASE_DateOfEvent[0..1]
-    ref elevation: BU_BASE_Elevation[0..*]
-    ref externalReference: BU_BASE_ExternalReference[0..*]
-    ref geometry2D: BU_BASE_BuildingGeometry2D[0..*]
-    ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
-    ref inspireId: BASE_Identifier
-    ref name: BASE2_SimpleGeographicalName[0..*]
-    ref ProductionBuilding inv building[0..*]
-    ref Address inv building[0..*]
+  Class <<featureType>> "BuildingPart" {
+    geometry3DLoD1_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD1_geometrySolid : BLOB [0..1]
+    geometry3DLoD1_geometrySolid_content_type : TEXT [0..1]
+    geometry3DLoD2_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD2_geometrySolid : BLOB [0..1]
+    geometry3DLoD2_geometrySolid_content_type : TEXT [0..1]
+    geometry3DLoD3_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD3_geometrySolid : BLOB [0..1]
+    geometry3DLoD3_geometrySolid_content_type : TEXT [0..1]
+    geometry3DLoD4_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD4_geometrySolid : BLOB [0..1]
+    geometry3DLoD4_geometrySolid_content_type : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> conditionOfConstruction : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_horizontalGeometryReference : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryReference3DTop : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_horizontalGeometryReference : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD2_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD3_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD4_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> numberOfBuildingUnits : INTEGER [0..1]
+    <<voidable>> numberOfDwellings : INTEGER [0..1]
+    <<voidable>> numberOfFloorsAboveGround : INTEGER [0..1]
+    inspireId BASE_Identifier as ref
+    <<voidable>> currentUse BU_BASE_CurrentUse [0..*] as ref
+    <<voidable>> dateOfConstruction BU_BASE_DateOfEvent [0..1] as ref
+    <<voidable>> dateOfDemolition BU_BASE_DateOfEvent [0..1] as ref
+    <<voidable>> dateOfRenovation BU_BASE_DateOfEvent [0..1] as ref
+    <<voidable>> elevation BU_BASE_Elevation [0..*] as ref
+    <<voidable>> externalReference BU_BASE_ExternalReference [0..*] as ref
+    <<voidable>> geometry2D BU_BASE_BuildingGeometry2D [0..*] as ref
+    <<voidable>> heightAboveGround BU_BASE_HeightAboveGround [0..*] as ref
+    <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
   }
-  Class "BuildingGeometry3DLoD" {
-    geometryMultiSurface: MULTISURFACE [0..1]
-    geometrySolid: BLOB [0..1]
-    geometrySolid_content_type: TEXT [0..1]
-    horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    terrainIntersection: MULTICURVE [0..1]
-    verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    verticalGeometryReference3DBottom: TEXT [0..1]
+  Class <<dataType>> "BuildingGeometry3DLoD" {
+    geometryMultiSurface : MULTISURFACE [0..1]
+    geometrySolid : BLOB [0..1]
+    geometrySolid_content_type : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
   }
-  Attributes "BU_CORE3D_BuildingGeometry3DLoD1" {
-    description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD 1 representation."
-    identifier = "Buildings3D::BuildingGeometry3DLoD1"
-    tableName = "BU_CORE3D_BuildingGeometry3DLoD1"
-    geometryMultiSurface: MULTISURFACE [0..1]
-    geometrySolid: BLOB [0..1]
-    geometrySolid_content_type: TEXT [0..1]
-    horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
+  Attributes <<dataType>> "BU_CORE3D_BuildingGeometry3DLoD1" {
+    * description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD 1 representation."
+    * identifier = "Buildings3D::BuildingGeometry3DLoD1"
+    * tableName = "BU_CORE3D_BuildingGeometry3DLoD1"
+    geometryMultiSurface : MULTISURFACE [0..1]
+    geometrySolid : BLOB [0..1]
+    geometrySolid_content_type : TEXT [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    terrainIntersection: MULTICURVE [0..1]
-    verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    verticalGeometryReference3DBottom: TEXT [0..1]
-    verticalGeometryReference3DTop TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
+    <<voidable>> terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> verticalGeometryReference3DTop TEXT CHECK(BU_BASE_ElevationReferenceValue)
   }
-  Class "Building" {
-    beginLifespanVersion: DATETIME [0..1]
-    buildingNatures: TEXT [0..1]
-    conditionOfConstruction: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry3DLoD1_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD1_geometrySolid: BLOB [0..1]
-    geometry3DLoD1_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD1_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD1_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD1_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD1_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD1_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD1_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD1_verticalGeometryReference3DBottom: TEXT [0..1]
-    geometry3DLoD1_verticalGeometryReference3DTop: TEXT [0..1]
-    geometry3DLoD2_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD2_geometrySolid: BLOB [0..1]
-    geometry3DLoD2_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD2_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD2_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD2_horizontalGeometryReference: TEXT [0..1]
-    geometry3DLoD2_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD2_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD2_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD2_verticalGeometryReference3DBottom: TEXT [0..1]
-    geometry3DLoD3_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD3_geometrySolid: BLOB [0..1]
-    geometry3DLoD3_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD3_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD3_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD3_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD3_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD3_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD3_verticalGeometryReference3DBottom: TEXT [0..1]
-    geometry3DLoD4_geometryMultiSurface: MULTISURFACE [0..1]
-    geometry3DLoD4_geometrySolid: BLOB [0..1]
-    geometry3DLoD4_geometrySolid_content_type: TEXT [0..1]
-    geometry3DLoD4_horizontalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD4_horizontalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD4_terrainIntersection: MULTICURVE [0..1]
-    geometry3DLoD4_verticalGeometryEstimatedAccuracy: TEXT [0..1]
-    geometry3DLoD4_verticalGeometryEstimatedAccuracy_uom: TEXT [0..1]
-    geometry3DLoD4_verticalGeometryReference3DBottom: TEXT [0..1]
-    numberOfBuildingUnits: INTEGER [0..1]
-    numberOfDwellings: INTEGER [0..1]
-    numberOfFloorsAboveGround: INTEGER [0..1]
-    ref currentUse: BU_BASE_CurrentUse[0..*]
-    ref dateOfConstruction: BU_BASE_DateOfEvent[0..1]
-    ref dateOfDemolition: BU_BASE_DateOfEvent[0..1]
-    ref dateOfRenovation: BU_BASE_DateOfEvent[0..1]
-    ref elevation: BU_BASE_Elevation[0..*]
-    ref externalReference: BU_BASE_ExternalReference[0..*]
-    ref geometry2D: BU_BASE_BuildingGeometry2D[0..*]
-    ref heightAboveGround: BU_BASE_HeightAboveGround[0..*]
-    ref inspireId: BASE_Identifier
-    ref name: BASE2_SimpleGeographicalName[0..*]
-    ref ProductionBuilding inv building[0..*]
-    ref Address inv building[0..*]
+  Class <<featureType>> "Building" {
+    geometry3DLoD1_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD1_geometrySolid : BLOB [0..1]
+    geometry3DLoD1_geometrySolid_content_type : TEXT [0..1]
+    geometry3DLoD2_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD2_geometrySolid : BLOB [0..1]
+    geometry3DLoD2_geometrySolid_content_type : TEXT [0..1]
+    geometry3DLoD3_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD3_geometrySolid : BLOB [0..1]
+    geometry3DLoD3_geometrySolid_content_type : TEXT [0..1]
+    geometry3DLoD4_geometryMultiSurface : MULTISURFACE [0..1]
+    geometry3DLoD4_geometrySolid : BLOB [0..1]
+    geometry3DLoD4_geometrySolid_content_type : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> conditionOfConstruction : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_horizontalGeometryReference : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> geometry3DLoD1_verticalGeometryReference3DTop : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_horizontalGeometryReference : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD2_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD2_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD3_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD3_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> geometry3DLoD4_verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> geometry3DLoD4_verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> numberOfBuildingUnits : INTEGER [0..1]
+    <<voidable>> numberOfDwellings : INTEGER [0..1]
+    <<voidable>> numberOfFloorsAboveGround : INTEGER [0..1]
+    inspireId BASE_Identifier as ref
+    <<voidable>> currentUse BU_BASE_CurrentUse [0..*] as ref
+    <<voidable>> dateOfConstruction BU_BASE_DateOfEvent [0..1] as ref
+    <<voidable>> dateOfDemolition BU_BASE_DateOfEvent [0..1] as ref
+    <<voidable>> dateOfRenovation BU_BASE_DateOfEvent [0..1] as ref
+    <<voidable>> elevation BU_BASE_Elevation [0..*] as ref
+    <<voidable>> externalReference BU_BASE_ExternalReference [0..*] as ref
+    <<voidable>> geometry2D BU_BASE_BuildingGeometry2D [0..*] as ref
+    <<voidable>> heightAboveGround BU_BASE_HeightAboveGround [0..*] as ref
+    <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> parts_BuildingPart BASE_Identifier [0..*] as ref
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "BU_BASE_HorizontalGeometryReferenceValue" {
+}
+Container <<applicationSchema>> "BuildingsBase" {
+  * fileName = "BuildingsBase"
+  Constraint Enum <<codeList>> "BU_BASE_ConditionOfConstructionValue" {
+    * identifier = "BuildingsBase::ConditionOfConstructionValue"
     obligation = "implementingRule"
-    identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
   }
-  Constraint Enum "BU_BASE_ElevationReferenceValue" {
+  Constraint Enum <<codeList>> "BU_BASE_HorizontalGeometryReferenceValue" {
+    * identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
     obligation = "implementingRule"
-    identifier = "BuildingsBase::ElevationReferenceValue"
   }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
+  Constraint Enum <<codeList>> "BU_BASE_ElevationReferenceValue" {
+    * identifier = "BuildingsBase::ElevationReferenceValue"
     obligation = "implementingRule"
-    identifier = "BuildingsBase::ConditionOfConstructionValue"
   }
-  Feature "BU_BASE_BuildingGeometry2D" {
-    description = "This data types includes the geometry of the building and metadata information about which element of the building was captured and how."
-    identifier = "BuildingsBase::BuildingGeometry2D"
-    tableName = "BU_BASE_BuildingGeometry2D"
-    geometry GEOMETRY NOT NULL
-    horizontalGeometryEstimatedAccuracy TEXT
-    horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    horizontalGeometryReference TEXT NOT NULL CHECK(BU_BASE_HorizontalGeometryReferenceValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    referenceGeometry BOOLEAN NOT NULL
-    verticalGeometryEstimatedAccuracy TEXT
-    verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    verticalGeometryReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+  Constraint Enum <<codeList>> "BU_BASE_BuildingNatureValue" {
+    * identifier = "BuildingsBase::BuildingNatureValue"
+    obligation = "implementingRule"
   }
-  Attributes "BU_BASE_CurrentUse" {
-    description = "This data type enables to detail the current use(s)."
-    identifier = "BuildingsBase::CurrentUse"
-    tableName = "BU_BASE_CurrentUse"
-    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    percentage INTEGER
+  Constraint Enum <<codeList>> "BU_BASE_HeightStatusValue" {
+    * identifier = "BuildingsBase::HeightStatusValue"
+    obligation = "implementingRule"
   }
-  Attributes "BU_BASE_DateOfEvent" {
-    description = "This data type includes the different possible ways to define the date of an event."
-    identifier = "BuildingsBase::DateOfEvent"
-    tableName = "BU_BASE_DateOfEvent"
-    anyPoint DATETIME
-    beginning DATETIME
-    end DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "BU_BASE_Elevation" {
-    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
-    identifier = "BuildingsBase::Elevation"
-    tableName = "BU_BASE_Elevation"
+  Attributes <<dataType>> "BU_BASE_Elevation" {
+    * description = "This data types includes the elevation value itself  and information on how this elevation was measured."
+    * identifier = "BuildingsBase::Elevation"
+    * tableName = "BU_BASE_Elevation"
     elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
     elevationValue_coordinate <<missing>> NOT NULL
     elevationValue_dimension INTEGER NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }
-  Attributes "BU_BASE_ExternalReference" {
-    description = "Reference to an external information system containing any piece of information related to the spatial object."
-    identifier = "BuildingsBase::ExternalReference"
-    tableName = "BU_BASE_ExternalReference"
+  Constraint Enum <<codeList>> "BU_BASE_CurrentUseValue" {
+    * identifier = "BuildingsBase::CurrentUseValue"
+    extensiblity = "narrower"
+    obligation = "implementingRule"
+  }
+  Attributes <<dataType>> "BU_BASE_DateOfEvent" {
+    * description = "This data type includes the different possible ways to define the date of an event."
+    * identifier = "BuildingsBase::DateOfEvent"
+    * tableName = "BU_BASE_DateOfEvent"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>> anyPoint DATETIME
+    <<voidable>> beginning DATETIME
+    <<voidable>> end DATETIME
+  }
+  Attributes <<dataType>> "BU_BASE_ExternalReference" {
+    * description = "Reference to an external information system containing any piece of information related to the spatial object."
+    * identifier = "BuildingsBase::ExternalReference"
+    * tableName = "BU_BASE_ExternalReference"
     id INTEGER NOT NULL PRIMARY KEY
     informationSystem TEXT NOT NULL
     reference TEXT NOT NULL
   }
-  Attributes "BU_BASE_HeightAboveGround" {
-    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
-    identifier = "BuildingsBase::HeightAboveGround"
-    tableName = "BU_BASE_HeightAboveGround"
-    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+  Attributes <<dataType>> "BU_BASE_CurrentUse" {
+    * description = "This data type enables to detail the current use(s)."
+    * identifier = "BuildingsBase::CurrentUse"
+    * tableName = "BU_BASE_CurrentUse"
+    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
     id INTEGER NOT NULL PRIMARY KEY
-    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
-    status TEXT CHECK(BU_BASE_HeightStatusValue)
+    <<voidable>> percentage INTEGER
+  }
+  Feature <<dataType>> "BU_BASE_BuildingGeometry2D" {
+    * description = "This data types includes the geometry of the building and metadata information about which element of the building was captured and how."
+    * identifier = "BuildingsBase::BuildingGeometry2D"
+    * tableName = "BU_BASE_BuildingGeometry2D"
+    geometry GEOMETRY NOT NULL
+    horizontalGeometryReference TEXT NOT NULL CHECK(BU_BASE_HorizontalGeometryReferenceValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    referenceGeometry BOOLEAN NOT NULL
+    verticalGeometryReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    <<voidable>> horizontalGeometryEstimatedAccuracy TEXT
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> verticalGeometryEstimatedAccuracy TEXT
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+  }
+  Attributes <<dataType>> "BU_BASE_HeightAboveGround" {
+    * description = "Vertical distance (measured or estimated) between a low reference and a high reference."
+    * identifier = "BuildingsBase::HeightAboveGround"
+    * tableName = "BU_BASE_HeightAboveGround"
+    id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    <<voidable>> heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    <<voidable>> lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    <<voidable>> status TEXT CHECK(BU_BASE_HeightStatusValue)
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
     spelling_text TEXT NOT NULL
   }
-  Constraint Enum "BU_BASE_CurrentUseValue" {
-    extensiblity = "narrower"
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::CurrentUseValue"
-  }
-  Constraint Enum "BU_BASE_HeightStatusValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::HeightStatusValue"
-  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

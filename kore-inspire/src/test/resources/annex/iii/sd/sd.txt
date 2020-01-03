@@ -1,14 +1,15 @@
-Container <<applicationSchema>>  "SpeciesDistribution" {
-  Constraint Enum "SD_OccurrenceCategoryValue" {
-    identifier = "SpeciesDistribution::OccurrenceCategoryValue"
+Container <<applicationSchema>> "SpeciesDistribution" {
+  * fileName = "SpeciesDistribution"
+  Constraint Enum <<codeList>> "SD_OccurrenceCategoryValue" {
+    * identifier = "SpeciesDistribution::OccurrenceCategoryValue"
     absent
     common
     present
     rare
     veryRare
   }
-  Constraint Enum "SD_GeneralCountingUnitValue" {
-    identifier = "SpeciesDistribution::GeneralCountingUnitValue"
+  Constraint Enum <<codeList>> "SD_GeneralCountingUnitValue" {
+    * identifier = "SpeciesDistribution::GeneralCountingUnitValue"
     colonies
     individuals
     juvenile
@@ -18,21 +19,21 @@ Container <<applicationSchema>>  "SpeciesDistribution" {
     shoots
     tufts
   }
-  Constraint Enum "SD_EunisSpeciesCodeValue" {
-    identifier = "SpeciesDistribution::EunisSpeciesCodeValue"
+  Constraint Enum <<codeList>> "SD_EunisSpeciesCodeValue" {
+    * identifier = "SpeciesDistribution::EunisSpeciesCodeValue"
   }
-  Constraint Enum "SD_EuNomenCodeValue" {
-    identifier = "SpeciesDistribution::EuNomenCodeValue"
+  Constraint Enum <<codeList>> "SD_EuNomenCodeValue" {
+    * identifier = "SpeciesDistribution::EuNomenCodeValue"
   }
-  Constraint Enum "SD_PopulationTypeValue" {
-    identifier = "SpeciesDistribution::PopulationTypeValue"
+  Constraint Enum <<codeList>> "SD_PopulationTypeValue" {
+    * identifier = "SpeciesDistribution::PopulationTypeValue"
     concentration
     permanent
     reproducing
     wintering
   }
-  Constraint Enum "SD_ResidencyStatusValue" {
-    identifier = "SpeciesDistribution::ResidencyStatusValue"
+  Constraint Enum <<codeList>> "SD_ResidencyStatusValue" {
+    * identifier = "SpeciesDistribution::ResidencyStatusValue"
     cultivated
     extinct
     introducedEstablished
@@ -42,122 +43,123 @@ Container <<applicationSchema>>  "SpeciesDistribution" {
     probablyExtinct
     re-introducedOrTranslocated
   }
-  Constraint Enum "SD_ReferenceSpeciesCodeValue" {
-    identifier = "SpeciesDistribution::ReferenceSpeciesCodeValue"
+  Constraint Enum <<codeList>> "SD_ReferenceSpeciesCodeValue" {
+    * identifier = "SpeciesDistribution::ReferenceSpeciesCodeValue"
   }
-  Feature "SD_SpeciesDistributionDataSet" {
-    description = "This data set is a collection of individual spatial objects (units) in a distribution of species.
-
+  Feature <<featureType>> "SD_SpeciesDistributionDataSet" {
+    * description = "This data set is a collection of individual spatial objects (units) in a distribution of species.
+  
     Collection of individual spatial objects of allowed geometry where a species occurs."
-    identifier = "SpeciesDistribution::SpeciesDistributionDataSet"
-    tableName = "SD_SpeciesDistributionDataSet"
-    beginLifespanVersion DATETIME
-    domainExtent MULTISURFACE
-    endLifespanVersion DATETIME
+    * identifier = "SpeciesDistribution::SpeciesDistributionDataSet"
+    * tableName = "SD_SpeciesDistributionDataSet"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    name TEXT
+    <<voidable>> beginLifespanVersion DATETIME
+    <<voidable>> domainExtent MULTISURFACE
+    <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> name TEXT
   }
-  Constraint Enum "SD_QualifierValue" {
-    identifier = "SpeciesDistribution::QualifierValue"
+  Constraint Enum <<codeList>> "SD_QualifierValue" {
+    * identifier = "SpeciesDistribution::QualifierValue"
     congruent
     excludes
     includedIn
     includes
     overlaps
   }
-  Feature "SD_SpeciesDistributionUnit" {
-    description = "Occurrence of animal and plant species aggregated by grid, region, administrative unit or other analytical unit.
-
+  Feature <<featureType>> "SD_SpeciesDistributionUnit" {
+    * description = "Occurrence of animal and plant species aggregated by grid, region, administrative unit or other analytical unit.
+  
     Pan-European, national or local mapping initiatives, resulting in spatial data for species in terrestrial and marine environments, e.g. for birds, insects, mammals, amphibians, reptiles, fish or vascular plants.
-
+  
     NOTE 1 Only species are mentioned in the INSPIRE definition. But earlier INSPIRE documents (INPIRE IMS, 2003) mentions both species or species grouped e.g. to families. So we interprete species as taxa, which means taxonomic units at any systematic rank, like subspecies, species, genus, family etc."
-    identifier = "SpeciesDistribution::SpeciesDistributionUnit"
-    tableName = "SD_SpeciesDistributionUnit"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "SpeciesDistribution::SpeciesDistributionUnit"
+    * tableName = "SD_SpeciesDistributionUnit"
     geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    speciesName_localSpeciesId TEXT CHECK(SD_LocalSpeciesNameCodeValue)
-    speciesName_localSpeciesName TEXT
-    speciesName_localSpeciesScheme TEXT
-    speciesName_qualifier TEXT CHECK(SD_QualifierValue)
     speciesName_referenceSpeciesId TEXT NOT NULL CHECK(SD_ReferenceSpeciesCodeValue)
-    speciesName_referenceSpeciesName TEXT
     speciesName_referenceSpeciesScheme TEXT NOT NULL CHECK(SD_ReferenceSpeciesSchemeValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> spatialObject_AbstractFeature INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> speciesName_localSpeciesId TEXT CHECK(SD_LocalSpeciesNameCodeValue)
+    <<voidable>> speciesName_localSpeciesName TEXT
+    <<voidable>> speciesName_localSpeciesScheme TEXT
+    <<voidable>> speciesName_qualifier TEXT CHECK(SD_QualifierValue)
+    <<voidable>> speciesName_referenceSpeciesName TEXT
   }
-  Constraint Enum "SD_NatureDirectivesCodeValue" {
-    identifier = "SpeciesDistribution::NatureDirectivesCodeValue"
+  Constraint Enum <<codeList>> "SD_NatureDirectivesCodeValue" {
+    * identifier = "SpeciesDistribution::NatureDirectivesCodeValue"
   }
-  Attributes "SD_SpeciesNameType" {
-    description = "Identifier and scientific name, including the author, taken from an international reference list, optionally completed by a locally used name and its taxonomic concept relationship to the reference name.
-
+  Attributes <<dataType>> "SD_SpeciesNameType" {
+    * description = "Identifier and scientific name, including the author, taken from an international reference list, optionally completed by a locally used name and its taxonomic concept relationship to the reference name.
+  
     The authorized ReferenceSpeciesScheme provides reference species list which defines the ReferenceSpeciesName with its scientific name plus author and ReferenceSpeciesId.  The LocalSpeciesName provides nomenclatural and taxonomical information about the locally used species name and the taxonomic concepts implied by the use of this name according to a given reference."
-    identifier = "SpeciesDistribution::SpeciesNameType"
-    tableName = "SD_SpeciesNameType"
+    * identifier = "SpeciesDistribution::SpeciesNameType"
+    * tableName = "SD_SpeciesNameType"
     id INTEGER NOT NULL PRIMARY KEY
-    localSpeciesId TEXT CHECK(SD_LocalSpeciesNameCodeValue)
-    localSpeciesName TEXT
-    localSpeciesScheme TEXT
-    qualifier TEXT CHECK(SD_QualifierValue)
     referenceSpeciesId TEXT NOT NULL CHECK(SD_ReferenceSpeciesCodeValue)
-    referenceSpeciesName TEXT
     referenceSpeciesScheme TEXT NOT NULL CHECK(SD_ReferenceSpeciesSchemeValue)
+    <<voidable>> localSpeciesId TEXT CHECK(SD_LocalSpeciesNameCodeValue)
+    <<voidable>> localSpeciesName TEXT
+    <<voidable>> localSpeciesScheme TEXT
+    <<voidable>> qualifier TEXT CHECK(SD_QualifierValue)
+    <<voidable>> referenceSpeciesName TEXT
   }
-  Attributes "SD_PopulationSizeType" {
-    description = "A range value indicating the counted, estimated or calculated occurrences or population sizes, which is defined by an upper and a lower limit.
-
+  Attributes <<dataType>> "SD_PopulationSizeType" {
+    * description = "A range value indicating the counted, estimated or calculated occurrences or population sizes, which is defined by an upper and a lower limit.
+  
     A range density (or abundance) value for species occurrence in the individual species distribution units either counted, estimated or calculated based on defined counting units,  or using upper and lower bounds."
-    identifier = "SpeciesDistribution::PopulationSizeType"
-    tableName = "SD_PopulationSizeType"
+    * identifier = "SpeciesDistribution::PopulationSizeType"
+    * tableName = "SD_PopulationSizeType"
     countingMethod TEXT NOT NULL CHECK(SD_CountingMethodValue)
     countingUnit TEXT NOT NULL CHECK(SD_CountingUnitValue)
     id INTEGER NOT NULL PRIMARY KEY
     populationSize_lowerBound INTEGER
     populationSize_upperBound INTEGER
   }
-  Constraint Enum "SD_CountingMethodValue" {
-    identifier = "SpeciesDistribution::CountingMethodValue"
+  Constraint Enum <<codeList>> "SD_CountingMethodValue" {
+    * identifier = "SpeciesDistribution::CountingMethodValue"
     calculated
     counted
     estimated
   }
-  Attributes "SD_DistributionInfoType" {
-    description = "The description of the status of the subject of distribution within the species distribution unit, including the indication of the abundance by counting, estimation or calculation of the number of occurrences or population size of the particular species."
-    identifier = "SpeciesDistribution::DistributionInfoType"
-    tableName = "SD_DistributionInfoType"
-    collectedFrom DATE
-    collectedTo DATE
+  Attributes <<dataType>> "SD_DistributionInfoType" {
+    * description = "The description of the status of the subject of distribution within the species distribution unit, including the indication of the abundance by counting, estimation or calculation of the number of occurrences or population size of the particular species."
+    * identifier = "SpeciesDistribution::DistributionInfoType"
+    * tableName = "SD_DistributionInfoType"
     id INTEGER NOT NULL PRIMARY KEY
     occurrenceCategory TEXT NOT NULL CHECK(SD_OccurrenceCategoryValue)
     populationSize_countingMethod TEXT CHECK(SD_CountingMethodValue)
     populationSize_countingUnit TEXT CHECK(SD_CountingUnitValue)
     populationSize_populationSize_lowerBound INTEGER
     populationSize_populationSize_upperBound INTEGER
-    populationType TEXT CHECK(SD_PopulationTypeValue)
-    residencyStatus TEXT CHECK(SD_ResidencyStatusValue)
-    sensitiveInfo BOOLEAN
+    <<voidable>> collectedFrom DATE
+    <<voidable>> collectedTo DATE
+    <<voidable>> populationType TEXT CHECK(SD_PopulationTypeValue)
+    <<voidable>> residencyStatus TEXT CHECK(SD_ResidencyStatusValue)
+    <<voidable>> sensitiveInfo BOOLEAN
   }
-  Attributes "SD_RangeType" {
-    description = "Value indicating the upper and lower limits of the counting, estimation or calculation of occurrences."
-    identifier = "SpeciesDistribution::RangeType"
-    tableName = "SD_RangeType"
+  Attributes <<dataType>> "SD_RangeType" {
+    * description = "Value indicating the upper and lower limits of the counting, estimation or calculation of occurrences."
+    * identifier = "SpeciesDistribution::RangeType"
+    * tableName = "SD_RangeType"
     id INTEGER NOT NULL PRIMARY KEY
     lowerBound INTEGER
     upperBound INTEGER
   }
-  Constraint Enum "SD_ReferenceSpeciesSchemeValue" {
-    identifier = "SpeciesDistribution::ReferenceSpeciesSchemeValue"
+  Constraint Enum <<codeList>> "SD_ReferenceSpeciesSchemeValue" {
+    * identifier = "SpeciesDistribution::ReferenceSpeciesSchemeValue"
     eunis
     eunomen
     natureDirectives
   }
-  Constraint Enum "SD_LocalSpeciesNameCodeValue" {
-    identifier = "SpeciesDistribution::LocalSpeciesNameCodeValue"
+  Constraint Enum <<codeList>> "SD_LocalSpeciesNameCodeValue" {
+    * identifier = "SpeciesDistribution::LocalSpeciesNameCodeValue"
   }
-  Constraint Enum "SD_Article17CountingUnitValue" {
-    identifier = "SpeciesDistribution::Article17CountingUnitValue"
+  Constraint Enum <<codeList>> "SD_Article17CountingUnitValue" {
+    * identifier = "SpeciesDistribution::Article17CountingUnitValue"
     adults
     area
     breedingFemales
@@ -175,78 +177,95 @@ Container <<applicationSchema>>  "SpeciesDistribution" {
     shoots
     tufts
   }
-  Constraint Enum "SD_CountingUnitValue" {
-    identifier = "SpeciesDistribution::CountingUnitValue"
+  Constraint Enum <<codeList>> "SD_CountingUnitValue" {
+    * identifier = "SpeciesDistribution::CountingUnitValue"
   }
   Relation "SD_SpeciesDistributionDataSet_member" {
-    profile = "features"
-    tableName = "SD_SpeciesDistributionDataSet_member"
+    * profile = "features"
+    * tableName = "SD_SpeciesDistributionDataSet_member"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionDataSet(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SD_SpeciesDistributionUnit(id)
   }
   Relation "SD_SpeciesDistributionDataSet_inspireId" {
-    profile = "attributes"
-    relatedReference = "SD_SpeciesDistributionDataSet#inspireId"
-    tableName = "SD_SpeciesDistributionDataSet_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SD_SpeciesDistributionDataSet#inspireId"
+    * tableName = "SD_SpeciesDistributionDataSet_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionDataSet(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SD_SpeciesDistributionUnit_inspireId" {
-    profile = "attributes"
-    relatedReference = "SD_SpeciesDistributionUnit#inspireId"
-    tableName = "SD_SpeciesDistributionUnit_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SD_SpeciesDistributionUnit#inspireId"
+    * tableName = "SD_SpeciesDistributionUnit_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SD_SpeciesDistributionUnit_distributionInfo" {
-    profile = "attributes"
-    tableName = "SD_SpeciesDistributionUnit_distributionInfo"
+    * profile = "attributes"
+    * tableName = "SD_SpeciesDistributionUnit_distributionInfo"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SD_DistributionInfoType(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+  Relation "SD_SpeciesDistributionUnit_spatialObject_AbstractFeature" {
+    * profile = "attributes"
+    * relatedReference = "attribute SD_SpeciesDistributionUnit#spatialObject_AbstractFeature"
+    * tableName = "SD_SpeciesDistributionUnit_spatialObject_AbstractFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Constraint Enum "GMD_CI_DateTypeCode" {
-    identifier = "Citation and responsible party information::CI_DateTypeCode"
+}
+Container "Citation and responsible party information" {
+  * fileName = "Citation and responsible party information"
+  Constraint Enum <<codeList>> "GMD_CI_DateTypeCode" {
+    * identifier = "Citation and responsible party information::CI_DateTypeCode"
     creation
     publication
     revision
   }
 }
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

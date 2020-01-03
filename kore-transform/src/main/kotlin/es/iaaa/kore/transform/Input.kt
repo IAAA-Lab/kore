@@ -15,6 +15,7 @@
  */
 package es.iaaa.kore.transform
 
+import es.iaaa.kore.KoreObject
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.impl.*
 import es.iaaa.kore.resource.ResourceHelper
@@ -34,7 +35,7 @@ interface Input : Validable {
     val type: Property<String>
 
     /**
-     * The selector.
+     * The package selector.
      */
     val selector: Property<(KorePackage) -> Boolean>
 
@@ -42,6 +43,11 @@ interface Input : Validable {
      * The helper.
      */
     val helper: Property<ResourceHelper>
+
+    /**
+     * The object selector.
+     */
+    val boundary: Property<(KoreObject, KoreObject) -> Boolean>
 
     /**
      * Returns a [Violations] object indicating if this input

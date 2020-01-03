@@ -1,32 +1,39 @@
-Container <<applicationSchema>>  "Atmospheric Conditions and Meteorological Geographical Features" {
-  Constraint Enum "AC_MF_EU_AirQualityReferenceComponentValue" {
-    identifier = "Atmospheric Conditions and Meteorological Geographical Features::EU_AirQualityReferenceComponentValue"
+Container <<applicationSchema>> "Atmospheric Conditions and Meteorological Geographical Features" {
+  * fileName = "Atmospheric Conditions and Meteorological Geographical Features"
+  Constraint Enum <<codeList>> "AC_MF_EU_AirQualityReferenceComponentValue" {
+    * identifier = "Atmospheric Conditions and Meteorological Geographical Features::EU_AirQualityReferenceComponentValue"
   }
-  Constraint Enum "AC_MF_GRIB_CodeTable4_2Value" {
-    identifier = "Atmospheric Conditions and Meteorological Geographical Features::GRIB_CodeTable4_2Value"
-  }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+  Constraint Enum <<codeList>> "AC_MF_GRIB_CodeTable4_2Value" {
+    * identifier = "Atmospheric Conditions and Meteorological Geographical Features::GRIB_CodeTable4_2Value"
   }
 }
+Package <<applicationSchema>> "Base Types" {
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

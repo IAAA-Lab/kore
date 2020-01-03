@@ -7,6 +7,7 @@ import es.iaaa.kore.models.gpkg.TextType
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.setTypeWhen
+import kotlin.math.min
 
 /**
  * URI is encoded as TEXT.
@@ -40,7 +41,7 @@ val `ISO 19139 type - LocalisedCharacterString`: Transform = { _, _ ->
                 (att.type as KoreClass).allAttributes().forEach { toBeCopiedAtt ->
                     val addedAtt = toBeCopiedAtt.copy(parent)
                     addedAtt.name = toBeCopiedAtt.name
-                    addedAtt.lowerBound = kotlin.math.min(toBeCopiedAtt.lowerBound, att.lowerBound)
+                    addedAtt.lowerBound = min(toBeCopiedAtt.lowerBound, att.lowerBound)
                 }
             } else {
                 att.containingClass = parent

@@ -1,39 +1,40 @@
-Container <<applicationSchema>>  "AdministrativeUnits" {
-  Constraint Enum "AU_TechnicalStatusValue" {
-    identifier = "AdministrativeUnits::TechnicalStatusValue"
+Container <<applicationSchema>> "AdministrativeUnits" {
+  * fileName = "AdministrativeUnits"
+  Constraint Enum <<enumeration>> "AU_TechnicalStatusValue" {
+    * identifier = "AdministrativeUnits::TechnicalStatusValue"
     edgeMatched
     notEdgeMatched
   }
-  Feature "AU_AdministrativeBoundary" {
-    description = "A line of demarcation between administrative units."
-    identifier = "AdministrativeUnits::AdministrativeBoundary"
-    tableName = "AU_AdministrativeBoundary"
-    beginLifespanVersion DATETIME
+  Feature <<featureType>> "AU_AdministrativeBoundary" {
+    * description = "A line of demarcation between administrative units."
+    * identifier = "AdministrativeUnits::AdministrativeBoundary"
+    * tableName = "AU_AdministrativeBoundary"
     country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
-    nationalLevels TEXT NOT NULL
-    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
+    <<array>> nationalLevels TEXT NOT NULL
+    <<voidable>> technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
   }
-  Feature "AU_AdministrativeUnit" {
-    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
-    identifier = "AdministrativeUnits::AdministrativeUnit"
-    tableName = "AU_AdministrativeUnit"
-    beginLifespanVersion DATETIME
+  Feature <<featureType>> "AU_AdministrativeUnit" {
+    * description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
+    * identifier = "AdministrativeUnits::AdministrativeUnit"
+    * tableName = "AU_AdministrativeUnit"
     country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     nationalCode TEXT NOT NULL
     nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-    upperLevelUnit INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> upperLevelUnit INTEGER
+    <<reference>> inspireId INTEGER
   }
-  Constraint Enum "AU_AdministrativeHierarchyLevel" {
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
+  Constraint Enum <<codeList>> "AU_AdministrativeHierarchyLevel" {
+    * identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
     1stOrder
     2ndOrder
     3rdOrder
@@ -41,128 +42,107 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     5thOrder
     6thOrder
   }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+  Feature <<featureType>> "AU_Condominium" {
+    * description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
   
     NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "AdministrativeUnits::Condominium"
+    * tableName = "AU_Condominium"
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
   }
-  Feature "AU_ResidenceOfAuthority" {
-    description = "Data type representing the name and position of a residence of authority."
-    identifier = "AdministrativeUnits::ResidenceOfAuthority"
-    tableName = "AU_ResidenceOfAuthority"
-    geometry POINT
+  Feature <<dataType>> "AU_ResidenceOfAuthority" {
+    * description = "Data type representing the name and position of a residence of authority."
+    * identifier = "AdministrativeUnits::ResidenceOfAuthority"
+    * tableName = "AU_ResidenceOfAuthority"
     id INTEGER NOT NULL PRIMARY KEY
     name_language TEXT
     name_spelling_text TEXT NOT NULL
+    <<voidable>> geometry POINT
   }
-  Constraint Enum "AU_LegalStatusValue" {
-    identifier = "AdministrativeUnits::LegalStatusValue"
+  Constraint Enum <<enumeration>> "AU_LegalStatusValue" {
+    * identifier = "AdministrativeUnits::LegalStatusValue"
     agreed
     notAgreed
   }
   Relation "AU_boundary_admUnit" {
-    profile = "features"
-    tableName = "AU_boundary_admUnit"
+    * profile = "features"
+    * tableName = "AU_boundary_admUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
   Relation "AU_AdministrativeBoundary_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeBoundary#inspireId"
-    tableName = "AU_AdministrativeBoundary_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute AU_AdministrativeBoundary#inspireId"
+    * tableName = "AU_AdministrativeBoundary_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "AU_AdministrativeUnit_administeredBy" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_administeredBy"
+    * profile = "features"
+    * tableName = "AU_AdministrativeUnit_administeredBy"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
   Relation "AU_AdministrativeUnit_lowerLevelUnit" {
-    profile = "features"
-    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
-    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
+    * profile = "features"
+    * relatedReference = "attribute AU_AdministrativeUnit#upperLevelUnit"
+    * tableName = "AU_AdministrativeUnit_lowerLevelUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
   Relation "AU_AdministrativeUnit_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeUnit#inspireId"
-    tableName = "AU_AdministrativeUnit_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute AU_AdministrativeUnit#inspireId"
+    * tableName = "AU_AdministrativeUnit_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "AU_AdministrativeUnit_name" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_name"
+    * profile = "attributes"
+    * tableName = "AU_AdministrativeUnit_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "AU_AdministrativeUnit_nationalLevelName" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_nationalLevelName"
+    * profile = "attributes"
+    * tableName = "AU_AdministrativeUnit_nationalLevelName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
   }
   Relation "AU_AdministrativeUnit_residenceOfAuthority" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
+    * profile = "features"
+    * tableName = "AU_AdministrativeUnit_residenceOfAuthority"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
   }
   Relation "AU_Condominium_admUnit" {
-    profile = "features"
-    tableName = "AU_Condominium_admUnit"
+    * profile = "features"
+    * tableName = "AU_Condominium_admUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
   Relation "AU_Condominium_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_Condominium#inspireId"
-    tableName = "AU_Condominium_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute AU_Condominium#inspireId"
+    * tableName = "AU_Condominium_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "AU_Condominium_name" {
-    profile = "attributes"
-    tableName = "AU_Condominium_name"
+    * profile = "attributes"
+    * tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "BASE2_CountryCode" {
-    identifier = "Base Types 2::CountryCode"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<codeList>> "BASE2_CountryCode" {
+    * identifier = "Base Types 2::CountryCode"
     AT
     BE
     BG
@@ -193,38 +173,17 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     TR
     UK
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
     spelling_text TEXT NOT NULL
   }
-  Attributes "GMD_LocalisedCharacterString" {
-    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
-    tableName = "GMD_LocalisedCharacterString"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-    text TEXT NOT NULL
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
+}
+Container "ISO 00639 Language Codes" {
+  * fileName = "ISO 00639 Language Codes"
+  Constraint Enum <<codeList>> "GMD_LanguageCode" {
+    * identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
     Albanian
     Arabic
@@ -270,11 +229,17 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     Turkish
     Ukranian
   }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
+}
+Container "ISO 03166 Country Codes" {
+  * fileName = "ISO 03166 Country Codes"
+  Constraint Enum <<codeList>> "GMD_CountryCode" {
+    * identifier = "ISO 03166 Country Codes::CountryCode"
   }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
+}
+Container "Identification information" {
+  * fileName = "Identification information"
+  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
+    * identifier = "Identification information::MD_CharacterSetCode"
     (reservedforfutureuse)
     8859part1
     8859part10
@@ -306,3 +271,61 @@ Container <<applicationSchema>>  "AdministrativeUnits" {
     utf8
   }
 }
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container "Cultural and linguistic adapdability" {
+  * fileName = "Cultural and linguistic adapdability"
+  Attributes <<dataType>> "GMD_LocalisedCharacterString" {
+    * identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    * tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

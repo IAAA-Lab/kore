@@ -36,5 +36,5 @@ internal abstract class KoreStructuralFeatureImpl : KoreTypedElementImpl(), Kore
     override var defaultValue: Any? = null
     override var isUnsettable: Boolean = false
     override val container: KoreObject? get() = containingClass
-    override fun toString(): String = "${containingClass?.name}#$name"
+    override fun toString(): String = "feature ${containingClass?.name}#$name"
 }

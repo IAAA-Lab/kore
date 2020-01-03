@@ -21,6 +21,7 @@ val `Extract primitive array`: Transform = { _, _ ->
         upperBound = 1
         val segments = (name as String).split("_")
         name = (segments.dropLast(1) + English.plural(segments.last())).joinToString(separator = "_")
+        addStereotype(Stereotypes.array)
     }
 }
 

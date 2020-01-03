@@ -1,47 +1,48 @@
-Container <<applicationSchema>>  "Geographical Names" {
-  Constraint Enum "GN_GrammaticalNumberValue" {
-    identifier = "Geographical Names::GrammaticalNumberValue"
+Container <<applicationSchema>> "Geographical Names" {
+  * fileName = "Geographical Names"
+  Constraint Enum <<codeList>> "GN_GrammaticalNumberValue" {
+    * identifier = "Geographical Names::GrammaticalNumberValue"
     dual
     plural
     singular
   }
-  Constraint Enum "GN_NameStatusValue" {
-    identifier = "Geographical Names::NameStatusValue"
+  Constraint Enum <<codeList>> "GN_NameStatusValue" {
+    * identifier = "Geographical Names::NameStatusValue"
     historical
     official
     other
     standardised
   }
-  Constraint Enum "GN_NativenessValue" {
-    identifier = "Geographical Names::NativenessValue"
+  Constraint Enum <<codeList>> "GN_NativenessValue" {
+    * identifier = "Geographical Names::NativenessValue"
     endonym
     exonym
   }
-  Attributes "GN_PronunciationOfName" {
-    description = "Proper, correct or standard (standard within the linguistic community concerned) pronunciation of a name.
+  Attributes <<dataType>> "GN_PronunciationOfName" {
+    * description = "Proper, correct or standard (standard within the linguistic community concerned) pronunciation of a name.
   
     SOURCE Adapted from [UNGEGN Manual 2006]."
-    identifier = "Geographical Names::PronunciationOfName"
-    tableName = "GN_PronunciationOfName"
+    * identifier = "Geographical Names::PronunciationOfName"
+    * tableName = "GN_PronunciationOfName"
     id INTEGER NOT NULL PRIMARY KEY
-    pronunciationIPA TEXT
-    pronunciationSoundLink TEXT
+    <<voidable>> pronunciationIPA TEXT
+    <<voidable>> pronunciationSoundLink TEXT
   }
-  Attributes "GN_SpellingOfName" {
-    description = "Proper way of writing a name.
+  Attributes <<dataType>> "GN_SpellingOfName" {
+    * description = "Proper way of writing a name.
   
     SOURCE Adapted from [UNGEGN Manual 2006].
   
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
-    identifier = "Geographical Names::SpellingOfName"
-    tableName = "GN_SpellingOfName"
+    * identifier = "Geographical Names::SpellingOfName"
+    * tableName = "GN_SpellingOfName"
     id INTEGER NOT NULL PRIMARY KEY
-    script TEXT
     text TEXT NOT NULL
-    transliterationScheme TEXT
+    <<voidable>> script TEXT
+    <<voidable>> transliterationScheme TEXT
   }
-  Constraint Enum "GN_NamedPlaceTypeValue" {
-    identifier = "Geographical Names::NamedPlaceTypeValue"
+  Constraint Enum <<codeList>> "GN_NamedPlaceTypeValue" {
+    * identifier = "Geographical Names::NamedPlaceTypeValue"
     administrativeUnit
     building
     hydrography
@@ -52,126 +53,80 @@ Container <<applicationSchema>>  "Geographical Names" {
     protectedSite
     transportNetwork
   }
-  Feature "GN_NamedPlace" {
-    description = "Any real world entity referred to by one or several proper nouns."
-    identifier = "Geographical Names::NamedPlace"
-    tableName = "GN_NamedPlace"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+  Feature <<featureType>> "GN_NamedPlace" {
+    * description = "Any real world entity referred to by one or several proper nouns."
+    * identifier = "Geographical Names::NamedPlace"
+    * tableName = "GN_NamedPlace"
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    leastDetailedViewingResolution_distance TEXT
-    leastDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     leastDetailedViewingResolution_equivalentScale_denominator INTEGER
-    mostDetailedViewingResolution_distance TEXT
-    mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
     mostDetailedViewingResolution_equivalentScale_denominator INTEGER
-    types TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>>, <<array>> types TEXT
+    <<reference>> inspireId INTEGER
+    <<voidable>> leastDetailedViewingResolution_distance TEXT
+    <<voidable>> leastDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> mostDetailedViewingResolution_distance TEXT
+    <<voidable>> mostDetailedViewingResolution_distance_uom TEXT CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "GN_GrammaticalGenderValue" {
-    identifier = "Geographical Names::GrammaticalGenderValue"
+  Constraint Enum <<codeList>> "GN_GrammaticalGenderValue" {
+    * identifier = "Geographical Names::GrammaticalGenderValue"
     common
     feminine
     masculine
     neuter
   }
-  Attributes "GN_GeographicalName" {
-    description = "Proper noun applied to a real world entity."
-    identifier = "Geographical Names::GeographicalName"
-    tableName = "GN_GeographicalName"
-    grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
-    grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+  Attributes <<dataType>> "GN_GeographicalName" {
+    * description = "Proper noun applied to a real world entity."
+    * identifier = "Geographical Names::GeographicalName"
+    * tableName = "GN_GeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    nameStatus TEXT CHECK(GN_NameStatusValue)
-    nativeness TEXT CHECK(GN_NativenessValue)
-    pronunciation_pronunciationIPA TEXT
-    pronunciation_pronunciationSoundLink TEXT
-    sourceOfName TEXT
+    <<voidable>> grammaticalGender TEXT CHECK(GN_GrammaticalGenderValue)
+    <<voidable>> grammaticalNumber TEXT CHECK(GN_GrammaticalNumberValue)
+    <<voidable>> language TEXT
+    <<voidable>> nameStatus TEXT CHECK(GN_NameStatusValue)
+    <<voidable>> nativeness TEXT CHECK(GN_NativenessValue)
+    <<voidable>> pronunciation_pronunciationIPA TEXT
+    <<voidable>> pronunciation_pronunciationSoundLink TEXT
+    <<voidable>> sourceOfName TEXT
   }
   Relation "GN_NamedPlace_inspireId" {
-    profile = "attributes"
-    relatedReference = "GN_NamedPlace#inspireId"
-    tableName = "GN_NamedPlace_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute GN_NamedPlace#inspireId"
+    * tableName = "GN_NamedPlace_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "GN_NamedPlace_localType" {
-    profile = "attributes"
-    tableName = "GN_NamedPlace_localType"
+    * profile = "attributes"
+    * tableName = "GN_NamedPlace_localType"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
   }
   Relation "GN_NamedPlace_name" {
-    profile = "attributes"
-    tableName = "GN_NamedPlace_name"
+    * profile = "attributes"
+    * tableName = "GN_NamedPlace_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
   Relation "GN_NamedPlace_relatedSpatialObject" {
-    profile = "attributes"
-    tableName = "GN_NamedPlace_relatedSpatialObject"
+    * profile = "attributes"
+    * tableName = "GN_NamedPlace_relatedSpatialObject"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "GN_GeographicalName_spelling" {
-    profile = "attributes"
-    tableName = "GN_GeographicalName_spelling"
+    * profile = "attributes"
+    * tableName = "GN_GeographicalName_spelling"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_GeographicalName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_SpellingOfName(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "GMD_LocalisedCharacterString" {
-    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
-    tableName = "GMD_LocalisedCharacterString"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-    text TEXT NOT NULL
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
+}
+Container "ISO 00639 Language Codes" {
+  * fileName = "ISO 00639 Language Codes"
+  Constraint Enum <<codeList>> "GMD_LanguageCode" {
+    * identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
     Albanian
     Arabic
@@ -217,11 +172,17 @@ Container <<applicationSchema>>  "Geographical Names" {
     Turkish
     Ukranian
   }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
+}
+Container "ISO 03166 Country Codes" {
+  * fileName = "ISO 03166 Country Codes"
+  Constraint Enum <<codeList>> "GMD_CountryCode" {
+    * identifier = "ISO 03166 Country Codes::CountryCode"
   }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
+}
+Container "Identification information" {
+  * fileName = "Identification information"
+  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
+    * identifier = "Identification information::MD_CharacterSetCode"
     (reservedforfutureuse)
     8859part1
     8859part10
@@ -252,4 +213,66 @@ Container <<applicationSchema>>  "Geographical Names" {
     utf7
     utf8
   }
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container "Cultural and linguistic adapdability" {
+  * fileName = "Cultural and linguistic adapdability"
+  Attributes <<dataType>> "GMD_LocalisedCharacterString" {
+    * identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
+    * tableName = "GMD_LocalisedCharacterString"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+    text TEXT NOT NULL
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

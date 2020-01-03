@@ -1,30 +1,31 @@
-Container <<applicationSchema>>  "Soil" {
-  Feature "SO_SoilBody" {
-    description = "Part of the soil cover that is delineated and that is homogeneous with regard to certain soil properties and/or spatial patterns.
+Container <<applicationSchema>> "Soil" {
+  * fileName = "Soil"
+  Feature <<featureType>> "SO_SoilBody" {
+    * description = "Part of the soil cover that is delineated and that is homogeneous with regard to certain soil properties and/or spatial patterns.
   
     The soils present in the soil body are characterized by one or more derived soil profiles that are found together in the area specified by the &ldquo;geometry&rdquo; attribute of the SoilBody.
   
     NOTE 1 If several derived soil profiles are used to describe the soil body, the spatial distribution of the soil they describe within the soil body is not defined, but their presence is indicated by a range percentage of area. The underlying reason behind the fact of not delineating the different soils within a soil body is the target scale of the map or spatial dataset. This means that geographical accuracy and preciseness of soil characterization depend on and vary with the target scale, i.e. the soil body can be delineated differently among scales.
   
     NOTE 2 The concept of soil body is a correlate of the concept soil mapping unit, and the soils of a soilbody might form e.g. a soil association, a soil complex, etc."
-    identifier = "Soil::SoilBody"
-    tableName = "SO_SoilBody"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Soil::SoilBody"
+    * tableName = "SO_SoilBody"
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    soilBodyLabel TEXT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> soilBodyLabel TEXT
   }
-  Constraint Enum "SO_LayerTypeValue" {
-    identifier = "Soil::LayerTypeValue"
+  Constraint Enum <<codeList>> "SO_LayerTypeValue" {
+    * identifier = "Soil::LayerTypeValue"
   }
-  Attributes "SO_SoilThemeParameterType" {
-    description = "A soil-related property (soil theme) that is represented by this coverage. It is composed of a parameter name coming from a codelist SoilDerivedObjectParameterNameValue and a Unit of Measure used for expressing that parameter.
+  Attributes <<dataType>> "SO_SoilThemeParameterType" {
+    * description = "A soil-related property (soil theme) that is represented by this coverage. It is composed of a parameter name coming from a codelist SoilDerivedObjectParameterNameValue and a Unit of Measure used for expressing that parameter.
   
     EXAMPLE Land irrigation suitability, pH in the topsoil, etc"
-    identifier = "Soil::SoilThemeParameterType"
-    tableName = "SO_SoilThemeParameterType"
+    * identifier = "Soil::SoilThemeParameterType"
+    * tableName = "SO_SoilThemeParameterType"
     id INTEGER NOT NULL PRIMARY KEY
     soilThemeParameterName TEXT NOT NULL CHECK(SO_SoilDerivedObjectParameterNameValue)
     uom_formula TEXT
@@ -35,8 +36,8 @@ Container <<applicationSchema>>  "Soil" {
     uom_uomName TEXT
     uom_uomSymbol TEXT
   }
-  Attributes "SO_SoilLayer" {
-    description = "domain of a soil with a certain vertical extension developed through non-pedogenic processes, displaying a change in structure and/or composition to possibly over- or underlying adjacent domains, or a grouping of soil horizons or other sub-domains with a special purpose.
+  Attributes <<featureType>> "SO_SoilLayer" {
+    * description = "domain of a soil with a certain vertical extension developed through non-pedogenic processes, displaying a change in structure and/or composition to possibly over- or underlying adjacent domains, or a grouping of soil horizons or other sub-domains with a special purpose.
   
     NOTE1 Different kinds of layer concepts are covered by this definition.
   
@@ -49,69 +50,71 @@ Container <<applicationSchema>>  "Soil" {
     EXAMPLE 4: In the framework of soils deeply modified by human activity, artificial layers may be due to different kinds of deposits (concrete, bricks, &hellip;).
   
     SOURCE WD ISO28258, modified"
-    identifier = "Soil::SoilLayer"
-    tableName = "SO_SoilLayer"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Soil::SoilLayer"
+    * tableName = "SO_SoilLayer"
     id INTEGER NOT NULL PRIMARY KEY
-    layerGenesisEnvironment TEXT CHECK(GE_EventEnvironmentValue)
-    layerGenesisProcess TEXT CHECK(GE_EventProcessValue)
-    layerGenesisProcessState TEXT CHECK(SO_LayerGenesisProcessStateValue)
-    layerRockTypes TEXT
     layerType TEXT NOT NULL CHECK(SO_LayerTypeValue)
-    profileElementDepthRange_lowerValue: DOUBLE [0..1]
-    profileElementDepthRange_uom_formula: TEXT [0..1]
-    profileElementDepthRange_uom_measureType: TEXT [0..1]
-    profileElementDepthRange_uom_nameStandardUnit: TEXT [0..1]
-    profileElementDepthRange_uom_offsetToStandardUnit: DOUBLE [0..1]
-    profileElementDepthRange_uom_scaleToStandardUnit: DOUBLE [0..1]
-    profileElementDepthRange_uom_uomName: TEXT [0..1]
-    profileElementDepthRange_uom_uomSymbol: TEXT [0..1]
-    profileElementDepthRange_upperValue: DOUBLE [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref isPartOf: SoilProfileinv isDescribedBy[0..*]
-    ref particleSizeFraction: SO_ParticleSizeFractionType[0..*]
+    profileElementDepthRange_lowerValue : DOUBLE [0..1]
+    profileElementDepthRange_uom_formula : TEXT [0..1]
+    profileElementDepthRange_uom_measureType : TEXT [0..1]
+    profileElementDepthRange_uom_nameStandardUnit : TEXT [0..1]
+    profileElementDepthRange_uom_offsetToStandardUnit : DOUBLE [0..1]
+    profileElementDepthRange_uom_scaleToStandardUnit : DOUBLE [0..1]
+    profileElementDepthRange_uom_uomName : TEXT [0..1]
+    profileElementDepthRange_uom_uomSymbol : TEXT [0..1]
+    profileElementDepthRange_upperValue : DOUBLE [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<array>> layerRockTypes TEXT
+    <<voidable>> layerGenesisEnvironment TEXT CHECK(GE_EventEnvironmentValue)
+    <<voidable>> layerGenesisProcess TEXT CHECK(GE_EventProcessValue)
+    <<voidable>> layerGenesisProcessState TEXT CHECK(SO_LayerGenesisProcessStateValue)
+    inspireId BASE_Identifier [0..1] as ref
+    isPartOf SoilProfile as ref
+    <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
+    <<voidable>> profileElementObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
-  Constraint Enum "SO_FAOHorizonMasterValue" {
-    identifier = "Soil::FAOHorizonMasterValue"
+  Constraint Enum <<codeList>> "SO_FAOHorizonMasterValue" {
+    * identifier = "Soil::FAOHorizonMasterValue"
   }
-  Attributes "SO_ObservedSoilProfile" {
-    description = "a representation of a soil profile found on a specific location which is described on the basis of observations in a trial pit or with a borehole.
+  Attributes <<featureType>> "SO_ObservedSoilProfile" {
+    * description = "a representation of a soil profile found on a specific location which is described on the basis of observations in a trial pit or with a borehole.
   
     The observed soil profile corresponds to a set of data taken directly from a georeferenced<b> </b>soil profile, described in the field, and often sampled and analyzed in the laboratory."
-    identifier = "Soil::ObservedSoilProfile"
-    tableName = "SO_ObservedSoilProfile"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Soil::ObservedSoilProfile"
+    * tableName = "SO_ObservedSoilProfile"
     id INTEGER NOT NULL PRIMARY KEY
-    localIdentifier: TEXT [0..1]
-    location INTEGER
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref WRBSoilName: SO_WRBSoilNameType[0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref isDescribedBy: ProfileElement[0..*] inv isPartOf
-    ref otherSoilName: SO_OtherSoilNameType[0..*]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localIdentifier : TEXT [0..1]
+    <<reference>> location INTEGER
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
+    <<voidable>> isDescribedBy ProfileElement [0..*] as ref
+    <<voidable>> otherSoilName SO_OtherSoilNameType [0..*] as ref
+    <<voidable>> soilProfileObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
-  Attributes "SO_WRBSoilNameType" {
-    description = "an identification of the soil profile according to the profile to according to “World Reference Base for Soil Resources 2006, first update 2007”, World Soil Resources Reports No. 103. FAO, Rome.
+  Attributes <<dataType>> "SO_WRBSoilNameType" {
+    * description = "an identification of the soil profile according to the profile to according to “World Reference Base for Soil Resources 2006, first update 2007”, World Soil Resources Reports No. 103. FAO, Rome.
   
     NOTE The structure of the WRBSoilNameType was based on the <i>World reference base for soil resources 2006</i>, <i>first update 2007</i>, World Soil Resources Reports No. 103, Food and Agriculture Organization of the United
   
     Nations, Rome, 2007.
   
     EXAMPLE Lixic Vertic Ferralsol (Ferric, Rhodic), WRB 2006, update 2007."
-    identifier = "Soil::WRBSoilNameType"
-    tableName = "SO_WRBSoilNameType"
+    * identifier = "Soil::WRBSoilNameType"
+    * tableName = "SO_WRBSoilNameType"
     WRBReferenceSoilGroup TEXT NOT NULL CHECK(SO_WRBReferenceSoilGroupValue)
     id INTEGER NOT NULL PRIMARY KEY
     isOriginalClassification BOOLEAN NOT NULL
-    over INTEGER
+    <<reference>> over INTEGER
   }
-  Attributes "SO_RangeType" {
-    description = "A range value defined by an upper limit and a lower limit."
-    identifier = "Soil::RangeType"
-    tableName = "SO_RangeType"
+  Attributes <<dataType>> "SO_RangeType" {
+    * description = "A range value defined by an upper limit and a lower limit."
+    * identifier = "Soil::RangeType"
+    * tableName = "SO_RangeType"
     id INTEGER NOT NULL PRIMARY KEY
     lowerValue DOUBLE
     uom_formula TEXT
@@ -123,54 +126,54 @@ Container <<applicationSchema>>  "Soil" {
     uom_uomSymbol TEXT
     upperValue DOUBLE
   }
-  Constraint Enum "SO_FAOPrimeValue" {
-    identifier = "Soil::FAOPrimeValue"
+  Constraint Enum <<codeList>> "SO_FAOPrimeValue" {
+    * identifier = "Soil::FAOPrimeValue"
   }
-  Feature "SO_SoilDerivedObject" {
-    description = "A spatial object type for representing spatial objects with soil-related property derived from one or more soil and possibly other non soil properties.
+  Feature <<featureType>> "SO_SoilDerivedObject" {
+    * description = "A spatial object type for representing spatial objects with soil-related property derived from one or more soil and possibly other non soil properties.
   
     NOTE Soil thematic maps can be derived directly from the involved soil database (organic matter content, pH, texture, etc.) or they can be derived by using pedotransfer functions or pedotransfer rules (e.g. plant available water in the rooting depth). Derivation can be simple extraction from a single data field, or a complex combination of different kind of data and application of e.g. mathematical or expert knowledge-based procedures."
-    identifier = "Soil::SoilDerivedObject"
-    tableName = "SO_SoilDerivedObject"
+    * identifier = "Soil::SoilDerivedObject"
+    * tableName = "SO_SoilDerivedObject"
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    soilDerivedObjectObservation INTEGER
+    <<voidable>>, <<reference>> soilDerivedObjectObservation_OM_Observation INTEGER
+    <<reference>> inspireId INTEGER
   }
-  Constraint Enum "SO_OtherSoilNameTypeValue" {
-    identifier = "Soil::OtherSoilNameTypeValue"
+  Constraint Enum <<codeList>> "SO_OtherSoilNameTypeValue" {
+    * identifier = "Soil::OtherSoilNameTypeValue"
   }
-  Constraint Enum "SO_WRBQualifierPlaceValue" {
-    identifier = "Soil::WRBQualifierPlaceValue"
+  Constraint Enum <<codeList>> "SO_WRBQualifierPlaceValue" {
+    * identifier = "Soil::WRBQualifierPlaceValue"
   }
-  Constraint Enum "SO_SoilProfileParameterNameValue" {
-    identifier = "Soil::SoilProfileParameterNameValue"
+  Constraint Enum <<codeList>> "SO_SoilProfileParameterNameValue" {
+    * identifier = "Soil::SoilProfileParameterNameValue"
   }
-  Constraint Enum "SO_WRBReferenceSoilGroupValue" {
+  Constraint Enum <<codeList>> "SO_WRBReferenceSoilGroupValue" {
+    * identifier = "Soil::WRBReferenceSoilGroupValue"
     genoptions = "nKill=0;nLang=1;sLang=Java;bConstructor=1;bConInline=0;sConScope=Public;bCpyConstructor=0;bCpyConInline=0;sCpyConScope=Public;bDestructor=1;bDesVirtual=1;bDesInline=0;sDesScope=Public;CHeader=.h;CBody=.cpp;JBody=.java;VBody=.cls;VBNetBody=.vb;sAssocName=m_$LinkClass;bGetSet=1;bGenInterfaces=1;JCol=Vector;CCol=[];VCol=Collection;bVMultiuse=1;bVPersist=0;bVDatabind=0;bVDatasource=0;bVGlobal=0;bVCreatable=1;bVExposed=0;sMTS=0;sCRefType=*;sCGetPrefix=Get;sCSetPrefix=Set;sJGetPrefix=get;sJSetPrefix=set;sCSGetPrefix=Get;sCSSetPrefix=Set;sVVersion=6.0;CSBody=.cs;DBody=.pas;bJInnerClasses=1;sJCollection=;sCodePage=;sPHPBody=.php;sPHPVersion=;sPHPGetPrefix=get;sPHPSetPrefix=set;ASBody=.as;PyBody=.py;CPPVersion=;ASVersion=2.0;ANSICHeader=.h;ANSICBody=.c;ANSIC_OOSupport=0;ANSIC_NSDLMT=_;ANSIC_RefParam=1;ANSIC_RefStyle=*;ANSIC_RefName=this;ANSIC_ConstructorName=new;ANSIC_DestructorName=delete;"
-    identifier = "Soil::WRBReferenceSoilGroupValue"
   }
-  Attributes "SO_OtherSoilNameType" {
-    description = "an identification of the soil profile according to a specific classification scheme.
+  Attributes <<dataType>> "SO_OtherSoilNameType" {
+    * description = "an identification of the soil profile according to a specific classification scheme.
   
     EXAMPLE Fluventic Haploxerept, according to Soil Taxonomy (USDA 2006)."
-    identifier = "Soil::OtherSoilNameType"
-    tableName = "SO_OtherSoilNameType"
+    * identifier = "Soil::OtherSoilNameType"
+    * tableName = "SO_OtherSoilNameType"
     id INTEGER NOT NULL PRIMARY KEY
     isOriginalClassification BOOLEAN NOT NULL
     soilName TEXT NOT NULL CHECK(SO_OtherSoilNameTypeValue)
   }
-  Constraint Enum "SO_OtherHorizonNotationTypeValue" {
-    identifier = "Soil::OtherHorizonNotationTypeValue"
+  Constraint Enum <<codeList>> "SO_OtherHorizonNotationTypeValue" {
+    * identifier = "Soil::OtherHorizonNotationTypeValue"
   }
-  Attributes "SO_SoilThemeDescriptiveParameterType" {
-    description = "data type providing a descriptive property for the soil-related property (soil theme) that is represented by its associated SoilThemeCoverage.
+  Attributes <<dataType>> "SO_SoilThemeDescriptiveParameterType" {
+    * description = "data type providing a descriptive property for the soil-related property (soil theme) that is represented by its associated SoilThemeCoverage.
   
     this datatype exists of a name and if needed a unit of measurement.
   
     EXAMPLE confidence level for each value in the SoilThemeCoverage (pH in the topsoil)"
-    identifier = "Soil::SoilThemeDescriptiveParameterType"
-    tableName = "SO_SoilThemeDescriptiveParameterType"
+    * identifier = "Soil::SoilThemeDescriptiveParameterType"
+    * tableName = "SO_SoilThemeDescriptiveParameterType"
     id INTEGER NOT NULL PRIMARY KEY
     soilThemeDescriptiveParameterName TEXT NOT NULL
     uom_formula TEXT
@@ -181,28 +184,28 @@ Container <<applicationSchema>>  "Soil" {
     uom_uomName TEXT
     uom_uomSymbol TEXT
   }
-  Constraint Enum "SO_WRBSpecifierValue" {
+  Constraint Enum <<codeList>> "SO_WRBSpecifierValue" {
+    * identifier = "Soil::WRBSpecifierValue"
     genfile = "C:\temp\SpecifierValue.java"
     genoptions = "nKill=0;nLang=1;sLang=Java;bConstructor=1;bConInline=0;sConScope=Public;bCpyConstructor=0;bCpyConInline=0;sCpyConScope=Public;bDestructor=1;bDesVirtual=1;bDesInline=0;sDesScope=Public;CHeader=.h;CBody=.cpp;JBody=.java;VBody=.cls;VBNetBody=.vb;sAssocName=m_$LinkClass;bGetSet=1;bGenInterfaces=1;JCol=Vector;CCol=[];VCol=Collection;bVMultiuse=1;bVPersist=0;bVDatabind=0;bVDatasource=0;bVGlobal=0;bVCreatable=1;bVExposed=0;sMTS=0;sCRefType=*;sCGetPrefix=Get;sCSetPrefix=Set;sJGetPrefix=get;sJSetPrefix=set;sCSGetPrefix=Get;sCSSetPrefix=Set;sVVersion=6.0;CSBody=.cs;DBody=.pas;bJInnerClasses=1;sJCollection=;sCodePage=;sPHPBody=.php;sPHPVersion=;sPHPGetPrefix=get;sPHPSetPrefix=set;ASBody=.as;PyBody=.py;CPPVersion=;ASVersion=2.0;ANSICHeader=.h;ANSICBody=.c;ANSIC_OOSupport=0;ANSIC_NSDLMT=_;ANSIC_RefParam=1;ANSIC_RefStyle=*;ANSIC_RefName=this;ANSIC_ConstructorName=new;ANSIC_DestructorName=delete;"
-    identifier = "Soil::WRBSpecifierValue"
   }
   Class "DerivedProfilePresenceInSoilBody" {
     conID = "EAID_8DB35F17_EA63_4c56_9C45_5CD8C3508143"
-    derivedProfilePercentageRange_lowerValue: DOUBLE [0..1]
-    derivedProfilePercentageRange_uom_formula: TEXT [0..1]
-    derivedProfilePercentageRange_uom_measureType: TEXT [0..1]
-    derivedProfilePercentageRange_uom_nameStandardUnit: TEXT [0..1]
-    derivedProfilePercentageRange_uom_offsetToStandardUnit: DOUBLE [0..1]
-    derivedProfilePercentageRange_uom_scaleToStandardUnit: DOUBLE [0..1]
-    derivedProfilePercentageRange_uom_uomName: TEXT [0..1]
-    derivedProfilePercentageRange_uom_uomSymbol: TEXT [0..1]
-    derivedProfilePercentageRange_upperValue: DOUBLE [0..1]
+    derivedProfilePercentageRange_lowerValue : DOUBLE [0..1]
+    derivedProfilePercentageRange_uom_formula : TEXT [0..1]
+    derivedProfilePercentageRange_uom_measureType : TEXT [0..1]
+    derivedProfilePercentageRange_uom_nameStandardUnit : TEXT [0..1]
+    derivedProfilePercentageRange_uom_offsetToStandardUnit : DOUBLE [0..1]
+    derivedProfilePercentageRange_uom_scaleToStandardUnit : DOUBLE [0..1]
+    derivedProfilePercentageRange_uom_uomName : TEXT [0..1]
+    derivedProfilePercentageRange_uom_uomSymbol : TEXT [0..1]
+    derivedProfilePercentageRange_upperValue : DOUBLE [0..1]
   }
-  Constraint Enum "SO_SoilDerivedObjectParameterNameValue" {
-    identifier = "Soil::SoilDerivedObjectParameterNameValue"
+  Constraint Enum <<codeList>> "SO_SoilDerivedObjectParameterNameValue" {
+    * identifier = "Soil::SoilDerivedObjectParameterNameValue"
   }
-  Attributes "SO_FAOHorizonNotationType" {
-    description = "A classification of a horizon according to the Horizon classification system specified in <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006.
+  Attributes <<dataType>> "SO_FAOHorizonNotationType" {
+    * description = "A classification of a horizon according to the Horizon classification system specified in <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006.
   
     A code system that denotes horizons in which the same dominant soil forming processes has been active similarly. This code summarizes many observations of the soil description and gives an impression about the genetic processes that have formed the soil under observation.
   
@@ -221,21 +224,21 @@ Container <<applicationSchema>>  "Soil" {
     EXAMPLE 2B' tg1
   
     SOURCE 1 Page 67 - 77 of the <i>Guidelines for soil description, 4th edition</i>, Food and Agriculture Organization of the United Nations, Rome, 2006. (ISBN 92-5-105521-1)"
-    identifier = "Soil::FAOHorizonNotationType"
-    tableName = "SO_FAOHorizonNotationType"
+    * identifier = "Soil::FAOHorizonNotationType"
+    * tableName = "SO_FAOHorizonNotationType"
     FAOHorizonDiscontinuity INTEGER
     FAOHorizonMaster TEXT NOT NULL CHECK(SO_FAOHorizonMasterValue)
-    FAOHorizonSubordinates TEXT
     FAOHorizonVertical INTEGER
     FAOPrime TEXT NOT NULL CHECK(SO_FAOPrimeValue)
     id INTEGER NOT NULL PRIMARY KEY
     isOriginalClassification BOOLEAN NOT NULL
+    <<array>> FAOHorizonSubordinates TEXT
   }
-  Constraint Enum "SO_FAOHorizonSubordinateValue" {
-    identifier = "Soil::FAOHorizonSubordinateValue"
+  Constraint Enum <<codeList>> "SO_FAOHorizonSubordinateValue" {
+    * identifier = "Soil::FAOHorizonSubordinateValue"
   }
-  Feature "SO_SoilPlot" {
-    description = "spot where a specific soil investigation is carried out.
+  Feature <<featureType>> "SO_SoilPlot" {
+    * description = "spot where a specific soil investigation is carried out.
   
     NOTE 1: For observed soil profiles, a spot location has to be defined. It is the place on which the observation is made. The profile is an observation made on the plot.
   
@@ -244,13 +247,9 @@ Container <<applicationSchema>>  "Soil" {
     EXAMPLE A borehole is the location where you gather the information to abstract a profile information from.
   
     SOURCE GS Soil"
-    identifier = "Soil::SoilPlot"
-    tableName = "SO_SoilPlot"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Soil::SoilPlot"
+    * tableName = "SO_SoilPlot"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    locatedOn INTEGER
     soilPlotLocation_geometryLocation GEOMETRY
     soilPlotLocation_nameLocation_extentTypeCode BOOLEAN DEFAULT '1'
     soilPlotLocation_nameLocation_geographicIdentifier_authority_date DATE
@@ -260,47 +259,49 @@ Container <<applicationSchema>>  "Soil" {
     soilPlotLocation_nameLocation_geographicIdentifier_authority_type TEXT CHECK(BASE2_SimpleCitationType)
     soilPlotLocation_nameLocation_geographicIdentifier_code TEXT
     soilPlotType TEXT NOT NULL CHECK(SO_SoilPlotTypeValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> locatedOn INTEGER
+    <<reference>> inspireId INTEGER
   }
-  Constraint Enum "SO_SoilPlotTypeValue" {
-    identifier = "Soil::SoilPlotTypeValue"
+  Constraint Enum <<codeList>> "SO_SoilPlotTypeValue" {
+    * identifier = "Soil::SoilPlotTypeValue"
   }
-  Constraint Enum "SO_ProfileElementParameterNameValue" {
-    identifier = "Soil::ProfileElementParameterNameValue"
+  Constraint Enum <<codeList>> "SO_ProfileElementParameterNameValue" {
+    * identifier = "Soil::ProfileElementParameterNameValue"
   }
-  Constraint Enum "SO_SoilInvestigationPurposeValue" {
-    identifier = "Soil::SoilInvestigationPurposeValue"
+  Constraint Enum <<codeList>> "SO_SoilInvestigationPurposeValue" {
+    * identifier = "Soil::SoilInvestigationPurposeValue"
   }
-  Class "SoilProfile" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    localIdentifier: TEXT [0..1]
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref WRBSoilName: SO_WRBSoilNameType[0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref isDescribedBy: ProfileElement[0..*] inv isPartOf
-    ref otherSoilName: SO_OtherSoilNameType[0..*]
+  Class <<featureType>> "SoilProfile" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localIdentifier : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
+    <<voidable>> isDescribedBy ProfileElement [0..*] as ref
+    <<voidable>> otherSoilName SO_OtherSoilNameType [0..*] as ref
+    <<voidable>> soilProfileObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
-  Attributes "SO_SoilThemeDescriptiveCoverage" {
-    description = "a spatial object type that is associated to the soil theme coverage and holds additional information on values of a property of the soil theme coverage.
+  Attributes <<featureType>> "SO_SoilThemeDescriptiveCoverage" {
+    * description = "a spatial object type that is associated to the soil theme coverage and holds additional information on values of a property of the soil theme coverage.
   
     This coverage can only exist in relation to a base coverage SoilThemeCoverage, it has the same domain and spatial extent as the base coverage. And it gives extra information on the values of the base coverages
   
     SOURCE Adapted from "Coverage" [ISO 19123:2005].
   
     EXAMPLE coverage indicating the confidence level of the pH values reported in the associated SoilThemeCoverage."
-    identifier = "Soil::SoilThemeDescriptiveCoverage"
-    tableName = "SO_SoilThemeDescriptiveCoverage"
-    beginLifespanVersion DATETIME NOT NULL
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
-    domainSet: Any
-    endLifespanVersion DATETIME
+    * identifier = "Soil::SoilThemeDescriptiveCoverage"
+    * tableName = "SO_SoilThemeDescriptiveCoverage"
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
+    domainSet : Any
     id INTEGER NOT NULL PRIMARY KEY
-    isDescribing INTEGER
-    metadata: Any [0..*]
-    rangeSet: Any [0..*]
-    rangeType: RecordType
+    metadata : Any [0..*]
+    rangeSet : Any [0..*]
+    rangeType : RecordType
     soilThemeDescriptiveParameter_soilThemeDescriptiveParameterName TEXT NOT NULL
     soilThemeDescriptiveParameter_uom_formula TEXT
     soilThemeDescriptiveParameter_uom_measureType TEXT CHECK(GML_MeasureType)
@@ -309,61 +310,63 @@ Container <<applicationSchema>>  "Soil" {
     soilThemeDescriptiveParameter_uom_scaleToStandardUnit DOUBLE
     soilThemeDescriptiveParameter_uom_uomName TEXT
     soilThemeDescriptiveParameter_uom_uomSymbol TEXT
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
-    ref domainExtent: EX_Extent[1..*]
+    <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> isDescribing INTEGER
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainExtent EX_Extent [1..*] as ref
   }
-  Class "ProfileElement" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    profileElementDepthRange_lowerValue: DOUBLE [0..1]
-    profileElementDepthRange_uom_formula: TEXT [0..1]
-    profileElementDepthRange_uom_measureType: TEXT [0..1]
-    profileElementDepthRange_uom_nameStandardUnit: TEXT [0..1]
-    profileElementDepthRange_uom_offsetToStandardUnit: DOUBLE [0..1]
-    profileElementDepthRange_uom_scaleToStandardUnit: DOUBLE [0..1]
-    profileElementDepthRange_uom_uomName: TEXT [0..1]
-    profileElementDepthRange_uom_uomSymbol: TEXT [0..1]
-    profileElementDepthRange_upperValue: DOUBLE [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref isPartOf: SoilProfileinv isDescribedBy[0..*]
-    ref particleSizeFraction: SO_ParticleSizeFractionType[0..*]
+  Class <<featureType>> "ProfileElement" {
+    profileElementDepthRange_lowerValue : DOUBLE [0..1]
+    profileElementDepthRange_uom_formula : TEXT [0..1]
+    profileElementDepthRange_uom_measureType : TEXT [0..1]
+    profileElementDepthRange_uom_nameStandardUnit : TEXT [0..1]
+    profileElementDepthRange_uom_offsetToStandardUnit : DOUBLE [0..1]
+    profileElementDepthRange_uom_scaleToStandardUnit : DOUBLE [0..1]
+    profileElementDepthRange_uom_uomName : TEXT [0..1]
+    profileElementDepthRange_uom_uomSymbol : TEXT [0..1]
+    profileElementDepthRange_upperValue : DOUBLE [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    isPartOf SoilProfile as ref
+    <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
+    <<voidable>> profileElementObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
-  Attributes "SO_OtherHorizonNotationType" {
-    description = "classification of a horizon according to a specific classification system.
+  Attributes <<dataType>> "SO_OtherHorizonNotationType" {
+    * description = "classification of a horizon according to a specific classification system.
   
     A code system denoting horizons in which the same dominant soil forming processes have been active in the same way. This code summarizes many observations of the soil description and gives an impression about the genetic processes that have formed the soil under observation."
-    identifier = "Soil::OtherHorizonNotationType"
-    tableName = "SO_OtherHorizonNotationType"
+    * identifier = "Soil::OtherHorizonNotationType"
+    * tableName = "SO_OtherHorizonNotationType"
     horizonNotation TEXT NOT NULL CHECK(SO_OtherHorizonNotationTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
     isOriginalClassification BOOLEAN NOT NULL
   }
-  Constraint Enum "SO_SoilSiteParameterNameValue" {
-    identifier = "Soil::SoilSiteParameterNameValue"
+  Constraint Enum <<codeList>> "SO_SoilSiteParameterNameValue" {
+    * identifier = "Soil::SoilSiteParameterNameValue"
   }
-  Constraint Enum "SO_WRBQualifierValue" {
+  Constraint Enum <<codeList>> "SO_WRBQualifierValue" {
+    * identifier = "Soil::WRBQualifierValue"
     genfile = "C:\temp\QualifierValue.java"
     genoptions = "nKill=0;nLang=1;sLang=Java;bConstructor=1;bConInline=0;sConScope=Public;bCpyConstructor=0;bCpyConInline=0;sCpyConScope=Public;bDestructor=1;bDesVirtual=1;bDesInline=0;sDesScope=Public;CHeader=.h;CBody=.cpp;JBody=.java;VBody=.cls;VBNetBody=.vb;sAssocName=m_$LinkClass;bGetSet=1;bGenInterfaces=1;JCol=Vector;CCol=[];VCol=Collection;bVMultiuse=1;bVPersist=0;bVDatabind=0;bVDatasource=0;bVGlobal=0;bVCreatable=1;bVExposed=0;sMTS=0;sCRefType=*;sCGetPrefix=Get;sCSetPrefix=Set;sJGetPrefix=get;sJSetPrefix=set;sCSGetPrefix=Get;sCSSetPrefix=Set;sVVersion=6.0;CSBody=.cs;DBody=.pas;bJInnerClasses=1;sJCollection=;sCodePage=;sPHPBody=.php;sPHPVersion=;sPHPGetPrefix=get;sPHPSetPrefix=set;ASBody=.as;PyBody=.py;CPPVersion=;ASVersion=2.0;ANSICHeader=.h;ANSICBody=.c;ANSIC_OOSupport=0;ANSIC_NSDLMT=_;ANSIC_RefParam=1;ANSIC_RefStyle=*;ANSIC_RefName=this;ANSIC_ConstructorName=new;ANSIC_DestructorName=delete;"
-    identifier = "Soil::WRBQualifierValue"
   }
-  Constraint Enum "SO_LayerGenesisProcessStateValue" {
-    identifier = "Soil::LayerGenesisProcessStateValue"
+  Constraint Enum <<codeList>> "SO_LayerGenesisProcessStateValue" {
+    * identifier = "Soil::LayerGenesisProcessStateValue"
   }
-  Attributes "SO_SoilThemeCoverage" {
-    description = "a spatial object type that holds values for a property based on one or more soil and possibly non soil parameters within its spatial, temporal or spatiotemporal domain.
+  Attributes <<featureType>> "SO_SoilThemeCoverage" {
+    * description = "a spatial object type that holds values for a property based on one or more soil and possibly non soil parameters within its spatial, temporal or spatiotemporal domain.
   
     SOURCE Adapted from "Coverage" [ISO 19123:2005]."
-    identifier = "Soil::SoilThemeCoverage"
-    tableName = "SO_SoilThemeCoverage"
-    beginLifespanVersion DATETIME NOT NULL
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
-    domainSet: Any
-    endLifespanVersion DATETIME
+    * identifier = "Soil::SoilThemeCoverage"
+    * tableName = "SO_SoilThemeCoverage"
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
+    domainSet : Any
     id INTEGER NOT NULL PRIMARY KEY
-    metadata: Any [0..*]
-    rangeSet: Any [0..*]
-    rangeType: RecordType
+    metadata : Any [0..*]
+    rangeSet : Any [0..*]
+    rangeType : RecordType
     soilThemeParameter_soilThemeParameterName TEXT NOT NULL CHECK(SO_SoilDerivedObjectParameterNameValue)
     soilThemeParameter_uom_formula TEXT
     soilThemeParameter_uom_measureType TEXT CHECK(GML_MeasureType)
@@ -372,13 +375,15 @@ Container <<applicationSchema>>  "Soil" {
     soilThemeParameter_uom_scaleToStandardUnit DOUBLE
     soilThemeParameter_uom_uomName TEXT
     soilThemeParameter_uom_uomSymbol TEXT
-    validTimeFrom DATE
-    validTimeTo DATE
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
-    ref domainExtent: EX_Extent[1..*]
+    <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validTimeFrom DATE
+    <<voidable>> validTimeTo DATE
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainExtent EX_Extent [1..*] as ref
   }
-  Attributes "SO_ParticleSizeFractionType" {
-    description = "share of the soil that is composed of mineral soil particles of the size within the size range specified.
+  Attributes <<dataType>> "SO_ParticleSizeFractionType" {
+    * description = "share of the soil that is composed of mineral soil particles of the size within the size range specified.
   
     Mineral part of the soil, fractioned on the basis of size (diameter), limits of the particles. It is the fine earth fraction. That is, the portion of the soil that passes through a 2 mm diameter sieve opening.
   
@@ -387,8 +392,8 @@ Container <<applicationSchema>>  "Soil" {
     SOURCE1 NRCS Natural Resources Conservation Service, Soil survey laboratory information manual, Soil survey investigation report n.45 version 1.0 May 1995 pag. 11
   
     SOURCE2 GLOSSARY OF SOIL SCIENCE TERMS"
-    identifier = "Soil::ParticleSizeFractionType"
-    tableName = "SO_ParticleSizeFractionType"
+    * identifier = "Soil::ParticleSizeFractionType"
+    * tableName = "SO_ParticleSizeFractionType"
     fractionContent TEXT NOT NULL
     fractionParticleSizeRange_lowerValue DOUBLE
     fractionParticleSizeRange_uom_formula TEXT
@@ -401,8 +406,8 @@ Container <<applicationSchema>>  "Soil" {
     fractionParticleSizeRange_upperValue DOUBLE
     id INTEGER NOT NULL PRIMARY KEY
   }
-  Feature "SO_SoilSite" {
-    description = "area within a larger survey, study or monitored area, where a specific soil investigation is carried out.
+  Feature <<featureType>> "SO_SoilSite" {
+    * description = "area within a larger survey, study or monitored area, where a specific soil investigation is carried out.
   
     Site provides the object to describe:
   
@@ -429,241 +434,204 @@ Container <<applicationSchema>>  "Soil" {
     NOTE Any plot can be linked to one specific site only, but several plots to one site.
   
     SOURCE GS Soil, modified"
-    identifier = "Soil::SoilSite"
-    tableName = "SO_SoilSite"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Soil::SoilSite"
+    * tableName = "SO_SoilSite"
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     soilInvestigationPurpose TEXT NOT NULL CHECK(SO_SoilInvestigationPurposeValue)
-    validFrom DATETIME
-    validTo DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
   }
-  Attributes "SO_WRBQualifierGroupType" {
-    description = "A data type to define the group of a qualifier and its possible specifier(s), its place and position with regard to the World Reference Base (WRB) Reference Soil Group (RSG) it belongs to according to <i>World reference base for soil resources 2006</i>, <i>first update 2007</i>, World Soil Resources Reports No. 103, Food and Agriculture Organization of the United Nations, Rome, 2007."
-    identifier = "Soil::WRBQualifierGroupType"
-    tableName = "SO_WRBQualifierGroupType"
+  Attributes <<dataType>> "SO_WRBQualifierGroupType" {
+    * description = "A data type to define the group of a qualifier and its possible specifier(s), its place and position with regard to the World Reference Base (WRB) Reference Soil Group (RSG) it belongs to according to <i>World reference base for soil resources 2006</i>, <i>first update 2007</i>, World Soil Resources Reports No. 103, Food and Agriculture Organization of the United Nations, Rome, 2007."
+    * identifier = "Soil::WRBQualifierGroupType"
+    * tableName = "SO_WRBQualifierGroupType"
     WRBqualifier TEXT NOT NULL CHECK(SO_WRBQualifierValue)
-    WRBspecifiers TEXT
     id INTEGER NOT NULL PRIMARY KEY
     qualifierPlace TEXT NOT NULL CHECK(SO_WRBQualifierPlaceValue)
     qualifierPosition INTEGER NOT NULL
+    <<array>> WRBspecifiers TEXT
   }
-  Attributes "SO_SoilHorizon" {
-    description = "Domain of a soil with a certain vertical extension, more or less parallel to the surface and homogeneous for most morphological and analytical characteristics, developed in a parent material layer through pedogenic processes or made up of in-situ sedimented organic residues of up-growing plants (peat).
+  Attributes <<featureType>> "SO_SoilHorizon" {
+    * description = "Domain of a soil with a certain vertical extension, more or less parallel to the surface and homogeneous for most morphological and analytical characteristics, developed in a parent material layer through pedogenic processes or made up of in-situ sedimented organic residues of up-growing plants (peat).
   
     SOURCE ISO/WD 28258, modified
   
     NOTE Horizons may be part of a layer."
-    identifier = "Soil::SoilHorizon"
-    tableName = "SO_SoilHorizon"
-    FAOHorizonNotation INTEGER
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Soil::SoilHorizon"
+    * tableName = "SO_SoilHorizon"
     id INTEGER NOT NULL PRIMARY KEY
-    profileElementDepthRange_lowerValue: DOUBLE [0..1]
-    profileElementDepthRange_uom_formula: TEXT [0..1]
-    profileElementDepthRange_uom_measureType: TEXT [0..1]
-    profileElementDepthRange_uom_nameStandardUnit: TEXT [0..1]
-    profileElementDepthRange_uom_offsetToStandardUnit: DOUBLE [0..1]
-    profileElementDepthRange_uom_scaleToStandardUnit: DOUBLE [0..1]
-    profileElementDepthRange_uom_uomName: TEXT [0..1]
-    profileElementDepthRange_uom_uomSymbol: TEXT [0..1]
-    profileElementDepthRange_upperValue: DOUBLE [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref isPartOf: SoilProfileinv isDescribedBy[0..*]
-    ref particleSizeFraction: SO_ParticleSizeFractionType[0..*]
+    profileElementDepthRange_lowerValue : DOUBLE [0..1]
+    profileElementDepthRange_uom_formula : TEXT [0..1]
+    profileElementDepthRange_uom_measureType : TEXT [0..1]
+    profileElementDepthRange_uom_nameStandardUnit : TEXT [0..1]
+    profileElementDepthRange_uom_offsetToStandardUnit : DOUBLE [0..1]
+    profileElementDepthRange_uom_scaleToStandardUnit : DOUBLE [0..1]
+    profileElementDepthRange_uom_uomName : TEXT [0..1]
+    profileElementDepthRange_uom_uomSymbol : TEXT [0..1]
+    profileElementDepthRange_upperValue : DOUBLE [0..1]
+    <<voidable>>, <<reference>> FAOHorizonNotation INTEGER
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    isPartOf SoilProfile as ref
+    <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
+    <<voidable>> profileElementObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
-  Attributes "SO_DerivedSoilProfile" {
-    description = "non-point-located soil profile that serves as a reference profile for a specific soil type in a certain geographical area.
+  Attributes <<featureType>> "SO_DerivedSoilProfile" {
+    * description = "non-point-located soil profile that serves as a reference profile for a specific soil type in a certain geographical area.
   
     The characteristics of a derived soil profile are mostly derived (e.g. averaged) from one or several observed profiles of the same soil type in the area of interest, or are designed with expert knowledge about the same kind of landscape.
   
     NOTE 1 The derived soil profile represents the average or typical profile that characterizes the so called soil typological unit, soil series."
-    identifier = "Soil::DerivedSoilProfile"
-    tableName = "SO_DerivedSoilProfile"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Soil::DerivedSoilProfile"
+    * tableName = "SO_DerivedSoilProfile"
     id INTEGER NOT NULL PRIMARY KEY
-    localIdentifier: TEXT [0..1]
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref WRBSoilName: SO_WRBSoilNameType[0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref isDescribedBy: ProfileElement[0..*] inv isPartOf
-    ref otherSoilName: SO_OtherSoilNameType[0..*]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localIdentifier : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
+    <<voidable>> isDescribedBy ProfileElement [0..*] as ref
+    <<voidable>> otherSoilName SO_OtherSoilNameType [0..*] as ref
+    <<voidable>> soilProfileObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
   Relation "SO_SoilBody_isDescribedBy" {
-    profile = "attributes"
-    tableName = "SO_SoilBody_isDescribedBy"
+    * profile = "attributes"
+    * tableName = "SO_SoilBody_isDescribedBy"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilBody(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_DerivedSoilProfile(id)
   }
   Relation "SO_SoilBody_inspireId" {
-    profile = "attributes"
-    relatedReference = "SO_SoilBody#inspireId"
-    tableName = "SO_SoilBody_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilBody#inspireId"
+    * tableName = "SO_SoilBody_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilBody(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SO_observedProfile_location" {
-    profile = "features"
-    relatedReference = "SO_ObservedSoilProfile#location"
-    tableName = "SO_observedProfile_location"
+    * profile = "features"
+    * relatedReference = "attribute SO_ObservedSoilProfile#location"
+    * tableName = "SO_observedProfile_location"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilPlot(id)
   }
   Relation "SO_WRBSoilNameType_over" {
-    profile = "attributes"
-    relatedReference = "SO_WRBSoilNameType#over"
-    tableName = "SO_WRBSoilNameType_over"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_WRBSoilNameType#over"
+    * tableName = "SO_WRBSoilNameType_over"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_WRBSoilNameType(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBSoilNameType(id)
   }
   Relation "SO_WRBSoilNameType_WRBQualifierGroup" {
-    profile = "attributes"
-    tableName = "SO_WRBSoilNameType_WRBQualifierGroup"
+    * profile = "attributes"
+    * tableName = "SO_WRBSoilNameType_WRBQualifierGroup"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_WRBSoilNameType(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBQualifierGroupType(id)
   }
-  Relation "SO_SoilDerivedObject_soilDerivedObjectObservation" {
-    profile = "attributes"
-    relatedReference = "SO_SoilDerivedObject#soilDerivedObjectObservation"
-    tableName = "SO_SoilDerivedObject_soilDerivedObjectObservation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
-  }
   Relation "SO_SoilDerivedObject_isBasedOnSoilBody" {
-    profile = "features"
-    tableName = "SO_SoilDerivedObject_isBasedOnSoilBody"
+    * profile = "features"
+    * tableName = "SO_SoilDerivedObject_isBasedOnSoilBody"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilBody(id)
   }
   Relation "SO_SoilDerivedObject_isBasedOnObservedSoilProfile" {
-    profile = "attributes"
-    tableName = "SO_SoilDerivedObject_isBasedOnObservedSoilProfile"
+    * profile = "attributes"
+    * tableName = "SO_SoilDerivedObject_isBasedOnObservedSoilProfile"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ObservedSoilProfile(id)
   }
   Relation "SO_SoilDerivedObject_isBasedOnSoilDerivedObject" {
-    profile = "features"
-    tableName = "SO_SoilDerivedObject_isBasedOnSoilDerivedObject"
+    * profile = "features"
+    * tableName = "SO_SoilDerivedObject_isBasedOnSoilDerivedObject"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilDerivedObject(id)
   }
   Relation "SO_SoilDerivedObject_inspireId" {
-    profile = "attributes"
-    relatedReference = "SO_SoilDerivedObject#inspireId"
-    tableName = "SO_SoilDerivedObject_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilDerivedObject#inspireId"
+    * tableName = "SO_SoilDerivedObject_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SO_SoilDerivedObject_soilDerivedObjectObservation_OM_Observation" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilDerivedObject#soilDerivedObjectObservation_OM_Observation"
+    * tableName = "SO_SoilDerivedObject_soilDerivedObjectObservation_OM_Observation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SO_SoilPlot_inspireId" {
-    profile = "attributes"
-    relatedReference = "SO_SoilPlot#inspireId"
-    tableName = "SO_SoilPlot_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilPlot#inspireId"
+    * tableName = "SO_SoilPlot_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SO_SoilThemeDescriptiveCoverage_isDescribing" {
-    profile = "attributes"
-    relatedReference = "SO_SoilThemeDescriptiveCoverage#isDescribing"
-    tableName = "SO_SoilThemeDescriptiveCoverage_isDescribing"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeDescriptiveCoverage#isDescribing"
+    * tableName = "SO_SoilThemeDescriptiveCoverage_isDescribing"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilThemeCoverage(id)
   }
-  Relation "SO_SoilSite_soilSiteObservation" {
-    profile = "attributes"
-    tableName = "SO_SoilSite_soilSiteObservation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
-  }
   Relation "SO_SoilSite_isObservedOnLocation" {
-    profile = "features"
-    relatedReference = "SO_SoilPlot#locatedOn"
-    tableName = "SO_SoilSite_isObservedOnLocation"
+    * profile = "features"
+    * relatedReference = "attribute SO_SoilPlot#locatedOn"
+    * tableName = "SO_SoilSite_isObservedOnLocation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilPlot(id)
   }
   Relation "SO_SoilSite_inspireId" {
-    profile = "attributes"
-    relatedReference = "SO_SoilSite#inspireId"
-    tableName = "SO_SoilSite_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilSite#inspireId"
+    * tableName = "SO_SoilSite_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SO_SoilSite_soilSiteObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "SO_SoilSite_soilSiteObservation_OM_Observation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SO_SoilHorizon_FAOHorizonNotation" {
-    profile = "attributes"
-    relatedReference = "SO_SoilHorizon#FAOHorizonNotation"
-    tableName = "SO_SoilHorizon_FAOHorizonNotation"
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilHorizon#FAOHorizonNotation"
+    * tableName = "SO_SoilHorizon_FAOHorizonNotation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_FAOHorizonNotationType(id)
   }
   Relation "SO_SoilHorizon_otherHorizonNotation" {
-    profile = "attributes"
-    tableName = "SO_SoilHorizon_otherHorizonNotation"
+    * profile = "attributes"
+    * tableName = "SO_SoilHorizon_otherHorizonNotation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_OtherHorizonNotationType(id)
   }
   Relation "SO_DerivedSoilProfile_isDerivedFrom" {
-    profile = "attributes"
-    tableName = "SO_DerivedSoilProfile_isDerivedFrom"
+    * profile = "attributes"
+    * tableName = "SO_DerivedSoilProfile_isDerivedFrom"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ObservedSoilProfile(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "_OM_Observation_relatedObservation" {
-    profile = "attributes"
-    tableName = "_OM_Observation_relatedObservation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
-  }
-  Relation "_OM_Observation_parameter" {
-    profile = "attributes"
-    tableName = "_OM_Observation_parameter"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
-  }
-  Constraint Enum "GML_MeasureType" {
-    identifier = "Units of Measure::MeasureType"
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum <<codeList>> "GML_MeasureType" {
+    * identifier = "Units of Measure::MeasureType"
     angle
     area
     length
@@ -673,118 +641,23 @@ Container <<applicationSchema>>  "Soil" {
     volume
     weight
   }
-  Constraint Enum "GE_EventProcessValue" {
-    identifier = "Geology::EventProcessValue"
+}
+Container <<applicationSchema>> "Geology" {
+  * fileName = "Geology"
+  Constraint Enum <<codeList>> "GE_LithologyValue" {
+    * identifier = "Geology::LithologyValue"
   }
-  Constraint Enum "GE_EventEnvironmentValue" {
-    identifier = "Geology::EventEnvironmentValue"
+  Constraint Enum <<codeList>> "GE_EventEnvironmentValue" {
+    * identifier = "Geology::EventEnvironmentValue"
   }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
+  Constraint Enum <<codeList>> "GE_EventProcessValue" {
+    * identifier = "Geology::EventProcessValue"
   }
-  Attributes "_OM_Observation" {
-    hasXmlLang = "false#NOTES#Values: true | false
-    Default: false
-    Description: axml attribute xml:lang shall be generated for the type representing the class
-    "
-    description = "An observation is an act that results in the estimation of the value of a feature property, and involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. Use of a common model allows observation data using different procedures to be combined unambiguously. Observation details are also important for data discovery and for data quality estimation. Observation feature types are defined by the properties that support these applications.
-  
-    An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. The result of an observation is an estimate of the value of a property of some feature, so the details of the observation are metadata concerning the value of the feature property. The observation itself is also a feature, since it has properties and identity."
-    identifier = "observation::OM_Observation"
-    tableName = "_OM_Observation"
-    id INTEGER NOT NULL PRIMARY KEY
-    resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    resultTime_position_date8601 DATE
-    resultTime_position_dateTime8601 DATETIME
-    resultTime_position_time8601 TEXT
-    resultTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    ref featureOfInterest: GFI_Featureinv propertyValueProvider[0..*]
-    ref procedure: OM_Processinv generatedObservation[0..*]
-    ref resultQuality: DQ_Element[0..*]
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "GMLCOV_GridFunction" {
-    description = "An explicit mapping rule for grid geometries"
-    identifier = "Coverages (Domain and Range)::GridFunction"
-    tableName = "GMLCOV_GridFunction"
-    id INTEGER NOT NULL PRIMARY KEY
-    sequenceRule_scanDirection <<missing>>
-    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    startPoints TEXT
-  }
-  Attributes "_NamedValue" {
-    description = "The class <i>NamedValue</i> provides for a generic soft-typed parameter value. NamedValue shall support two attributes."
-    identifier = "observation::NamedValue"
-    tableName = "_NamedValue"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_linkage TEXT
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-  }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    facsimiles TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    voices TEXT
-  }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    deliveryPoints TEXT
-    electronicMailAddresses TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
-  }
-  Constraint Enum "TRS_TM_IndeterminateValue" {
-    identifier = "Temporal Reference System::TM_IndeterminateValue"
-    after
-    before
-    name
-    now
-    unknow
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "CIS_CV_SequenceType" {
-    identifier = "Quadrilateral Grid::CV_SequenceType"
+}
+Container "Quadrilateral Grid" {
+  * fileName = "Quadrilateral Grid"
+  Constraint Enum <<codeList>> "CIS_CV_SequenceType" {
+    * identifier = "Quadrilateral Grid::CV_SequenceType"
     CantorDiagonal
     Hilbert
     Morton
@@ -792,161 +665,74 @@ Container <<applicationSchema>>  "Soil" {
     linear
     spiral
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Attributes "GMD_PT_Locale" {
-    identifier = "Cultural and linguistic adapdability::PT_Locale"
-    tableName = "GMD_PT_Locale"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+}
+Container "Data quality information" {
+  * fileName = "Data quality information"
+  Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
+    * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
     directInternal
     indirect
   }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
-    date DATE
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
-    level LegislationLevelValue
-    link TEXT
-    name TEXT NOT NULL
-    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
-    identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
-    annually
-    asNeeded
-    biannually
-    continual
-    daily
-    fortnightly
-    irregular
-    monthly
-    notPlanned
-    quarterly
-    unknown
-    weekly
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    linkage TEXT NOT NULL
-    name TEXT
-    protocol TEXT
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "MI_MD_ScopeCode" {
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+
+Package "Records and Class Metadata" {
+  Class <<type>>, <<type>> "Any" {}
+  Class <<type>>, <<type>> "RecordType" {
+    typeName_aName : TEXT
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+}
+Package "Extent information" {
+  Class "EX_Extent" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
     RationalRose$Java:GenerateDefaultConstructor = "True"
@@ -961,130 +747,18 @@ Container <<applicationSchema>>  "Soil" {
     RationalRose$Visual Basic:OptionBase = "(none)"
     RationalRose$Visual Basic:OptionCompare = "(none)"
     RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Maintenance information::MD_ScopeCode"
-    attribute
-    attributeType
-    collectionHardware
-    collectionSession
-    dataset
-    dimensionGroup
-    feature
-    featureType
-    fieldSession
-    model
-    nonGeographicDataset
-    propertyType
-    series
-    service
-    software
-    tile
+    description : TEXT [0..1]
   }
-  Constraint Enum "MEI_MD_ObligationCode" {
-    identifier = "Metadata extension information::MD_ObligationCode"
-    conditional
-    mandatory
-    optional
-  }
-  Constraint Enum "MEI_MD_DatatypeCode" {
-    identifier = "Metadata extension information::MD_DatatypeCode"
-    abstractClass
-    aggregateClass
-    association
-    characterString
-    class
-    codelist
-    codelistElement
-    datatypeClass
-    enumeration
-    integer
-    interfaceClass
-    metaClass
-    specifiedClass
-    typeClass
-    unionClass
-  }
-  Constraint Enum "GMD_MD_KeywordTypeCode" {
-    identifier = "Identification information::MD_KeywordTypeCode"
-    discipline
-    place
-    stratum
-    temporal
-    theme
-  }
-  Constraint Enum "GMD_DS_AssociationTypeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Identification information::DS_AssociationTypeCode"
-    crossReference
-    largerWorkCitation
-    partOfSeamlessDatabase
-    source
-    stereoMate
-  }
-  Constraint Enum "GMD_DS_InitiativeTypeCode" {
-    identifier = "Identification information::DS_InitiativeTypeCode"
-    campaign
-    collection
-    exercise
-    experiment
-    investigation
-    mission
-    operation
-    platform
-    process
-    program
-    project
-    sensor
-    study
-    task
-    trial
-  }
-  Constraint Enum "DI_MD_MediumNameCode" {
-    identifier = "Distribution information::MD_MediumNameCode"
-    1quarterInchCartridgeTape
-    3480Cartridge
-    3490Cartridge
-    3580Cartridge
-    3halfInchFloppy
-    4mmCartridgeTape
-    5quarterInchFloppy
-    7trackTape
-    8mmCartridgeTape
-    9trackTape
-    cdRom
-    digitalLinearTape
-    dvd
-    dvdRom
-    hardcopy
-    onLine
-    satellite
-    telephoneLink
-  }
-  Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
+}
+Container <<applicationSchema>> "Coverages (Domain and Range)" {
+  * fileName = "Coverages (Domain and Range)"
+  Attributes <<dataType>> "GMLCOV_GridFunction" {
+    * description = "An explicit mapping rule for grid geometries"
+    * identifier = "Coverages (Domain and Range)::GridFunction"
+    * tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    <<array>> startPoints TEXT
   }
 }

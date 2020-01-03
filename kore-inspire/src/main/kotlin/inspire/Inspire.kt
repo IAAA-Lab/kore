@@ -8,8 +8,8 @@ import es.iaaa.kore.transform.Conversion
 fun main() {
     val config = Configuration(
         file = "kore-inspire/src/main/resources/INSPIRE Consolidated UML Model ANNEX I II III complete r4618.xml",
-        description = false,
-        sql = false
+        description = true,
+        sql = true
     )
     mapOf(
         "au" to "AdministrativeUnits",

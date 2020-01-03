@@ -1,6 +1,7 @@
-Container <<applicationSchema>>  "MaritimeUnits" {
-  Feature "MU_MaritimeBoundary" {
-    description = "A line depicting the separation of any type of maritime jurisdiction.
+Container <<applicationSchema>> "MaritimeUnits" {
+  * fileName = "MaritimeUnits"
+  Feature <<featureType>> "MU_MaritimeBoundary" {
+    * description = "A line depicting the separation of any type of maritime jurisdiction.
   
     SOURCE IHO Dictionary, S-32, Fifth Edition.
   
@@ -11,35 +12,35 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     2) the limits of the maritime zones of States with opposite or adjacent coasts.
   
     Maritime boundaries are a politically sensitive subject, because it affects coastal State's jurisdiction concerning fishery, petroleum and other resources of the sea as well as other uses of the sea. [Source: "Maritime Boundary", S.P. Jagota]"
-    identifier = "MaritimeUnits::MaritimeBoundary"
-    tableName = "MU_MaritimeBoundary"
-    beginLifespanVersion DATETIME NOT NULL
-    countries TEXT NOT NULL
-    endLifespanVersion DATETIME
+    * identifier = "MaritimeUnits::MaritimeBoundary"
+    * tableName = "MU_MaritimeBoundary"
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    legalStatus TEXT CHECK(AU_LegalStatusValue)
-    technicalStatus TEXT CHECK(AU_TechnicalStatusValue)
+    <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
+    <<array>> countries TEXT NOT NULL
+    <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> legalStatus TEXT CHECK(AU_LegalStatusValue)
+    <<voidable>> technicalStatus TEXT CHECK(AU_TechnicalStatusValue)
   }
-  Constraint Enum "MU_MaritimeZoneTypeValue" {
-    identifier = "MaritimeUnits::MaritimeZoneTypeValue"
+  Constraint Enum <<codeList>> "MU_MaritimeZoneTypeValue" {
+    * identifier = "MaritimeUnits::MaritimeZoneTypeValue"
     contiguousZone
     continentalShelf
     exclusiveEconomicZone
     internalWaters
     territorialSea
   }
-  Feature "MU_BaselineSegment" {
-    description = "Segment of the baseline from which the outer limits of the territorial sea and certain other outer limits are measured."
-    identifier = "MaritimeUnits::BaselineSegment"
-    tableName = "MU_BaselineSegment"
+  Feature <<dataType>> "MU_BaselineSegment" {
+    * description = "Segment of the baseline from which the outer limits of the territorial sea and certain other outer limits are measured."
+    * identifier = "MaritimeUnits::BaselineSegment"
+    * tableName = "MU_BaselineSegment"
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     segmentType TEXT NOT NULL CHECK(MU_BaselineSegmentTypeValue)
   }
-  Attributes "MU_Baseline" {
-    description = "The line from which the outer limits of the territorial sea and certain other outer limits are measured.
+  Attributes <<featureType>> "MU_Baseline" {
+    * description = "The line from which the outer limits of the territorial sea and certain other outer limits are measured.
   
     SOURCE IHO Dictionary, S-32, Fifth Edition.
   
@@ -48,165 +49,116 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     According to United Nations Convention on the Law of the Sea (UNCLOS), the baseline segment can be normal, straight or archipelagic depending on the method used to determine the baseline segment.
   
     COMMENT: For this moment there is no clearly identified use-case that would require Baseline spatial object types, therefore it is not strictly necessary to include these objects in the dataset."
-    identifier = "MaritimeUnits::Baseline"
-    tableName = "MU_Baseline"
-    beginLifespanVersion DATETIME NOT NULL
-    endLifespanVersion DATETIME
+    * identifier = "MaritimeUnits::Baseline"
+    * tableName = "MU_Baseline"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
   }
-  Constraint Enum "MU_BaselineSegmentTypeValue" {
-    identifier = "MaritimeUnits::BaselineSegmentTypeValue"
+  Constraint Enum <<codeList>> "MU_BaselineSegmentTypeValue" {
+    * identifier = "MaritimeUnits::BaselineSegmentTypeValue"
     archipelagic
     normal
     straight
   }
-  Feature "MU_MaritimeZone" {
-    description = "A belt of sea defined by international treaties and conventions, where coastal State executes jurisdictional rights.
+  Feature <<featureType>> "MU_MaritimeZone" {
+    * description = "A belt of sea defined by international treaties and conventions, where coastal State executes jurisdictional rights.
   
     NOTE 1 The zone is established for e.g. cadastral, administrative, economic, security or safety purposes. It is not established for environmental management or regulation, which is covered by the theme Area management/restriction/regulation zones and reporting areas, or for environmental protection, which is covered by the theme Protected sites.
   
     NOTE 2 The maritime zone can be either internal waters, territorial sea, contiguous zone, exclusive economic zone or continental shelf."
-    identifier = "MaritimeUnits::MaritimeZone"
-    tableName = "MU_MaritimeZone"
-    beginLifeSpanVersion DATETIME
+    * identifier = "MaritimeUnits::MaritimeZone"
+    * tableName = "MU_MaritimeZone"
     country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifepanVersion DATETIME
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     zoneType TEXT NOT NULL CHECK(MU_MaritimeZoneTypeValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifeSpanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifepanVersion DATETIME
+    <<reference>> inspireId INTEGER
   }
   Relation "MU_MaritimeBoundary_inspireId" {
-    profile = "attributes"
-    relatedReference = "MU_MaritimeBoundary#inspireId"
-    tableName = "MU_MaritimeBoundary_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute MU_MaritimeBoundary#inspireId"
+    * tableName = "MU_MaritimeBoundary_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "MU_Baseline_segment" {
-    profile = "features"
-    tableName = "MU_Baseline_segment"
+    * profile = "features"
+    * tableName = "MU_Baseline_segment"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_Baseline(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_BaselineSegment(id)
   }
   Relation "MU_Baseline_inspireId" {
-    profile = "attributes"
-    relatedReference = "MU_Baseline#inspireId"
-    tableName = "MU_Baseline_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute MU_Baseline#inspireId"
+    * tableName = "MU_Baseline_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_Baseline(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "MU_MaritimeZone_boundary" {
-    profile = "features"
-    tableName = "MU_MaritimeZone_boundary"
+    * profile = "features"
+    * tableName = "MU_MaritimeZone_boundary"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_MaritimeBoundary(id)
   }
   Relation "MU_MaritimeZone_baseline" {
-    profile = "attributes"
-    tableName = "MU_MaritimeZone_baseline"
+    * profile = "attributes"
+    * tableName = "MU_MaritimeZone_baseline"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_Baseline(id)
   }
-  Relation "MU_MaritimeZone_baseline" {
-    profile = "attributes"
-    tableName = "MU_MaritimeZone_baseline"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_Shoreline(id)
-  }
-  Relation "MU_MaritimeZone_seaArea" {
-    profile = "attributes"
-    tableName = "MU_MaritimeZone_seaArea"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
-  }
-  Relation "MU_MaritimeZone_sea" {
-    profile = "features"
-    tableName = "MU_MaritimeZone_sea"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_Sea(id)
-  }
   Relation "MU_MaritimeZone_inspireId" {
-    profile = "attributes"
-    relatedReference = "MU_MaritimeZone#inspireId"
-    tableName = "MU_MaritimeZone_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute MU_MaritimeZone#inspireId"
+    * tableName = "MU_MaritimeZone_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "MU_MaritimeZone_name" {
-    profile = "attributes"
-    tableName = "MU_MaritimeZone_name"
+    * profile = "attributes"
+    * tableName = "MU_MaritimeZone_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "SR_Shoreline_segment" {
-    profile = "features"
-    tableName = "SR_Shoreline_segment"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ShoreSegment(id)
-  }
-  Relation "SR_SeaArea_subArea" {
-    profile = "attributes"
-    tableName = "SR_SeaArea_subArea"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
-  }
-  Relation "SR_SeaArea_inspireId" {
-    profile = "attributes"
-    relatedReference = "SR_SeaArea#inspireId"
-    tableName = "SR_SeaArea_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+  Relation "MU_MaritimeZone_baseline_Shoreline" {
+    * profile = "attributes"
+    * tableName = "MU_MaritimeZone_baseline_Shoreline"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SR_SeaArea_parameterValue" {
-    profile = "attributes"
-    tableName = "SR_SeaArea_parameterValue"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ParameterValuePair(id)
+  Relation "MU_MaritimeZone_seaArea_SeaArea" {
+    * profile = "attributes"
+    * tableName = "MU_MaritimeZone_seaArea_SeaArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SR_SeaArea_extent" {
-    profile = "features"
-    tableName = "SR_SeaArea_extent"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
+  Relation "MU_MaritimeZone_sea_Sea" {
+    * profile = "attributes"
+    * tableName = "MU_MaritimeZone_sea_Sea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Constraint Enum "AU_LegalStatusValue" {
-    identifier = "AdministrativeUnits::LegalStatusValue"
-    agreed
-    notAgreed
-  }
-  Constraint Enum "AU_TechnicalStatusValue" {
-    identifier = "AdministrativeUnits::TechnicalStatusValue"
+}
+Container <<applicationSchema>> "AdministrativeUnits" {
+  * fileName = "AdministrativeUnits"
+  Constraint Enum <<enumeration>> "AU_TechnicalStatusValue" {
+    * identifier = "AdministrativeUnits::TechnicalStatusValue"
     edgeMatched
     notEdgeMatched
   }
-  Constraint Enum "BASE2_CountryCode" {
-    identifier = "Base Types 2::CountryCode"
+  Constraint Enum <<enumeration>> "AU_LegalStatusValue" {
+    * identifier = "AdministrativeUnits::LegalStatusValue"
+    agreed
+    notAgreed
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<codeList>> "BASE2_CountryCode" {
+    * identifier = "Base Types 2::CountryCode"
     AT
     BE
     BG
@@ -237,157 +189,56 @@ Container <<applicationSchema>>  "MaritimeUnits" {
     TR
     UK
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "SR_Shoreline" {
-    description = "Any Boundary between a Sea Area and land."
-    identifier = "Sea Regions::Shoreline"
-    tableName = "SR_Shoreline"
-    id INTEGER NOT NULL PRIMARY KEY
-    waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "SR_SeaArea" {
-    description = "An area of sea defined according to its physical and chemical characteristics. It may have multiple geometries (extent) to represent different tidal states.
-  
-    A SeaArea is a type of HydroObject as described in the Annex1 theme Hydrography. It has geometry described by one or more GM_MultiSurfaces. Multiple geometries are allowed  to enable a SeaArea to be described according to different tidal states.
-  
-    Typically however, specialisations of SeaArea will restrict the geometry to a particular tidal state or set of tidal states.  SeaAreas include named seas such as ‘Baltic Sea’ and also un-named areas of sea that have particular chemical and physical characteristics.  SeaAreas are 2D objects and carry no explicit information about the depth of the sea, this is specified in the INSPIRE Elevation Theme."
-    identifier = "Sea Regions::SeaArea"
-    tableName = "SR_SeaArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Feature "SR_Sea" {
-    description = "Extent of sea at High Water (meanHighWater).
-  
-    An area of sea, bounded by land and adjacent sea regions.  May contain smaller scale sea regions. Has common large scale circulation patterns, in part defined by its land boundaries.  High Water is taken to be mean high water.  Applies to common names areas of sea, e.g. North Sea, Agean Sea etc. (Source: IHO S23 SeaRegion)"
-    identifier = "Sea Regions::Sea"
-    tableName = "SR_Sea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    extent_geometry MULTISURFACE NOT NULL
-    extent_waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Feature "SR_ShoreSegment" {
-    description = "A Shore Segment is a section of shore line.
-  
-    Where it is possible to provide attributes about shore stability (eroding, stable etc) and/or shore type (sand, rock, harbour etc). Then the Shore Segment should be used in place of the GML LineString element to describe curve segments."
-    identifier = "Sea Regions::ShoreSegment"
-    tableName = "SR_ShoreSegment"
-    geometry CURVE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    shoreClassification TEXT CHECK(SR_ShoreTypeClassificationValue)
-    shoreStability TEXT CHECK(SR_ShoreStabilityValue)
-  }
-  Attributes "SR_ParameterValuePair" {
-    description = "A parameter value pair contains a value of some observed property. e.g. Annual Mean Sea Surface Temperature."
-    identifier = "Sea Regions::ParameterValuePair"
-    tableName = "SR_ParameterValuePair"
-    id INTEGER NOT NULL PRIMARY KEY
-    parameter AbstractObservableProperty NOT NULL
-    value TEXT NOT NULL
-    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
-  Feature "SR_MarineExtent" {
-    description = "The extent of a sea area for a given tidal state
-  
-    The expected 2D geometric extent of a SeaArea for a particular tidal state."
-    identifier = "Sea Regions::MarineExtent"
-    tableName = "SR_MarineExtent"
-    geometry MULTISURFACE NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-  }
-  Attributes "HY_HydroIdentifier" {
-    description = "A hydrographic thematic identifier.
-  
-    NOTE May be used to hold a national hydrological identification code."
-    identifier = "Hydro - base::HydroIdentifier"
-    tableName = "HY_HydroIdentifier"
-    classificationScheme TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-  }
-  Constraint Enum "HY_P_WaterLevelValue" {
-    identifier = "Hydro - Physical Waters::WaterLevelValue"
-    equinoctialSpringLowWater
-    highWater
-    highWaterSprings
-    higherHighWater
-    higherHighWaterLargeTide
-    highestAstronomicalTide
-    highestHighWater
-    indianSpringHighWater
-    indianSpringLowWater
-    localDatum
-    lowWater
-    lowWaterDatum
-    lowWaterSprings
-    lowerLowWater
-    lowerLowWaterLargeTide
-    lowestAstronomicalTide
-    lowestLowWater
-    lowestLowWaterSprings
-    meanHighWater
-    meanHighWaterNeaps
-    meanHighWaterSprings
-    meanHigherHighWater
-    meanHigherHighWaterSprings
-    meanHigherLowWater
-    meanLowWater
-    meanLowWaterNeaps
-    meanLowWaterSprings
-    meanLowerHighWater
-    meanLowerLowWater
-    meanLowerLowWaterSprings
-    meanSeaLevel
-    meanTideLevel
-    meanWaterLevel
-    nearlyHighestHighWater
-    nearlyLowestLowWater
-    tropicHigherHighWater
-    tropicLowerLowWater
-  }
-  Constraint Enum "SR_SeaAreaTypeClassificationValue" {
-    identifier = "Sea Regions::SeaAreaTypeClassificationValue"
-  }
-  Constraint Enum "SR_ShoreTypeClassificationValue" {
-    identifier = "Sea Regions::ShoreTypeClassificationValue"
-  }
-  Constraint Enum "SR_ShoreStabilityValue" {
-    identifier = "Sea Regions::ShoreStabilityValue"
-  }
-  Constraint Enum "GML_UomIdentifier" {}
 }
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

@@ -1,146 +1,163 @@
-Container <<applicationSchema>>  "Base Types" {
-  Constraint Enum "BASE_VerticalPositionValue" {
-    identifier = "Base Types::VerticalPositionValue"
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Constraint Enum <<enumeration>> "BASE_VerticalPositionValue" {
+    * identifier = "Base Types::VerticalPositionValue"
     onGroundSurface
     suspendedOrElevated
     underground
   }
-  Constraint Enum "BASE_ConditionOfFacilityValue" {
-    identifier = "Base Types::ConditionOfFacilityValue"
+  Constraint Enum <<codeList>> "BASE_ConditionOfFacilityValue" {
+    * identifier = "Base Types::ConditionOfFacilityValue"
     decommissioned
     disused
     functional
     projected
     underConstruction
   }
-  Constraint Enum "BASE_VoidReasonValue" {
-    identifier = "Base Types::VoidReasonValue"
+  Constraint Enum <<codeList>> "BASE_VoidReasonValue" {
+    * identifier = "Base Types::VoidReasonValue"
     Unknown
     Unpopulated
     Withheld
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "BASE_SpatialDataSet" {
-    description = "Identifiable collection of spatial data.
+  Attributes <<featureType>> "BASE_SpatialDataSet" {
+    * description = "Identifiable collection of spatial data.
   
     NOTE The type SpatialDataSet is offered as a pre-defined type for spatial data sets. The scope of this type is packaging pre-defined data sets for the non-direct access download service. It may be reused in thematic application schemas, but if it does not fit an application-schema-specific data set object should be modelled. This type may have the same name and definition like this type, but may have a different set of properties.
   
     This type specifies three properties: an external object identifier, a container for metadata (may be void), and an association to zero or more spatial objects."
-    identifier = "Base Types::SpatialDataSet"
-    tableName = "BASE_SpatialDataSet"
+    * identifier = "Base Types::SpatialDataSet"
+    * tableName = "BASE_SpatialDataSet"
     id INTEGER NOT NULL PRIMARY KEY
-    identifier INTEGER
-    metadata MD_Metadata
+    <<reference>> identifier INTEGER
+    <<voidable>> metadata MD_Metadata
   }
   Relation "BASE_SpatialDataSet_identifier" {
-    profile = "attributes"
-    relatedReference = "BASE_SpatialDataSet#identifier"
-    tableName = "BASE_SpatialDataSet_identifier"
+    * profile = "attributes"
+    * relatedReference = "attribute BASE_SpatialDataSet#identifier"
+    * tableName = "BASE_SpatialDataSet_identifier"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE_SpatialDataSet(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+}
+Container "Metadata extension information" {
+  * fileName = "Metadata extension information"
+  Constraint Enum <<codeList>> "GMD_MD_DatatypeCode" {
+    * identifier = "Metadata extension information::MD_DatatypeCode"
+    abstractClass
+    aggregateClass
+    association
+    characterString
+    class
+    codelist
+    codelistElement
+    datatypeClass
+    enumeration
+    integer
+    interfaceClass
+    metaClass
+    specifiedClass
+    typeClass
+    unionClass
   }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_linkage TEXT
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  Constraint Enum <<enumeration>> "GMD_MD_ObligationCode" {
+    * identifier = "Metadata extension information::MD_ObligationCode"
+    conditional
+    mandatory
+    optional
   }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    facsimiles TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    voices TEXT
+}
+Container "Identification information" {
+  * fileName = "Identification information"
+  Constraint Enum <<codeList>> "GMD_DS_InitiativeTypeCode" {
+    * identifier = "Identification information::DS_InitiativeTypeCode"
+    campaign
+    collection
+    exercise
+    experiment
+    investigation
+    mission
+    operation
+    platform
+    process
+    program
+    project
+    sensor
+    study
+    task
+    trial
   }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    deliveryPoints TEXT
-    electronicMailAddresses TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
+  Constraint Enum <<codeList>> "GMD_DS_AssociationTypeCode" {
+    * identifier = "Identification information::DS_AssociationTypeCode"
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    crossReference
+    largerWorkCitation
+    partOfSeamlessDatabase
+    source
+    stereoMate
   }
-  Attributes "GMD_PT_Locale" {
-    identifier = "Cultural and linguistic adapdability::PT_Locale"
-    tableName = "GMD_PT_Locale"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
+  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
+    * identifier = "Identification information::MD_CharacterSetCode"
     (reservedforfutureuse)
     8859part1
     8859part10
@@ -171,44 +188,62 @@ Container <<applicationSchema>>  "Base Types" {
     utf7
     utf8
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
+  Constraint Enum <<codeList>> "GMD_MD_KeywordTypeCode" {
+    * identifier = "Identification information::MD_KeywordTypeCode"
+    discipline
+    place
+    stratum
+    temporal
+    theme
   }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
+  Constraint Enum <<codeList>> "GMD_MD_ProgressCode" {
+    * identifier = "Identification information::MD_ProgressCode"
+    completed
+    historicalArchive
+    obsolete
+    onGoing
+    planned
+    required
+    underDevelopment
   }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
-    date DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    level LegislationLevelValue
-    link TEXT
-    name TEXT NOT NULL
-    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+}
+Container "Maintenance information" {
+  * fileName = "Maintenance information"
+  Constraint Enum <<codeList>> "GMD_MD_ScopeCode" {
+    * identifier = "Maintenance information::MD_ScopeCode"
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    attribute
+    attributeType
+    collectionHardware
+    collectionSession
+    dataset
+    dimensionGroup
+    feature
+    featureType
+    fieldSession
+    model
+    nonGeographicDataset
+    propertyType
+    series
+    service
+    software
+    tile
   }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
-  }
-  Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
-    identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
+  Constraint Enum <<codeList>> "GMD_MD_MaintenanceFrequencyCode" {
+    * identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
     annually
     asNeeded
     biannually
@@ -222,8 +257,90 @@ Container <<applicationSchema>>  "Base Types" {
     unknown
     weekly
   }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
+}
+Container "Citation and responsible party information" {
+  * fileName = "Citation and responsible party information"
+  Attributes <<dataType>> "GMD_CI_ResponsibleParty" {
+    * description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
+    * identifier = "Citation and responsible party information::CI_ResponsibleParty"
+    * tableName = "GMD_CI_ResponsibleParty"
+    contactInfo_contactInstructions TEXT
+    contactInfo_hoursOfService TEXT
+    contactInfo_onlineResource_applicationProfile TEXT
+    contactInfo_onlineResource_description TEXT
+    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    contactInfo_onlineResource_linkage TEXT
+    contactInfo_onlineResource_name TEXT
+    contactInfo_onlineResource_protocol TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    individualName TEXT
+    organisationName TEXT
+    positionName TEXT
+    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+    <<reference>> contactInfo_address INTEGER
+    <<reference>> contactInfo_phone INTEGER
+  }
+  Constraint Enum <<codeList>> "GMD_CI_RoleCode" {
+    * identifier = "Citation and responsible party information::CI_RoleCode"
+    author
+    custodian
+    distributor
+    originator
+    owner
+    pointOfContact
+    principalInvestigator
+    processor
+    publisher
+    resourceProvider
+    user
+  }
+  Constraint Enum <<codeList>> "GMD_CI_OnLineFunctionCode" {
+    * identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
+    download
+    information
+    offlineAccess
+    order
+    search
+  }
+  Attributes <<dataType>> "GMD_CI_Telephone" {
+    * description = "Telephone numbers for contacting the responsible individual or organisation"
+    * identifier = "Citation and responsible party information::CI_Telephone"
+    * tableName = "GMD_CI_Telephone"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<array>> facsimiles TEXT
+    <<array>> voices TEXT
+  }
+  Attributes <<dataType>> "GMD_CI_Address" {
+    * description = "Location of the responsible individual or organisation"
+    * identifier = "Citation and responsible party information::CI_Address"
+    * tableName = "GMD_CI_Address"
+    administrativeArea TEXT
+    city TEXT
+    country TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    postalCode TEXT
+    <<array>> deliveryPoints TEXT
+    <<array>> electronicMailAddresses TEXT
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
+    * profile = "attributes"
+    * relatedReference = "attribute GMD_CI_ResponsibleParty#contactInfo_phone"
+    * tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute GMD_CI_ResponsibleParty#contactInfo_address"
+    * tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
+}
+Container "ISO 00639 Language Codes" {
+  * fileName = "ISO 00639 Language Codes"
+  Constraint Enum <<codeList>> "GMD_LanguageCode" {
+    * identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
     Albanian
     Arabic
@@ -269,134 +386,35 @@ Container <<applicationSchema>>  "Base Types" {
     Turkish
     Ukranian
   }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
+}
+Container "ISO 03166 Country Codes" {
+  * fileName = "ISO 03166 Country Codes"
+  Constraint Enum <<codeList>> "GMD_CountryCode" {
+    * identifier = "ISO 03166 Country Codes::CountryCode"
   }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    linkage TEXT NOT NULL
-    name TEXT
-    protocol TEXT
-  }
-  Constraint Enum "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Maintenance information::MD_ScopeCode"
-    attribute
-    attributeType
-    collectionHardware
-    collectionSession
-    dataset
-    dimensionGroup
-    feature
-    featureType
-    fieldSession
-    model
-    nonGeographicDataset
-    propertyType
-    series
-    service
-    software
-    tile
-  }
-  Constraint Enum "MEI_MD_ObligationCode" {
-    identifier = "Metadata extension information::MD_ObligationCode"
-    conditional
-    mandatory
-    optional
-  }
-  Constraint Enum "MEI_MD_DatatypeCode" {
-    identifier = "Metadata extension information::MD_DatatypeCode"
-    abstractClass
-    aggregateClass
-    association
-    characterString
-    class
-    codelist
-    codelistElement
-    datatypeClass
-    enumeration
-    integer
-    interfaceClass
-    metaClass
-    specifiedClass
-    typeClass
-    unionClass
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+}
+Container "Data quality information" {
+  * fileName = "Data quality information"
+  Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
+    * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
     directInternal
     indirect
   }
-  Constraint Enum "GMD_MD_KeywordTypeCode" {
-    identifier = "Identification information::MD_KeywordTypeCode"
-    discipline
-    place
-    stratum
-    temporal
-    theme
+}
+Container "Distribution information" {
+  * fileName = "Distribution information"
+  Constraint Enum <<codeList>> "GMD_MD_MediumFormatCode" {
+    * identifier = "Distribution information::MD_MediumFormatCode"
+    cpio
+    highSierra
+    iso9660
+    iso9660AppleHFS
+    iso9660RockRidge
+    tar
   }
-  Constraint Enum "GMD_DS_AssociationTypeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Identification information::DS_AssociationTypeCode"
-    crossReference
-    largerWorkCitation
-    partOfSeamlessDatabase
-    source
-    stereoMate
-  }
-  Constraint Enum "GMD_DS_InitiativeTypeCode" {
-    identifier = "Identification information::DS_InitiativeTypeCode"
-    campaign
-    collection
-    exercise
-    experiment
-    investigation
-    mission
-    operation
-    platform
-    process
-    program
-    project
-    sensor
-    study
-    task
-    trial
-  }
-  Constraint Enum "DI_MD_MediumNameCode" {
-    identifier = "Distribution information::MD_MediumNameCode"
+  Constraint Enum <<codeList>> "GMD_MD_MediumNameCode" {
+    * identifier = "Distribution information::MD_MediumNameCode"
     1quarterInchCartridgeTape
     3480Cartridge
     3490Cartridge
@@ -416,19 +434,144 @@ Container <<applicationSchema>>  "Base Types" {
     satellite
     telephoneLink
   }
-  Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
+}
+Package "Metadata entity set information" {
+  Class "MD_Metadata" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    characterSet : TEXT [0..1]
+    dataSet : TEXT [0..1]
+    dateStamp : DATE
+    fileIdentifier : TEXT [0..1]
+    language : TEXT [0..1]
+    metadataStandardName : TEXT [0..1]
+    metadataStandardVersion : TEXT [0..1]
+    parentIdentifier : TEXT [0..1]
+    <<array>> hierarchyLevelNames : TEXT [0..1]
+    <<array>> hierarchyLevels : TEXT [0..1]
+    contact GMD_CI_ResponsibleParty [1..*] as ref
+    dataQualityInfo DQ_DataQuality [0..*] as ref
+    describes DS_DataSet [0..*] as ref
+    describes CL_DataSet [0..*] as ref
+    featureAttribute GF_AttributeType [0..*] as ref
+    featureType GF_FeatureType [0..*] as ref
+    locale GMD_PT_Locale [0..*] as ref
+    propertyType GF_PropertyType [0..*] as ref
+    series DS_Aggregate [0..*] as ref
   }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Package "General Feature Model" {
+  Class <<MetaClass>>, <<metaclass>> "GF_PropertyType" {
+    definition : TEXT
+    propertyTypeMetadata MD_Metadata [0..*] as ref
+    rule PF_PortrayalRule [0..*] as ref
+    theGF_FeatureType GF_FeatureType as ref
+  }
+  Class "GF_InheritanceRelation" {
+    description : TEXT
+    name[0..1] : TEXT
+    uniqueInstance : BOOLEAN
+    subtype GF_FeatureType as ref
+    supertype GF_FeatureType as ref
+  }
+  Class <<MetaClass>>, <<metaclass>> "GF_AttributeType" {
+    definition : TEXT
+    valueDomain : TEXT
+    valueType_aName : TEXT
+    characterize GF_AttributeType [0..1] as ref
+    characterizeBy GF_AttributeType [0..*] as ref
+    featureAttributeMetadata MD_Metadata [0..*] as ref
+    propertyTypeMetadata MD_Metadata [0..*] as ref
+    rule PF_PortrayalRule [0..*] as ref
+    theGF_FeatureType GF_FeatureType as ref
+  }
+  Class <<metaclass>> "GF_FeatureType" {
+    definition : TEXT
+    isAbstract : BOOLEAN
+    carrierOfCharacteristics GF_PropertyType [0..*] as ref
+    featureTypeMetadata MD_Metadata [0..*] as ref
+    linkBetween GF_AssociationType [0..*] as ref
+    ruleSet PF_FeaturePortrayal [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+  }
+  Class <<MetaClass>>, <<metaclass>> "GF_Operation" {
+    definition : TEXT
+    signature : TEXT
+    dependsOn GF_AssociationType [0..*] as ref
+    propertyTypeMetadata MD_Metadata [0..*] as ref
+    rule PF_PortrayalRule [0..*] as ref
+    theGF_FeatureType GF_FeatureType as ref
+  }
+  Class <<MetaClass>>, <<metaclass>> "GF_AssociationType" {
+    definition : TEXT
+    isAbstract : BOOLEAN
+    carrierOfCharacteristics GF_PropertyType [0..*] as ref
+    featureTypeMetadata MD_Metadata [0..*] as ref
+    includes GF_FeatureType [1..*] as ref
+    linkBetween GF_AssociationType [0..*] as ref
+    ruleSet PF_FeaturePortrayal [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+    theGF_Operation GF_Operation [0..*] as ref
+  }
+}
+Package "Metadata application information" {
+  Class "DS_DataSet" {
+    has MD_Metadata [1..*] as ref
+    partOf DS_Aggregate [0..*] as ref
+  }
+  Class "DS_Aggregate" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    composedOf DS_DataSet [1..*] as ref
+    seriesMetadata MD_Metadata [1..*] as ref
+    subset DS_Aggregate [0..*] as ref
+    superset DS_Aggregate [0..*] as ref
+  }
+}
+Package "ISO 19144-1 Classification Systems" {
+  Class "CL_DataSet" {
+    has MD_Metadata [1..*] as ref
+    partOf DS_Aggregate [0..*] as ref
+  }
+}
+Container "Cultural and linguistic adapdability" {
+  * fileName = "Cultural and linguistic adapdability"
+  Attributes <<dataType>> "GMD_PT_Locale" {
+    * identifier = "Cultural and linguistic adapdability::PT_Locale"
+    * tableName = "GMD_PT_Locale"
+    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    country TEXT CHECK(GMD_CountryCode)
+    id INTEGER NOT NULL PRIMARY KEY
+    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
   }
 }

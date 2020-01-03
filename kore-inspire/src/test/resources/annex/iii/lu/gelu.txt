@@ -1,81 +1,37 @@
-Container <<applicationSchema>>  "Gridded Land Use" {
-  Attributes "GELU_ExistingLandUseGrid" {
-    description = "An existing land use grid is a collection of pixels for which information on existing (present or past) land use is provided. The HILUCS system shall be used for classification."
-    identifier = "Gridded Land Use::ExistingLandUseGrid"
-    tableName = "GELU_ExistingLandUseGrid"
-    beginLifespanVersion DATETIME
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
-    domainSet: Any
-    endLifespanVersion DATETIME
+Container <<applicationSchema>> "Gridded Land Use" {
+  * fileName = "Gridded Land Use"
+  Attributes <<featureType>> "GELU_ExistingLandUseGrid" {
+    * description = "An existing land use grid is a collection of pixels for which information on existing (present or past) land use is provided. The HILUCS system shall be used for classification."
+    * identifier = "Gridded Land Use::ExistingLandUseGrid"
+    * tableName = "GELU_ExistingLandUseGrid"
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
+    domainSet : Any
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    metadata: Any [0..*]
+    metadata : Any [0..*]
     name TEXT NOT NULL
-    rangeSet: Any [0..*]
-    rangeType: RecordType
-    validFrom DATE
-    validTo DATE
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
+    rangeSet : Any [0..*]
+    rangeType : RecordType
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> validFrom DATE
+    <<voidable>> validTo DATE
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
   }
   Relation "GELU_ExistingLandUseGrid_inspireId" {
-    profile = "attributes"
-    relatedReference = "GELU_ExistingLandUseGrid#inspireId"
-    tableName = "GELU_ExistingLandUseGrid_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute GELU_ExistingLandUseGrid#inspireId"
+    * tableName = "GELU_ExistingLandUseGrid_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Attributes "GMLCOV_GridFunction" {
-    description = "An explicit mapping rule for grid geometries"
-    identifier = "Coverages (Domain and Range)::GridFunction"
-    tableName = "GMLCOV_GridFunction"
-    id INTEGER NOT NULL PRIMARY KEY
-    sequenceRule_scanDirection <<missing>>
-    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    startPoints TEXT
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Constraint Enum "CIS_CV_SequenceType" {
-    identifier = "Quadrilateral Grid::CV_SequenceType"
+}
+Container "Quadrilateral Grid" {
+  * fileName = "Quadrilateral Grid"
+  Constraint Enum <<codeList>> "CIS_CV_SequenceType" {
+    * identifier = "Quadrilateral Grid::CV_SequenceType"
     CantorDiagonal
     Hilbert
     Morton
@@ -84,3 +40,69 @@ Container <<applicationSchema>>  "Gridded Land Use" {
     spiral
   }
 }
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "Records and Class Metadata" {
+  Class <<type>>, <<type>> "Any" {}
+  Class <<type>>, <<type>> "RecordType" {
+    typeName_aName : TEXT
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+}
+Container <<applicationSchema>> "Coverages (Domain and Range)" {
+  * fileName = "Coverages (Domain and Range)"
+  Attributes <<dataType>> "GMLCOV_GridFunction" {
+    * description = "An explicit mapping rule for grid geometries"
+    * identifier = "Coverages (Domain and Range)::GridFunction"
+    * tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    <<array>> startPoints TEXT
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

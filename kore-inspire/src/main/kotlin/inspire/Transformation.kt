@@ -17,6 +17,8 @@
 
 package inspire
 
+import es.iaaa.kore.KoreReference
+import es.iaaa.kore.references
 import es.iaaa.kore.transform.conversion
 import es.iaaa.kore.transform.impl.Console
 import es.iaaa.kore.transform.impl.GeoPackageWriter
@@ -29,6 +31,13 @@ val transformation = { options: Map<String, Any> ->
         input {
             type.set("EA-UML1.3")
             helper.set(inspireResourceHelper)
+            boundary.set { source, target ->
+                if (source is KoreReference) {
+                    source.isNavigable && !target.references("featureType")
+                } else {
+                    !target.references("featureType")
+                }
+            }
         }
         transformation {
             manipulation(`Before rules`)
@@ -38,6 +47,7 @@ val transformation = { options: Map<String, Any> ->
             rule(`ISO 19107 - Geometry types`)
             rule(`ISO 19115 - Basic types`)
             rule(`ISO 19139 - Metadata XML Implementation Types`)
+            rule(`Replace boundaries by Identifier`)
             rule(`Flatten union types`)
             rule(`UoM is added as a separate property`)
             rule(`Flattening types`)

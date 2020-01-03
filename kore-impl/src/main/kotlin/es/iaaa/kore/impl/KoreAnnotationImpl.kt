@@ -35,4 +35,5 @@ internal class KoreAnnotationImpl : KoreModelElementImpl(), KoreAnnotation {
             }
         }
     override val references: MutableList<KoreObject> = mutableListOf()
+    override fun toString(): String = "annotation $details"
 }

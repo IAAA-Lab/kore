@@ -108,4 +108,6 @@ open class KoreClassImpl : KoreClassifierImpl(), KoreClass {
 
     internal val internalOperations: MutableList<KoreOperationImpl> = mutableListOf()
     private val internalStructuralFeatures: MutableList<KoreStructuralFeature> = mutableListOf()
+
+    override fun toString(): String = "class ${container?.name}#$name"
 }

@@ -1,84 +1,64 @@
-Container <<applicationSchema>>  "Coverages (Domain and Range)" {
-  Attributes "GMLCOV_RectifiedGridCoverage" {
-    description = "Coverage whose domain consists of a rectified grid
+Container <<applicationSchema>> "Coverages (Domain and Range)" {
+  * fileName = "Coverages (Domain and Range)"
+  Attributes <<featureType>> "GMLCOV_RectifiedGridCoverage" {
+    * description = "Coverage whose domain consists of a rectified grid
   
     A rectified grid is a grid for which there is an affine transformation between the grid coordinates and the coordinates of a coordinate reference system.
   
     NOTE This type can be used for both discrete and continuous coverages."
-    identifier = "Coverages (Domain and Range)::RectifiedGridCoverage"
-    tableName = "GMLCOV_RectifiedGridCoverage"
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
+    * identifier = "Coverages (Domain and Range)::RectifiedGridCoverage"
+    * tableName = "GMLCOV_RectifiedGridCoverage"
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    metadata: Any [0..*]
-    rangeType: RecordType
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
-    ref rangeSet: Any[0..*]
+    metadata : Any [0..*]
+    rangeType : RecordType
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    rangeSet Any [0..*] as ref
   }
-  Attributes "GMLCOV_ReferenceableGridCoverage" {
-    description = "Coverage whose domain consists of a referenceable grid
+  Attributes <<featureType>> "GMLCOV_ReferenceableGridCoverage" {
+    * description = "Coverage whose domain consists of a referenceable grid
   
     A referencable grid is a grid associated with a transformation that can be used to convert grid coordinate values to values of coordinates referenced to a coordinate reference system.
   
     NOTE This type can be used for both discrete and continuous coverages."
-    identifier = "Coverages (Domain and Range)::ReferenceableGridCoverage"
-    tableName = "GMLCOV_ReferenceableGridCoverage"
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
+    * identifier = "Coverages (Domain and Range)::ReferenceableGridCoverage"
+    * tableName = "GMLCOV_ReferenceableGridCoverage"
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    metadata: Any [0..*]
-    rangeType: RecordType
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
-    ref rangeSet: Any[0..*]
+    metadata : Any [0..*]
+    rangeType : RecordType
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    rangeSet Any [0..*] as ref
   }
-  Class <<union>>  "CoverageFunction" {
-    ruleDefinition: TEXT
-    ruleReference: TEXT
-    ref gridFunction: GMLCOV_GridFunction
+  Class <<union>> "CoverageFunction" {
+    ruleDefinition : TEXT
+    ruleReference : TEXT
+    gridFunction GMLCOV_GridFunction as ref
   }
-  Class "CoverageByDomainAndRange" {
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
-    metadata: Any [0..*]
-    rangeType: RecordType
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
-    ref rangeSet: Any[0..*]
+  Class <<featureType>> "CoverageByDomainAndRange" {
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
+    metadata : Any [0..*]
+    rangeType : RecordType
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    rangeSet Any [0..*] as ref
   }
-  Attributes "GMLCOV_GridFunction" {
-    description = "An explicit mapping rule for grid geometries"
-    identifier = "Coverages (Domain and Range)::GridFunction"
-    tableName = "GMLCOV_GridFunction"
+  Attributes <<dataType>> "GMLCOV_GridFunction" {
+    * description = "An explicit mapping rule for grid geometries"
+    * identifier = "Coverages (Domain and Range)::GridFunction"
+    * tableName = "GMLCOV_GridFunction"
     id INTEGER NOT NULL PRIMARY KEY
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    startPoints TEXT
+    <<array>> startPoints TEXT
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "CIS_CV_SequenceType" {
-    identifier = "Quadrilateral Grid::CV_SequenceType"
+}
+Container "Quadrilateral Grid" {
+  * fileName = "Quadrilateral Grid"
+  Constraint Enum <<codeList>> "CIS_CV_SequenceType" {
+    * identifier = "Quadrilateral Grid::CV_SequenceType"
     CantorDiagonal
     Hilbert
     Morton
@@ -87,3 +67,41 @@ Container <<applicationSchema>>  "Coverages (Domain and Range)" {
     spiral
   }
 }
+Package <<applicationSchema>> "Base Types" {
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "Records and Class Metadata" {
+  Class <<type>>, <<type>> "Any" {}
+  Class <<type>>, <<type>> "RecordType" {
+    typeName_aName : TEXT
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

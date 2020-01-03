@@ -1,47 +1,57 @@
-Container <<applicationSchema>>  "Hydro - base" {
-  Attributes "HY_HydroIdentifier" {
-    description = "A hydrographic thematic identifier.
+Container <<applicationSchema>> "Hydro - base" {
+  * fileName = "Hydro - base"
+  Attributes <<dataType>> "HY_HydroIdentifier" {
+    * description = "A hydrographic thematic identifier.
   
     NOTE May be used to hold a national hydrological identification code."
-    identifier = "Hydro - base::HydroIdentifier"
-    tableName = "HY_HydroIdentifier"
+    * identifier = "Hydro - base::HydroIdentifier"
+    * tableName = "HY_HydroIdentifier"
     classificationScheme TEXT
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
   }
-  Class "HydroObject" {
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+  Class <<featureType>> "HydroObject" {
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
+}
+Package <<applicationSchema>> "Base Types" {
   Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
     spelling_text TEXT NOT NULL
   }
 }
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

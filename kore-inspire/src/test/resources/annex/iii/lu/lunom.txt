@@ -1,60 +1,67 @@
-Container <<applicationSchema>>  "Land Use Nomenclature" {
-  Attributes "LUNOM_SpecificPercentage" {
-    description = "Percentage of land use object that is covered by this specific presence."
-    identifier = "Land Use Nomenclature::SpecificPercentage"
-    tableName = "LUNOM_SpecificPercentage"
+Container <<applicationSchema>> "Land Use Nomenclature" {
+  * fileName = "Land Use Nomenclature"
+  Attributes <<dataType>> "LUNOM_SpecificPercentage" {
+    * description = "Percentage of land use object that is covered by this specific presence."
+    * identifier = "Land Use Nomenclature::SpecificPercentage"
+    * tableName = "LUNOM_SpecificPercentage"
     id INTEGER NOT NULL PRIMARY KEY
     percentage INTEGER NOT NULL
     specificValue TEXT NOT NULL CHECK(LUNOM_LandUseClassificationValue)
   }
-  Constraint Enum "LUNOM_HILUCSValue" {
-    identifier = "Land Use Nomenclature::HILUCSValue"
+  Constraint Enum <<codeList>> "LUNOM_HILUCSValue" {
+    * identifier = "Land Use Nomenclature::HILUCSValue"
   }
-  Attributes "LUNOM_HILUCSPercentage" {
-    description = "Percentage of land use object that is covered by this HILUCS presence.
+  Attributes <<dataType>> "LUNOM_HILUCSPercentage" {
+    * description = "Percentage of land use object that is covered by this HILUCS presence.
   
     NOTE1:The percentage is according to the socio-economic or functional importance of the use.
   
     NOTE2:examples are provided in the narrative description part of the data specification."
-    identifier = "Land Use Nomenclature::HILUCSPercentage"
-    tableName = "LUNOM_HILUCSPercentage"
+    * identifier = "Land Use Nomenclature::HILUCSPercentage"
+    * tableName = "LUNOM_HILUCSPercentage"
     hilucsValue TEXT NOT NULL CHECK(LUNOM_HILUCSValue)
     id INTEGER NOT NULL PRIMARY KEY
     percentage INTEGER NOT NULL
   }
-  Constraint Enum "LUNOM_LandUseClassificationValue" {
-    identifier = "Land Use Nomenclature::LandUseClassificationValue"
+  Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
+    * identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
-  Class <<union>>  "HILUCSPresence" {
-    orderedLists: TEXT
-    ref percentageList: LUNOM_HILUCSPercentage[1..*]
+  Class <<union>> "HILUCSPresence" {
+    <<array>> orderedLists : TEXT
+    percentageList LUNOM_HILUCSPercentage [1..*] as ref
   }
-  Class <<union>>  "SpecificPresence" {
-    orderedLists: TEXT
-    ref percentageList: LUNOM_SpecificPercentage[1..*]
-  }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+  Class <<union>> "SpecificPresence" {
+    <<array>> orderedLists : TEXT
+    percentageList LUNOM_SpecificPercentage [1..*] as ref
   }
 }
+Package <<applicationSchema>> "Base Types" {
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

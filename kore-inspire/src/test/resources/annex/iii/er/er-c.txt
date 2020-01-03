@@ -1,14 +1,15 @@
-Container <<applicationSchema>>  "Energy Resources Coverage" {
-  Constraint Enum "ER_C_WindPotentialValue" {
-    identifier = "Energy Resources Coverage::WindPotentialValue"
+Container <<applicationSchema>> "Energy Resources Coverage" {
+  * fileName = "Energy Resources Coverage"
+  Constraint Enum <<codeList>> "ER_C_WindPotentialValue" {
+    * identifier = "Energy Resources Coverage::WindPotentialValue"
     averageMeanWindPowerDensity
     averageMeanWindSpeed
   }
-  Constraint Enum "ER_C_PotentialTypeValue" {
-    identifier = "Energy Resources Coverage::PotentialTypeValue"
+  Constraint Enum <<codeList>> "ER_C_PotentialTypeValue" {
+    * identifier = "Energy Resources Coverage::PotentialTypeValue"
   }
-  Constraint Enum "ER_C_TidalPotentialValue" {
-    identifier = "Energy Resources Coverage::TidalPotentialValue"
+  Constraint Enum <<codeList>> "ER_C_TidalPotentialValue" {
+    * identifier = "Energy Resources Coverage::TidalPotentialValue"
     averagePeakFlow
     averageTidalPower
     meanNeapTidalPower
@@ -18,46 +19,46 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
     meanSpringTidalRange
     meanSpringTidePeakFlow
   }
-  Constraint Enum "ER_C_HydroPotentialValue" {
-    identifier = "Energy Resources Coverage::HydroPotentialValue"
+  Constraint Enum <<codeList>> "ER_C_HydroPotentialValue" {
+    * identifier = "Energy Resources Coverage::HydroPotentialValue"
     potentialHydroPower
   }
-  Attributes "ER_C_RenewableAndWastePotentialCoverage" {
-    description = "Function that returns an energy potential value from its range for any direct position within its spatial, temporal or spatio-temporal domain.
+  Attributes <<featureType>> "ER_C_RenewableAndWastePotentialCoverage" {
+    * description = "Function that returns an energy potential value from its range for any direct position within its spatial, temporal or spatio-temporal domain.
   
     SOURCE Adapted from "Coverage" [ISO 19123:2005]."
-    identifier = "Energy Resources Coverage::RenewableAndWastePotentialCoverage"
-    tableName = "ER_C_RenewableAndWastePotentialCoverage"
-    assessmentMethod_date DATE
-    assessmentMethod_level LegislationLevelValue
-    assessmentMethod_link TEXT
-    assessmentMethod_name TEXT
-    assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
-    beginLifespanVersion DATETIME
-    coverageFunction_ruleDefinition: TEXT [0..1]
-    coverageFunction_ruleReference: TEXT [0..1]
-    domainSet: Any
-    endLifespanVersion DATETIME
+    * identifier = "Energy Resources Coverage::RenewableAndWastePotentialCoverage"
+    * tableName = "ER_C_RenewableAndWastePotentialCoverage"
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
+    domainSet : Any
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    metadata: Any [0..*]
-    name TEXT
+    metadata : Any [0..*]
     potentialType TEXT NOT NULL CHECK(ER_C_PotentialTypeValue)
-    rangeSet: Any [0..*]
-    rangeType: RecordType
+    rangeSet : Any [0..*]
+    rangeType : RecordType
     typeOfResource TEXT NOT NULL CHECK(ER_B_RenewableAndWasteValue)
-    verticalExtent_verticalExtent_range_lowerBound TEXT
-    verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
     verticalExtent_verticalExtent_range_upperBound TEXT
     verticalExtent_verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
     verticalExtent_verticalExtent_scalar TEXT
     verticalExtent_verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
     verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
-    ref coverageFunction_gridFunction: GMLCOV_GridFunction[0..1]
-    ref domainExtent: EX_Extent[1..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> assessmentMethod_date DATE
+    <<voidable>> assessmentMethod_level LegislationLevelValue
+    <<voidable>> assessmentMethod_link TEXT
+    <<voidable>> assessmentMethod_name TEXT
+    <<voidable>> assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
+    <<reference>> inspireId INTEGER
+    <<voidable>> name TEXT
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
+    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainExtent EX_Extent [1..*] as ref
   }
-  Constraint Enum "ER_C_SolarPotentialValue" {
-    identifier = "Energy Resources Coverage::SolarPotentialValue"
+  Constraint Enum <<codeList>> "ER_C_SolarPotentialValue" {
+    * identifier = "Energy Resources Coverage::SolarPotentialValue"
     diffuseIrradiance
     diffuseIrradiation
     directNormalIrradiance
@@ -65,49 +66,31 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
     globalHorizontalIrradiance
     globalHorizontalIrradiation
   }
-  Constraint Enum "ER_C_GeothermalPotentialValue" {
-    identifier = "Energy Resources Coverage::GeothermalPotentialValue"
+  Constraint Enum <<codeList>> "ER_C_GeothermalPotentialValue" {
+    * identifier = "Energy Resources Coverage::GeothermalPotentialValue"
     geothermalGradient
     temperature
   }
   Relation "ER_C_RenewableAndWastePotentialCoverage_inspireId" {
-    profile = "attributes"
-    relatedReference = "ER_C_RenewableAndWastePotentialCoverage#inspireId"
-    tableName = "ER_C_RenewableAndWastePotentialCoverage_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute ER_C_RenewableAndWastePotentialCoverage#inspireId"
+    * tableName = "ER_C_RenewableAndWastePotentialCoverage_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_C_RenewableAndWastePotentialCoverage(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "BASE2_SimpleCitationType" {
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
     CI_Citation
     DocumentCitation
     LegislationCitation
   }
-  Constraint Enum "ER_B_RenewableAndWasteValue" {
-    identifier = "Energy Resources Base::RenewableAndWasteValue"
+}
+Container <<applicationSchema>> "Energy Resources Base" {
+  * fileName = "Energy Resources Base"
+  Constraint Enum <<codeList>> "ER_B_RenewableAndWasteValue" {
+    * identifier = "Energy Resources Base::RenewableAndWasteValue"
     biogas
     geothermal
     hydro
@@ -120,40 +103,18 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
     tideWaveOcean
     wind
   }
-  Constraint Enum "ER_B_VerticalReferenceValue" {
-    identifier = "Energy Resources Base::VerticalReferenceValue"
+  Constraint Enum <<codeList>> "ER_B_VerticalReferenceValue" {
+    * identifier = "Energy Resources Base::VerticalReferenceValue"
     groundLevel
     lowestAstronomicalTide
     meanSeaLevel
     seafloor
   }
-  Constraint Enum "GML_UomIdentifier" {}
-  Attributes "GMLCOV_GridFunction" {
-    description = "An explicit mapping rule for grid geometries"
-    identifier = "Coverages (Domain and Range)::GridFunction"
-    tableName = "GMLCOV_GridFunction"
-    id INTEGER NOT NULL PRIMARY KEY
-    sequenceRule_scanDirection <<missing>>
-    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    startPoints TEXT
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Constraint Enum "CIS_CV_SequenceType" {
-    identifier = "Quadrilateral Grid::CV_SequenceType"
+}
+Container "Quadrilateral Grid" {
+  * fileName = "Quadrilateral Grid"
+  Constraint Enum <<codeList>> "CIS_CV_SequenceType" {
+    * identifier = "Quadrilateral Grid::CV_SequenceType"
     CantorDiagonal
     Hilbert
     Morton
@@ -161,28 +122,104 @@ Container <<applicationSchema>>  "Energy Resources Coverage" {
     linear
     spiral
   }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
-    date DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    level LegislationLevelValue
-    link TEXT
-    name TEXT NOT NULL
-    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+}
+Container "Data quality information" {
+  * fileName = "Data quality information"
+  Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
+    * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
     directInternal
     indirect
   }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+
+Package "Records and Class Metadata" {
+  Class <<type>>, <<type>> "Any" {}
+  Class <<type>>, <<type>> "RecordType" {
+    typeName_aName : TEXT
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+}
+Package "Extent information" {
+  Class "EX_Extent" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    description : TEXT [0..1]
+  }
+}
+Container <<applicationSchema>> "Coverages (Domain and Range)" {
+  * fileName = "Coverages (Domain and Range)"
+  Attributes <<dataType>> "GMLCOV_GridFunction" {
+    * description = "An explicit mapping rule for grid geometries"
+    * identifier = "Coverages (Domain and Range)::GridFunction"
+    * tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    <<array>> startPoints TEXT
+  }
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

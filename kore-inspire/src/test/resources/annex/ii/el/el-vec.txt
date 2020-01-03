@@ -1,52 +1,53 @@
-Container <<applicationSchema>>  "ElevationVectorElements" {
-  Constraint Enum "EL_VEC_SpotElevationTypeValue" {
-    identifier = "ElevationVectorElements::SpotElevationTypeValue"
+Container <<applicationSchema>> "ElevationVectorElements" {
+  * fileName = "ElevationVectorElements"
+  Constraint Enum <<codeList>> "EL_VEC_SpotElevationTypeValue" {
+    * identifier = "ElevationVectorElements::SpotElevationTypeValue"
   }
-  Feature "EL_VEC_ContourLine" {
-    description = "Linear spatial object composed of a set of adjoining locations characterized by having the same elevation property value. It describes, together with other contour lines present in the area, the local morphology of the Earth's surface.
+  Feature <<featureType>> "EL_VEC_ContourLine" {
+    * description = "Linear spatial object composed of a set of adjoining locations characterized by having the same elevation property value. It describes, together with other contour lines present in the area, the local morphology of the Earth's surface.
   
     NOTE 1 The attribute propertyType is equal to 'height' in the case of contour lines and it is equal to 'depth' in the case of depth contours."
-    identifier = "ElevationVectorElements::ContourLine"
-    tableName = "EL_VEC_ContourLine"
-    beginLifespanVersion: DATETIME [0..1]
-    contourLineType TEXT CHECK(EL_VEC_ContourLineTypeValue)
-    downRight BOOLEAN
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "ElevationVectorElements::ContourLine"
+    * tableName = "EL_VEC_ContourLine"
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum: ChartDatum [0..1]
-    propertyType: TEXT
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
     propertyValue_coordinate <<missing>> NOT NULL
     propertyValue_dimension INTEGER NOT NULL
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> contourLineType TEXT CHECK(EL_VEC_ContourLineTypeValue)
+    <<voidable>> downRight BOOLEAN
   }
-  Class "ElevationVectorObject" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    localDepthDatum: ChartDatum [0..1]
-    propertyType: TEXT
+  Class <<featureType>> "ElevationVectorObject" {
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
   }
-  Feature "EL_VEC_VoidArea" {
-    description = "Area of the Earth's surface where the elevation model is unknown because of missing input data. This area shall be excluded from a DEM.
+  Feature <<featureType>> "EL_VEC_VoidArea" {
+    * description = "Area of the Earth's surface where the elevation model is unknown because of missing input data. This area shall be excluded from a DEM.
   
     SOURCE "ObscureArea" [GIS4EU D3.5].
   
     NOTE 1 A void area may contain a number of isolated areas with elevation data. These are considered as holes of the container void area.
   
     NOTE 2  Void areas can be useful as masks when calculating a more appropriate or accurate DEM."
-    identifier = "ElevationVectorElements::VoidArea"
-    tableName = "EL_VEC_VoidArea"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "ElevationVectorElements::VoidArea"
+    * tableName = "EL_VEC_VoidArea"
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum: ChartDatum [0..1]
-    propertyType: TEXT
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
   }
-  Constraint Enum "EL_VEC_SpotElevationClassValue" {
-    identifier = "ElevationVectorElements::SpotElevationClassValue"
+  Constraint Enum <<codeList>> "EL_VEC_SpotElevationClassValue" {
+    * identifier = "ElevationVectorElements::SpotElevationClassValue"
   }
-  Feature "EL_VEC_BreakLine" {
-    description = "A line of a critical nature which describes the shape of an elevation surface and indicates a discontinuity in the slope of the surface (i.e. an abrupt change in gradient). Triangles included within a TIN model must never cross it.
+  Feature <<featureType>> "EL_VEC_BreakLine" {
+    * description = "A line of a critical nature which describes the shape of an elevation surface and indicates a discontinuity in the slope of the surface (i.e. an abrupt change in gradient). Triangles included within a TIN model must never cross it.
   
     SOURCE Adapted from [ISO 19107:2003].
   
@@ -61,105 +62,87 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     NOTE 3  All breaklines are located on the ground surface or on any of the artificial structures built on it.
   
     NOTE 4  Breaklines are useful as input data for the generation of a more appropriate or accurate digital elevation model by using interpolation methods."
-    identifier = "ElevationVectorElements::BreakLine"
-    tableName = "EL_VEC_BreakLine"
-    beginLifespanVersion: DATETIME [0..1]
+    * identifier = "ElevationVectorElements::BreakLine"
+    * tableName = "EL_VEC_BreakLine"
     breakLineType TEXT NOT NULL CHECK(EL_VEC_BreakLineTypeValue)
-    endLifespanVersion: DATETIME [0..1]
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum: ChartDatum [0..1]
-    manMadeBreak BOOLEAN
-    propertyType: TEXT
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> manMadeBreak BOOLEAN
   }
-  Class "ChartDatum" {
-    datumWaterLevel: TEXT
-    scope_description: TEXT [0..1]
-    ref offset: Measure[0..*]
-    ref referencePoint: POINT[1..*]
+  Class <<dataType>> "ChartDatum" {
+    datumWaterLevel : TEXT
+    scope_description : TEXT [0..1]
+    offset Measure [0..*] as ref
+    referencePoint POINT [1..*] as ref
   }
-  Constraint Enum "EL_VEC_BreakLineTypeValue" {
-    identifier = "ElevationVectorElements::BreakLineTypeValue"
+  Constraint Enum <<codeList>> "EL_VEC_BreakLineTypeValue" {
+    * identifier = "ElevationVectorElements::BreakLineTypeValue"
   }
-  Feature "EL_VEC_IsolatedArea" {
-    description = "Delimitation of an area of the Earth's surface where an isolated part of the elevation model exists. Its outside surroundings have no elevation information.
+  Feature <<featureType>> "EL_VEC_IsolatedArea" {
+    * description = "Delimitation of an area of the Earth's surface where an isolated part of the elevation model exists. Its outside surroundings have no elevation information.
   
     SOURCE Adapted from "IslandArea" [GIS4EU D3.5].
   
     NOTE 1 It includes the delimitation of any island of elevation data which are isolated from the main DEM. They may be included inside void areas.
   
     NOTE 2 Isolated areas can be useful as masks when calculating a more appropriate or accurate DEM."
-    identifier = "ElevationVectorElements::IsolatedArea"
-    tableName = "EL_VEC_IsolatedArea"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "ElevationVectorElements::IsolatedArea"
+    * tableName = "EL_VEC_IsolatedArea"
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum: ChartDatum [0..1]
-    propertyType: TEXT
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
   }
-  Feature "EL_VEC_SpotElevation" {
-    description = "Point spatial object which describes the elevation of an Earth's surface at a specific location. It provides a single elevation property value.
+  Feature <<featureType>> "EL_VEC_SpotElevation" {
+    * description = "Point spatial object which describes the elevation of an Earth's surface at a specific location. It provides a single elevation property value.
   
     NOTE 1 It often represents a singular point in the morphology of a land or water body's floor surface.
   
     NOTE 2 The attribute propertyType is equal to 'height' in the case of spot heights. It is equal to 'depth' in the case of spot depths."
-    identifier = "ElevationVectorElements::SpotElevation"
-    tableName = "EL_VEC_SpotElevation"
-    beginLifespanVersion: DATETIME [0..1]
-    classification TEXT CHECK(EL_VEC_SpotElevationClassValue)
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "ElevationVectorElements::SpotElevation"
+    * tableName = "EL_VEC_SpotElevation"
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localDepthDatum: ChartDatum [0..1]
-    propertyType: TEXT
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
     propertyValue_coordinate <<missing>> NOT NULL
     propertyValue_dimension INTEGER NOT NULL
-    spotElevationType TEXT CHECK(EL_VEC_SpotElevationTypeValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> classification TEXT CHECK(EL_VEC_SpotElevationClassValue)
+    <<voidable>> spotElevationType TEXT CHECK(EL_VEC_SpotElevationTypeValue)
   }
-  Constraint Enum "EL_VEC_ContourLineTypeValue" {
-    identifier = "ElevationVectorElements::ContourLineTypeValue"
+  Constraint Enum <<enumeration>> "EL_VEC_ContourLineTypeValue" {
+    * identifier = "ElevationVectorElements::ContourLineTypeValue"
     auxiliary
     master
     ordinary
   }
   Relation "EL_VEC_SpotElevation_geographicalName" {
-    profile = "attributes"
-    tableName = "EL_VEC_SpotElevation_geographicalName"
+    * profile = "attributes"
+    * tableName = "EL_VEC_SpotElevation_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_VEC_SpotElevation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "EL_BAS_ElevationPropertyTypeValue" {
-    identifier = "ElevationBaseTypes::ElevationPropertyTypeValue"
+}
+Container <<applicationSchema>> "ElevationBaseTypes" {
+  * fileName = "ElevationBaseTypes"
+  Constraint Enum <<enumeration>> "EL_BAS_ElevationPropertyTypeValue" {
+    * identifier = "ElevationBaseTypes::ElevationPropertyTypeValue"
     depth
     height
   }
-  Constraint Enum "HY_P_WaterLevelValue" {
-    identifier = "Hydro - Physical Waters::WaterLevelValue"
+}
+Container <<applicationSchema>> "Hydro - Physical Waters" {
+  * fileName = "Hydro - Physical Waters"
+  Constraint Enum <<codeList>> "HY_P_WaterLevelValue" {
+    * identifier = "Hydro - Physical Waters::WaterLevelValue"
     equinoctialSpringLowWater
     highWater
     highWaterSprings
@@ -198,14 +181,15 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     tropicHigherHighWater
     tropicLowerLowWater
   }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Class "Measure" {
+    value : TEXT
+    uom UnitOfMeasure as ref
   }
-  Constraint Enum "GML_MeasureType" {
-    identifier = "Units of Measure::MeasureType"
+  Constraint Enum <<codeList>> "GML_MeasureType" {
+    * identifier = "Units of Measure::MeasureType"
     angle
     area
     length
@@ -215,4 +199,53 @@ Container <<applicationSchema>>  "ElevationVectorElements" {
     volume
     weight
   }
+  Class "UnitOfMeasure" {
+    formula : TEXT [0..1]
+    measureType : TEXT
+    nameStandardUnit : TEXT [0..1]
+    offsetToStandardUnit : DOUBLE [0..1]
+    scaleToStandardUnit : DOUBLE [0..1]
+    uomName : TEXT
+    uomSymbol : TEXT
+    measure Measure [0..*] as ref
+  }
 }
+Package <<applicationSchema>> "Base Types" {
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

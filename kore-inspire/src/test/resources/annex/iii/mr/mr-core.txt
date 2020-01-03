@@ -1,11 +1,17 @@
-Container <<applicationSchema>>  "MineralResources" {
-  Constraint Enum "MR_CORE_ImportanceValue" {
-    identifier = "MineralResources::ImportanceValue"
+Container <<applicationSchema>> "MineralResources" {
+  * fileName = "MineralResources"
+  Constraint Enum <<codeList>> "MR_CORE_ImportanceValue" {
+    * identifier = "MineralResources::ImportanceValue"
   }
-  Constraint Enum "MR_CORE_CommodityCodeValue" {
-    identifier = "MineralResources::CommodityCodeValue"
+  Constraint Enum <<codeList>> "MR_CORE_CommodityCodeValue" {
+    * identifier = "MineralResources::CommodityCodeValue"
   }
-  Attributes "MR_CORE_MiningActivity" {
+  Attributes <<featureType>> "MR_CORE_MiningActivity" {
+    * description = "The process of extracting metallic, non-metallic mineral, or industrial rock deposits from the Earth.
+  
+    The term may also include preliminary treatment eg. cleaning or sizing."
+    * identifier = "MineralResources::MiningActivity"
+    * tableName = "MR_CORE_MiningActivity"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -24,19 +30,14 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "The process of extracting metallic, non-metallic mineral, or industrial rock deposits from the Earth.
-  
-    The term may also include preliminary treatment eg. cleaning or sizing."
-    identifier = "MineralResources::MiningActivity"
-    tableName = "MR_CORE_MiningActivity"
     activityType TEXT NOT NULL CHECK(MR_CORE_MiningActivityTypeValue)
-    associatedMine INTEGER
     id INTEGER NOT NULL PRIMARY KEY
-    oreProcessed Quantity
     processingType TEXT NOT NULL CHECK(MR_CORE_ProcessingActivityTypeValue)
-    ref inspireId: BASE_Identifier
+    <<voidable>>, <<reference>> associatedMine INTEGER
+    <<voidable>> oreProcessed Quantity
+    inspireId BASE_Identifier as ref
   }
-  Class <<type>>  "MineralDepositModel" {
+  Class <<type>> "MineralDepositModel" {
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -57,57 +58,27 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    mineralDepositGroups: TEXT
-    mineralDepositTypes: TEXT [0..1]
+    <<voidable>>, <<array>> mineralDepositTypes : TEXT [0..1]
+    <<array>> mineralDepositGroups : TEXT
   }
-  Constraint Enum "MR_CORE_ResourceCategoryValue" {
-    identifier = "MineralResources::ResourceCategoryValue"
+  Constraint Enum <<codeList>> "MR_CORE_ResourceCategoryValue" {
+    * identifier = "MineralResources::ResourceCategoryValue"
   }
-  Constraint Enum "MR_CORE_ClassificationMethodUsedValue" {
-    identifier = "MineralResources::ClassificationMethodUsedValue"
+  Constraint Enum <<codeList>> "MR_CORE_ClassificationMethodUsedValue" {
+    * identifier = "MineralResources::ClassificationMethodUsedValue"
   }
-  Constraint Enum "MR_CORE_ProcessingActivityTypeValue" {
-    identifier = "MineralResources::ProcessingActivityTypeValue"
+  Constraint Enum <<codeList>> "MR_CORE_ProcessingActivityTypeValue" {
+    * identifier = "MineralResources::ProcessingActivityTypeValue"
   }
-  Constraint Enum "MR_CORE_MineralOccurrenceTypeValue" {
-    identifier = "MineralResources::MineralOccurrenceTypeValue"
+  Constraint Enum <<codeList>> "MR_CORE_MineralOccurrenceTypeValue" {
+    * identifier = "MineralResources::MineralOccurrenceTypeValue"
   }
-  Attributes "MR_CORE_CommodityMeasure" {
-    hasXmlLang = "false#NOTES#Values: true | false
-    Default: false
-    Description: axml attribute xml:lang shall be generated for the type representing the class
-    "
-    xsdCanonicalElement = "#NOTES#Description: no element shall be generated for the class, but the given type or element referenced
-    "
-    xsdCanonicalPropertyGroup = "#NOTES#Description: group to be referenced if the class is used as a type of a property
-    "
-    xsdCanonicalPropertyType = "#NOTES#Description: type to be referenced if the class is used as a type of a property
-    "
-    xsdCanonicalType = "#NOTES#Description: no type shall be generated for the class, but the given type or element referenced
-    "
-    xsdDerivation = "true#NOTES#Values: true | false
-    Default: true
-    Description: class implemented as new type + element, or by applying constraints only
-    "
-    xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
-    "
-    description = "A measure of the amount of the commodity based on a Reserve, Resource or Endowment calculation.
+  Attributes <<dataType>> "MR_CORE_CommodityMeasure" {
+    * description = "A measure of the amount of the commodity based on a Reserve, Resource or Endowment calculation.
   
     Where OreMeasure is Resource or Reserve CommodityMeasure is mandatory"
-    identifier = "MineralResources::CommodityMeasure"
-    tableName = "MR_CORE_CommodityMeasure"
-    commodityAmount QuantityRange
-    cutOffGrade QuantityRange
-    grade QuantityRange
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Constraint Enum "MR_CORE_ExplorationResultValue" {
-    identifier = "MineralResources::ExplorationResultValue"
-  }
-  Constraint Enum "MR_CORE_MineralDepositGroupValue" {
-    identifier = "MineralResources::MineralDepositGroupValue"
-  }
-  Attributes "MR_CORE_Endowment" {
+    * identifier = "MineralResources::CommodityMeasure"
+    * tableName = "MR_CORE_CommodityMeasure"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -126,21 +97,23 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "The quantity of a mineral (or a group of minerals for industrial rocks) in accumulations (deposits) meeting specified physical characteristics such as quality, size and depth.
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>> commodityAmount QuantityRange
+    <<voidable>> cutOffGrade QuantityRange
+    <<voidable>> grade QuantityRange
+  }
+  Constraint Enum <<codeList>> "MR_CORE_ExplorationResultValue" {
+    * identifier = "MineralResources::ExplorationResultValue"
+  }
+  Constraint Enum <<codeList>> "MR_CORE_MineralDepositGroupValue" {
+    * identifier = "MineralResources::MineralDepositGroupValue"
+  }
+  Attributes <<dataType>> "MR_CORE_Endowment" {
+    * description = "The quantity of a mineral (or a group of minerals for industrial rocks) in accumulations (deposits) meeting specified physical characteristics such as quality, size and depth.
   
     Usually includes Resources, as unlike the latter, it does not have to have prospects for "eventual economic extraction". It often includes the total amount of a commodity originally introduced to a particular location during the deposit forming processes - and thus can include resources, reserves, past production and mining and metallurgical losses."
-    identifier = "MineralResources::Endowment"
-    tableName = "MR_CORE_Endowment"
-    classificationMethodUsed: TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    includesReserves BOOLEAN
-    includesResources BOOLEAN
-    ore: QuantityRange
-    proposedExtractionMethod: Category [0..1]
-    ref dimension: MR_CORE_EarthResourceDimension[0..1]
-    ref sourceReference: BASE2_SimpleCitation[1..*]
-  }
-  Class "EarthResource" {
+    * identifier = "MineralResources::Endowment"
+    * tableName = "MR_CORE_Endowment"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -159,65 +132,63 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanversion: DATETIME [0..1]
-    name: TEXT [0..1]
-    ref dimension: MR_CORE_EarthResourceDimension[0..1]
-    ref expression: Category[0..*]
-    ref form: Category[0..*]
-    ref inspireId: BASE_Identifier
-    ref linearOrientation: CGU_CGI_LinearOrientation[0..*]
-    ref planarOrientation: CGU_CGI_PlanarOrientation[0..*]
-    ref shape: Category[0..*]
-    ref sourceReference: BASE2_SimpleCitation[0..*]
-    ref MappedFeature inv specification
+    classificationMethodUsed : TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    ore : QuantityRange
+    <<voidable>> includesReserves BOOLEAN
+    <<voidable>> includesResources BOOLEAN
+    <<voidable>> proposedExtractionMethod : Category [0..1]
+    sourceReference BASE2_SimpleCitation [1..*] as ref
+    <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
   }
-  Attributes "MR_CORE_ExplorationActivity" {
-    description = "A period of exploration activity."
-    identifier = "MineralResources::ExplorationActivity"
-    tableName = "MR_CORE_ExplorationActivity"
+  Class <<featureType>> "EarthResource" {
+    hasXmlLang = "false#NOTES#Values: true | false
+    Default: false
+    Description: axml attribute xml:lang shall be generated for the type representing the class
+    "
+    xsdCanonicalElement = "#NOTES#Description: no element shall be generated for the class, but the given type or element referenced
+    "
+    xsdCanonicalPropertyGroup = "#NOTES#Description: group to be referenced if the class is used as a type of a property
+    "
+    xsdCanonicalPropertyType = "#NOTES#Description: type to be referenced if the class is used as a type of a property
+    "
+    xsdCanonicalType = "#NOTES#Description: no type shall be generated for the class, but the given type or element referenced
+    "
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
+    "
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanversion : DATETIME [0..1]
+    <<voidable>> name : TEXT [0..1]
+    inspireId BASE_Identifier as ref
+    <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
+    <<voidable>> expression Category [0..*] as ref
+    <<voidable>> form Category [0..*] as ref
+    <<voidable>> geologicHistory_GeologicEvent BASE_Identifier [0..*] as ref
+    <<voidable>> linearOrientation CGU_CGI_LinearOrientation [0..*] as ref
+    <<voidable>> planarOrientation CGU_CGI_PlanarOrientation [0..*] as ref
+    <<voidable>> shape Category [0..*] as ref
+    <<voidable>> sourceReference BASE2_SimpleCitation [0..*] as ref
+  }
+  Attributes <<featureType>> "MR_CORE_ExplorationActivity" {
+    * description = "A period of exploration activity."
+    * identifier = "MineralResources::ExplorationActivity"
+    * tableName = "MR_CORE_ExplorationActivity"
     activityType TEXT NOT NULL CHECK(MR_CORE_ExplorationActivityTypeValue)
-    explorationResults TEXT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    <<array>> explorationResults TEXT NOT NULL
   }
-  Attributes "MR_CORE_Reserve" {
-    hasXmlLang = "false#NOTES#Values: true | false
-    Default: false
-    Description: axml attribute xml:lang shall be generated for the type representing the class
-    "
-    xsdCanonicalElement = "#NOTES#Description: no element shall be generated for the class, but the given type or element referenced
-    "
-    xsdCanonicalPropertyGroup = "#NOTES#Description: group to be referenced if the class is used as a type of a property
-    "
-    xsdCanonicalPropertyType = "#NOTES#Description: type to be referenced if the class is used as a type of a property
-    "
-    xsdCanonicalType = "#NOTES#Description: no type shall be generated for the class, but the given type or element referenced
-    "
-    xsdDerivation = "true#NOTES#Values: true | false
-    Default: true
-    Description: class implemented as new type + element, or by applying constraints only
-    "
-    xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
-    "
-    description = "The economically mineable part of a Measured and/or Indicated Mineral Resource.
+  Attributes <<dataType>> "MR_CORE_Reserve" {
+    * description = "The economically mineable part of a Measured and/or Indicated Mineral Resource.
   
     It includes diluting materials and allowances for losses, which may occur when the material is mined. &lsquo;Marketable Coal Reserves&rsquo; maybe reported in conjunction with, but not instead of, reports of Ore (Coal) Reserves. &lsquo;Saleable product&rsquo; (e.g. for industrial minerals) can be reported in conjunction with ore reserve.
   
     Synonyms: Ore Reserve; Coal Reserve (s); Diamond (or gemstone) Ore Reserve; Mineral Reserves (not preferred, should be stated that used to mean the same as JORC&rsquo;s Ore Reserve); Mineable production estimates"
-    identifier = "MineralResources::Reserve"
-    tableName = "MR_CORE_Reserve"
-    category TEXT NOT NULL CHECK(MR_CORE_ReserveCategoryValue)
-    classificationMethodUsed: TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    ore: QuantityRange
-    proposedExtractionMethod: Category [0..1]
-    ref dimension: MR_CORE_EarthResourceDimension[0..1]
-    ref sourceReference: BASE2_SimpleCitation[1..*]
-  }
-  Constraint Enum "MR_CORE_MiningActivityTypeValue" {
-    identifier = "MineralResources::MiningActivityTypeValue"
-  }
-  Attributes "MR_CORE_Resource" {
+    * identifier = "MineralResources::Reserve"
+    * tableName = "MR_CORE_Reserve"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -236,21 +207,23 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "An accumulation of material of intrinsic economic interest in or on the Earth&rsquo;s crust in such form, quality and quantity that there are reasonable prospects for economic extraction.
+    category TEXT NOT NULL CHECK(MR_CORE_ReserveCategoryValue)
+    classificationMethodUsed : TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    ore : QuantityRange
+    <<voidable>> proposedExtractionMethod : Category [0..1]
+    sourceReference BASE2_SimpleCitation [1..*] as ref
+    <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
+  }
+  Constraint Enum <<codeList>> "MR_CORE_MiningActivityTypeValue" {
+    * identifier = "MineralResources::MiningActivityTypeValue"
+  }
+  Attributes <<dataType>> "MR_CORE_Resource" {
+    * description = "An accumulation of material of intrinsic economic interest in or on the Earth&rsquo;s crust in such form, quality and quantity that there are reasonable prospects for economic extraction.
   
     Synonyms: Mineral Resource; Coal Resource (s); Diamond (Gemstone) Resource; Potentially Mineable Mineralisation."
-    identifier = "MineralResources::Resource"
-    tableName = "MR_CORE_Resource"
-    category TEXT NOT NULL CHECK(MR_CORE_ResourceCategoryValue)
-    classificationMethodUsed: TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    includesReserves BOOLEAN
-    ore: QuantityRange
-    proposedExtractionMethod: Category [0..1]
-    ref dimension: MR_CORE_EarthResourceDimension[0..1]
-    ref sourceReference: BASE2_SimpleCitation[1..*]
-  }
-  Attributes "MR_CORE_MineName" {
+    * identifier = "MineralResources::Resource"
+    * tableName = "MR_CORE_Resource"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -269,17 +242,48 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "A  data type indicating the Mine Name and whether it is the preferred name."
-    identifier = "MineralResources::MineName"
-    tableName = "MR_CORE_MineName"
+    category TEXT NOT NULL CHECK(MR_CORE_ResourceCategoryValue)
+    classificationMethodUsed : TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    ore : QuantityRange
+    <<voidable>> includesReserves BOOLEAN
+    <<voidable>> proposedExtractionMethod : Category [0..1]
+    sourceReference BASE2_SimpleCitation [1..*] as ref
+    <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
+  }
+  Attributes <<dataType>> "MR_CORE_MineName" {
+    * description = "A  data type indicating the Mine Name and whether it is the preferred name."
+    * identifier = "MineralResources::MineName"
+    * tableName = "MR_CORE_MineName"
+    hasXmlLang = "false#NOTES#Values: true | false
+    Default: false
+    Description: axml attribute xml:lang shall be generated for the type representing the class
+    "
+    xsdCanonicalElement = "#NOTES#Description: no element shall be generated for the class, but the given type or element referenced
+    "
+    xsdCanonicalPropertyGroup = "#NOTES#Description: group to be referenced if the class is used as a type of a property
+    "
+    xsdCanonicalPropertyType = "#NOTES#Description: type to be referenced if the class is used as a type of a property
+    "
+    xsdCanonicalType = "#NOTES#Description: no type shall be generated for the class, but the given type or element referenced
+    "
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
+    "
     id INTEGER NOT NULL PRIMARY KEY
     isPreferred BOOLEAN NOT NULL
     mineName TEXT NOT NULL
   }
-  Constraint Enum "MR_CORE_ExplorationActivityTypeValue" {
-    identifier = "MineralResources::ExplorationActivityTypeValue"
+  Constraint Enum <<codeList>> "MR_CORE_ExplorationActivityTypeValue" {
+    * identifier = "MineralResources::ExplorationActivityTypeValue"
   }
-  Attributes "MR_CORE_EarthResourceDimension" {
+  Attributes <<dataType>> "MR_CORE_EarthResourceDimension" {
+    * description = "The size and volume of the earth resource."
+    * identifier = "MineralResources::EarthResourceDimension"
+    * tableName = "MR_CORE_EarthResourceDimension"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -298,19 +302,19 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "The size and volume of the earth resource."
-    identifier = "MineralResources::EarthResourceDimension"
-    tableName = "MR_CORE_EarthResourceDimension"
     id INTEGER NOT NULL PRIMARY KEY
-    ref area: QuantityRange[0..*]
-    ref depth: QuantityRange[0..*]
-    ref length: QuantityRange[0..*]
-    ref width: QuantityRange[0..*]
+    <<voidable>> area QuantityRange [0..*] as ref
+    <<voidable>> depth QuantityRange [0..*] as ref
+    <<voidable>> length QuantityRange [0..*] as ref
+    <<voidable>> width QuantityRange [0..*] as ref
   }
-  Class "MiningFeature" {
-    ref inspireId: BASE_Identifier
+  Class <<featureType>> "MiningFeature" {
+    inspireId BASE_Identifier as ref
   }
-  Attributes "MR_CORE_Commodity" {
+  Attributes <<featureType>> "MR_CORE_Commodity" {
+    * description = "The material of economic interest in the EarthResource"
+    * identifier = "MineralResources::Commodity"
+    * tableName = "MR_CORE_Commodity"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -329,45 +333,40 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "The material of economic interest in the EarthResource"
-    identifier = "MineralResources::Commodity"
-    tableName = "MR_CORE_Commodity"
     commodity TEXT NOT NULL CHECK(MR_CORE_CommodityCodeValue)
-    commodityImportance TEXT CHECK(MR_CORE_ImportanceValue)
-    commodityRank INTEGER
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>> commodityImportance TEXT CHECK(MR_CORE_ImportanceValue)
+    <<voidable>> commodityRank INTEGER
   }
-  Attributes "MR_CORE_Mine" {
-    hasXmlLang = "false#NOTES#Values: true | false
-    Default: false
-    Description: axml attribute xml:lang shall be generated for the type representing the class
-    "
-    xsdCanonicalElement = "#NOTES#Description: no element shall be generated for the class, but the given type or element referenced
-    "
-    xsdCanonicalPropertyGroup = "#NOTES#Description: group to be referenced if the class is used as a type of a property
-    "
-    xsdCanonicalPropertyType = "#NOTES#Description: type to be referenced if the class is used as a type of a property
-    "
-    xsdCanonicalType = "#NOTES#Description: no type shall be generated for the class, but the given type or element referenced
-    "
-    xsdDerivation = "true#NOTES#Values: true | false
-    Default: true
-    Description: class implemented as new type + element, or by applying constraints only
-    "
-    xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
-    "
-    description = "An excavation carried out for the extraction of mineral deposits.
+  Attributes <<featureType>> "MR_CORE_Mine" {
+    * description = "An excavation carried out for the extraction of mineral deposits.
   
     &lsquo;True&rsquo; mines are underground workings and open-pit workings (also called open-sky mines) generally for the extraction of metallic commodities. The Mine feature also includes open workings generally for the extraction of industrial minerals, commonly referred to as quarries."
-    identifier = "MineralResources::Mine"
-    tableName = "MR_CORE_Mine"
-    beginLifespanVersion DATETIME
+    * identifier = "MineralResources::Mine"
+    * tableName = "MR_CORE_Mine"
+    hasXmlLang = "false#NOTES#Values: true | false
+    Default: false
+    Description: axml attribute xml:lang shall be generated for the type representing the class
+    "
+    xsdCanonicalElement = "#NOTES#Description: no element shall be generated for the class, but the given type or element referenced
+    "
+    xsdCanonicalPropertyGroup = "#NOTES#Description: group to be referenced if the class is used as a type of a property
+    "
+    xsdCanonicalPropertyType = "#NOTES#Description: type to be referenced if the class is used as a type of a property
+    "
+    xsdCanonicalType = "#NOTES#Description: no type shall be generated for the class, but the given type or element referenced
+    "
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
+    "
     endDate_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     endDate_position_date8601 DATE
     endDate_position_dateTime8601 DATETIME
     endDate_position_time8601 TEXT
     endDate_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    endLifespanVersion DATETIME
     id INTEGER NOT NULL PRIMARY KEY
     startDate_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     startDate_position_date8601 DATE
@@ -375,12 +374,17 @@ Container <<applicationSchema>>  "MineralResources" {
     startDate_position_time8601 TEXT
     startDate_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
     status TEXT NOT NULL CHECK(MR_CORE_MineStatusValue)
-    ref inspireId: BASE_Identifier
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    inspireId BASE_Identifier as ref
   }
-  Constraint Enum "MR_CORE_MineralDepositTypeValue" {
-    identifier = "MineralResources::MineralDepositTypeValue"
+  Constraint Enum <<codeList>> "MR_CORE_MineralDepositTypeValue" {
+    * identifier = "MineralResources::MineralDepositTypeValue"
   }
-  Attributes "MR_CORE_MineralOccurrence" {
+  Attributes <<featureType>> "MR_CORE_MineralOccurrence" {
+    * description = "<font color="#400040">A mineral accumulation in the lithosphere. </font>"
+    * identifier = "MineralResources::MineralOccurrence"
+    * tableName = "MR_CORE_MineralOccurrence"
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -399,38 +403,35 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    description = "<font color="#400040">A mineral accumulation in the lithosphere. </font>"
-    identifier = "MineralResources::MineralOccurrence"
-    tableName = "MR_CORE_MineralOccurrence"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanversion: DATETIME [0..1]
-    endusePotentials TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    name: TEXT [0..1]
     type TEXT NOT NULL CHECK(MR_CORE_MineralOccurrenceTypeValue)
-    ref dimension: MR_CORE_EarthResourceDimension[0..1]
-    ref expression: Category[0..*]
-    ref form: Category[0..*]
-    ref inspireId: BASE_Identifier
-    ref linearOrientation: CGU_CGI_LinearOrientation[0..*]
-    ref planarOrientation: CGU_CGI_PlanarOrientation[0..*]
-    ref shape: Category[0..*]
-    ref sourceReference: BASE2_SimpleCitation[0..*]
-    ref MappedFeature inv specification
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanversion : DATETIME [0..1]
+    <<voidable>>, <<array>> endusePotentials TEXT
+    <<voidable>> name : TEXT [0..1]
+    inspireId BASE_Identifier as ref
+    <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
+    <<voidable>> expression Category [0..*] as ref
+    <<voidable>> form Category [0..*] as ref
+    <<voidable>> geologicHistory_GeologicEvent BASE_Identifier [0..*] as ref
+    <<voidable>> linearOrientation CGU_CGI_LinearOrientation [0..*] as ref
+    <<voidable>> planarOrientation CGU_CGI_PlanarOrientation [0..*] as ref
+    <<voidable>> shape Category [0..*] as ref
+    <<voidable>> sourceReference BASE2_SimpleCitation [0..*] as ref
   }
-  Feature "MR_CORE_MiningFeatureOccurrence" {
-    description = "A spatial representation of a MiningFeature.
+  Feature <<featureType>> "MR_CORE_MiningFeatureOccurrence" {
+    * description = "A spatial representation of a MiningFeature.
   
     A MiningFeatureOccurrence provides a link between a notional feature (description package) and one spatial representation of it, or part of it. The MiningFeatureOccurrence carries a geometry and the association with a Mining Feature provides specification of all the other descriptors."
-    identifier = "MineralResources::MiningFeatureOccurrence"
-    tableName = "MR_CORE_MiningFeatureOccurrence"
+    * identifier = "MineralResources::MiningFeatureOccurrence"
+    * tableName = "MR_CORE_MiningFeatureOccurrence"
     id INTEGER NOT NULL PRIMARY KEY
     shape GEOMETRY NOT NULL
   }
-  Constraint Enum "MR_CORE_MineStatusValue" {
-    identifier = "MineralResources::MineStatusValue"
+  Constraint Enum <<codeList>> "MR_CORE_MineStatusValue" {
+    * identifier = "MineralResources::MineStatusValue"
   }
-  Class "OreMeasure" {
+  Class <<dataType>> "OreMeasure" {
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -449,105 +450,76 @@ Container <<applicationSchema>>  "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    classificationMethodUsed: TEXT
-    ore: QuantityRange
-    proposedExtractionMethod: Category [0..1]
-    ref dimension: MR_CORE_EarthResourceDimension[0..1]
-    ref sourceReference: BASE2_SimpleCitation[1..*]
+    classificationMethodUsed : TEXT
+    ore : QuantityRange
+    <<voidable>> proposedExtractionMethod : Category [0..1]
+    sourceReference BASE2_SimpleCitation [1..*] as ref
+    <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
   }
-  Constraint Enum "MR_CORE_EndusePotentialValue" {
-    identifier = "MineralResources::EndusePotentialValue"
+  Constraint Enum <<codeList>> "MR_CORE_EndusePotentialValue" {
+    * identifier = "MineralResources::EndusePotentialValue"
   }
-  Constraint Enum "MR_CORE_ReserveCategoryValue" {
-    identifier = "MineralResources::ReserveCategoryValue"
+  Constraint Enum <<codeList>> "MR_CORE_ReserveCategoryValue" {
+    * identifier = "MineralResources::ReserveCategoryValue"
   }
   Relation "MR_CORE_MiningActivity_associatedMine" {
-    profile = "attributes"
-    relatedReference = "MR_CORE_MiningActivity#associatedMine"
-    tableName = "MR_CORE_MiningActivity_associatedMine"
+    * profile = "attributes"
+    * relatedReference = "attribute MR_CORE_MiningActivity#associatedMine"
+    * tableName = "MR_CORE_MiningActivity_associatedMine"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_MiningActivity(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Mine(id)
   }
   Relation "MR_CORE_CommodityMeasure_commodityOfInterest" {
-    profile = "attributes"
-    tableName = "MR_CORE_CommodityMeasure_commodityOfInterest"
+    * profile = "attributes"
+    * tableName = "MR_CORE_CommodityMeasure_commodityOfInterest"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_CommodityMeasure(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Commodity(id)
   }
   Relation "MR_CORE_Mine_relatedActivity" {
-    profile = "attributes"
-    tableName = "MR_CORE_Mine_relatedActivity"
+    * profile = "attributes"
+    * tableName = "MR_CORE_Mine_relatedActivity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_Mine(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_MiningActivity(id)
   }
   Relation "MR_CORE_Mine_relatedMine" {
-    profile = "attributes"
-    tableName = "MR_CORE_Mine_relatedMine"
+    * profile = "attributes"
+    * tableName = "MR_CORE_Mine_relatedMine"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_Mine(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_Mine(id)
   }
   Relation "MR_CORE_Mine_mineName" {
-    profile = "attributes"
-    tableName = "MR_CORE_Mine_mineName"
+    * profile = "attributes"
+    * tableName = "MR_CORE_Mine_mineName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_Mine(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MR_CORE_MineName(id)
   }
   Relation "MR_CORE_Mine_sourceReference" {
-    profile = "attributes"
-    tableName = "MR_CORE_Mine_sourceReference"
+    * profile = "attributes"
+    * tableName = "MR_CORE_Mine_sourceReference"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MR_CORE_Mine(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "TRS_TM_IndeterminateValue" {
-    identifier = "Temporal Reference System::TM_IndeterminateValue"
+}
+Container "Temporal Reference System" {
+  * fileName = "Temporal Reference System"
+  Constraint Enum <<enumeration>> "TRS_TM_IndeterminateValue" {
+    * identifier = "Temporal Reference System::TM_IndeterminateValue"
     after
     before
     name
     now
     unknow
   }
-  Constraint Enum "GML_UomIdentifier" {}
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "BASE2_SimpleCitation" {
+    * tableName = "BASE2_SimpleCitation"
     date DATE
     id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
@@ -555,84 +527,11 @@ Container <<applicationSchema>>  "MineralResources" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
-  Attributes "CGU_CGI_LinearOrientation" {
-    description = "Description of the measured orientation of a line.  At least one of plunge or trend should not be nil."
-    identifier = "CGI_Value::CGI_LinearOrientation"
-    tableName = "CGU_CGI_LinearOrientation"
-    determinationMethod: TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    plunge_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
-    plunge_estimatedValue_value_nilReason_URI <<missing>>
-    plunge_estimatedValue_value_value TEXT
-    plunge_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
-    trend_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
-    trend_estimatedValue_value_nilReason_URI <<missing>>
-    trend_estimatedValue_value_value TEXT
-    trend_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
-    directed TEXT NOT NULL CHECK(CGU_LinearDirectedCode)
-    ref <<estimatedProperty>> descriptiveOrientation: CGU_CGI_Term
-  }
-  Attributes "CGU_CGI_PlanarOrientation" {
-    description = "Description of the geometry of a plane."
-    identifier = "CGI_Value::CGI_PlanarOrientation"
-    tableName = "CGU_CGI_PlanarOrientation"
-    azimuth_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
-    azimuth_estimatedValue_value_nilReason_URI <<missing>>
-    azimuth_estimatedValue_value_value TEXT
-    azimuth_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
-    convention TEXT NOT NULL CHECK(CGU_ConventionCode)
-    determinationMethod: TEXT
-    dip_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
-    dip_estimatedValue_value_nilReason_URI <<missing>>
-    dip_estimatedValue_value_value TEXT
-    dip_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
-    id INTEGER NOT NULL PRIMARY KEY
-    polarity TEXT NOT NULL CHECK(CGU_PlanarPolarityCode)
-    ref <<estimatedProperty>> descriptiveOrientation: CGU_CGI_Term
-  }
-  Attributes "GE_GeologicEvent" {
-    description = "An identifiable event during which one or more geological processes act to modify geological entities.
-  
-    A GeologicEvent should have a specified geologic age and process, and may have a specified environment. An example might be a cratonic uplift event during which erosion, sedimentation, and volcanism all take place. A GeologicEvent age can represent an instant in time or an interval of time."
-    identifier = "Geology::GeologicEvent"
-    tableName = "GE_GeologicEvent"
-    eventEnvironment TEXT CHECK(GE_EventEnvironmentValue)
-    eventProcesses TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    name TEXT
-    olderNamedAge TEXT CHECK(GE_GeochronologicEraValue)
-    youngerNamedAge TEXT CHECK(GE_GeochronologicEraValue)
-  }
-  Attributes "GE_ThematicClass" {
-    description = "A generic thematic classifier to enable the reclassification of Geologic Features with user defined classes appropriate to thematic maps.
-  
-    This datatype allows Geologic Features to be classified against thematic classes. This provides a generic means of delivering geological thematic map data."
-    identifier = "Geology::ThematicClass"
-    tableName = "GE_ThematicClass"
-    id INTEGER NOT NULL PRIMARY KEY
-    themeClass TEXT NOT NULL CHECK(GE_ThematicClassValue)
-    themeClassification TEXT NOT NULL CHECK(GE_ThematicClassificationValue)
-  }
-  Attributes "SWE_RealPair" {
-    asXMLList = "true"
-    xsdDerivation = "true#NOTES#Values: true | false
-    Default: true
-    Description: class implemented as new type + element, or by applying constraints only
-    "
-    identifier = "Basic Types::RealPair"
-    tableName = "SWE_RealPair"
-    id INTEGER NOT NULL PRIMARY KEY
-    items TEXT
-  }
-  Attributes "CGU_CGI_Term" {
-    identifier = "CGI_Value::CGI_Term"
-    tableName = "CGU_CGI_Term"
-    id INTEGER NOT NULL PRIMARY KEY
-    qualifier TEXT NOT NULL CHECK(CGU_ValueQualifierCode)
-    value TEXT NOT NULL CHECK(CGU_CodeListValue)
-  }
-  Constraint Enum "GML_MeasureType" {
-    identifier = "Units of Measure::MeasureType"
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum <<codeList>> "GML_MeasureType" {
+    * identifier = "Units of Measure::MeasureType"
     angle
     area
     length
@@ -642,52 +541,38 @@ Container <<applicationSchema>>  "MineralResources" {
     volume
     weight
   }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
+  Constraint Enum "GML_UomIdentifier" {}
+}
+Container "CGI_Value" {
+  * fileName = "CGI_Value"
+  Constraint Enum <<codeList>> "CGU_CodeListValue" {
+    * identifier = "CGI_Value::CodeListValue"
   }
-  Constraint Enum "CGU_LinearDirectedCode" {
-    identifier = "CGI_Value::LinearDirectedCode"
-    directed
-    directed down
-    directed up
-  }
-  Constraint Enum "CGU_DeterminationMethodTerm" {
-    identifier = "CGI_Value::DeterminationMethodTerm"
-  }
-  Constraint Enum "CGU_ConventionCode" {
-    identifier = "CGI_Value::ConventionCode"
+  Constraint Enum <<codeList>> "CGU_ConventionCode" {
+    * identifier = "CGI_Value::ConventionCode"
     dip dip direction
     strike dip right hand rule
   }
-  Constraint Enum "CGU_PlanarPolarityCode" {
-    identifier = "CGI_Value::PlanarPolarityCode"
-    overturned
-    upright
-    vertical
-  }
-  Constraint Enum "GE_EventEnvironmentValue" {
-    identifier = "Geology::EventEnvironmentValue"
-  }
-  Constraint Enum "GE_GeochronologicEraValue" {
-    identifier = "Geology::GeochronologicEraValue"
-  }
-  Constraint Enum "GE_ThematicClassificationValue" {
-    identifier = "Geology::ThematicClassificationValue"
-  }
-  Constraint Enum "GE_ThematicClassValue" {
-    identifier = "Geology::ThematicClassValue"
-  }
-  Attributes "SWE_NilValue" {
-    xsdDerivation = "false"
-    identifier = "Basic Types::NilValue"
-    tableName = "SWE_NilValue"
+  Attributes <<dataType>> "CGU_CGI_PlanarOrientation" {
+    * description = "Description of the geometry of a plane."
+    * identifier = "CGI_Value::CGI_PlanarOrientation"
+    * tableName = "CGU_CGI_PlanarOrientation"
+    azimuth_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    azimuth_estimatedValue_value_nilReason_URI <<missing>>
+    azimuth_estimatedValue_value_value TEXT
+    azimuth_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    convention TEXT NOT NULL CHECK(CGU_ConventionCode)
+    determinationMethod : TEXT
+    dip_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    dip_estimatedValue_value_nilReason_URI <<missing>>
+    dip_estimatedValue_value_value TEXT
+    dip_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    value TEXT NOT NULL
+    <<estimatedProperty>> polarity TEXT NOT NULL CHECK(CGU_PlanarPolarityCode)
+    <<estimatedProperty>> descriptiveOrientation CGU_CGI_Term as ref
   }
-  Constraint Enum "CGU_ValueQualifierCode" {
-    identifier = "CGI_Value::ValueQualifierCode"
+  Constraint Enum <<codeList>> "CGU_ValueQualifierCode" {
+    * identifier = "CGI_Value::ValueQualifierCode"
     always
     approximate
     common
@@ -698,22 +583,360 @@ Container <<applicationSchema>>  "MineralResources" {
     rare
     sometimes
   }
-  Constraint Enum "CGU_CodeListValue" {
-    identifier = "CGI_Value::CodeListValue"
+  Attributes <<dataType>> "CGU_CGI_LinearOrientation" {
+    * description = "Description of the measured orientation of a line.  At least one of plunge or trend should not be nil."
+    * identifier = "CGI_Value::CGI_LinearOrientation"
+    * tableName = "CGU_CGI_LinearOrientation"
+    determinationMethod : TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    plunge_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    plunge_estimatedValue_value_nilReason_URI <<missing>>
+    plunge_estimatedValue_value_value TEXT
+    plunge_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    trend_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
+    trend_estimatedValue_value_nilReason_URI <<missing>>
+    trend_estimatedValue_value_value TEXT
+    trend_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    <<estimatedProperty>> directed TEXT NOT NULL CHECK(CGU_LinearDirectedCode)
+    <<estimatedProperty>> descriptiveOrientation CGU_CGI_Term as ref
   }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
+  Attributes <<dataType>> "CGU_CGI_Term" {
+    * identifier = "CGI_Value::CGI_Term"
+    * tableName = "CGU_CGI_Term"
+    id INTEGER NOT NULL PRIMARY KEY
+    qualifier TEXT NOT NULL CHECK(CGU_ValueQualifierCode)
+    value TEXT NOT NULL CHECK(CGU_CodeListValue)
+  }
+  Constraint Enum <<codeList>> "CGU_DeterminationMethodTerm" {
+    * identifier = "CGI_Value::DeterminationMethodTerm"
+  }
+  Constraint Enum <<codeList>> "CGU_LinearDirectedCode" {
+    * identifier = "CGI_Value::LinearDirectedCode"
+    directed
+    directed down
+    directed up
+  }
+  Constraint Enum <<codeList>> "CGU_PlanarPolarityCode" {
+    * identifier = "CGI_Value::PlanarPolarityCode"
+    overturned
+    upright
+    vertical
+  }
+}
+Container <<applicationSchema>> "Geology" {
+  * fileName = "Geology"
+  Constraint Enum <<codeList>> "GE_ThematicClassificationValue" {
+    * identifier = "Geology::ThematicClassificationValue"
+  }
+  Constraint Enum <<codeList>> "GE_ThematicClassValue" {
+    * identifier = "Geology::ThematicClassValue"
+  }
+}
+Container "Data quality information" {
+  * fileName = "Data quality information"
+  Class "DQ_PositionalAccuracy" {
+    evaluationMethodDescription : TEXT [0..1]
+    evaluationMethodType : TEXT [0..1]
+    measureDescription : TEXT [0..1]
+    measureIdentification : MD_Identifier [0..1]
+    result : DQ_Result [1..2]
+    <<array>> dateTimes : TEXT [0..1]
+    <<array>> nameOfMeasures : TEXT [0..1]
+    evaluationProcedure BASE2_SimpleCitation [0..1] as ref
+  }
+  Class "DQ_Result" {}
+  Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
+    * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
     directInternal
     indirect
   }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package "Simple Components" {
+  Class "AllowedTokens" {
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    <<property>>, <<array>> values : TEXT [0..1]
+    <<property>> pattern : TEXT [0..1]
+  }
+  Class <<type>> "QuantityRange" {
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    uom_formula : TEXT [0..1]
+    uom_measureType : TEXT
+    uom_nameStandardUnit : TEXT [0..1]
+    uom_offsetToStandardUnit : DOUBLE [0..1]
+    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_uomName : TEXT
+    uom_uomSymbol : TEXT
+    <<property>> axisID : TEXT [0..1]
+    <<property>> constraint : AllowedValues [0..1]
+    <<property>> definition : ScopedName [0..1]
+    <<property>> description : TEXT [0..1]
+    <<property>> extension : Any [0..*]
+    <<property>> identifier : ScopedName [0..1]
+    <<property>> label : TEXT [0..1]
+    <<property>> nilValues : NilValues [0..1]
+    <<property>> optional : BOOLEAN [0..1]
+    <<property>> quality : Quality [0..*]
+    <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> updatable : BOOLEAN [0..1]
+    <<property>> value SWE_RealPair [0..1] as ref
+  }
+  Class <<union>> "Quality" {
+    hasXmlLang = "false#NOTES#Values: true | false
+    Default: false
+    Description: axml attribute xml:lang shall be generated for the type representing the class
+    "
+    <<property>> byCategory : Category
+    <<property>> byQuantity : Quantity
+    <<property>> byQuantityRange : QuantityRange
+    <<Property>> byText : Text
+  }
+  Class "AllowedValues" {
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    <<property>>, <<array>> values : TEXT [0..1]
+    <<property>> significantFigures : INTEGER [0..1]
+    <<Property>> interval SWE_RealPair [0..*] as ref
+  }
+  Class <<type>> "Text" {
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    <<property>> axisID : TEXT [0..1]
+    <<property>> constraint : AllowedTokens [0..1]
+    <<property>> definition : ScopedName [0..1]
+    <<property>> description : TEXT [0..1]
+    <<property>> extension : Any [0..*]
+    <<property>> identifier : ScopedName [0..1]
+    <<property>> label : TEXT [0..1]
+    <<property>> nilValues : NilValues [0..1]
+    <<property>> optional : BOOLEAN [0..1]
+    <<property>> quality : Quality [0..*]
+    <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> updatable : BOOLEAN [0..1]
+    <<property>> value : TEXT [0..1]
+  }
+  Class <<type>> "Category" {
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    <<property>> axisID : TEXT [0..1]
+    <<property>> codeSpace : Dictionary [0..1]
+    <<property>> constraint : AllowedTokens [0..1]
+    <<property>> definition : ScopedName [0..1]
+    <<property>> description : TEXT [0..1]
+    <<property>> extension : Any [0..*]
+    <<property>> identifier : ScopedName [0..1]
+    <<property>> label : TEXT [0..1]
+    <<property>> nilValues : NilValues [0..1]
+    <<property>> optional : BOOLEAN [0..1]
+    <<property>> quality : Quality [0..*]
+    <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> updatable : BOOLEAN [0..1]
+    <<property>> value : TEXT [0..1]
+  }
+  Class <<type>> "Quantity" {
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    uom_formula : TEXT [0..1]
+    uom_measureType : TEXT
+    uom_nameStandardUnit : TEXT [0..1]
+    uom_offsetToStandardUnit : DOUBLE [0..1]
+    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_uomName : TEXT
+    uom_uomSymbol : TEXT
+    <<property>> axisID : TEXT [0..1]
+    <<property>> constraint : AllowedValues [0..1]
+    <<property>> definition : ScopedName [0..1]
+    <<property>> description : TEXT [0..1]
+    <<property>> extension : Any [0..*]
+    <<property>> identifier : ScopedName [0..1]
+    <<property>> label : TEXT [0..1]
+    <<property>> nilValues : NilValues [0..1]
+    <<property>> optional : BOOLEAN [0..1]
+    <<property>> quality : Quality [0..*]
+    <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> updatable : BOOLEAN [0..1]
+    <<property>> value : DOUBLE [0..1]
+  }
+  Class <<type>> "NilValues" {
+    xsdDerivation = "true"
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+
+Package "Coordinate Reference Systems" {
+  Class <<type>> "SC_CRS" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    alias : GenericName [0..*]
+    domainOfValidity : EX_Extent [0..1]
+    identifier : RS_Identifier [0..*]
+    name : RS_Identifier
+    remarks : TEXT [0..1]
+    <<array>> scopes : TEXT
+    coordOperationFrom CC_CoordinateOperation [0..*] as ref
+    coordOperationTo CC_CoordinateOperation [0..*] as ref
+    directPosition DirectPosition [0..*] as ref
+    grid CV_ReferenceableGrid [0..*] as ref
+    grid CV_ReferenceableGrid [0..*] as ref
+    object GEOMETRY [0..*] as ref
+  }
+}
+Package "Names" {
+  Class <<type>> "NameSpace" {
+    isGlobal : BOOLEAN
+    acceptableClassList TypeName [0..*] as ref
+    name GenericName [0..*] as ref
+  }
+  Class <<type>>, <<type>> "TypeName" {
+    aName : TEXT
+    scope NameSpace as ref
+  }
+  Class <<type>>, <<type>> "GenericName" {
+    scope NameSpace as ref
+  }
+  Class <<type>> "ScopedName" {
+    scope NameSpace as ref
+  }
+}
+Package "Records and Class Metadata" {
+  Class <<type>>, <<type>> "Any" {}
+}
+Package "dictionary" {
+  Class <<type>> "Dictionary" {
+    description : TEXT [0..1]
+    descriptionReference : TEXT [0..1]
+    identifier : ScopedName [0..1]
+    name : GenericName [0..*]
+  }
+}
+Container "Basic Types" {
+  * fileName = "Basic Types"
+  Attributes <<dataType>> "SWE_RealPair" {
+    * identifier = "Basic Types::RealPair"
+    * tableName = "SWE_RealPair"
+    asXMLList = "true"
+    xsdDerivation = "true#NOTES#Values: true | false
+    Default: true
+    Description: class implemented as new type + element, or by applying constraints only
+    "
+    id INTEGER NOT NULL PRIMARY KEY
+    <<property>>, <<array>> items TEXT
+  }
+}
+Package "Reference system information" {
+  Class "RS_Identifier" {
+    authority_date : DATE [0..1]
+    authority_level : LegislationLevelValue [0..1]
+    authority_link : TEXT [0..1]
+    authority_name : TEXT [0..1]
+    authority_type : TEXT [0..1]
+    code : TEXT
+    codeSpace : TEXT [0..1]
+    version : TEXT [0..1]
+  }
+  Class "MD_Identifier" {
+    authority_date : DATE [0..1]
+    authority_level : LegislationLevelValue [0..1]
+    authority_link : TEXT [0..1]
+    authority_name : TEXT [0..1]
+    authority_type : TEXT [0..1]
+    code : TEXT
+  }
+}
+Package "Extent information" {
+  Class "EX_Extent" {
+    RationalRose$Java:ConstructorIs = "public"
+    RationalRose$Java:Final = "False"
+    RationalRose$Java:GenerateDefaultConstructor = "True"
+    RationalRose$Java:GenerateFinalizer = "False"
+    RationalRose$Java:GenerateInstanceInitializer = "False"
+    RationalRose$Java:GenerateStaticInitializer = "False"
+    RationalRose$Oracle8:CollectionOfREFS = "False"
+    RationalRose$Visual Basic:CollectionClass = "Collection"
+    RationalRose$Visual Basic:Creatable = "(221)"
+    RationalRose$Visual Basic:GenerateInitialization = "False"
+    RationalRose$Visual Basic:GenerateTermination = "False"
+    RationalRose$Visual Basic:OptionBase = "(none)"
+    RationalRose$Visual Basic:OptionCompare = "(none)"
+    RationalRose$Visual Basic:OptionExplicit = "True"
+    description : TEXT [0..1]
+  }
+}
+Package "Coordinate Operations" {
+  Class <<type>> "CC_CoordinateOperation" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    alias : GenericName [0..*]
+    domainOfValidity_description : TEXT [0..1]
+    identifier : RS_Identifier [0..*]
+    name : RS_Identifier
+    operationVersion : TEXT [0..1]
+    remarks : TEXT [0..1]
+    <<array>> scopes : TEXT
+    concatOperation CC_ConcatenatedOperation [0..*] as ref
+    coordinateOperationAccuracy DQ_PositionalAccuracy [0..*] as ref
+    passThruOperation CC_PassThroughOperation [0..*] as ref
+    sourceCRS SC_CRS [0..1] as ref
+    targetCRS SC_CRS [0..1] as ref
   }
 }

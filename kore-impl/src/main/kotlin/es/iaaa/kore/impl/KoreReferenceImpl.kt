@@ -28,4 +28,5 @@ internal open class KoreReferenceImpl : KoreStructuralFeatureImpl(), KoreReferen
     override val isContainer: Boolean get() = opposite?.isContainement == true
     override var isNavigable: Boolean = false
     override var opposite: KoreReference? = null
+    override fun toString(): String = "reference ${containingClass?.name}#$name ${if (isNavigable) "-->" else "<--"} ${opposite?.containingClass?.name}#${opposite?.name}"
 }

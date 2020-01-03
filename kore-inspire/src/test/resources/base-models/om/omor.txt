@@ -1,465 +1,72 @@
-Container <<applicationSchema>>  "Observation References" {
-  Attributes "OMOR_ObservationSet" {
-    description = "Links a set of Observations
+Container <<applicationSchema>> "Observation References" {
+  * fileName = "Observation References"
+  Attributes <<featureType>> "OMOR_ObservationSet" {
+    * description = "Links a set of Observations
   
     This class is used to link multiple related Observations together"
-    identifier = "Observation References::ObservationSet"
-    tableName = "OMOR_ObservationSet"
+    * identifier = "Observation References::ObservationSet"
+    * tableName = "OMOR_ObservationSet"
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-  }
-  Relation "OMOR_ObservationSet_member" {
-    profile = "attributes"
-    tableName = "OMOR_ObservationSet_member"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOR_ObservationSet(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
+    <<reference>> inspireId INTEGER
   }
   Relation "OMOR_ObservationSet_inspireId" {
-    profile = "attributes"
-    relatedReference = "OMOR_ObservationSet#inspireId"
-    tableName = "OMOR_ObservationSet_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute OMOR_ObservationSet#inspireId"
+    * tableName = "OMOR_ObservationSet_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOR_ObservationSet(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+  Relation "OMOR_ObservationSet_member_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "OMOR_ObservationSet_member_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOR_ObservationSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "_OM_Observation_relatedObservation" {
-    profile = "attributes"
-    tableName = "_OM_Observation_relatedObservation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
-  }
-  Relation "_OM_Observation_parameter" {
-    profile = "attributes"
-    tableName = "_OM_Observation_parameter"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
-  }
-  Attributes "_OM_Observation" {
-    hasXmlLang = "false#NOTES#Values: true | false
-    Default: false
-    Description: axml attribute xml:lang shall be generated for the type representing the class
-    "
-    description = "An observation is an act that results in the estimation of the value of a feature property, and involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. Use of a common model allows observation data using different procedures to be combined unambiguously. Observation details are also important for data discovery and for data quality estimation. Observation feature types are defined by the properties that support these applications.
-  
-    An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. The result of an observation is an estimate of the value of a property of some feature, so the details of the observation are metadata concerning the value of the feature property. The observation itself is also a feature, since it has properties and identity."
-    identifier = "observation::OM_Observation"
-    tableName = "_OM_Observation"
-    id INTEGER NOT NULL PRIMARY KEY
-    resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    resultTime_position_date8601 DATE
-    resultTime_position_dateTime8601 DATETIME
-    resultTime_position_time8601 TEXT
-    resultTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    ref featureOfInterest: GFI_Featureinv propertyValueProvider[0..*]
-    ref procedure: OM_Processinv generatedObservation[0..*]
-    ref resultQuality: DQ_Element[0..*]
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "_NamedValue" {
-    description = "The class <i>NamedValue</i> provides for a generic soft-typed parameter value. NamedValue shall support two attributes."
-    identifier = "observation::NamedValue"
-    tableName = "_NamedValue"
-    id INTEGER NOT NULL PRIMARY KEY
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_linkage TEXT
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    facsimiles TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    voices TEXT
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    deliveryPoints TEXT
-    electronicMailAddresses TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
-  }
-  Constraint Enum "TRS_TM_IndeterminateValue" {
-    identifier = "Temporal Reference System::TM_IndeterminateValue"
-    after
-    before
-    name
-    now
-    unknow
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Attributes "GMD_PT_Locale" {
-    identifier = "Cultural and linguistic adapdability::PT_Locale"
-    tableName = "GMD_PT_Locale"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
-    date DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    level LegislationLevelValue
-    link TEXT
-    name TEXT NOT NULL
-    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-  }
-  Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
-    identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
-    annually
-    asNeeded
-    biannually
-    continual
-    daily
-    fortnightly
-    irregular
-    monthly
-    notPlanned
-    quarterly
-    unknown
-    weekly
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
-  }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    linkage TEXT NOT NULL
-    name TEXT
-    protocol TEXT
-  }
-  Constraint Enum "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Maintenance information::MD_ScopeCode"
-    attribute
-    attributeType
-    collectionHardware
-    collectionSession
-    dataset
-    dimensionGroup
-    feature
-    featureType
-    fieldSession
-    model
-    nonGeographicDataset
-    propertyType
-    series
-    service
-    software
-    tile
-  }
-  Constraint Enum "MEI_MD_ObligationCode" {
-    identifier = "Metadata extension information::MD_ObligationCode"
-    conditional
-    mandatory
-    optional
-  }
-  Constraint Enum "MEI_MD_DatatypeCode" {
-    identifier = "Metadata extension information::MD_DatatypeCode"
-    abstractClass
-    aggregateClass
-    association
-    characterString
-    class
-    codelist
-    codelistElement
-    datatypeClass
-    enumeration
-    integer
-    interfaceClass
-    metaClass
-    specifiedClass
-    typeClass
-    unionClass
-  }
-  Constraint Enum "GMD_MD_KeywordTypeCode" {
-    identifier = "Identification information::MD_KeywordTypeCode"
-    discipline
-    place
-    stratum
-    temporal
-    theme
-  }
-  Constraint Enum "GMD_DS_AssociationTypeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Identification information::DS_AssociationTypeCode"
-    crossReference
-    largerWorkCitation
-    partOfSeamlessDatabase
-    source
-    stereoMate
-  }
-  Constraint Enum "GMD_DS_InitiativeTypeCode" {
-    identifier = "Identification information::DS_InitiativeTypeCode"
-    campaign
-    collection
-    exercise
-    experiment
-    investigation
-    mission
-    operation
-    platform
-    process
-    program
-    project
-    sensor
-    study
-    task
-    trial
-  }
-  Constraint Enum "DI_MD_MediumNameCode" {
-    identifier = "Distribution information::MD_MediumNameCode"
-    1quarterInchCartridgeTape
-    3480Cartridge
-    3490Cartridge
-    3580Cartridge
-    3halfInchFloppy
-    4mmCartridgeTape
-    5quarterInchFloppy
-    7trackTape
-    8mmCartridgeTape
-    9trackTape
-    cdRom
-    digitalLinearTape
-    dvd
-    dvdRom
-    hardcopy
-    onLine
-    satellite
-    telephoneLink
-  }
-  Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

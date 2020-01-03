@@ -9,6 +9,7 @@ import es.iaaa.kore.models.gpkg.metadata
 import es.iaaa.kore.models.gpkg.mimeType
 import es.iaaa.kore.models.gpkg.scope
 import es.iaaa.kore.models.gpkg.standardUri
+import es.iaaa.kore.references
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.setLowerBoundWhen
@@ -22,34 +23,33 @@ val `Voidable mapped as nullable`: Transform = { _, _ ->
     setLowerBoundWhen(0) { it.findDefaultNamedReferences().any { ref -> ref.name == "voidable" } }
 }
 
-val `load authoritative descriptions of the reasons for void values as metadata`: Transform = { conversion, options ->
-    val withMetadata = options["metadata"] == true
-    val withSelector = conversion.input.selector.get()
+val `load authoritative descriptions of the reasons for void values as metadata`: Transform = { conversion, _ ->
+
     val definitions = listOf(
         Triple(1, "Unknown", "attribute"),
         Triple(2, "Unpopulated", "attributeType"),
         Triple(3, "Withheld", "attribute"),
         Triple(4, "Withheld", "attributeType")
     )
-
-    var rootContainer: KorePackage? = null
-
-    patch(predicate = withSelector) {
-        rootContainer = this
+    val rootContainer by lazy {
+        conversion.model.allContent().filterIsInstance<KorePackage>().first {
+            it.references(Stereotypes.applicationSchema) && "Base Types" == it.name
+        }
     }
 
     patch<KoreClass>(predicate = { name == "VoidReasonValue" }, global = true) {
         val parentName = name
         attributes.forEach { att ->
             definitions.filter { it.second == att.name }.forEach { def ->
-                rootContainer?.metadata {
+                val voidValueReason = rootContainer.metadata {
                     id = def.first.toString()
                     name = def.second
                     scope = def.third
                     standardUri = "http://www.isotc211.org/2005/gmd"
                     mimeType = "text/plain"
-                    metadata = "http://inspire.ec.europa.eu/codelist/$parentName/${def.second}/${def.second}.en.iso19135xml"
+                    metadata = "http://inspire.ec.europa.eu/codelist/$parentName/${def.second}"
                 }
+                conversion.track(voidValueReason)
             }
         }
     }

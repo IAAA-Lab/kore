@@ -66,9 +66,15 @@ private fun KoreClass.assignPrefix(): String = when (container?.name) {
     "Distribution information" -> "DI_"
     "Data quality evaluation" -> "DQE_"
     "Enumerations" -> "GCO_"
+    "Service Metadata" -> ""
     "Geometric primitive" -> ""
     "Segmented Curve" -> "SC_"
     "Coverage Core" -> "CC_"
+    "ISO 19145 Registry GPL representations" -> "" // ISO 19145 Registry GPL representations
+    "ISO 19135:2005 Procedures for Registration" -> "" // ISO 19135:2005 Procedures for Registration
+    "Image Knowledge Base" -> "" // ISO 19101-2:2008 Imagery Reference
+    "Image Information" -> "" // ISO 19101-2:2008 Imagery Reference
+    "Sensor Data" -> "" // ISO 19130:2010 Sensor Data
     null -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy for package without name")
     else -> throw Exception("Not computable U2G prefix: No xmlns tag found in the hierarchy for package '${container?.name}'")
 }

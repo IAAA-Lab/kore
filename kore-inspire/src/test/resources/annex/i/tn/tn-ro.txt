@@ -1,6 +1,7 @@
-Container <<applicationSchema>>  "Road Transport Network" {
-  Constraint Enum "TN_RO_AreaConditionValue" {
-    identifier = "Road Transport Network::AreaConditionValue"
+Container <<applicationSchema>> "Road Transport Network" {
+  * fileName = "Road Transport Network"
+  Constraint Enum <<codeList>> "TN_RO_AreaConditionValue" {
+    * identifier = "Road Transport Network::AreaConditionValue"
     inNationalPark
     insideCities
     nearRailroadCrossing
@@ -8,62 +9,62 @@ Container <<applicationSchema>>  "Road Transport Network" {
     outsideCities
     trafficCalmingArea
   }
-  Constraint Enum "TN_RO_RoadServiceTypeValue" {
-    identifier = "Road Transport Network::RoadServiceTypeValue"
+  Constraint Enum <<codeList>> "TN_RO_RoadServiceTypeValue" {
+    * identifier = "Road Transport Network::RoadServiceTypeValue"
     busStation
     parking
     restArea
     toll
   }
-  Attributes "TN_RO_RoadServiceArea" {
-    description = "Surface annexed to a road and devoted to offer particular services for it.
+  Attributes <<featureType>> "TN_RO_RoadServiceArea" {
+    * description = "Surface annexed to a road and devoted to offer particular services for it.
   
     EXAMPLES Gas station, rest area, toll area."
-    identifier = "Road Transport Network::RoadServiceArea"
-    tableName = "TN_RO_RoadServiceArea"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: SURFACE
+    * identifier = "Road Transport Network::RoadServiceArea"
+    * tableName = "TN_RO_RoadServiceArea"
+    geometry : SURFACE
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Attributes "TN_RO_RoadNode" {
-    description = "A point spatial object that is used to either represent connectivity between two road links or to represent a significant spatial object such as a services station or  roundabout."
-    identifier = "Road Transport Network::RoadNode"
-    tableName = "TN_RO_RoadNode"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    formOfRoadNode TEXT CHECK(TN_RO_FormOfRoadNodeValue)
-    geometry: POINT
+  Attributes <<featureType>> "TN_RO_RoadNode" {
+    * description = "A point spatial object that is used to either represent connectivity between two road links or to represent a significant spatial object such as a services station or  roundabout."
+    * identifier = "Road Transport Network::RoadNode"
+    * tableName = "TN_RO_RoadNode"
+    geometry : POINT
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref spokeEnd: Link[0..*] inv endNode[0..1]
-    ref spokeStart: Link[0..*] inv startNode[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> formOfRoadNode TEXT CHECK(TN_RO_FormOfRoadNodeValue)
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
+    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
   }
-  Attributes "TN_RO_RoadServiceType" {
-    description = "Description of the type of road service area and the available facilities."
-    identifier = "Road Transport Network::RoadServiceType"
-    tableName = "TN_RO_RoadServiceType"
-    availableFacilities TEXT
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+  Attributes <<featureType>> "TN_RO_RoadServiceType" {
+    * description = "Description of the type of road service area and the available facilities."
+    * identifier = "Road Transport Network::RoadServiceType"
+    * tableName = "TN_RO_RoadServiceType"
     id INTEGER NOT NULL PRIMARY KEY
     type TEXT NOT NULL CHECK(TN_RO_RoadServiceTypeValue)
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<array>> availableFacilities TEXT
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Constraint Enum "TN_RO_ServiceFacilityValue" {
-    identifier = "Road Transport Network::ServiceFacilityValue"
+  Constraint Enum <<codeList>> "TN_RO_ServiceFacilityValue" {
+    * identifier = "Road Transport Network::ServiceFacilityValue"
     drinks
     food
     fuel
@@ -72,8 +73,8 @@ Container <<applicationSchema>>  "Road Transport Network" {
     shop
     toilets
   }
-  Constraint Enum "TN_RO_VehicleTypeValue" {
-    identifier = "Road Transport Network::VehicleTypeValue"
+  Constraint Enum <<codeList>> "TN_RO_VehicleTypeValue" {
+    * identifier = "Road Transport Network::VehicleTypeValue"
     allVehicle
     bicycle
     carWithTrailer
@@ -104,40 +105,40 @@ Container <<applicationSchema>>  "Road Transport Network" {
     vehicleWithOtherDangerousLoad
     vehicleWithWaterPollutingLoad
   }
-  Attributes "TN_RO_NumberOfLanes" {
-    description = "The number of lanes of a road element.
+  Attributes <<featureType>> "TN_RO_NumberOfLanes" {
+    * description = "The number of lanes of a road element.
   
     SOURCE Adapated from [Euroroads]."
-    identifier = "Road Transport Network::NumberOfLanes"
-    tableName = "TN_RO_NumberOfLanes"
-    beginLifespanVersion: DATETIME [0..1]
-    direction TEXT CHECK(NET_LinkDirectionValue)
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::NumberOfLanes"
+    * tableName = "TN_RO_NumberOfLanes"
     id INTEGER NOT NULL PRIMARY KEY
-    minMaxNumberOfLanes TEXT CHECK(TN_RO_MinMaxLaneValue)
     numberOfLanes INTEGER NOT NULL
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> direction TEXT CHECK(NET_LinkDirectionValue)
+    <<voidable>> minMaxNumberOfLanes TEXT CHECK(TN_RO_MinMaxLaneValue)
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Attributes "TN_RO_FormOfWay" {
-    description = "A classification based on the physical properties of the Road Link.
+  Attributes <<featureType>> "TN_RO_FormOfWay" {
+    * description = "A classification based on the physical properties of the Road Link.
   
     SOURCE Based on [EuroRoadS]."
-    identifier = "Road Transport Network::FormOfWay"
-    tableName = "TN_RO_FormOfWay"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::FormOfWay"
+    * tableName = "TN_RO_FormOfWay"
     formOfWay TEXT NOT NULL CHECK(TN_RO_FormOfWayValue)
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Constraint Enum "TN_RO_FunctionalRoadClassValue" {
-    identifier = "Road Transport Network::FunctionalRoadClassValue"
+  Constraint Enum <<enumeration>> "TN_RO_FunctionalRoadClassValue" {
+    * identifier = "Road Transport Network::FunctionalRoadClassValue"
     eighthClass
     fifthClass
     firstClass
@@ -149,16 +150,16 @@ Container <<applicationSchema>>  "Road Transport Network" {
     sixthClass
     thirdClass
   }
-  Constraint Enum "TN_RO_WeatherConditionValue" {
-    identifier = "Road Transport Network::WeatherConditionValue"
+  Constraint Enum <<codeList>> "TN_RO_WeatherConditionValue" {
+    * identifier = "Road Transport Network::WeatherConditionValue"
     fog
     ice
     rain
     smog
     snow
   }
-  Constraint Enum "TN_RO_FormOfWayValue" {
-    identifier = "Road Transport Network::FormOfWayValue"
+  Constraint Enum <<codeList>> "TN_RO_FormOfWayValue" {
+    * identifier = "Road Transport Network::FormOfWayValue"
     bicycleRoad
     dualCarriageway
     enclosedTrafficArea
@@ -175,79 +176,78 @@ Container <<applicationSchema>>  "Road Transport Network" {
     trafficSquare
     walkway
   }
-  Attributes "TN_RO_RoadArea" {
-    description = "Surface which extends to the limits of a road, including vehicular areas and other parts of it.
+  Attributes <<featureType>> "TN_RO_RoadArea" {
+    * description = "Surface which extends to the limits of a road, including vehicular areas and other parts of it.
   
     EAXMPLE Pedestrian areas."
-    identifier = "Road Transport Network::RoadArea"
-    tableName = "TN_RO_RoadArea"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: SURFACE
+    * identifier = "Road Transport Network::RoadArea"
+    * tableName = "TN_RO_RoadArea"
+    geometry : SURFACE
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Constraint Enum "TN_RO_MinMaxLaneValue" {
-    identifier = "Road Transport Network::MinMaxLaneValue"
+  Constraint Enum <<enumeration>> "TN_RO_MinMaxLaneValue" {
+    * identifier = "Road Transport Network::MinMaxLaneValue"
     average
     maximum
     minimum
   }
-  Attributes "TN_RO_RoadSurfaceCategory" {
-    description = "Specification of the state of the surface of the associated Road Element. Indicates whether a road is paved or unpaved.
+  Attributes <<featureType>> "TN_RO_RoadSurfaceCategory" {
+    * description = "Specification of the state of the surface of the associated Road Element. Indicates whether a road is paved or unpaved.
   
     SOURCE [GDF3, Euroroads]."
-    identifier = "Road Transport Network::RoadSurfaceCategory"
-    tableName = "TN_RO_RoadSurfaceCategory"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::RoadSurfaceCategory"
+    * tableName = "TN_RO_RoadSurfaceCategory"
     id INTEGER NOT NULL PRIMARY KEY
     surfaceCategory TEXT NOT NULL CHECK(TN_RO_RoadSurfaceCategoryValue)
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Attributes "TN_RO_RoadLink" {
-    description = "A linear spatial object that describes the geometry and connectivity of a road network between two points in the network.
+  Attributes <<featureType>> "TN_RO_RoadLink" {
+    * description = "A linear spatial object that describes the geometry and connectivity of a road network between two points in the network.
   
     Road links can represent paths, bicycle roads, single carriageways, multiple carriageway roads and even fictitious trajectories across traffic squares."
-    identifier = "Road Transport Network::RoadLink"
-    tableName = "TN_RO_RoadLink"
-    beginLifespanVersion: DATETIME [0..1]
-    centrelineGeometry: CURVE
-    endLifespanVersion: DATETIME [0..1]
-    fictitious: BOOLEAN
+    * identifier = "Road Transport Network::RoadLink"
+    * tableName = "TN_RO_RoadLink"
+    centrelineGeometry : CURVE
+    fictitious : BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref endNode: Node[0..1] inv spokeEnd[0..*]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref startNode: Node[0..1] inv spokeStart[0..*]
-    ref ThoroughfareName inv transportLink[0..*]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    endNode_Node BASE_Identifier [0..1] as ref
+    inspireId BASE_Identifier [0..1] as ref
+    startNode_Node BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Attributes "TN_RO_RoadLinkSequence" {
-    description = "A linear spatial object, composed of an ordered collection of road links, which represents a continuous path in a road network without any branches. The element has a defined beginning and end and every position on the road link sequence is identifiable with one single parameter such as length. It describes an element of the road network, characterized by one or more thematic identifiers and/or properties."
-    identifier = "Road Transport Network::RoadLinkSequence"
-    tableName = "TN_RO_RoadLinkSequence"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+  Attributes <<featureType>> "TN_RO_RoadLinkSequence" {
+    * description = "A linear spatial object, composed of an ordered collection of road links, which represents a continuous path in a road network without any branches. The element has a defined beginning and end and every position on the road link sequence is identifiable with one single parameter such as length. It describes an element of the road network, characterized by one or more thematic identifiers and/or properties."
+    * identifier = "Road Transport Network::RoadLinkSequence"
+    * tableName = "TN_RO_RoadLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref link: NET_DirectedLink[1..*]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    link NET_DirectedLink [1..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Constraint Enum "TN_RO_FormOfRoadNodeValue" {
-    identifier = "Road Transport Network::FormOfRoadNodeValue"
+  Constraint Enum <<codeList>> "TN_RO_FormOfRoadNodeValue" {
+    * identifier = "Road Transport Network::FormOfRoadNodeValue"
     enclosedTrafficArea
     junction
     levelCrossing
@@ -257,406 +257,168 @@ Container <<applicationSchema>>  "Road Transport Network" {
     roundabout
     trafficSquare
   }
-  Attributes "TN_RO_RoadName" {
-    description = "Name of a road, as assigned by the responsible authority."
-    identifier = "Road Transport Network::RoadName"
-    tableName = "TN_RO_RoadName"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+  Attributes <<featureType>> "TN_RO_RoadName" {
+    * description = "Name of a road, as assigned by the responsible authority."
+    * identifier = "Road Transport Network::RoadName"
+    * tableName = "TN_RO_RoadName"
     id INTEGER NOT NULL PRIMARY KEY
     name_language TEXT
     name_spelling_text TEXT NOT NULL
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Attributes "TN_RO_VehicleTrafficArea" {
-    description = "Surface that represents the part of a road which is used for the normal traffic of vehicles."
-    identifier = "Road Transport Network::VehicleTrafficArea"
-    tableName = "TN_RO_VehicleTrafficArea"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: SURFACE
+  Attributes <<featureType>> "TN_RO_VehicleTrafficArea" {
+    * description = "Surface that represents the part of a road which is used for the normal traffic of vehicles."
+    * identifier = "Road Transport Network::VehicleTrafficArea"
+    * tableName = "TN_RO_VehicleTrafficArea"
+    geometry : SURFACE
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Constraint Enum "TN_RO_SpeedLimitSourceValue" {
-    identifier = "Road Transport Network::SpeedLimitSourceValue"
+  Constraint Enum <<codeList>> "TN_RO_SpeedLimitSourceValue" {
+    * identifier = "Road Transport Network::SpeedLimitSourceValue"
     fixedTrafficSign
     regulation
     variableTrafficSign
   }
-  Constraint Enum "TN_RO_SpeedLimitMinMaxValue" {
-    identifier = "Road Transport Network::SpeedLimitMinMaxValue"
+  Constraint Enum <<enumeration>> "TN_RO_SpeedLimitMinMaxValue" {
+    * identifier = "Road Transport Network::SpeedLimitMinMaxValue"
     maximum
     minimum
     recommendedMaximum
     recommendedMinimum
   }
-  Attributes "TN_RO_Road" {
-    description = "A collection of road link sequences and/or individual road links that are characterized by one or more thematic identifiers and/or properties.
+  Attributes <<featureType>> "TN_RO_Road" {
+    * description = "A collection of road link sequences and/or individual road links that are characterized by one or more thematic identifiers and/or properties.
   
     EXAMPLE Examples are roads characterized by a specific identification code, used by road management authorities or tourist routes, identified by a specific name."
-    identifier = "Road Transport Network::Road"
-    tableName = "TN_RO_Road"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::Road"
+    * tableName = "TN_RO_Road"
     id INTEGER NOT NULL PRIMARY KEY
-    localRoadCode TEXT
-    nationalRoadCode TEXT
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref post: TN_MarkerPost[0..*] inv route[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localRoadCode TEXT
+    <<voidable>> nationalRoadCode TEXT
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    link_GeneralisedLink BASE_Identifier [1..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
-  Constraint Enum "TN_RO_RoadPartValue" {
-    identifier = "Road Transport Network::RoadPartValue"
+  Constraint Enum <<codeList>> "TN_RO_RoadPartValue" {
+    * identifier = "Road Transport Network::RoadPartValue"
     carriageway
     pavedSurface
   }
-  Constraint Enum "TN_RO_RoadSurfaceCategoryValue" {
-    identifier = "Road Transport Network::RoadSurfaceCategoryValue"
+  Constraint Enum <<codeList>> "TN_RO_RoadSurfaceCategoryValue" {
+    * identifier = "Road Transport Network::RoadSurfaceCategoryValue"
     paved
     unpaved
   }
-  Attributes "TN_RO_FunctionalRoadClass" {
-    description = "A classification based on the importance of the role that the road performs in the road network.
+  Attributes <<featureType>> "TN_RO_FunctionalRoadClass" {
+    * description = "A classification based on the importance of the role that the road performs in the road network.
   
     SOURCE Adapted from [GDF, EuroRoadS]."
-    identifier = "Road Transport Network::FunctionalRoadClass"
-    tableName = "TN_RO_FunctionalRoadClass"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::FunctionalRoadClass"
+    * tableName = "TN_RO_FunctionalRoadClass"
     functionalClass TEXT NOT NULL CHECK(TN_RO_FunctionalRoadClassValue)
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Attributes "TN_RO_SpeedLimit" {
-    description = "Limit for the speed of a vehicle on a road..
+  Attributes <<featureType>> "TN_RO_SpeedLimit" {
+    * description = "Limit for the speed of a vehicle on a road..
   
     SOURCE [Euroroads]."
-    identifier = "Road Transport Network::SpeedLimit"
-    tableName = "TN_RO_SpeedLimit"
-    areaCondition TEXT CHECK(TN_RO_AreaConditionValue)
-    beginLifespanVersion: DATETIME [0..1]
-    direction TEXT CHECK(NET_LinkDirectionValue)
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::SpeedLimit"
+    * tableName = "TN_RO_SpeedLimit"
     id INTEGER NOT NULL PRIMARY KEY
-    laneExtension INTEGER
     speedLimitMinMaxType TEXT NOT NULL CHECK(TN_RO_SpeedLimitMinMaxValue) DEFAULT 'Maximum'
-    speedLimitSource TEXT CHECK(TN_RO_SpeedLimitSourceValue)
     speedLimitValue TEXT NOT NULL
     speedLimitValue_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    startLane INTEGER
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    vehicleType TEXT CHECK(TN_RO_VehicleTypeValue)
-    weatherCondition TEXT CHECK(TN_RO_WeatherConditionValue)
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> areaCondition TEXT CHECK(TN_RO_AreaConditionValue)
+    <<voidable>> direction TEXT CHECK(NET_LinkDirectionValue)
+    <<voidable>> laneExtension INTEGER
+    <<voidable>> speedLimitSource TEXT CHECK(TN_RO_SpeedLimitSourceValue)
+    <<voidable>> startLane INTEGER
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> vehicleType TEXT CHECK(TN_RO_VehicleTypeValue)
+    <<voidable>> weatherCondition TEXT CHECK(TN_RO_WeatherConditionValue)
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Attributes "TN_RO_RoadWidth" {
-    description = "The width of the road, measured as an average value.
+  Attributes <<featureType>> "TN_RO_RoadWidth" {
+    * description = "The width of the road, measured as an average value.
   
     SOURCE [Euroroads]."
-    identifier = "Road Transport Network::RoadWidth"
-    tableName = "TN_RO_RoadWidth"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+    * identifier = "Road Transport Network::RoadWidth"
+    * tableName = "TN_RO_RoadWidth"
     id INTEGER NOT NULL PRIMARY KEY
-    measuredRoadPart TEXT CHECK(TN_RO_RoadPartValue)
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
     width TEXT NOT NULL
     width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    ref inspireId: BASE_Identifier[0..1]
-    ref networkRef: NET_NetworkReference[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> measuredRoadPart TEXT CHECK(TN_RO_RoadPartValue)
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Attributes "TN_RO_ERoad" {
-    description = "A collection of road link sequences and or individual road links that represents a route that is part of the international E-road network, characterized by its European route number.
+  Attributes <<featureType>> "TN_RO_ERoad" {
+    * description = "A collection of road link sequences and or individual road links that represents a route that is part of the international E-road network, characterized by its European route number.
   
     EXAMPLE E40."
-    identifier = "Road Transport Network::ERoad"
-    tableName = "TN_RO_ERoad"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    europeanRouteNumber TEXT
+    * identifier = "Road Transport Network::ERoad"
+    * tableName = "TN_RO_ERoad"
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref post: TN_MarkerPost[0..*] inv route[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> europeanRouteNumber TEXT
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    link_GeneralisedLink BASE_Identifier [1..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container "basicTypes" {
+  * fileName = "basicTypes"
+  Constraint Enum <<enumeration>>, <<enumeration>> "GML_Sign" {
+    * identifier = "basicTypes::Sign"
+    "+"
+    "-"
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "NET_Network_geographicalName" {
-    profile = "attributes"
-    tableName = "NET_Network_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Relation "NET_NetworkReference_involves" {
-    profile = "attributes"
-    tableName = "NET_NetworkReference_involves"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
-  }
-  Relation "HH_SA_Event_additionalInformation" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#additionalInformation"
-    tableName = "HH_SA_Event_additionalInformation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
-  }
-  Relation "HH_SA_Event_part" {
-    profile = "features"
-    relatedReference = "HH_SA_Event#aggregation"
-    tableName = "HH_SA_Event_part"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
-  }
-  Relation "HH_SA_Event_inspireId" {
-    profile = "attributes"
-    relatedReference = "HH_SA_Event#inspireId"
-    tableName = "HH_SA_Event_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "HH_SA_Event_sourceReference" {
-    profile = "attributes"
-    tableName = "HH_SA_Event_sourceReference"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
-  }
-  Relation "AU_admUnit_boundary" {
-    profile = "features"
-    tableName = "AU_admUnit_boundary"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeBoundary(id)
-  }
-  Relation "AU_AdministrativeUnit_administeredBy" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_administeredBy"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
-    profile = "features"
-    relatedReference = "AU_AdministrativeUnit#upperLevelUnit"
-    tableName = "AU_AdministrativeUnit_lowerLevelUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_AdministrativeUnit_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeUnit#inspireId"
-    tableName = "AU_AdministrativeUnit_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_AdministrativeUnit_name" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Relation "AU_AdministrativeUnit_nationalLevelName" {
-    profile = "attributes"
-    tableName = "AU_AdministrativeUnit_nationalLevelName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
-  }
-  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
-    profile = "features"
-    tableName = "AU_AdministrativeUnit_residenceOfAuthority"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
-  }
-  Relation "HH_SA_EventConsequence_event" {
-    profile = "features"
-    relatedReference = "HH_SA_EventConsequence#event"
-    tableName = "HH_SA_EventConsequence_event"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventConsequence(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
-  }
-  Relation "AU_AdministrativeBoundary_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_AdministrativeBoundary#inspireId"
-    tableName = "AU_AdministrativeBoundary_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_admUnit" {
-    profile = "features"
-    tableName = "AU_Condominium_admUnit"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
-  }
-  Relation "AU_Condominium_inspireId" {
-    profile = "attributes"
-    relatedReference = "AU_Condominium#inspireId"
-    tableName = "AU_Condominium_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "AU_Condominium_name" {
-    profile = "attributes"
-    tableName = "AU_Condominium_name"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Constraint Enum "NET_LinkDirectionValue" {
-    identifier = "Network::LinkDirectionValue"
-    bothDirections
-    inDirection
-    inOppositeDirection
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
-  }
-  Attributes "NET_Network" {
-    description = "A network is a collection of network elements.
-  
-    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
-    identifier = "Network::Network"
-    tableName = "NET_Network"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "NET_NetworkReference" {
-    description = "A reference to a network element."
-    identifier = "Network::NetworkReference"
-    tableName = "NET_NetworkReference"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "NET_DirectedLink" {
-    description = "A link either in its positive or negative direction."
-    identifier = "Network::DirectedLink"
-    tableName = "NET_DirectedLink"
-    direction TEXT NOT NULL CHECK(GML_Sign)
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "TN_MarkerPost" {
-    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
-  
-    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
-    identifier = "Common Transport Elements::MarkerPost"
-    tableName = "TN_MarkerPost"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    location TEXT NOT NULL
-    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref route: TransportLinkSet[0..1] inv post[0..*]
-  }
-  Attributes "HH_SA_TrafficRelatedEvent" {
-    description = "An unintentional event arising by a traffic facility along a traffic network harming humans, property or the environment."
-    identifier = "Safety::TrafficRelatedEvent"
-    tableName = "HH_SA_TrafficRelatedEvent"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    endTime DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName_language TEXT
-    locationUnit_geographicalName_spelling_text TEXT
-    locationUnit_geometry GEOMETRY
-    startTime DATETIME NOT NULL
-    trafficType TEXT NOT NULL CHECK(HH_SA_TrafficTypeValue)
-    ref causeOfEvent: PT_FreeText[0..*]
-  }
-  Feature "HH_SA_Event" {
-    description = "Unintentional or intentional accident or incident harming  or damaging humans, properties or the environment."
-    identifier = "Safety::Event"
-    tableName = "HH_SA_Event"
-    additionalInformation INTEGER
-    aggregation INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    endTime DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    isIntentional BOOLEAN
-    isMajor BOOLEAN
-    locationUnit_administrativeUnit AU_AdministrativeUnit
-    locationUnit_geographicalName_language TEXT
-    locationUnit_geographicalName_spelling_text TEXT
-    locationUnit_geometry GEOMETRY
-    startTime DATETIME NOT NULL
-    ref causeOfEvent: PT_FreeText[0..*]
-  }
-  Attributes "HH_SA_EventInformation" {
-    description = "All available information about the  event."
-    identifier = "Safety::EventInformation"
-    tableName = "HH_SA_EventInformation"
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "BASE2_SimpleCitation" {
+    * tableName = "BASE2_SimpleCitation"
     date DATE
     id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
@@ -664,220 +426,107 @@ Container <<applicationSchema>>  "Road Transport Network" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
-  Feature "AU_AdministrativeUnit" {
-    description = "Unit of administration where a Member State has and/or exercises jurisdictional rights, for local, regional and national governance."
-    identifier = "AdministrativeUnits::AdministrativeUnit"
-    tableName = "AU_AdministrativeUnit"
-    beginLifespanVersion DATETIME
-    country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    nationalCode TEXT NOT NULL
-    nationalLevel TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-    upperLevelUnit INTEGER
+    language TEXT
+    spelling_text TEXT NOT NULL
   }
-  Feature "AU_AdministrativeBoundary" {
-    description = "A line of demarcation between administrative units."
-    identifier = "AdministrativeUnits::AdministrativeBoundary"
-    tableName = "AU_AdministrativeBoundary"
-    beginLifespanVersion DATETIME
-    country TEXT NOT NULL CHECK(BASE2_CountryCode)
-    endLifespanVersion DATETIME
-    geometry CURVE NOT NULL
+}
+Container <<applicationSchema>> "Network" {
+  * fileName = "Network"
+  Attributes <<dataType>> "NET_DirectedLink" {
+    * description = "A link either in its positive or negative direction."
+    * identifier = "Network::DirectedLink"
+    * tableName = "NET_DirectedLink"
+    direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    legalStatus TEXT CHECK(AU_LegalStatusValue) DEFAULT 'agreed'
-    nationalLevels TEXT NOT NULL
-    technicalStatus TEXT CHECK(AU_TechnicalStatusValue) DEFAULT 'edgeMatched'
+    <<reference>> link_Link INTEGER
   }
-  Attributes "GMD_LocalisedCharacterString" {
-    identifier = "Cultural and linguistic adapdability::LocalisedCharacterString"
-    tableName = "GMD_LocalisedCharacterString"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
+  Constraint Enum <<codeList>> "NET_LinkDirectionValue" {
+    * identifier = "Network::LinkDirectionValue"
+    bothDirections
+    inDirection
+    inOppositeDirection
+  }
+  Attributes <<dataType>> "NET_NetworkReference" {
+    * description = "A reference to a network element."
+    * identifier = "Network::NetworkReference"
+    * tableName = "NET_NetworkReference"
     id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-    text TEXT NOT NULL
+    <<version>>, <<reference>> element_NetworkElement INTEGER
+    involves TrafficRelatedEvent [0..*] as ref
   }
-  Feature "AU_ResidenceOfAuthority" {
-    description = "Data type representing the name and position of a residence of authority."
-    identifier = "AdministrativeUnits::ResidenceOfAuthority"
-    tableName = "AU_ResidenceOfAuthority"
-    geometry POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    name_language TEXT
-    name_spelling_text TEXT NOT NULL
+  Relation "NET_NetworkReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
+    * tableName = "NET_NetworkReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Attributes "HH_SA_EventConsequence" {
-    description = "The harm an event caused for humans, propriety."
-    identifier = "Safety::EventConsequence"
-    tableName = "HH_SA_EventConsequence"
-    consequenceType TEXT NOT NULL CHECK(HH_SA_ConsequenceTypeValue)
-    event INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    value DOUBLE NOT NULL
+  Relation "NET_DirectedLink_link_Link" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_DirectedLink#link_Link"
+    * tableName = "NET_DirectedLink_link_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Feature "AU_Condominium" {
-    description = "An administrative area established independently to any national administrative division of territory  and administered by two or more countries.
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
-    NOTE Condominium is not a part of any national administrative hierarchy of territory division in Member State."
-    identifier = "AdministrativeUnits::Condominium"
-    tableName = "AU_Condominium"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    geometry MULTISURFACE NOT NULL
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Constraint Enum "GML_Sign" {
-    identifier = "basicTypes::Sign"
-    "+"
-    "-"
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "HH_SA_TrafficTypeValue" {
-    identifier = "Safety::TrafficTypeValue"
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "BASE2_CountryCode" {
-    identifier = "Base Types 2::CountryCode"
-    AT
-    BE
-    BG
-    CY
-    CZ
-    DE
-    DK
-    EE
-    EL
-    ES
-    FI
-    FR
-    HR
-    HU
-    IE
-    IT
-    LT
-    LU
-    LV
-    MT
-    NL
-    PL
-    PT
-    RO
-    SE
-    SI
-    SK
-    TR
-    UK
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "AU_AdministrativeHierarchyLevel" {
-    identifier = "AdministrativeUnits::AdministrativeHierarchyLevel"
-    1stOrder
-    2ndOrder
-    3rdOrder
-    4thOrder
-    5thOrder
-    6thOrder
+}
+Package "Location referencing mechanisms" {
+  Class "NodeLocationReference" {
+    node_Node BASE_Identifier as ref
+    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
   }
-  Constraint Enum "AU_LegalStatusValue" {
-    identifier = "AdministrativeUnits::LegalStatusValue"
-    agreed
-    notAgreed
-  }
-  Constraint Enum "AU_TechnicalStatusValue" {
-    identifier = "AdministrativeUnits::TechnicalStatusValue"
-    edgeMatched
-    notEdgeMatched
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
-  }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-  Constraint Enum "HH_SA_ConsequenceTypeValue" {
-    identifier = "Safety::ConsequenceTypeValue"
-  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

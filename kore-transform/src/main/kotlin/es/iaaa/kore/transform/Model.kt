@@ -43,7 +43,7 @@ class Model(val input: Input) : Validable {
     fun relevantContent(): List<KoreObject> =
         (selectedPackages() + selectedPackages().flatMap { it.allContents().toList() }) + tracked
 
-    fun allRelevantContent(): List<KoreObject> = relevantContent().toSet().typeClosure().toList()
+    fun allRelevantContent(): List<KoreObject> = relevantContent().toSet().typeClosure(input.boundary.get()).toList()
 
     fun allDependencies(): List<KoreObject> = allRelevantContent() - relevantContent()
 
@@ -52,26 +52,50 @@ class Model(val input: Input) : Validable {
     val tracked: MutableList<KoreObject> = mutableListOf()
 }
 
-fun Set<KoreObject>.typeClosure(): Set<KoreObject> {
+fun Set<KoreObject>.typeClosure(boundary: (KoreObject, KoreObject) -> Boolean = { _, _ -> true }): Set<KoreObject> {
 
-    fun Set<KoreObject>.refinements(): List<KoreObject> =
-        filterIsInstance<KoreModelElement>().flatMap {
-            it.annotations.flatMap { ann -> ann.references }
+    fun List<KoreObject>.metas(): List<KoreObject> =
+        filterIsInstance<KoreModelElement>().mapNotNull { src -> src.metaClass }
+
+    fun List<KoreObject>.refinements(): List<KoreObject> =
+        filterIsInstance<KoreModelElement>().flatMap { src ->
+            src.annotations.flatMap { ann -> ann.references }
         }
 
-    fun Set<KoreObject>.attributes(): List<KoreObject> =
-        filterIsInstance<KoreClass>().flatMap(KoreClass::allAttributes)
+    fun List<KoreObject>.annotations(): List<KoreObject> =
+        filterIsInstance<KoreModelElement>().flatMap { src ->
+            src.annotations
+        }
 
-    fun Set<KoreObject>.references(): List<KoreObject> =
-        filterIsInstance<KoreClass>().flatMap(KoreClass::allReferences).filter { ref -> ref.name != null }
+    fun List<KoreObject>.attributes(): List<Pair<KoreObject, KoreObject>> =
+        filterIsInstance<KoreClass>().flatMap { src -> src.allAttributes().map { Pair(src, it) } }
 
-    fun Set<KoreObject>.types(): List<KoreObject> =
-        filterIsInstance<KoreTypedElement>().filter { it.name != null }.mapNotNull(KoreTypedElement::type)
+    fun List<KoreObject>.references(): List<Pair<KoreObject, KoreObject>> =
+        filterIsInstance<KoreClass>().flatMap { src -> src.allReferences().filter { it.isNavigable }.map { Pair(src, it) } }
 
-    tailrec fun expand(base: Set<KoreObject>): Set<KoreObject> {
-        val preExpanded = base + base.refinements() + base.attributes() + base.references()
-        val expanded = preExpanded + preExpanded.types()
-        return if (expanded == base) base else expand(expanded)
+    fun Pair<KoreObject, KoreObject>.types(): List<Pair<KoreObject, KoreObject>> {
+        val second = this.second
+        return if (second is KoreTypedElement) {
+            val type = second.type
+            if (type == null) {
+                listOf(this)
+            } else {
+                listOf(this, Pair(second, type))
+            }
+        } else {
+            listOf(this)
+         }
     }
-    return expand(toSet())
+
+    tailrec fun expand(candidates: Set<KoreObject>, sources: List<KoreObject>): Set<KoreObject> {
+        val reachablesWithProvenance = with(sources) { attributes() + references() }
+            .flatMap { it.types() }.filterNot { it.second in candidates }
+        val reachablesWithoutProvenance = with(sources) { annotations() + refinements() + metas() }.filterNot { it in candidates }
+        val reachables = reachablesWithProvenance.map { it.second } + reachablesWithoutProvenance
+        return if (reachables.isEmpty()) candidates else expand(
+            candidates = candidates + reachables,
+            sources = reachablesWithProvenance.filter { boundary(it.first, it.second) }.map { it.second } + reachablesWithoutProvenance
+        )
+    }
+    return expand(this, toList())
 }

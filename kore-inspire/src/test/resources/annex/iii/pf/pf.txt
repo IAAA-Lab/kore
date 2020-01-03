@@ -1,259 +1,216 @@
-Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
+Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
+  * fileName = "ProductionAndIndustrialFacilities"
   isnamespace = "0"
-  Constraint Enum "PF_InstallationTypeValue" {
-    identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
+  Constraint Enum <<codeList>> "PF_InstallationTypeValue" {
+    * identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
   }
-  Class "ProductionInstallationPart" {
-    descriptions: TEXT [0..1]
-    names: TEXT [0..1]
-    pointGeometry: POINT [0..1]
-    surfaceGeometry: SURFACE [0..1]
-    technique: TEXT [0..1]
-    thematicId_identifier: TEXT [0..1]
-    thematicId_identifierScheme: TEXT [0..1]
-    type: TEXT [0..1]
-    ref groupingInstallation: ProductionInstallationinv groupedInstallationPart[0..*]
-    ref inspireId: BASE_Identifier
-    ref status: PF_StatusType[0..*]
+  Class <<featureType>> "ProductionInstallationPart" {
+    pointGeometry : POINT [0..1]
+    thematicId_identifier : TEXT [0..1]
+    thematicId_identifierScheme : TEXT [0..1]
+    <<voidable>>, <<array>> descriptions : TEXT [0..1]
+    <<voidable>>, <<array>> names : TEXT [0..1]
+    <<voidable>> surfaceGeometry : SURFACE [0..1]
+    <<voidable>> technique : TEXT [0..1]
+    <<voidable>> type : TEXT [0..1]
+    groupingInstallation ProductionInstallation as ref
+    inspireId BASE_Identifier as ref
+    <<voidable>> status PF_StatusType [0..*] as ref
   }
-  Attributes "PF_StatusType" {
-    description = "The state or condition of a technical component, with regard to the functional and operational order, in which it is arranged for a limited or extended time period.
+  Attributes <<dataType>> "PF_StatusType" {
+    * description = "The state or condition of a technical component, with regard to the functional and operational order, in which it is arranged for a limited or extended time period.
   
     It applies equally to the technical unit (facility, installation or installation part), to the production site, to the parcel and to the production building."
-    identifier = "ProductionAndIndustrialFacilities::StatusType"
-    tableName = "PF_StatusType"
-    description TEXT
+    * identifier = "ProductionAndIndustrialFacilities::StatusType"
+    * tableName = "PF_StatusType"
     id INTEGER NOT NULL PRIMARY KEY
     statusType TEXT NOT NULL CHECK(BASE_ConditionOfFacilityValue)
-    validFrom DATE
-    validTo DATE
+    <<voidable>> description TEXT
+    <<voidable>> validFrom DATE
+    <<voidable>> validTo DATE
   }
-  Constraint Enum "PF_RiverBasinDistrictValue" {
-    identifier = "ProductionAndIndustrialFacilities::RiverBasinDistrictValue"
+  Constraint Enum <<codeList>> "PF_RiverBasinDistrictValue" {
+    * identifier = "ProductionAndIndustrialFacilities::RiverBasinDistrictValue"
   }
-  Constraint Enum "PF_InstallationPartTypeValue" {
-    identifier = "ProductionAndIndustrialFacilities::InstallationPartTypeValue"
+  Constraint Enum <<codeList>> "PF_InstallationPartTypeValue" {
+    * identifier = "ProductionAndIndustrialFacilities::InstallationPartTypeValue"
   }
-  Class <<code List>>  "TypeOfProductionBuildingValue" {
+  Class <<code List>> "TypeOfProductionBuildingValue" {
     visibility = "Public"
   }
-  Feature "PF_ProductionBuilding" {
-    description = "Artificial construction, part of the production facility that are useful to host or provide shelter to activity development.
+  Feature <<featureType>> "PF_ProductionBuilding" {
+    * description = "Artificial construction, part of the production facility that are useful to host or provide shelter to activity development.
   
     Inside a facility, and in relation with the definition of building, this entity should represent a construction under responsibility of the facility, either as an independent unit or as a functional infrastructure for an installation."
-    identifier = "ProductionAndIndustrialFacilities::ProductionBuilding"
-    tableName = "PF_ProductionBuilding"
-    geometry GEOMETRY
+    * identifier = "ProductionAndIndustrialFacilities::ProductionBuilding"
+    * tableName = "PF_ProductionBuilding"
     id INTEGER NOT NULL PRIMARY KEY
     thematicId_identifier TEXT
     thematicId_identifierScheme TEXT
-    ref typeOfBuilding: TypeOfProductionBuildingValue[0..*]
+    <<voidable>> geometry GEOMETRY
+    <<voidable>> typeOfBuilding TypeOfProductionBuildingValue [0..*] as ref
   }
-  Class "TechnicalUnit" {}
-  Class "ProductionInstallation" {
-    descriptions: TEXT [0..1]
-    names: TEXT [0..1]
-    pointGeometry: POINT [0..1]
-    surfaceGeometry: SURFACE [0..1]
-    thematicId_identifier: TEXT [0..1]
-    thematicId_identifierScheme: TEXT [0..1]
-    type: TEXT [0..1]
-    ref groupedInstallationPart: ProductionInstallationPart[0..*] inv groupingInstallation
-    ref groupingFacility: PF_ProductionFacilityinv groupedInstallation[0..*]
-    ref inspireId: BASE_Identifier
-    ref status: PF_StatusType[0..*]
+  Class <<featureType>> "TechnicalUnit" {}
+  Class <<featureType>> "ProductionInstallation" {
+    pointGeometry : POINT [0..1]
+    thematicId_identifier : TEXT [0..1]
+    thematicId_identifierScheme : TEXT [0..1]
+    <<voidable>>, <<array>> descriptions : TEXT [0..1]
+    <<voidable>>, <<array>> names : TEXT [0..1]
+    <<voidable>> surfaceGeometry : SURFACE [0..1]
+    <<voidable>> type : TEXT [0..1]
+    groupingFacility PF_ProductionFacility as ref
+    inspireId BASE_Identifier as ref
+    <<voidable>> groupedInstallationPart ProductionInstallationPart [0..*] as ref
+    <<voidable>> status PF_StatusType [0..*] as ref
   }
-  Feature "PF_ProductionSite" {
-    description = "All land at a distinct geographic location where the production facility was, is, or is intended to be located. This includes all infrastructure, equipment and materials;
+  Feature <<featureType>> "PF_ProductionSite" {
+    * description = "All land at a distinct geographic location where the production facility was, is, or is intended to be located. This includes all infrastructure, equipment and materials;
   
     An area of land or water that one or more process plants is or may be situated on, or else a single location, in which, if there is more than one manufacturer of (a) substance(s), certain infrastructure and facilities are shared.
   
     A continuous surface, maritime or terrestrial in which production facilities have been already implanted or urban and/or engineering activities have been developed for production purposes. The location will be defined by means of geographical boundaries within which activities under the control of an organization may be carried out. The geographical boundaries may be on land and in water, and include above and below surface structures, both natural and man-made."
-    identifier = "ProductionAndIndustrialFacilities::ProductionSite"
-    tableName = "PF_ProductionSite"
-    descriptions TEXT
+    * identifier = "ProductionAndIndustrialFacilities::ProductionSite"
+    * tableName = "PF_ProductionSite"
     geometry MULTISURFACE
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    names TEXT
     thematicId_identifier TEXT
     thematicId_identifierScheme TEXT
+    <<voidable>>, <<array>> descriptions TEXT
+    <<voidable>>, <<array>> names TEXT
+    <<reference>> inspireId INTEGER
   }
-  Feature "PF_ProductionPlot" {
-    description = "A portion of land or water part of a production facility destined to functional purposes.
+  Feature <<featureType>> "PF_ProductionPlot" {
+    * description = "A portion of land or water part of a production facility destined to functional purposes.
   
     A potential sub-division of a major site as delimited extension of land in which are performed extensive operations related with the activity or one of the activities performed by a facility."
-    identifier = "ProductionAndIndustrialFacilities::ProductionPlot"
-    tableName = "PF_ProductionPlot"
+    * identifier = "ProductionAndIndustrialFacilities::ProductionPlot"
+    * tableName = "PF_ProductionPlot"
     geometry SURFACE
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     thematicId_identifier TEXT
     thematicId_identifierScheme TEXT
+    <<reference>> inspireId INTEGER
   }
-  Feature "PF_ProductionFacility" {
-    description = "One or more installations on the same site operated by the same natural or legal person,
+  Feature <<featureType>> "PF_ProductionFacility" {
+    * description = "One or more installations on the same site operated by the same natural or legal person,
   
     designed, built or installed to serve specific production or industrial purposes, comprehending
   
     all infrastructure, equipment and materials.
   
     A production facility groups together a single installation, set of installations or production processes (stationary or mobile), which can be defined within a single geographical boundary, organizational unit or production process. A production facility can also be identified as one or more installations located on the same site that are operated by the same natural or legal person and in which production activities are being carried out. Such a facility groups potentially the land, buildings, and equipment used in carrying on an industrial business or other undertaking or service."
-    identifier = "ProductionAndIndustrialFacilities::ProductionFacility"
-    tableName = "PF_ProductionFacility"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY
-    hostingSite INTEGER
+    * identifier = "ProductionAndIndustrialFacilities::ProductionFacility"
+    * tableName = "PF_ProductionFacility"
+    geometry : GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    name: TEXT [0..1]
     riverBasinDistrict TEXT CHECK(PF_RiverBasinDistrictValue)
-    surfaceGeometry SURFACE
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref function: ACT_CORE_Function[1..*]
-    ref groupedInstallation: ProductionInstallation[0..*] inv groupingFacility
-    ref inspireId: BASE_Identifier
-    ref thematicId: BASE2_ThematicIdentifier[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<reference>> hostingSite INTEGER
+    <<voidable>> name : TEXT [0..1]
+    <<voidable>> surfaceGeometry SURFACE
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    function ACT_CORE_Function [1..*] as ref
+    inspireId BASE_Identifier as ref
+    thematicId BASE2_ThematicIdentifier [0..*] as ref
+    <<voidable>> groupedInstallation ProductionInstallation [0..*] as ref
   }
-  Constraint Enum "PF_PollutionAbatementTechniqueValue" {
-    identifier = "ProductionAndIndustrialFacilities::PollutionAbatementTechniqueValue"
+  Constraint Enum <<codeList>> "PF_PollutionAbatementTechniqueValue" {
+    * identifier = "ProductionAndIndustrialFacilities::PollutionAbatementTechniqueValue"
   }
   Relation "PF_ProductionBuilding_groupedFacility" {
-    profile = "features"
-    tableName = "PF_ProductionBuilding_groupedFacility"
+    * profile = "features"
+    * tableName = "PF_ProductionBuilding_groupedFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
   }
   Relation "PF_ProductionBuilding_status" {
-    profile = "attributes"
-    tableName = "PF_ProductionBuilding_status"
+    * profile = "attributes"
+    * tableName = "PF_ProductionBuilding_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
+  Relation "PF_ProductionBuilding_building_AbstractBuilding" {
+    * profile = "attributes"
+    * tableName = "PF_ProductionBuilding_building_AbstractBuilding"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "PF_ProductionSite_hostedFacility" {
-    profile = "features"
-    relatedReference = "PF_ProductionFacility#hostingSite"
-    tableName = "PF_ProductionSite_hostedFacility"
+    * profile = "features"
+    * relatedReference = "attribute PF_ProductionFacility#hostingSite"
+    * tableName = "PF_ProductionSite_hostedFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
   }
   Relation "PF_ProductionSite_inspireId" {
-    profile = "attributes"
-    relatedReference = "PF_ProductionSite#inspireId"
-    tableName = "PF_ProductionSite_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute PF_ProductionSite#inspireId"
+    * tableName = "PF_ProductionSite_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "PF_ProductionSite_sitePlan" {
-    profile = "attributes"
-    tableName = "PF_ProductionSite_sitePlan"
+    * profile = "attributes"
+    * tableName = "PF_ProductionSite_sitePlan"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
   Relation "PF_ProductionSite_status" {
-    profile = "attributes"
-    tableName = "PF_ProductionSite_status"
+    * profile = "attributes"
+    * tableName = "PF_ProductionSite_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
   Relation "PF_ProductionPlot_groupingFacility" {
-    profile = "features"
-    tableName = "PF_ProductionPlot_groupingFacility"
+    * profile = "features"
+    * tableName = "PF_ProductionPlot_groupingFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
   }
   Relation "PF_ProductionPlot_inspireId" {
-    profile = "attributes"
-    relatedReference = "PF_ProductionPlot#inspireId"
-    tableName = "PF_ProductionPlot_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute PF_ProductionPlot#inspireId"
+    * tableName = "PF_ProductionPlot_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "PF_ProductionPlot_status" {
-    profile = "attributes"
-    tableName = "PF_ProductionPlot_status"
+    * profile = "attributes"
+    * tableName = "PF_ProductionPlot_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
   Relation "PF_ProductionFacility_status" {
-    profile = "attributes"
-    tableName = "PF_ProductionFacility_status"
+    * profile = "attributes"
+    * tableName = "PF_ProductionFacility_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "BASE_ConditionOfFacilityValue" {
-    identifier = "Base Types::ConditionOfFacilityValue"
-    decommissioned
-    disused
-    functional
-    projected
-    underConstruction
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
-  Attributes "BASE2_ThematicIdentifier" {
-    description = "Thematic identifier to uniquely identify the spatial object.
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_ThematicIdentifier" {
+    * description = "Thematic identifier to uniquely identify the spatial object.
   
     Some spatial objects may be assigned multiple unique identifiers.
   
     These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
-    identifier = "Base Types 2::ThematicIdentifier"
-    tableName = "BASE2_ThematicIdentifier"
+    * identifier = "Base Types 2::ThematicIdentifier"
+    * tableName = "BASE2_ThematicIdentifier"
     id INTEGER NOT NULL PRIMARY KEY
     identifier TEXT NOT NULL
     identifierScheme TEXT NOT NULL
   }
-  Attributes "ACT_CORE_Function" {
-    description = "The function of something expressed as an activity and optional input and/or output.
-  
-    NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
-    identifier = "Activity Complex::Function"
-    tableName = "ACT_CORE_Function"
-    activities TEXT NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-    inputs TEXT
-    outputs TEXT
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "BASE2_SimpleCitation" {
+    * tableName = "BASE2_SimpleCitation"
     date DATE
     id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
@@ -261,78 +218,80 @@ Container <<applicationSchema>>  "ProductionAndIndustrialFacilities" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
-  Attributes "BU_BASE_CurrentUse" {
-    description = "This data type enables to detail the current use(s)."
-    identifier = "BuildingsBase::CurrentUse"
-    tableName = "BU_BASE_CurrentUse"
-    currentUse TEXT NOT NULL CHECK(BU_BASE_CurrentUseValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    percentage INTEGER
-  }
-  Attributes "BU_BASE_DateOfEvent" {
-    description = "This data type includes the different possible ways to define the date of an event."
-    identifier = "BuildingsBase::DateOfEvent"
-    tableName = "BU_BASE_DateOfEvent"
-    anyPoint DATETIME
-    beginning DATETIME
-    end DATETIME
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "BU_BASE_Elevation" {
-    description = "This data types includes the elevation value itself  and information on how this elevation was measured."
-    identifier = "BuildingsBase::Elevation"
-    tableName = "BU_BASE_Elevation"
-    elevationReference TEXT NOT NULL CHECK(BU_BASE_ElevationReferenceValue)
-    elevationValue_coordinate <<missing>> NOT NULL
-    elevationValue_dimension INTEGER NOT NULL
-    id INTEGER NOT NULL PRIMARY KEY
-  }
-  Attributes "BU_BASE_ExternalReference" {
-    description = "Reference to an external information system containing any piece of information related to the spatial object."
-    identifier = "BuildingsBase::ExternalReference"
-    tableName = "BU_BASE_ExternalReference"
-    id INTEGER NOT NULL PRIMARY KEY
-    informationSystem TEXT NOT NULL
-    reference TEXT NOT NULL
-  }
-  Attributes "BU_BASE_HeightAboveGround" {
-    description = "Vertical distance (measured or estimated) between a low reference and a high reference."
-    identifier = "BuildingsBase::HeightAboveGround"
-    tableName = "BU_BASE_HeightAboveGround"
-    heightReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
-    id INTEGER NOT NULL PRIMARY KEY
-    lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
-    status TEXT CHECK(BU_BASE_HeightStatusValue)
-    value TEXT NOT NULL
-    value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-  }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
-  }
-  Constraint Enum "BU_BASE_ConditionOfConstructionValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ConditionOfConstructionValue"
-  }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
-  }
-  Constraint Enum "BU_BASE_CurrentUseValue" {
-    extensiblity = "narrower"
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::CurrentUseValue"
-  }
-  Constraint Enum "BU_BASE_ElevationReferenceValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::ElevationReferenceValue"
-  }
-  Constraint Enum "BU_BASE_HeightStatusValue" {
-    obligation = "implementingRule"
-    identifier = "BuildingsBase::HeightStatusValue"
-  }
-  Constraint Enum "GML_UomIdentifier" {}
 }
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Constraint Enum <<codeList>> "BASE_ConditionOfFacilityValue" {
+    * identifier = "Base Types::ConditionOfFacilityValue"
+    decommissioned
+    disused
+    functional
+    projected
+    underConstruction
+  }
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container <<applicationSchema>> "Activity Complex" {
+  * fileName = "Activity Complex"
+  Attributes <<dataType>> "ACT_CORE_Function" {
+    * description = "The function of something expressed as an activity and optional input and/or output.
+  
+    NOTE  Depending on the scope it can refer to different activities (co-incineration, Collection, exploration, incineration, interim disposal, management, recycling, primary production, primary treatment, recovery , recycling, release, storage, use, waste management, etc) and Inputs and Outputs (sludge, substance, tailings, technical products, urban waste water, volatile organic compound, waste, WEEE from private households, etc)."
+    * identifier = "Activity Complex::Function"
+    * tableName = "ACT_CORE_Function"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<array>> inputs TEXT
+    <<voidable>>, <<array>> outputs TEXT
+    <<array>> activities TEXT NOT NULL
+  }
+  Constraint Enum <<codeList>> "ACT_CORE_EconomicActivityValue" {
+    * identifier = "Activity Complex::EconomicActivityValue"
+  }
+  Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
+    * identifier = "Activity Complex::InputOutputValue"
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+

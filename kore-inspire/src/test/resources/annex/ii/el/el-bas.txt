@@ -1,36 +1,43 @@
-Container <<applicationSchema>>  "ElevationBaseTypes" {
-  Constraint Enum "EL_BAS_SurfaceTypeValue" {
-    identifier = "ElevationBaseTypes::SurfaceTypeValue"
+Container <<applicationSchema>> "ElevationBaseTypes" {
+  * fileName = "ElevationBaseTypes"
+  Constraint Enum <<enumeration>> "EL_BAS_SurfaceTypeValue" {
+    * identifier = "ElevationBaseTypes::SurfaceTypeValue"
     DSM
     DTM
   }
-  Constraint Enum "EL_BAS_ElevationPropertyTypeValue" {
-    identifier = "ElevationBaseTypes::ElevationPropertyTypeValue"
+  Constraint Enum <<enumeration>> "EL_BAS_ElevationPropertyTypeValue" {
+    * identifier = "ElevationBaseTypes::ElevationPropertyTypeValue"
     depth
     height
   }
+}
+Package <<applicationSchema>> "Base Types" {
   Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

@@ -8,7 +8,9 @@ fun KoreReference.toAttribute(remove: Boolean = true): KoreAttribute =
     koreAttribute(copyFromTo(this, containingClass, remove = remove))
 
 fun KoreAttribute.toReference(remove: Boolean = true): KoreReference =
-    koreReference(copyFromTo(this, containingClass, remove = remove))
+    koreReference(copyFromTo(this, containingClass, remove = remove)).also {
+        it.isNavigable = true
+    }
 
 /**
  * Copy an annotation.

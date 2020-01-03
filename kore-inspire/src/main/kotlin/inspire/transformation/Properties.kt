@@ -15,7 +15,7 @@ val `Properties`: Transform = { _, _ ->
             AttributesTable
         ) &&
                 !isMany
-    }) {
+    }, global = true) {
         metaClass = Column
         columnName = name
     }

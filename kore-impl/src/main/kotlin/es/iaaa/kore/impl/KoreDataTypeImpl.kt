@@ -20,4 +20,6 @@ import es.iaaa.kore.KoreDataType
 /**
  * A representation of the model object **Data Type**.
  */
-internal open class KoreDataTypeImpl : KoreClassifierImpl(), KoreDataType
+internal open class KoreDataTypeImpl : KoreClassifierImpl(), KoreDataType {
+    override fun toString(): String = "type ${container?.name}#$name"
+}

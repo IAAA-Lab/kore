@@ -1,177 +1,183 @@
-Container <<applicationSchema>>  "Sea Regions" {
-  Feature "SR_ShoreSegment" {
-    description = "A Shore Segment is a section of shore line.
+Container <<applicationSchema>> "Sea Regions" {
+  * fileName = "Sea Regions"
+  Feature <<featureType>> "SR_ShoreSegment" {
+    * description = "A Shore Segment is a section of shore line.
   
     Where it is possible to provide attributes about shore stability (eroding, stable etc) and/or shore type (sand, rock, harbour etc). Then the Shore Segment should be used in place of the GML LineString element to describe curve segments."
-    identifier = "Sea Regions::ShoreSegment"
-    tableName = "SR_ShoreSegment"
+    * identifier = "Sea Regions::ShoreSegment"
+    * tableName = "SR_ShoreSegment"
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    shoreClassification TEXT CHECK(SR_ShoreTypeClassificationValue)
-    shoreStability TEXT CHECK(SR_ShoreStabilityValue)
+    <<voidable>> shoreClassification TEXT CHECK(SR_ShoreTypeClassificationValue)
+    <<voidable>> shoreStability TEXT CHECK(SR_ShoreStabilityValue)
   }
-  Attributes "SR_SeaSurfaceArea" {
-    description = "An area of the sea surface with some type of cover e.g. an area of sea ice.
+  Attributes <<featureType>> "SR_SeaSurfaceArea" {
+    * description = "An area of the sea surface with some type of cover e.g. an area of sea ice.
   
     This describes a sea region according to the characteristics of the sea surface rather than characteristics of the water column in general. It is analogous to the concept of LandCover (INSPIRE Annex III)."
-    identifier = "Sea Regions::SeaSurfaceArea"
-    tableName = "SR_SeaSurfaceArea"
-    geometry: GEOMETRY [0..1]
+    * identifier = "Sea Regions::SeaSurfaceArea"
+    * tableName = "SR_SeaSurfaceArea"
+    geometry : GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
     surfaceType TEXT NOT NULL CHECK(SR_SeaSurfaceClassificationValue)
   }
-  Feature "SR_Sea" {
-    description = "Extent of sea at High Water (meanHighWater).
+  Feature <<featureType>> "SR_Sea" {
+    * description = "Extent of sea at High Water (meanHighWater).
   
     An area of sea, bounded by land and adjacent sea regions.  May contain smaller scale sea regions. Has common large scale circulation patterns, in part defined by its land boundaries.  High Water is taken to be mean high water.  Applies to common names areas of sea, e.g. North Sea, Agean Sea etc. (Source: IHO S23 SeaRegion)"
-    identifier = "Sea Regions::Sea"
-    tableName = "SR_Sea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Sea Regions::Sea"
+    * tableName = "SR_Sea"
     extent_geometry MULTISURFACE NOT NULL
     extent_waterLevel TEXT CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Constraint Enum "SR_ShoreTypeClassificationValue" {
-    identifier = "Sea Regions::ShoreTypeClassificationValue"
+  Constraint Enum <<codeList>> "SR_ShoreTypeClassificationValue" {
+    * identifier = "Sea Regions::ShoreTypeClassificationValue"
   }
-  Attributes "SR_ParameterValuePair" {
-    description = "A parameter value pair contains a value of some observed property. e.g. Annual Mean Sea Surface Temperature."
-    identifier = "Sea Regions::ParameterValuePair"
-    tableName = "SR_ParameterValuePair"
+  Attributes <<dataType>> "SR_ParameterValuePair" {
+    * description = "A parameter value pair contains a value of some observed property. e.g. Annual Mean Sea Surface Temperature."
+    * identifier = "Sea Regions::ParameterValuePair"
+    * tableName = "SR_ParameterValuePair"
     id INTEGER NOT NULL PRIMARY KEY
     parameter AbstractObservableProperty NOT NULL
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Feature "SR_MarineIsoline" {
-    description = "An isoline representing a particular value of some marine physical or chemical phenomenon such as temperature, salinity or wave height.
+  Feature <<dataType>> "SR_MarineIsoline" {
+    * description = "An isoline representing a particular value of some marine physical or chemical phenomenon such as temperature, salinity or wave height.
   
     A Marine Contour representing a particular value of some phenomenon. The geometry of the contour is a GM_Multicurve, i.e. may be formulated from several curves, all representing  the same value e.g. 15 degrees celsius."
-    identifier = "Sea Regions::MarineIsoline"
-    tableName = "SR_MarineIsoline"
+    * identifier = "Sea Regions::MarineIsoline"
+    * tableName = "SR_MarineIsoline"
     geometry MULTICURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     value TEXT NOT NULL
     value_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Attributes "SR_SeaBedArea" {
-    description = "An area of the sea bed with some identified type of cover. e.g. an area of vegetation or sediment type.
+  Attributes <<featureType>> "SR_SeaBedArea" {
+    * description = "An area of the sea bed with some identified type of cover. e.g. an area of vegetation or sediment type.
   
     This describes a sea region according to the characteristics of the sea bed  rather than characteristics of the water column in general.  It does not include the subsea geology and is analogous to the concept of LandCover (INSPIRE Annex III)."
-    identifier = "Sea Regions::SeaBedArea"
-    tableName = "SR_SeaBedArea"
-    geometry: GEOMETRY [0..1]
+    * identifier = "Sea Regions::SeaBedArea"
+    * tableName = "SR_SeaBedArea"
+    geometry : GEOMETRY [0..1]
     id INTEGER NOT NULL PRIMARY KEY
-    surfaceTypes TEXT NOT NULL
+    <<array>> surfaceTypes TEXT NOT NULL
   }
-  Attributes "SR_SeaArea" {
-    description = "An area of sea defined according to its physical and chemical characteristics. It may have multiple geometries (extent) to represent different tidal states.
+  Attributes <<featureType>> "SR_SeaArea" {
+    * description = "An area of sea defined according to its physical and chemical characteristics. It may have multiple geometries (extent) to represent different tidal states.
   
     A SeaArea is a type of HydroObject as described in the Annex1 theme Hydrography. It has geometry described by one or more GM_MultiSurfaces. Multiple geometries are allowed  to enable a SeaArea to be described according to different tidal states.
   
     Typically however, specialisations of SeaArea will restrict the geometry to a particular tidal state or set of tidal states.  SeaAreas include named seas such as ‘Baltic Sea’ and also un-named areas of sea that have particular chemical and physical characteristics.  SeaAreas are 2D objects and carry no explicit information about the depth of the sea, this is specified in the INSPIRE Elevation Theme."
-    identifier = "Sea Regions::SeaArea"
-    tableName = "SR_SeaArea"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Sea Regions::SeaArea"
+    * tableName = "SR_SeaArea"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "SR_Shoreline" {
-    description = "Any Boundary between a Sea Area and land."
-    identifier = "Sea Regions::Shoreline"
-    tableName = "SR_Shoreline"
+  Attributes <<featureType>> "SR_Shoreline" {
+    * description = "Any Boundary between a Sea Area and land."
+    * identifier = "Sea Regions::Shoreline"
+    * tableName = "SR_Shoreline"
     id INTEGER NOT NULL PRIMARY KEY
-    waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>> waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "SR_Coastline" {
-    description = "A special case of a shoreline defined as the shoreline at Mean High Water (MHW). Where there is not significant variation in water level, Mean Sea Level (MSL) can be used as a substitute for MHW.
+  Attributes <<featureType>> "SR_Coastline" {
+    * description = "A special case of a shoreline defined as the shoreline at Mean High Water (MHW). Where there is not significant variation in water level, Mean Sea Level (MSL) can be used as a substitute for MHW.
   
     This feature type is designed for the general use case where the land:sea boundary is required to support general discovery and viewing of datasets.  It is not designed to infer any political boundaries.  The purpose is to provide a consistent overview of European marine extent and for this reason a single tidal extent is selected.  This is consistent with IHO-57 definitions"
-    identifier = "Sea Regions::Coastline"
-    tableName = "SR_Coastline"
+    * identifier = "Sea Regions::Coastline"
+    * tableName = "SR_Coastline"
     id INTEGER NOT NULL PRIMARY KEY
-    waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>> waterLevel TEXT CHECK(HY_P_WaterLevelValue)
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Constraint Enum "SR_ShoreStabilityValue" {
-    identifier = "Sea Regions::ShoreStabilityValue"
+  Constraint Enum <<codeList>> "SR_ShoreStabilityValue" {
+    * identifier = "Sea Regions::ShoreStabilityValue"
   }
-  Feature "SR_MarineCirculationZone" {
-    description = "A sea area defined by its physical and chemical circulation patterns.
+  Feature <<featureType>> "SR_MarineCirculationZone" {
+    * description = "A sea area defined by its physical and chemical circulation patterns.
   
     Typically used for management and reporting of the marine environment or marine environmental classification."
-    identifier = "Sea Regions::MarineCirculationZone"
-    tableName = "SR_MarineCirculationZone"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Sea Regions::MarineCirculationZone"
+    * tableName = "SR_MarineCirculationZone"
     extent_geometry MULTISURFACE NOT NULL
     extent_waterLevel TEXT CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
     zoneType TEXT NOT NULL CHECK(SR_ZoneTypeValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Constraint Enum "SR_SeaBedCoverValue" {
-    identifier = "Sea Regions::SeaBedCoverValue"
+  Constraint Enum <<codeList>> "SR_SeaBedCoverValue" {
+    * identifier = "Sea Regions::SeaBedCoverValue"
   }
-  Class "MarineLayer" {
-    geometry: GEOMETRY [0..1]
+  Class <<featureType>> "MarineLayer" {
+    geometry : GEOMETRY [0..1]
   }
-  Constraint Enum "SR_SeaSurfaceClassificationValue" {
-    identifier = "Sea Regions::SeaSurfaceClassificationValue"
+  Constraint Enum <<codeList>> "SR_SeaSurfaceClassificationValue" {
+    * identifier = "Sea Regions::SeaSurfaceClassificationValue"
   }
-  Constraint Enum "SR_ZoneTypeValue" {
-    identifier = "Sea Regions::ZoneTypeValue"
+  Constraint Enum <<codeList>> "SR_ZoneTypeValue" {
+    * identifier = "Sea Regions::ZoneTypeValue"
   }
-  Attributes "SR_InterTidalArea" {
-    description = "The part of the marine environment that is exposed (not covered in water) during a normal tidal cycle; defined as the difference between any high and any low water level.
+  Attributes <<featureType>> "SR_InterTidalArea" {
+    * description = "The part of the marine environment that is exposed (not covered in water) during a normal tidal cycle; defined as the difference between any high and any low water level.
   
     The part of the marine environment that is exposed (not covered in water) during a normal tidal cycle."
-    identifier = "Sea Regions::InterTidalArea"
-    tableName = "SR_InterTidalArea"
-    beginLifespanVersion: DATETIME [0..1]
-    composition: TEXT [0..1]
-    delineationKnown: BOOLEAN [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: MULTISURFACE
+    * identifier = "Sea Regions::InterTidalArea"
+    * tableName = "SR_InterTidalArea"
+    geometry : MULTISURFACE
     highWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
     lowWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
-    ref SurfaceWater inv bank[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> composition : TEXT [0..1]
+    <<voidable>> delineationKnown : BOOLEAN [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Feature "SR_MarineExtent" {
-    description = "The extent of a sea area for a given tidal state
+  Feature <<dataType>> "SR_MarineExtent" {
+    * description = "The extent of a sea area for a given tidal state
   
     The expected 2D geometric extent of a SeaArea for a particular tidal state."
-    identifier = "Sea Regions::MarineExtent"
-    tableName = "SR_MarineExtent"
+    * identifier = "Sea Regions::MarineExtent"
+    * tableName = "SR_MarineExtent"
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     waterLevel TEXT CHECK(HY_P_WaterLevelValue)
   }
-  Attributes "SR_MarineContour" {
-    description = "A set of isolines representing the value of some phenomenon at a particular time.
+  Attributes <<featureType>> "SR_MarineContour" {
+    * description = "A set of isolines representing the value of some phenomenon at a particular time.
   
     A representation of any physical or chemical phenomenon related to the SeaArea.  MarineContour should be derived from an OceanGeographicFeature of the same phenomenon.  The source observations used to derive this feature may be linked to via the sourceObservations association. MarineContour is an abstraction of the ‘real world’ to provide an overview of the expected conditions of a SeaArea.  Examples would include salinity contours, depth contours, significant wave height."
-    identifier = "Sea Regions::MarineContour"
-    tableName = "SR_MarineContour"
+    * identifier = "Sea Regions::MarineContour"
+    * tableName = "SR_MarineContour"
     id INTEGER NOT NULL PRIMARY KEY
     phenomenon AbstractObservableProperty NOT NULL
     validTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
@@ -180,117 +186,85 @@ Container <<applicationSchema>>  "Sea Regions" {
     validTime_position_time8601 TEXT
     validTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "SR_SeaAreaTypeClassificationValue" {
-    identifier = "Sea Regions::SeaAreaTypeClassificationValue"
+  Constraint Enum <<codeList>> "SR_SeaAreaTypeClassificationValue" {
+    * identifier = "Sea Regions::SeaAreaTypeClassificationValue"
+  }
+  Relation "SR_Sea_<<missing>>_MaritimeZone" {
+    * profile = "attributes"
+    * tableName = "SR_Sea_<<missing>>_MaritimeZone"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SR_SeaArea_subArea" {
-    profile = "attributes"
-    tableName = "SR_SeaArea_subArea"
+    * profile = "attributes"
+    * tableName = "SR_SeaArea_subArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
   }
   Relation "SR_SeaArea_inspireId" {
-    profile = "attributes"
-    relatedReference = "SR_SeaArea#inspireId"
-    tableName = "SR_SeaArea_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SR_SeaArea#inspireId"
+    * tableName = "SR_SeaArea_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SR_SeaArea_parameterValue" {
-    profile = "attributes"
-    tableName = "SR_SeaArea_parameterValue"
+    * profile = "attributes"
+    * tableName = "SR_SeaArea_parameterValue"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ParameterValuePair(id)
   }
   Relation "SR_SeaArea_extent" {
-    profile = "features"
-    tableName = "SR_SeaArea_extent"
+    * profile = "features"
+    * tableName = "SR_SeaArea_extent"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
   }
   Relation "SR_Shoreline_segment" {
-    profile = "features"
-    tableName = "SR_Shoreline_segment"
+    * profile = "features"
+    * tableName = "SR_Shoreline_segment"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ShoreSegment(id)
   }
-  Relation "SR_MarineContour_sourceObservations" {
-    profile = "attributes"
-    tableName = "SR_MarineContour_sourceObservations"
+  Relation "SR_MarineContour_sourceObservations_ObservationSet" {
+    * profile = "attributes"
+    * tableName = "SR_MarineContour_sourceObservations_ObservationSet"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineContour(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOR_ObservationSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SR_MarineContour_isoline" {
-    profile = "features"
-    tableName = "SR_MarineContour_isoline"
+    * profile = "features"
+    * tableName = "SR_MarineContour_isoline"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineContour(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineIsoline(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container "Temporal Reference System" {
+  * fileName = "Temporal Reference System"
+  Constraint Enum <<enumeration>> "TRS_TM_IndeterminateValue" {
+    * identifier = "Temporal Reference System::TM_IndeterminateValue"
+    after
+    before
+    name
+    now
+    unknow
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Hydro - Physical Waters" {
+  * fileName = "Hydro - Physical Waters"
+  Constraint Enum <<codeList>> "HY_P_ShoreTypeValue" {
+    * identifier = "Hydro - Physical Waters::ShoreTypeValue"
+    boulders
+    clay
+    gravel
+    mud
+    rock
+    sand
+    shingle
+    stone
   }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "OMOR_ObservationSet_member" {
-    profile = "attributes"
-    tableName = "OMOR_ObservationSet_member"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOR_ObservationSet(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
-  }
-  Relation "OMOR_ObservationSet_inspireId" {
-    profile = "attributes"
-    relatedReference = "OMOR_ObservationSet#inspireId"
-    tableName = "OMOR_ObservationSet_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOR_ObservationSet(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "_OM_Observation_relatedObservation" {
-    profile = "attributes"
-    tableName = "_OM_Observation_relatedObservation"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _OM_Observation(id)
-  }
-  Relation "_OM_Observation_parameter" {
-    profile = "attributes"
-    tableName = "_OM_Observation_parameter"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _OM_Observation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_phone" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_phone"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
-  }
-  Relation "GMD_CI_ResponsibleParty_contactInfo_address" {
-    profile = "attributes"
-    relatedReference = "GMD_CI_ResponsibleParty#contactInfo_address"
-    tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
-  }
-  Constraint Enum "HY_P_WaterLevelValue" {
-    identifier = "Hydro - Physical Waters::WaterLevelValue"
+  Constraint Enum <<codeList>> "HY_P_WaterLevelValue" {
+    * identifier = "Hydro - Physical Waters::WaterLevelValue"
     equinoctialSpringLowWater
     highWater
     highWaterSprings
@@ -329,432 +303,129 @@ Container <<applicationSchema>>  "Sea Regions" {
     tropicHigherHighWater
     tropicLowerLowWater
   }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "HY_P_ShoreTypeValue" {
-    identifier = "Hydro - Physical Waters::ShoreTypeValue"
-    boulders
-    clay
-    gravel
-    mud
-    rock
-    sand
-    shingle
-    stone
-  }
-  Constraint Enum "TRS_TM_IndeterminateValue" {
-    identifier = "Temporal Reference System::TM_IndeterminateValue"
-    after
-    before
-    name
-    now
-    unknow
-  }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
-  }
-  Attributes "HY_HydroIdentifier" {
-    description = "A hydrographic thematic identifier.
-  
-    NOTE May be used to hold a national hydrological identification code."
-    identifier = "Hydro - base::HydroIdentifier"
-    tableName = "HY_HydroIdentifier"
-    classificationScheme TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "OMOR_ObservationSet" {
-    description = "Links a set of Observations
-  
-    This class is used to link multiple related Observations together"
-    identifier = "Observation References::ObservationSet"
-    tableName = "OMOR_ObservationSet"
-    extent_description TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Attributes "_OM_Observation" {
-    hasXmlLang = "false#NOTES#Values: true | false
-    Default: false
-    Description: axml attribute xml:lang shall be generated for the type representing the class
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Package <<applicationSchema>> "Observable Properties" {
+  GF_PropertyType <<type>> "AbstractObservableProperty" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    description = "An observation is an act that results in the estimation of the value of a feature property, and involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. Use of a common model allows observation data using different procedures to be combined unambiguously. Observation details are also important for data discovery and for data quality estimation. Observation feature types are defined by the properties that support these applications.
+    <<array>> labels : TEXT [0..1]
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+}
+Container <<applicationSchema>> "Hydro - base" {
+  * fileName = "Hydro - base"
+  Attributes <<dataType>> "HY_HydroIdentifier" {
+    * description = "A hydrographic thematic identifier.
   
-    An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. The result of an observation is an estimate of the value of a property of some feature, so the details of the observation are metadata concerning the value of the feature property. The observation itself is also a feature, since it has properties and identity."
-    identifier = "observation::OM_Observation"
-    tableName = "_OM_Observation"
+    NOTE May be used to hold a national hydrological identification code."
+    * identifier = "Hydro - base::HydroIdentifier"
+    * tableName = "HY_HydroIdentifier"
+    classificationScheme TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    resultTime_position_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    resultTime_position_date8601 DATE
-    resultTime_position_dateTime8601 DATETIME
-    resultTime_position_time8601 TEXT
-    resultTime_position_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    ref featureOfInterest: GFI_Featureinv propertyValueProvider[0..*]
-    ref procedure: OM_Processinv generatedObservation[0..*]
-    ref resultQuality: DQ_Element[0..*]
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
   }
-  Attributes "_NamedValue" {
-    description = "The class <i>NamedValue</i> provides for a generic soft-typed parameter value. NamedValue shall support two attributes."
-    identifier = "observation::NamedValue"
-    tableName = "_NamedValue"
-    id INTEGER NOT NULL PRIMARY KEY
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
+}
+Package "General Feature Model" {
+  Class <<MetaClass>>, <<metaclass>> "GF_PropertyType" {
+    definition : TEXT
+    propertyTypeMetadata MD_Metadata [0..*] as ref
+    rule PF_PortrayalRule [0..*] as ref
+    theGF_FeatureType GF_FeatureType as ref
   }
-  Attributes "GMD_CI_ResponsibleParty" {
-    description = "Identification of, and means of communication with, person(s) and organisations associated with the dataset"
-    identifier = "Citation and responsible party information::CI_ResponsibleParty"
-    tableName = "GMD_CI_ResponsibleParty"
-    contactInfo_address INTEGER
-    contactInfo_contactInstructions TEXT
-    contactInfo_hoursOfService TEXT
-    contactInfo_onlineResource_applicationProfile TEXT
-    contactInfo_onlineResource_description TEXT
-    contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    contactInfo_onlineResource_linkage TEXT
-    contactInfo_onlineResource_name TEXT
-    contactInfo_onlineResource_protocol TEXT
-    contactInfo_phone INTEGER
-    id INTEGER NOT NULL PRIMARY KEY
-    individualName TEXT
-    organisationName TEXT
-    positionName TEXT
-    role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+  Class "GF_InheritanceRelation" {
+    description : TEXT
+    name[0..1] : TEXT
+    uniqueInstance : BOOLEAN
+    subtype GF_FeatureType as ref
+    supertype GF_FeatureType as ref
   }
-  Attributes "GMD_CI_Telephone" {
-    description = "Telephone numbers for contacting the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Telephone"
-    tableName = "GMD_CI_Telephone"
-    facsimiles TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    voices TEXT
+  Class <<metaclass>> "GF_FeatureType" {
+    definition : TEXT
+    isAbstract : BOOLEAN
+    carrierOfCharacteristics GF_PropertyType [0..*] as ref
+    featureTypeMetadata MD_Metadata [0..*] as ref
+    linkBetween GF_AssociationType [0..*] as ref
+    ruleSet PF_FeaturePortrayal [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
   }
-  Attributes "GMD_CI_Address" {
-    description = "Location of the responsible individual or organisation"
-    identifier = "Citation and responsible party information::CI_Address"
-    tableName = "GMD_CI_Address"
-    administrativeArea TEXT
-    city TEXT
-    country TEXT
-    deliveryPoints TEXT
-    electronicMailAddresses TEXT
-    id INTEGER NOT NULL PRIMARY KEY
-    postalCode TEXT
+  Class <<MetaClass>>, <<metaclass>> "GF_Operation" {
+    definition : TEXT
+    signature : TEXT
+    dependsOn GF_AssociationType [0..*] as ref
+    propertyTypeMetadata MD_Metadata [0..*] as ref
+    rule PF_PortrayalRule [0..*] as ref
+    theGF_FeatureType GF_FeatureType as ref
   }
-  Constraint Enum "GMD_CI_OnLineFunctionCode" {
-    identifier = "Citation and responsible party information::CI_OnLineFunctionCode"
-    download
-    information
-    offlineAccess
-    order
-    search
-  }
-  Constraint Enum "GMD_CI_RoleCode" {
-    identifier = "Citation and responsible party information::CI_RoleCode"
-    author
-    custodian
-    distributor
-    originator
-    owner
-    pointOfContact
-    principalInvestigator
-    processor
-    publisher
-    resourceProvider
-    user
-  }
-  Attributes "GMD_PT_Locale" {
-    identifier = "Cultural and linguistic adapdability::PT_Locale"
-    tableName = "GMD_PT_Locale"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
-  }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-  Constraint Enum "BASE2_SimpleCitationType" {
-    CI_Citation
-    DocumentCitation
-    LegislationCitation
-  }
-  Constraint Enum "GMD_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Attributes "BASE2_SimpleCitation" {
-    tableName = "BASE2_SimpleCitation"
-    date DATE
-    id INTEGER NOT NULL PRIMARY KEY
-    level LegislationLevelValue
-    link TEXT
-    name TEXT NOT NULL
-    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-  }
-  Constraint Enum "MI_MD_MaintenanceFrequencyCode" {
-    identifier = "Maintenance information::MD_MaintenanceFrequencyCode"
-    annually
-    asNeeded
-    biannually
-    continual
-    daily
-    fortnightly
-    irregular
-    monthly
-    notPlanned
-    quarterly
-    unknown
-    weekly
-  }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
-  }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-  Attributes "GMD_CI_OnlineResource" {
-    description = "Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained."
-    identifier = "Citation and responsible party information::CI_OnlineResource"
-    tableName = "GMD_CI_OnlineResource"
-    applicationProfile TEXT
-    description TEXT
-    function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    linkage TEXT NOT NULL
-    name TEXT
-    protocol TEXT
-  }
-  Constraint Enum "MI_MD_ScopeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Maintenance information::MD_ScopeCode"
-    attribute
-    attributeType
-    collectionHardware
-    collectionSession
-    dataset
-    dimensionGroup
-    feature
-    featureType
-    fieldSession
-    model
-    nonGeographicDataset
-    propertyType
-    series
-    service
-    software
-    tile
-  }
-  Constraint Enum "MEI_MD_ObligationCode" {
-    identifier = "Metadata extension information::MD_ObligationCode"
-    conditional
-    mandatory
-    optional
-  }
-  Constraint Enum "MEI_MD_DatatypeCode" {
-    identifier = "Metadata extension information::MD_DatatypeCode"
-    abstractClass
-    aggregateClass
-    association
-    characterString
-    class
-    codelist
-    codelistElement
-    datatypeClass
-    enumeration
-    integer
-    interfaceClass
-    metaClass
-    specifiedClass
-    typeClass
-    unionClass
-  }
-  Constraint Enum "GMD_MD_KeywordTypeCode" {
-    identifier = "Identification information::MD_KeywordTypeCode"
-    discipline
-    place
-    stratum
-    temporal
-    theme
-  }
-  Constraint Enum "GMD_DS_AssociationTypeCode" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    identifier = "Identification information::DS_AssociationTypeCode"
-    crossReference
-    largerWorkCitation
-    partOfSeamlessDatabase
-    source
-    stereoMate
-  }
-  Constraint Enum "GMD_DS_InitiativeTypeCode" {
-    identifier = "Identification information::DS_InitiativeTypeCode"
-    campaign
-    collection
-    exercise
-    experiment
-    investigation
-    mission
-    operation
-    platform
-    process
-    program
-    project
-    sensor
-    study
-    task
-    trial
-  }
-  Constraint Enum "DI_MD_MediumNameCode" {
-    identifier = "Distribution information::MD_MediumNameCode"
-    1quarterInchCartridgeTape
-    3480Cartridge
-    3490Cartridge
-    3580Cartridge
-    3halfInchFloppy
-    4mmCartridgeTape
-    5quarterInchFloppy
-    7trackTape
-    8mmCartridgeTape
-    9trackTape
-    cdRom
-    digitalLinearTape
-    dvd
-    dvdRom
-    hardcopy
-    onLine
-    satellite
-    telephoneLink
-  }
-  Constraint Enum "DQE_DQ_EvaluationMethodTypeCode" {
-    identifier = "Data quality evaluation::DQ_EvaluationMethodTypeCode"
-    directExternal
-    directInternal
-    indirect
-  }
-  Constraint Enum "SC_CV_CommonPointRule" {
-    identifier = "Segmented Curve::CV_CommonPointRule"
-    all
-    average
-    end
-    high
-    low
-    start
+  Class <<MetaClass>>, <<metaclass>> "GF_AssociationType" {
+    definition : TEXT
+    isAbstract : BOOLEAN
+    carrierOfCharacteristics GF_PropertyType [0..*] as ref
+    featureTypeMetadata MD_Metadata [0..*] as ref
+    includes GF_FeatureType [1..*] as ref
+    linkBetween GF_AssociationType [0..*] as ref
+    ruleSet PF_FeaturePortrayal [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+    theGF_InheritanceRelation GF_InheritanceRelation [0..*] as ref
+    theGF_Operation GF_Operation [0..*] as ref
   }
 }

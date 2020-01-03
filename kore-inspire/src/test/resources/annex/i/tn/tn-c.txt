@@ -1,165 +1,177 @@
-Container <<applicationSchema>>  "Cable Transport Network" {
-  Constraint Enum "TN_C_CablewayTypeValue" {
-    identifier = "Cable Transport Network::CablewayTypeValue"
+Container <<applicationSchema>> "Cable Transport Network" {
+  * fileName = "Cable Transport Network"
+  Constraint Enum <<codeList>> "TN_C_CablewayTypeValue" {
+    * identifier = "Cable Transport Network::CablewayTypeValue"
     cabinCableCar
     chairLift
     skiTow
   }
-  Attributes "TN_C_CablewayLinkSequence" {
-    description = "An ordered collection of cableway links that are characterized by one or more thematic identifiers and/or properties."
-    identifier = "Cable Transport Network::CablewayLinkSequence"
-    tableName = "TN_C_CablewayLinkSequence"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+  Attributes <<featureType>> "TN_C_CablewayLinkSequence" {
+    * description = "An ordered collection of cableway links that are characterized by one or more thematic identifiers and/or properties."
+    * identifier = "Cable Transport Network::CablewayLinkSequence"
+    * tableName = "TN_C_CablewayLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref link: NET_DirectedLink[1..*]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    link NET_DirectedLink [1..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Attributes "TN_C_CablewayNode" {
-    description = "A point spatial object that is used to represent connectivity between two consecutive cableway links."
-    identifier = "Cable Transport Network::CablewayNode"
-    tableName = "TN_C_CablewayNode"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: POINT
+  Attributes <<featureType>> "TN_C_CablewayNode" {
+    * description = "A point spatial object that is used to represent connectivity between two consecutive cableway links."
+    * identifier = "Cable Transport Network::CablewayNode"
+    * tableName = "TN_C_CablewayNode"
+    geometry : POINT
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref spokeEnd: Link[0..*] inv endNode[0..1]
-    ref spokeStart: Link[0..*] inv startNode[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
+    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
   }
-  Attributes "TN_C_CablewayLinkSet" {
-    description = "A collection of cableway link sequences and or individual cableway links that has a specific function or significance in a cable transport network."
-    identifier = "Cable Transport Network::CablewayLinkSet"
-    tableName = "TN_C_CablewayLinkSet"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
+  Attributes <<featureType>> "TN_C_CablewayLinkSet" {
+    * description = "A collection of cableway link sequences and or individual cableway links that has a specific function or significance in a cable transport network."
+    * identifier = "Cable Transport Network::CablewayLinkSet"
+    * tableName = "TN_C_CablewayLinkSet"
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref post: TN_MarkerPost[0..*] inv route[0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    inspireId BASE_Identifier [0..1] as ref
+    link_GeneralisedLink BASE_Identifier [1..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
-  Attributes "TN_C_CablewayLink" {
-    description = "Linear spatial object that describes the geometry and connectivity of a cable network between two points in a cableway transport network.
+  Attributes <<featureType>> "TN_C_CablewayLink" {
+    * description = "Linear spatial object that describes the geometry and connectivity of a cable network between two points in a cableway transport network.
   
     NOTE Cableway transport is a form of transport based on a cable suspended normally from a set of consecutive towers."
-    identifier = "Cable Transport Network::CablewayLink"
-    tableName = "TN_C_CablewayLink"
-    beginLifespanVersion: DATETIME [0..1]
-    cablewayType TEXT CHECK(TN_C_CablewayTypeValue)
-    centrelineGeometry: CURVE
-    endLifespanVersion: DATETIME [0..1]
-    fictitious: BOOLEAN
+    * identifier = "Cable Transport Network::CablewayLink"
+    * tableName = "TN_C_CablewayLink"
+    centrelineGeometry : CURVE
+    fictitious : BOOLEAN
     id INTEGER NOT NULL PRIMARY KEY
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref endNode: Node[0..1] inv spokeEnd[0..*]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref startNode: Node[0..1] inv spokeStart[0..*]
-    ref ThoroughfareName inv transportLink[0..*]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> cablewayType TEXT CHECK(TN_C_CablewayTypeValue)
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    endNode_Node BASE_Identifier [0..1] as ref
+    inspireId BASE_Identifier [0..1] as ref
+    startNode_Node BASE_Identifier [0..1] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container "basicTypes" {
+  * fileName = "basicTypes"
+  Constraint Enum <<enumeration>>, <<enumeration>> "GML_Sign" {
+    * identifier = "basicTypes::Sign"
+    "+"
+    "-"
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<enumeration>> "BASE2_SimpleCitationType" {
+    CI_Citation
+    DocumentCitation
+    LegislationCitation
   }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+  Attributes <<dataType>> "BASE2_SimpleCitation" {
+    * tableName = "BASE2_SimpleCitation"
+    date DATE
+    id INTEGER NOT NULL PRIMARY KEY
+    level LegislationLevelValue
+    link TEXT
+    name TEXT NOT NULL
+    type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Relation "NET_Network_geographicalName" {
-    profile = "attributes"
-    tableName = "NET_Network_geographicalName"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
-  }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
     spelling_text TEXT NOT NULL
   }
-  Attributes "NET_DirectedLink" {
-    description = "A link either in its positive or negative direction."
-    identifier = "Network::DirectedLink"
-    tableName = "NET_DirectedLink"
+}
+Container <<applicationSchema>> "Network" {
+  * fileName = "Network"
+  Attributes <<dataType>> "NET_DirectedLink" {
+    * description = "A link either in its positive or negative direction."
+    * identifier = "Network::DirectedLink"
+    * tableName = "NET_DirectedLink"
     direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
+    <<reference>> link_Link INTEGER
   }
-  Attributes "NET_Network" {
-    description = "A network is a collection of network elements.
-  
-    The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"
-    identifier = "Network::Network"
-    tableName = "NET_Network"
-    id INTEGER NOT NULL PRIMARY KEY
-    ref elements: NetworkElement[0..*] inv inNetwork[0..*]
+  Relation "NET_DirectedLink_link_Link" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_DirectedLink#link_Link"
+    * tableName = "NET_DirectedLink_link_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
-  Attributes "TN_MarkerPost" {
-    description = "Reference marker placed along a route in a transport network, mostly at regular intervals, indicating the distance from the beginning of the route, or some other reference point, to the point where the marker is located.
-  
-    EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
-    identifier = "Common Transport Elements::MarkerPost"
-    tableName = "TN_MarkerPost"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: POINT
-    id INTEGER NOT NULL PRIMARY KEY
-    location TEXT NOT NULL
-    location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    validFrom: DATETIME [0..1]
-    validTo: DATETIME [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..1]
-    ref inNetwork: NET_Network[0..*] inv elements[0..*]
-    ref inspireId: BASE_Identifier[0..1]
-    ref route: TransportLinkSet[0..1] inv post[0..*]
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "GML_Sign" {
-    identifier = "basicTypes::Sign"
-    "+"
-    "-"
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-  Constraint Enum "GML_UomIdentifier" {}
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
 }
+Package "Location referencing mechanisms" {
+  Class "NodeLocationReference" {
+    node_Node BASE_Identifier as ref
+    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
+  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+  Datatype LegislationLevelValue
+  
+}
+

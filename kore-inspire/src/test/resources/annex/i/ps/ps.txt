@@ -69,7 +69,7 @@ Container <<applicationSchema>>  "Protected Sites Simple" {
   }
   Feature "PS_ProtectedSite" {
     description = "An area designated or managed within a framework of international, Community and Member States' legislation to achieve specific conservation objectives.
-
+  
     Each protected site has a boundary defined through formal, legal or administrative agreements or decisions. The establishment of a protected site is normally underpinned by legislation and thus given weight in decisions about land use change and spatial planning. Each Site is normally selected as a representative example of a wider resource and selected through a formal criterion based approach. A protected site can be a contiguous extent of land/sea or a collection of discrete areas that together represent a single formal Protected Site.  This class has the attributes, constraints and associations that are part of the Simple application schema."
     identifier = "Protected Sites Simple::ProtectedSite"
     tableName = "PS_ProtectedSite"
@@ -161,11 +161,11 @@ Container <<applicationSchema>>  "Protected Sites Simple" {
   }
   Attributes "BASE_Identifier" {
     description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-
+  
     NOTE1 External object identifiers are distinct from thematic object identifiers.
-
+  
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-
+  
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
     identifier = "Base Types::Identifier"
     tableName = "BASE_Identifier"
@@ -190,9 +190,9 @@ Container <<applicationSchema>>  "Protected Sites Simple" {
   }
   Attributes "GN_SpellingOfName" {
     description = "Proper way of writing a name.
-
+  
     SOURCE Adapted from [UNGEGN Manual 2006].
-
+  
     NOTE Proper spelling means the writing of a name with the correct capitalisation and the correct letters and diacritics present in an accepted standard order."
     identifier = "Geographical Names::SpellingOfName"
     tableName = "GN_SpellingOfName"

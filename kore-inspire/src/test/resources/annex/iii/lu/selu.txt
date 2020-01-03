@@ -1,103 +1,114 @@
-Container <<applicationSchema>>  "Sampled Land Use" {
-  Feature "SELU_SampledExistingLandUseDataSet" {
-    description = "A sampled existing land use data set is a collection of locations for which information on existing (present or past) land uses is provided."
-    identifier = "Sampled Land Use::SampledExistingLandUseDataSet"
-    tableName = "SELU_SampledExistingLandUseDataSet"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+Container <<applicationSchema>> "Sampled Land Use" {
+  * fileName = "Sampled Land Use"
+  Feature <<featureType>> "SELU_SampledExistingLandUseDataSet" {
+    * description = "A sampled existing land use data set is a collection of locations for which information on existing (present or past) land uses is provided."
+    * identifier = "Sampled Land Use::SampledExistingLandUseDataSet"
+    * tableName = "SELU_SampledExistingLandUseDataSet"
     extent MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     name TEXT NOT NULL
-    validFrom DATE
-    validTo DATE
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> validFrom DATE
+    <<voidable>> validTo DATE
   }
-  Feature "SELU_ExistingLandUseSample" {
-    description = "Description of the existing land use that is present at the specific location."
-    identifier = "Sampled Land Use::ExistingLandUseSample"
-    tableName = "SELU_ExistingLandUseSample"
-    beginLifespanVersion DATETIME
-    dataset INTEGER
-    endLifespanVersion DATETIME
-    hilucsLandUses TEXT NOT NULL
-    hilucsPresence_orderedList TEXT CHECK(LUNOM_HILUCSValue)
+  Feature <<featureType>> "SELU_ExistingLandUseSample" {
+    * description = "Description of the existing land use that is present at the specific location."
+    * identifier = "Sampled Land Use::ExistingLandUseSample"
+    * tableName = "SELU_ExistingLandUseSample"
     hilucsPresence_percentageList_hilucsValue TEXT CHECK(LUNOM_HILUCSValue)
     hilucsPresence_percentageList_percentage INTEGER
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     location POINT NOT NULL
-    observationDate DATE
-    specificLandUses TEXT
-    specificPresence_orderedList TEXT CHECK(LUNOM_LandUseClassificationValue)
     specificPresence_percentageList_percentage INTEGER
     specificPresence_percentageList_specificValue TEXT CHECK(LUNOM_LandUseClassificationValue)
-    validFrom DATE
-    validTo DATE
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<array>> specificLandUses TEXT
+    <<reference>> dataset INTEGER
+    <<array>> hilucsLandUses TEXT NOT NULL
+    <<voidable>> hilucsPresence_orderedList TEXT CHECK(LUNOM_HILUCSValue)
+    <<reference>> inspireId INTEGER
+    <<voidable>> observationDate DATE
+    <<voidable>> specificPresence_orderedList TEXT CHECK(LUNOM_LandUseClassificationValue)
+    <<voidable>> validFrom DATE
+    <<voidable>> validTo DATE
   }
   Relation "SELU_SampledExistingLandUseDataSet_inspireId" {
-    profile = "attributes"
-    relatedReference = "SELU_SampledExistingLandUseDataSet#inspireId"
-    tableName = "SELU_SampledExistingLandUseDataSet_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SELU_SampledExistingLandUseDataSet#inspireId"
+    * tableName = "SELU_SampledExistingLandUseDataSet_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SELU_SampledExistingLandUseDataSet(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SELU_ExistingLandUseSample_dataset" {
-    profile = "features"
-    relatedReference = "SELU_ExistingLandUseSample#dataset"
-    tableName = "SELU_ExistingLandUseSample_dataset"
+    * profile = "features"
+    * relatedReference = "attribute SELU_ExistingLandUseSample#dataset"
+    * tableName = "SELU_ExistingLandUseSample_dataset"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SELU_ExistingLandUseSample(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SELU_SampledExistingLandUseDataSet(id)
   }
   Relation "SELU_ExistingLandUseSample_inspireId" {
-    profile = "attributes"
-    relatedReference = "SELU_ExistingLandUseSample#inspireId"
-    tableName = "SELU_ExistingLandUseSample_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute SELU_ExistingLandUseSample#inspireId"
+    * tableName = "SELU_ExistingLandUseSample_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SELU_ExistingLandUseSample(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Land Use Nomenclature" {
+  * fileName = "Land Use Nomenclature"
+  Constraint Enum <<codeList>> "LUNOM_HILUCSValue" {
+    * identifier = "Land Use Nomenclature::HILUCSValue"
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+  Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
+    * identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "LUNOM_HILUCSValue" {
-    identifier = "Land Use Nomenclature::HILUCSValue"
-  }
-  Constraint Enum "LUNOM_LandUseClassificationValue" {
-    identifier = "Land Use Nomenclature::LandUseClassificationValue"
-  }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
   
     NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
   
     NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+

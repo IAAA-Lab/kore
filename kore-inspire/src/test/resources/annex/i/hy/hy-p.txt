@@ -1,176 +1,184 @@
-Container <<applicationSchema>>  "Hydro - Physical Waters" {
-  Feature "HY_P_Shore" {
-    description = "The narrow strip of land in immediate contact with any body of water including the area between high and low water lines.
+Container <<applicationSchema>> "Hydro - Physical Waters" {
+  * fileName = "Hydro - Physical Waters"
+  Feature <<featureType>> "HY_P_Shore" {
+    * description = "The narrow strip of land in immediate contact with any body of water including the area between high and low water lines.
   
     SOURCE [IHO S-32].
   
     NOTE Regarded as a candidate spatial object in Annex II theme 'Land cover' due to unconsolidated shore inclusion in coastal land-cover classificaction schemes."
-    identifier = "Hydro - Physical Waters::Shore"
-    tableName = "HY_P_Shore"
-    beginLifespanVersion DATETIME
-    composition TEXT CHECK(HY_P_ShoreTypeValue)
-    delineationKnown BOOLEAN
-    endLifespanVersion DATETIME
+    * identifier = "Hydro - Physical Waters::Shore"
+    * tableName = "HY_P_Shore"
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> composition TEXT CHECK(HY_P_ShoreTypeValue)
+    <<voidable>> delineationKnown BOOLEAN
+    <<reference>> inspireId INTEGER
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_WidthRange" {
-    description = "The range of a watercourse's horizontal width along its length."
-    identifier = "Hydro - Physical Waters::WidthRange"
-    tableName = "HY_P_WidthRange"
+  Attributes <<dataType>> "HY_P_WidthRange" {
+    * description = "The range of a watercourse's horizontal width along its length."
+    * identifier = "Hydro - Physical Waters::WidthRange"
+    * tableName = "HY_P_WidthRange"
     id INTEGER NOT NULL PRIMARY KEY
     lower TEXT NOT NULL
     lower_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     upper TEXT NOT NULL
     upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Class "HydroPointOfInterest" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+  Class <<featureType>> "HydroPointOfInterest" {
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_Crossing" {
-    description = "A man-made object allowing the passage of water above or below an obstacle.
+  Attributes <<featureType>> "HY_P_Crossing" {
+    * description = "A man-made object allowing the passage of water above or below an obstacle.
   
     EXAMPLE Aqueduct, bridge, culvert, siphon."
-    identifier = "Hydro - Physical Waters::Crossing"
-    tableName = "HY_P_Crossing"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::Crossing"
+    * tableName = "HY_P_Crossing"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    type TEXT CHECK(HY_P_CrossingTypeValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    <<voidable>> type TEXT CHECK(HY_P_CrossingTypeValue)
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_Lock" {
-    description = "An enclosure with a pair or series of gates used for raising or lowering vessels as they pass from one water level to another.
+  Attributes <<featureType>> "HY_P_Lock" {
+    * description = "An enclosure with a pair or series of gates used for raising or lowering vessels as they pass from one water level to another.
   
     SOURCE [DFDD]."
-    identifier = "Hydro - Physical Waters::Lock"
-    tableName = "HY_P_Lock"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::Lock"
+    * tableName = "HY_P_Lock"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_ShorelineConstruction" {
-    description = "An artificial structure attached to land bordering a body of water and fixed in position.
+  Attributes <<featureType>> "HY_P_ShorelineConstruction" {
+    * description = "An artificial structure attached to land bordering a body of water and fixed in position.
   
     SOURCE [DFDD].
   
     NOTE 1 It is usually fixed to the waterbody bottom (for example: a mole) but may occasionally be fixed in position (for example: attached to the shore at one end and held between pilings at the other) but floating. Shoreline constructions are normally used for berthing and/or protection.
   
     NOTE 2 Includes breakwater/groyne/wharf; but has more flexibility - also applies to inland waters."
-    identifier = "Hydro - Physical Waters::ShorelineConstruction"
-    tableName = "HY_P_ShorelineConstruction"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::ShorelineConstruction"
+    * tableName = "HY_P_ShorelineConstruction"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Class "SurfaceWater" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    localType_characterSetCode: TEXT [0..1]
-    localType_country: TEXT [0..1]
-    localType_languageCode: TEXT [0..1]
-    localType_text: TEXT [0..1]
-    origin: TEXT [0..1]
-    persistence: TEXT [0..1]
-    tidal: BOOLEAN [0..1]
-    ref drainsBasin: HY_P_DrainageBasin[0..*] inv outlet[0..*]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+  Class <<featureType>> "SurfaceWater" {
+    geometry : GEOMETRY
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    localType_characterSetCode : TEXT [0..1]
+    localType_country : TEXT [0..1]
+    localType_languageCode : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localType_text : TEXT [0..1]
+    <<voidable>> origin : TEXT [0..1]
+    <<voidable>> persistence : TEXT [0..1]
+    <<voidable>> tidal : BOOLEAN [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Feature "HY_P_LandWaterBoundary" {
-    description = "The line where a land mass is in contact with a body of water.
+  Feature <<featureType>> "HY_P_LandWaterBoundary" {
+    * description = "The line where a land mass is in contact with a body of water.
   
     SOURCE [DFDD].
   
     NOTE The plane of reference for the land-water boundary should be a high water datum, such as 'Mean High Water Springs', 'High Water' or 'Mean Higher High Water'. Where there is little appreciable change in waterlevels / tide at the adjacent shore, then 'Mean Sea Level' or 'Local Datum' may be used."
-    identifier = "Hydro - Physical Waters::LandWaterBoundary"
-    tableName = "HY_P_LandWaterBoundary"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Hydro - Physical Waters::LandWaterBoundary"
+    * tableName = "HY_P_LandWaterBoundary"
     geometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    origin TEXT CHECK(HY_P_OriginValue)
-    waterLevelCategory TEXT CHECK(HY_P_WaterLevelValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
+    <<voidable>> waterLevelCategory TEXT CHECK(HY_P_WaterLevelValue)
   }
-  Attributes "HY_P_Watercourse" {
-    description = "A natural or man-made flowing watercourse or stream.
+  Attributes <<featureType>> "HY_P_Watercourse" {
+    * description = "A natural or man-made flowing watercourse or stream.
   
     SOURCE [EuroRegionalMap]."
-    identifier = "Hydro - Physical Waters::Watercourse"
-    tableName = "HY_P_Watercourse"
-    beginLifespanVersion: DATETIME [0..1]
-    condition TEXT CHECK(BASE_ConditionOfFacilityValue)
-    delineationKnown BOOLEAN
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY
+    * identifier = "Hydro - Physical Waters::Watercourse"
+    * tableName = "HY_P_Watercourse"
+    geometry : GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    length TEXT
-    length_uom TEXT CHECK(GML_UomIdentifier)
-    level TEXT CHECK(BASE_VerticalPositionValue)
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    localType_characterSetCode: TEXT [0..1]
-    localType_country: TEXT [0..1]
-    localType_languageCode: TEXT [0..1]
-    localType_text: TEXT [0..1]
-    origin: TEXT [0..1]
-    persistence: TEXT [0..1]
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    localType_characterSetCode : TEXT [0..1]
+    localType_country : TEXT [0..1]
+    localType_languageCode : TEXT [0..1]
     streamOrder_order TEXT
     streamOrder_orderScheme TEXT
     streamOrder_scope TEXT
-    tidal: BOOLEAN [0..1]
     width_lower TEXT NOT NULL
     width_lower_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     width_upper TEXT NOT NULL
     width_upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    ref drainsBasin: HY_P_DrainageBasin[0..*] inv outlet[0..*]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> delineationKnown BOOLEAN
+    <<voidable>> length TEXT
+    <<voidable>> length_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> level TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> localType_text : TEXT [0..1]
+    <<voidable>> origin : TEXT [0..1]
+    <<voidable>> persistence : TEXT [0..1]
+    <<voidable>> tidal : BOOLEAN [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Constraint Enum "HY_P_ShoreTypeValue" {
-    identifier = "Hydro - Physical Waters::ShoreTypeValue"
+  Constraint Enum <<codeList>> "HY_P_ShoreTypeValue" {
+    * identifier = "Hydro - Physical Waters::ShoreTypeValue"
     boulders
     clay
     gravel
@@ -180,195 +188,204 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     shingle
     stone
   }
-  Attributes "HY_P_RiverBasin" {
-    description = "The area of land from which all surface run-off flows through a sequence of streams, rivers and, possibly, lakes into the sea at a single river mouth, estuary or delta.
+  Attributes <<featureType>> "HY_P_RiverBasin" {
+    * description = "The area of land from which all surface run-off flows through a sequence of streams, rivers and, possibly, lakes into the sea at a single river mouth, estuary or delta.
   
     SOURCE [2000/60/EC Art. 2(13)]."
-    identifier = "Hydro - Physical Waters::RiverBasin"
-    tableName = "HY_P_RiverBasin"
-    area TEXT
-    area_uom TEXT CHECK(GML_UomIdentifier)
+    * identifier = "Hydro - Physical Waters::RiverBasin"
+    * tableName = "HY_P_RiverBasin"
     basinOrder_order TEXT
     basinOrder_orderScheme TEXT
     basinOrder_scope TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    origin TEXT CHECK(HY_P_OriginValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref outlet: SurfaceWater[0..*] inv drainsBasin[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> area TEXT
+    <<voidable>> area_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
+    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
+    <<voidable>> outlet SurfaceWater [0..*] as ref
   }
-  Feature "HY_P_Wetland" {
-    description = "A poorly drained or periodically flooded area where the soil is saturated with water, and vegetation is supported.
+  Feature <<featureType>> "HY_P_Wetland" {
+    * description = "A poorly drained or periodically flooded area where the soil is saturated with water, and vegetation is supported.
   
     SOURCE [EuroRegionalMap].
   
     EXAMPLE Marsh/swamp, bog/moor.
   
     NOTE Regarded as a candidate spatial object in Annex II theme 'Land cover' due to explicit mention in 2007/2/EC Ann. II 2."
-    identifier = "Hydro - Physical Waters::Wetland"
-    tableName = "HY_P_Wetland"
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
+    * identifier = "Hydro - Physical Waters::Wetland"
+    * tableName = "HY_P_Wetland"
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
     localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
     localType_country TEXT CHECK(GMD_CountryCode)
     localType_languageCode TEXT CHECK(GMD_LanguageCode)
-    localType_text TEXT
-    tidal BOOLEAN
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> localType_text TEXT
+    <<voidable>> tidal BOOLEAN
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_Sluice" {
-    description = "An open, inclined conduit fitted with a gate for regulating water flow.
+  Attributes <<featureType>> "HY_P_Sluice" {
+    * description = "An open, inclined conduit fitted with a gate for regulating water flow.
   
     SOURCE [DFDD]."
-    identifier = "Hydro - Physical Waters::Sluice"
-    tableName = "HY_P_Sluice"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::Sluice"
+    * tableName = "HY_P_Sluice"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_Ford" {
-    description = "A shallow part of a watercourse used as a road crossing.
+  Attributes <<featureType>> "HY_P_Ford" {
+    * description = "A shallow part of a watercourse used as a road crossing.
   
     SOURCE [DFDD]."
-    identifier = "Hydro - Physical Waters::Ford"
-    tableName = "HY_P_Ford"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::Ford"
+    * tableName = "HY_P_Ford"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Class "FluvialPoint" {
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+  Class <<featureType>> "FluvialPoint" {
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Class "ManMadeObject" {
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+  Class <<featureType>> "ManMadeObject" {
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_Embankment" {
-    description = "A man-made raised long mound of earth or other material.
+  Attributes <<featureType>> "HY_P_Embankment" {
+    * description = "A man-made raised long mound of earth or other material.
   
     SOURCE [DFDD].
   
     NOTE 1 Includes retaining walls, harbours, dikes.
   
     NOTE 2 Regarded as a candidate spatial object in Annex III theme 'Natural risk zones' due to its role in limiting flooding."
-    identifier = "Hydro - Physical Waters::Embankment"
-    tableName = "HY_P_Embankment"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::Embankment"
+    * tableName = "HY_P_Embankment"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_Rapids" {
-    description = "Portions of a stream with accelerated current where it descends rapidly but without a break in the slope of the bed sufficient to form a waterfall.
+  Attributes <<featureType>> "HY_P_Rapids" {
+    * description = "Portions of a stream with accelerated current where it descends rapidly but without a break in the slope of the bed sufficient to form a waterfall.
   
     SOURCE [DFDD]."
-    identifier = "Hydro - Physical Waters::Rapids"
-    tableName = "HY_P_Rapids"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::Rapids"
+    * tableName = "HY_P_Rapids"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Constraint Enum "HY_P_OriginValue" {
-    identifier = "Hydro - Physical Waters::OriginValue"
+  Constraint Enum <<enumeration>> "HY_P_OriginValue" {
+    * identifier = "Hydro - Physical Waters::OriginValue"
     manMade
     natural
   }
-  Constraint Enum "HY_P_CrossingTypeValue" {
-    identifier = "Hydro - Physical Waters::CrossingTypeValue"
+  Constraint Enum <<codeList>> "HY_P_CrossingTypeValue" {
+    * identifier = "Hydro - Physical Waters::CrossingTypeValue"
     aqueduct
     bridge
     culvert
     siphon
   }
-  Attributes "HY_P_StandingWater" {
-    description = "A body of water that is entirely surrounded by land.
+  Attributes <<featureType>> "HY_P_StandingWater" {
+    * description = "A body of water that is entirely surrounded by land.
   
     SOURCE [DFDD].
   
     NOTE It may occur in a natural terrain depression in which water collects, or may be impounded by a dam, or formed by its bed being hollowed out of the soil, or formed by embanking and/or damming up a natural hollow (for example: by a beaver dam). It may be connected to inflowing / outflowing watercourses or other standing waters."
-    identifier = "Hydro - Physical Waters::StandingWater"
-    tableName = "HY_P_StandingWater"
-    beginLifespanVersion: DATETIME [0..1]
-    elevation TEXT
-    elevation_uom TEXT CHECK(GML_UomIdentifier)
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY
+    * identifier = "Hydro - Physical Waters::StandingWater"
+    * tableName = "HY_P_StandingWater"
+    geometry : GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    localType_characterSetCode: TEXT [0..1]
-    localType_country: TEXT [0..1]
-    localType_languageCode: TEXT [0..1]
-    localType_text: TEXT [0..1]
-    meanDepth TEXT
-    meanDepth_uom TEXT CHECK(GML_UomIdentifier)
-    origin: TEXT [0..1]
-    persistence: TEXT [0..1]
-    surfaceArea TEXT
-    surfaceArea_uom TEXT CHECK(GML_UomIdentifier)
-    tidal: BOOLEAN [0..1]
-    ref drainsBasin: HY_P_DrainageBasin[0..*] inv outlet[0..*]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    localType_characterSetCode : TEXT [0..1]
+    localType_country : TEXT [0..1]
+    localType_languageCode : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> elevation TEXT
+    <<voidable>> elevation_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> localType_text : TEXT [0..1]
+    <<voidable>> meanDepth TEXT
+    <<voidable>> meanDepth_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> origin : TEXT [0..1]
+    <<voidable>> persistence : TEXT [0..1]
+    <<voidable>> surfaceArea TEXT
+    <<voidable>> surfaceArea_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> tidal : BOOLEAN [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Constraint Enum "HY_P_WaterLevelValue" {
-    identifier = "Hydro - Physical Waters::WaterLevelValue"
+  Constraint Enum <<codeList>> "HY_P_WaterLevelValue" {
+    * identifier = "Hydro - Physical Waters::WaterLevelValue"
     equinoctialSpringLowWater
     highWater
     highWaterSprings
@@ -407,56 +424,58 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     tropicHigherHighWater
     tropicLowerLowWater
   }
-  Attributes "HY_P_Falls" {
-    description = "A vertically descending part of a watercourse where it falls from a height.
+  Attributes <<featureType>> "HY_P_Falls" {
+    * description = "A vertically descending part of a watercourse where it falls from a height.
   
     SOURCE [Based on DFDD].
   
     EXAMPLE Waterfalls over a rock or a precipice."
-    identifier = "Hydro - Physical Waters::Falls"
-    tableName = "HY_P_Falls"
-    beginLifespanVersion: DATETIME [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
-    height TEXT
-    height_uom TEXT CHECK(GML_UomIdentifier)
+    * identifier = "Hydro - Physical Waters::Falls"
+    * tableName = "HY_P_Falls"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    <<voidable>> height TEXT
+    <<voidable>> height_uom TEXT CHECK(GML_UomIdentifier)
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_DamOrWeir" {
-    description = "A permanent barrier across a watercourse used to impound water or to control its flow.
+  Attributes <<featureType>> "HY_P_DamOrWeir" {
+    * description = "A permanent barrier across a watercourse used to impound water or to control its flow.
   
     SOURCE [EuroRegionalMap]."
-    identifier = "Hydro - Physical Waters::DamOrWeir"
-    tableName = "HY_P_DamOrWeir"
-    beginLifespanVersion: DATETIME [0..1]
-    condition: TEXT [0..1]
-    endLifespanVersion: DATETIME [0..1]
-    geometry: GEOMETRY [0..1]
+    * identifier = "Hydro - Physical Waters::DamOrWeir"
+    * tableName = "HY_P_DamOrWeir"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance: TEXT [0..1]
-    levelOfDetail_distance_uom: TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator: INTEGER [0..1]
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref inspireId: BASE_Identifier
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
+    inspireId BASE_Identifier as ref
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Attributes "HY_P_HydroOrderCode" {
-    description = "A hydrologically meaningful 'order code' for ordering hierarchies of watercourses and drainage basins."
-    identifier = "Hydro - Physical Waters::HydroOrderCode"
-    tableName = "HY_P_HydroOrderCode"
+  Attributes <<dataType>> "HY_P_HydroOrderCode" {
+    * description = "A hydrologically meaningful 'order code' for ordering hierarchies of watercourses and drainage basins."
+    * identifier = "Hydro - Physical Waters::HydroOrderCode"
+    * tableName = "HY_P_HydroOrderCode"
     id INTEGER NOT NULL PRIMARY KEY
     order TEXT NOT NULL
     orderScheme TEXT NOT NULL
     scope TEXT NOT NULL
   }
-  Feature "HY_P_DrainageBasin" {
-    description = "Area having a common outlet for its surface runoff.
+  Feature <<featureType>> "HY_P_DrainageBasin" {
+    * description = "Area having a common outlet for its surface runoff.
   
     SOURCE [UNESCO/WMO International Glossary of Hydrology].
   
@@ -465,99 +484,126 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     NOTE 2 The outlet of a drainage basin may be a canal or a lake.
   
     NOTE 3 Synonyms for drainage basin include: catchment; catchment area; drainage area; river basin; watershed."
-    identifier = "Hydro - Physical Waters::DrainageBasin"
-    tableName = "HY_P_DrainageBasin"
-    area TEXT
-    area_uom TEXT CHECK(GML_UomIdentifier)
+    * identifier = "Hydro - Physical Waters::DrainageBasin"
+    * tableName = "HY_P_DrainageBasin"
     basinOrder_order TEXT
     basinOrder_orderScheme TEXT
     basinOrder_scope TEXT
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    origin TEXT CHECK(HY_P_OriginValue)
-    ref geographicalName: BASE2_SimpleGeographicalName[0..*]
-    ref hydroId: HY_HydroIdentifier[0..*]
-    ref outlet: SurfaceWater[0..*] inv drainsBasin[0..*]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> area TEXT
+    <<voidable>> area_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
+    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
+    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
+    <<voidable>> outlet SurfaceWater [0..*] as ref
   }
-  Constraint Enum "HY_P_HydrologicalPersistenceValue" {
-    identifier = "Hydro - Physical Waters::HydrologicalPersistenceValue"
+  Constraint Enum <<codeList>> "HY_P_HydrologicalPersistenceValue" {
+    * identifier = "Hydro - Physical Waters::HydrologicalPersistenceValue"
     dry
     ephemeral
     intermittent
     perennial
   }
   Relation "HY_P_Shore_inspireId" {
-    profile = "attributes"
-    relatedReference = "HY_P_Shore#inspireId"
-    tableName = "HY_P_Shore_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Shore#inspireId"
+    * tableName = "HY_P_Shore_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Shore(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "HY_P_LandWaterBoundary_inspireId" {
-    profile = "attributes"
-    relatedReference = "HY_P_LandWaterBoundary#inspireId"
-    tableName = "HY_P_LandWaterBoundary_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_LandWaterBoundary#inspireId"
+    * tableName = "HY_P_LandWaterBoundary_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_LandWaterBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "HY_P_DrainageBasin_containsBasin" {
-    profile = "features"
-    tableName = "HY_P_DrainageBasin_containsBasin"
+    * profile = "features"
+    * tableName = "HY_P_DrainageBasin_containsBasin"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
   }
   Relation "HY_P_DrainageBasin_inspireId" {
-    profile = "attributes"
-    relatedReference = "HY_P_DrainageBasin#inspireId"
-    tableName = "HY_P_DrainageBasin_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_DrainageBasin#inspireId"
+    * tableName = "HY_P_DrainageBasin_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "HY_P_Wetland_inspireId" {
-    profile = "attributes"
-    relatedReference = "HY_P_Wetland#inspireId"
-    tableName = "HY_P_Wetland_inspireId"
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Wetland#inspireId"
+    * tableName = "HY_P_Wetland_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+}
+Container <<applicationSchema>> "Base Types" {
+  * fileName = "Base Types"
+  Constraint Enum <<enumeration>> "BASE_VerticalPositionValue" {
+    * identifier = "Base Types::VerticalPositionValue"
+    onGroundSurface
+    suspendedOrElevated
+    underground
   }
-  Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-  Constraint Enum "BASE_ConditionOfFacilityValue" {
-    identifier = "Base Types::ConditionOfFacilityValue"
+  Constraint Enum <<codeList>> "BASE_ConditionOfFacilityValue" {
+    * identifier = "Base Types::ConditionOfFacilityValue"
     decommissioned
     disused
     functional
     projected
     underConstruction
   }
-  Constraint Enum "GMD_LanguageCode" {
-    identifier = "ISO 00639 Language Codes::LanguageCode"
+  Attributes <<dataType>> "BASE_Identifier" {
+    * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
+  
+    NOTE1 External object identifiers are distinct from thematic object identifiers.
+  
+    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
+  
+    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
+    * identifier = "Base Types::Identifier"
+    * tableName = "BASE_Identifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
+  }
+  Metadata "Unknown" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Unpopulated" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+  Metadata "Withheld" {
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
+  }
+}
+Container "ISO 00639 Language Codes" {
+  * fileName = "ISO 00639 Language Codes"
+  Constraint Enum <<codeList>> "GMD_LanguageCode" {
+    * identifier = "ISO 00639 Language Codes::LanguageCode"
     Afrikaans
     Albanian
     Arabic
@@ -603,11 +649,17 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     Turkish
     Ukranian
   }
-  Constraint Enum "GMD_CountryCode" {
-    identifier = "ISO 03166 Country Codes::CountryCode"
+}
+Container "ISO 03166 Country Codes" {
+  * fileName = "ISO 03166 Country Codes"
+  Constraint Enum <<codeList>> "GMD_CountryCode" {
+    * identifier = "ISO 03166 Country Codes::CountryCode"
   }
-  Constraint Enum "GMD_MD_CharacterSetCode" {
-    identifier = "Identification information::MD_CharacterSetCode"
+}
+Container "Identification information" {
+  * fileName = "Identification information"
+  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
+    * identifier = "Identification information::MD_CharacterSetCode"
     (reservedforfutureuse)
     8859part1
     8859part10
@@ -638,42 +690,35 @@ Container <<applicationSchema>>  "Hydro - Physical Waters" {
     utf7
     utf8
   }
-  Constraint Enum "BASE_VerticalPositionValue" {
-    identifier = "Base Types::VerticalPositionValue"
-    onGroundSurface
-    suspendedOrElevated
-    underground
-  }
-  Attributes "BASE2_SimpleGeographicalName" {
-    tableName = "BASE2_SimpleGeographicalName"
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT
     spelling_text TEXT NOT NULL
   }
-  Attributes "HY_HydroIdentifier" {
-    description = "A hydrographic thematic identifier.
+}
+Container <<applicationSchema>> "Hydro - base" {
+  * fileName = "Hydro - base"
+  Attributes <<dataType>> "HY_HydroIdentifier" {
+    * description = "A hydrographic thematic identifier.
   
     NOTE May be used to hold a national hydrological identification code."
-    identifier = "Hydro - base::HydroIdentifier"
-    tableName = "HY_HydroIdentifier"
+    * identifier = "Hydro - base::HydroIdentifier"
+    * tableName = "HY_HydroIdentifier"
     classificationScheme TEXT
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
   }
-  Attributes "BASE_Identifier" {
-    description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
-  
-    NOTE1 External object identifiers are distinct from thematic object identifiers.
-  
-    NOTE 2 The voidable version identifier attribute is not part of the unique identifier of a spatial object and may be used to distinguish two versions of the same spatial object.
-  
-    NOTE 3 The unique identifier will not change during the life-time of a spatial object."
-    identifier = "Base Types::Identifier"
-    tableName = "BASE_Identifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    localId TEXT NOT NULL
-    namespace TEXT NOT NULL
-    versionId TEXT
-  }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

@@ -2,15 +2,11 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.KoreAttribute
-import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreObject
-import es.iaaa.kore.findTaggedValue
+import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.addAttributeWhen
 import es.iaaa.kore.transform.rules.patch
-import es.iaaa.kore.transform.rules.removeRefinements
 import es.iaaa.kore.transform.rules.removeTags
 
 val `add geopackage primary column`: Transform = { _, _ ->
@@ -55,14 +51,15 @@ private fun processText(text: String): String {
     }.filter { it.isNotBlank() }.joinToString("\n\n")
 }
 
-val `move to the selected package`: Transform = { conversion, _ ->
-    patch(predicate = conversion.input.selector.get()) {
+val `mark containers`: Transform = { conversion, _ ->
+
+    val potentialItems by lazy {
+        conversion.model.allRelevantContent().filterIsInstance<KoreClass>().filter { it.isStorable() }
+    }
+
+    patch<KorePackage>(predicate = { classifiers.intersect(potentialItems).isNotEmpty() }, global = true) {
         metaClass = Container
         fileName = name
-        conversion.model.allRelevantContent()
-            .filterIsInstance<KoreClass>()
-            .filter { it.isMoveable() }
-            .forEach { it.container = this }
     }
 }
 
@@ -94,22 +91,6 @@ val `remove unused tags`: Transform = { _, _ ->
     )
 }
 
-/**
- * Cleanup: remove stereotypes.
- */
-val `remove stereotypes`: Transform = { _, _ ->
-    removeRefinements(
-        listOf(
-            "voidable",
-            "lifeCycleInfo",
-            "dataType",
-            "enumeration",
-            "featureType",
-            "codeList"
-        )
-    )
-}
-
 val `audit`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = {
         !GpkgDataType.isInstance(type) &&
@@ -119,16 +100,15 @@ val `audit`: Transform = { _, _ ->
     }
 }
 
-private fun KoreClass?.isMoveable(): Boolean =
+private fun KoreClass?.isStorable(): Boolean =
     isFeaturesTable() || isAttributesTable() || isRelationTable() || isEnumConstraint()
 
 val `After rules`: List<Transform> = listOf(
     `add geopackage primary column`,
     `copy documentation to column description`,
     `copy documentation to table description`,
-    `move to the selected package`,
+    `mark containers`,
     `remove dangling references`,
     `remove unused tags`,
-    `remove stereotypes`,
     `audit`
 )

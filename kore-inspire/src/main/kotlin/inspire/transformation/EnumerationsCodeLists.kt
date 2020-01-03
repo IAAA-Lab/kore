@@ -28,7 +28,7 @@ val `Enumerations and codelists`: List<Transform> = listOf(
 
 private fun processLists(
     target: String
-): Transform = { _, options ->
+): Transform = { conversion, options ->
     val withDescription = options["description"] == true
     val patched = mutableListOf<KoreClass>()
     patch<KoreClass>(predicate = { references(target) }) {
@@ -43,6 +43,7 @@ private fun processLists(
             }
         }
         patched.add(this)
+        conversion.track(this)
     }
     setTypeWhen(TextType(), predicate = {
         it.type in patched
@@ -51,5 +52,6 @@ private fun processLists(
         if (type is KoreClass) {
             it.geoPackageSpec().add(type)
         }
+        conversion.track(it)
     })
 }

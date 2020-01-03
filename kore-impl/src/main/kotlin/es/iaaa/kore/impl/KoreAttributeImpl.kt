@@ -20,5 +20,7 @@ import es.iaaa.kore.KoreAttribute
 /**
  * A representation of the model object **Attribute**.
  */
-internal open class KoreAttributeImpl : KoreStructuralFeatureImpl(), KoreAttribute
+internal open class KoreAttributeImpl : KoreStructuralFeatureImpl(), KoreAttribute {
+    override fun toString(): String = "attribute ${containingClass?.name}#$name"
+}
 

@@ -1,19 +1,20 @@
-Container <<applicationSchema>>  "Energy Resources Base" {
-  Attributes "ER_B_VerticalExtentType" {
-    description = "Vertical dimensional property consisting of an absolute measure or range of measures referenced to a well-defined vertical reference level which is commonly taken as origin (ground level, mean sea level, etc.)."
-    identifier = "Energy Resources Base::VerticalExtentType"
-    tableName = "ER_B_VerticalExtentType"
+Container <<applicationSchema>> "Energy Resources Base" {
+  * fileName = "Energy Resources Base"
+  Attributes <<dataType>> "ER_B_VerticalExtentType" {
+    * description = "Vertical dimensional property consisting of an absolute measure or range of measures referenced to a well-defined vertical reference level which is commonly taken as origin (ground level, mean sea level, etc.)."
+    * identifier = "Energy Resources Base::VerticalExtentType"
+    * tableName = "ER_B_VerticalExtentType"
     id INTEGER NOT NULL PRIMARY KEY
-    verticalExtent_range_lowerBound TEXT
-    verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
     verticalExtent_range_upperBound TEXT
     verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
     verticalExtent_scalar TEXT
     verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
     verticalReference TEXT NOT NULL CHECK(ER_B_VerticalReferenceValue)
+    <<voidable>> verticalExtent_range_lowerBound TEXT
+    <<voidable>> verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "ER_B_ClassificationAndQuantificationFrameworkValue" {
-    identifier = "Energy Resources Base::ClassificationAndQuantificationFrameworkValue"
+  Constraint Enum <<codeList>> "ER_B_ClassificationAndQuantificationFrameworkValue" {
+    * identifier = "Energy Resources Base::ClassificationAndQuantificationFrameworkValue"
     NPD
     PERC
     RF
@@ -23,26 +24,26 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     UNFC2009
     USGS
   }
-  Constraint Enum "ER_B_FossilFuelClassValue" {
-    identifier = "Energy Resources Base::FossilFuelClassValue"
+  Constraint Enum <<codeList>> "ER_B_FossilFuelClassValue" {
+    * identifier = "Energy Resources Base::FossilFuelClassValue"
     contingentResources
     provenReserves
     resourcesInitiallyInPlace
   }
-  Attributes "ER_B_VerticalExtentRangeType" {
-    description = "Value indicating the upper and lower bounds of the height/depth range.
+  Attributes <<dataType>> "ER_B_VerticalExtentRangeType" {
+    * description = "Value indicating the upper and lower bounds of the height/depth range.
   
     In the case of depth, the range between the deepest (lower bound) and most shallow (upper bound) aspect of the deposit body, where the depth is true vertical depth below a chosen vertical reference level."
-    identifier = "Energy Resources Base::VerticalExtentRangeType"
-    tableName = "ER_B_VerticalExtentRangeType"
+    * identifier = "Energy Resources Base::VerticalExtentRangeType"
+    * tableName = "ER_B_VerticalExtentRangeType"
     id INTEGER NOT NULL PRIMARY KEY
-    lowerBound TEXT
-    lowerBound_uom TEXT CHECK(GML_UomIdentifier)
     upperBound TEXT NOT NULL
     upperBound_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    <<voidable>> lowerBound TEXT
+    <<voidable>> lowerBound_uom TEXT CHECK(GML_UomIdentifier)
   }
-  Constraint Enum "ER_B_RenewableAndWasteValue" {
-    identifier = "Energy Resources Base::RenewableAndWasteValue"
+  Constraint Enum <<codeList>> "ER_B_RenewableAndWasteValue" {
+    * identifier = "Energy Resources Base::RenewableAndWasteValue"
     biogas
     geothermal
     hydro
@@ -55,23 +56,23 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     tideWaveOcean
     wind
   }
-  Constraint Enum "ER_B_VerticalReferenceValue" {
-    identifier = "Energy Resources Base::VerticalReferenceValue"
+  Constraint Enum <<codeList>> "ER_B_VerticalReferenceValue" {
+    * identifier = "Energy Resources Base::VerticalReferenceValue"
     groundLevel
     lowestAstronomicalTide
     meanSeaLevel
     seafloor
   }
-  Class <<union>>  "VerticalExtentValue" {
-    range_lowerBound: TEXT [0..1]
-    range_lowerBound_uom: TEXT [0..1]
-    range_upperBound: TEXT
-    range_upperBound_uom: TEXT
-    scalar: TEXT
-    scalar_uom: TEXT
+  Class <<union>> "VerticalExtentValue" {
+    range_upperBound : TEXT
+    range_upperBound_uom : TEXT
+    scalar : TEXT
+    scalar_uom : TEXT
+    <<voidable>> range_lowerBound : TEXT [0..1]
+    <<voidable>> range_lowerBound_uom : TEXT [0..1]
   }
-  Constraint Enum "ER_B_FossilFuelValue" {
-    identifier = "Energy Resources Base::FossilFuelValue"
+  Constraint Enum <<codeList>> "ER_B_FossilFuelValue" {
+    * identifier = "Energy Resources Base::FossilFuelValue"
     crudeOil
     hardCoal
     lowRankCoal
@@ -81,29 +82,38 @@ Container <<applicationSchema>>  "Energy Resources Base" {
     oilShales
     peat
   }
+}
+Package <<applicationSchema>> "Base Types" {
   Metadata "Unknown" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Unpopulated" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unpopulated"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attribute"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attribute"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
   Metadata "Withheld" {
-    metadata = ""
-    mimeType = "text/xml"
-    scope = "attributeType"
-    standardUri = "http://www.isotc211.org/2005/gmd"
+    * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Withheld"
+    * mimeType = "text/plain"
+    * scope = "attributeType"
+    * standardUri = "http://www.isotc211.org/2005/gmd"
   }
+}
+Package "EA Model" {
+  Class "applicationSchema" {}
+}
+
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
   Constraint Enum "GML_UomIdentifier" {}
 }
