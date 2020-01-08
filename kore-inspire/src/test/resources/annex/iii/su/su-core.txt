@@ -1,5 +1,5 @@
 Package <<applicationSchema>> "Statistical Units Base" {
-  Class <<featureType>> "StatisticalUnit" {}
+  Abstract Class <<featureType>> "StatisticalUnit" {}
 }
 Package <<applicationSchema>> "Base Types" {
   Metadata "Unknown" {

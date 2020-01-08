@@ -9,11 +9,11 @@ Container <<applicationSchema>> "Activity Complex" {
     amount_unitOfMeasure_formula TEXT
     amount_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     amount_unitOfMeasure_nameStandardUnit TEXT
-    amount_unitOfMeasure_offsetToStandardUnit DOUBLE
-    amount_unitOfMeasure_scaleToStandardUnit DOUBLE
+    amount_unitOfMeasure_offsetToStandardUnit REAL
+    amount_unitOfMeasure_scaleToStandardUnit REAL
     amount_unitOfMeasure_uomName TEXT NOT NULL
     amount_unitOfMeasure_uomSymbol TEXT NOT NULL
-    amount_value TEXT NOT NULL
+    amount_value REAL NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inputOutput TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
   }

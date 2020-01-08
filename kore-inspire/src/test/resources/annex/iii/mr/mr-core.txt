@@ -132,16 +132,16 @@ Container <<applicationSchema>> "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    classificationMethodUsed : TEXT
+    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
     id INTEGER NOT NULL PRIMARY KEY
-    ore : QuantityRange
+    ore QuantityRange NOT NULL
     <<voidable>> includesReserves BOOLEAN
     <<voidable>> includesResources BOOLEAN
-    <<voidable>> proposedExtractionMethod : Category [0..1]
+    <<voidable>> proposedExtractionMethod Category
     sourceReference BASE2_SimpleCitation [1..*] as ref
     <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
   }
-  Class <<featureType>> "EarthResource" {
+  Abstract Class <<featureType>> "EarthResource" {
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -160,9 +160,9 @@ Container <<applicationSchema>> "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanversion : DATETIME [0..1]
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanversion DATETIME
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
     <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
     <<voidable>> expression Category [0..*] as ref
@@ -208,10 +208,10 @@ Container <<applicationSchema>> "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     category TEXT NOT NULL CHECK(MR_CORE_ReserveCategoryValue)
-    classificationMethodUsed : TEXT
+    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
     id INTEGER NOT NULL PRIMARY KEY
-    ore : QuantityRange
-    <<voidable>> proposedExtractionMethod : Category [0..1]
+    ore QuantityRange NOT NULL
+    <<voidable>> proposedExtractionMethod Category
     sourceReference BASE2_SimpleCitation [1..*] as ref
     <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
   }
@@ -243,11 +243,11 @@ Container <<applicationSchema>> "MineralResources" {
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
     category TEXT NOT NULL CHECK(MR_CORE_ResourceCategoryValue)
-    classificationMethodUsed : TEXT
+    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
     id INTEGER NOT NULL PRIMARY KEY
-    ore : QuantityRange
+    ore QuantityRange NOT NULL
     <<voidable>> includesReserves BOOLEAN
-    <<voidable>> proposedExtractionMethod : Category [0..1]
+    <<voidable>> proposedExtractionMethod Category
     sourceReference BASE2_SimpleCitation [1..*] as ref
     <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
   }
@@ -308,7 +308,7 @@ Container <<applicationSchema>> "MineralResources" {
     <<voidable>> length QuantityRange [0..*] as ref
     <<voidable>> width QuantityRange [0..*] as ref
   }
-  Class <<featureType>> "MiningFeature" {
+  Abstract Class <<featureType>> "MiningFeature" {
     inspireId BASE_Identifier as ref
   }
   Attributes <<featureType>> "MR_CORE_Commodity" {
@@ -405,10 +405,10 @@ Container <<applicationSchema>> "MineralResources" {
     "
     id INTEGER NOT NULL PRIMARY KEY
     type TEXT NOT NULL CHECK(MR_CORE_MineralOccurrenceTypeValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanversion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanversion DATETIME
     <<voidable>>, <<array>> endusePotentials TEXT
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
     <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
     <<voidable>> expression Category [0..*] as ref
@@ -431,7 +431,7 @@ Container <<applicationSchema>> "MineralResources" {
   Constraint Enum <<codeList>> "MR_CORE_MineStatusValue" {
     * identifier = "MineralResources::MineStatusValue"
   }
-  Class <<dataType>> "OreMeasure" {
+  Abstract Class <<dataType>> "OreMeasure" {
     hasXmlLang = "false#NOTES#Values: true | false
     Default: false
     Description: axml attribute xml:lang shall be generated for the type representing the class
@@ -450,9 +450,9 @@ Container <<applicationSchema>> "MineralResources" {
     "
     xsdName = "#NOTES#Description: value to be used for the schema conversion instead of the UML name
     "
-    classificationMethodUsed : TEXT
-    ore : QuantityRange
-    <<voidable>> proposedExtractionMethod : Category [0..1]
+    classificationMethodUsed TEXT NOT NULL CHECK(MR_CORE_ClassificationMethodUsedValue)
+    ore QuantityRange NOT NULL
+    <<voidable>> proposedExtractionMethod Category
     sourceReference BASE2_SimpleCitation [1..*] as ref
     <<voidable>> dimension MR_CORE_EarthResourceDimension [0..1] as ref
   }
@@ -562,7 +562,7 @@ Container "CGI_Value" {
     azimuth_estimatedValue_value_value TEXT
     azimuth_estimatedValue_value_value_uom TEXT CHECK(GML_UomIdentifier)
     convention TEXT NOT NULL CHECK(CGU_ConventionCode)
-    determinationMethod : TEXT
+    determinationMethod TEXT NOT NULL CHECK(CGU_DeterminationMethodTerm)
     dip_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
     dip_estimatedValue_value_nilReason_URI <<missing>>
     dip_estimatedValue_value_value TEXT
@@ -587,7 +587,7 @@ Container "CGI_Value" {
     * description = "Description of the measured orientation of a line.  At least one of plunge or trend should not be nil."
     * identifier = "CGI_Value::CGI_LinearOrientation"
     * tableName = "CGU_CGI_LinearOrientation"
-    determinationMethod : TEXT
+    determinationMethod TEXT NOT NULL CHECK(CGU_DeterminationMethodTerm)
     id INTEGER NOT NULL PRIMARY KEY
     plunge_estimatedValue_value_nilReason_NilReasonEnumeration <<missing>>
     plunge_estimatedValue_value_nilReason_URI <<missing>>
@@ -634,7 +634,7 @@ Container <<applicationSchema>> "Geology" {
 }
 Container "Data quality information" {
   * fileName = "Data quality information"
-  Class "DQ_PositionalAccuracy" {
+  Abstract Class "DQ_PositionalAccuracy" {
     evaluationMethodDescription : TEXT [0..1]
     evaluationMethodType : TEXT [0..1]
     measureDescription : TEXT [0..1]
@@ -644,7 +644,7 @@ Container "Data quality information" {
     <<array>> nameOfMeasures : TEXT [0..1]
     evaluationProcedure BASE2_SimpleCitation [0..1] as ref
   }
-  Class "DQ_Result" {}
+  Abstract Class "DQ_Result" {}
   Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
     * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -711,8 +711,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -795,8 +795,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -811,7 +811,7 @@ Package "Simple Components" {
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
     <<property>> updatable : BOOLEAN [0..1]
-    <<property>> value : DOUBLE [0..1]
+    <<property>> value : REAL [0..1]
   }
   Class <<type>> "NilValues" {
     xsdDerivation = "true"
@@ -824,7 +824,7 @@ Package "EA Model" {
 }
 
 Package "Coordinate Reference Systems" {
-  Class <<type>> "SC_CRS" {
+  Abstract Class <<type>> "SC_CRS" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     alias : GenericName [0..*]
@@ -851,7 +851,7 @@ Package "Names" {
     aName : TEXT
     scope NameSpace as ref
   }
-  Class <<type>>, <<type>> "GenericName" {
+  Abstract Class <<type>>, <<type>> "GenericName" {
     scope NameSpace as ref
   }
   Class <<type>> "ScopedName" {

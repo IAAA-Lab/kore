@@ -8,11 +8,11 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     NOTE This type can be used for both discrete and continuous coverages."
     * identifier = "Coverages (Domain and Range)::RectifiedGridCoverage"
     * tableName = "GMLCOV_RectifiedGridCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeType : RecordType
+    metadata Any
+    rangeType RecordType NOT NULL
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     rangeSet Any [0..*] as ref
   }
@@ -24,11 +24,11 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     NOTE This type can be used for both discrete and continuous coverages."
     * identifier = "Coverages (Domain and Range)::ReferenceableGridCoverage"
     * tableName = "GMLCOV_ReferenceableGridCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeType : RecordType
+    metadata Any
+    rangeType RecordType NOT NULL
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     rangeSet Any [0..*] as ref
   }
@@ -37,11 +37,11 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     ruleReference : TEXT
     gridFunction GMLCOV_GridFunction as ref
   }
-  Class <<featureType>> "CoverageByDomainAndRange" {
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    metadata : Any [0..*]
-    rangeType : RecordType
+  Abstract Class <<featureType>> "CoverageByDomainAndRange" {
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    metadata Any
+    rangeType RecordType NOT NULL
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     rangeSet Any [0..*] as ref
   }

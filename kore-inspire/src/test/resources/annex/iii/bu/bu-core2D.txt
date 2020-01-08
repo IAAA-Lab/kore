@@ -9,17 +9,17 @@ Container <<applicationSchema>> "Buildings2D" {
     geometry2D_referenceGeometry BOOLEAN NOT NULL
     geometry2D_verticalGeometryReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> conditionOfConstruction : TEXT [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<array>> buildingNatures TEXT
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
     <<voidable>> geometry2D_horizontalGeometryEstimatedAccuracy TEXT
     <<voidable>> geometry2D_horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> geometry2D_verticalGeometryEstimatedAccuracy TEXT
     <<voidable>> geometry2D_verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> numberOfBuildingUnits : INTEGER [0..1]
-    <<voidable>> numberOfDwellings : INTEGER [0..1]
-    <<voidable>> numberOfFloorsAboveGround : INTEGER [0..1]
+    <<voidable>> numberOfBuildingUnits INTEGER
+    <<voidable>> numberOfDwellings INTEGER
+    <<voidable>> numberOfFloorsAboveGround INTEGER
     inspireId BASE_Identifier as ref
     <<voidable>> currentUse BU_BASE_CurrentUse [0..*] as ref
     <<voidable>> dateOfConstruction BU_BASE_DateOfEvent [0..1] as ref
@@ -42,13 +42,13 @@ Container <<applicationSchema>> "Buildings2D" {
     * identifier = "Buildings2D::BuildingPart"
     * tableName = "BU_CORE2D_BuildingPart"
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> conditionOfConstruction : TEXT [0..1]
-    <<voidable>> numberOfBuildingUnits : INTEGER [0..1]
-    <<voidable>> numberOfDwellings : INTEGER [0..1]
-    <<voidable>> numberOfFloorsAboveGround : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<array>> buildingNatures TEXT
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    <<voidable>> numberOfBuildingUnits INTEGER
+    <<voidable>> numberOfDwellings INTEGER
+    <<voidable>> numberOfFloorsAboveGround INTEGER
     inspireId BASE_Identifier as ref
     <<voidable>> currentUse BU_BASE_CurrentUse [0..*] as ref
     <<voidable>> dateOfConstruction BU_BASE_DateOfEvent [0..1] as ref

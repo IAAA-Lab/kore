@@ -1,19 +1,18 @@
 Container <<applicationSchema>> "Addresses" {
   * fileName = "Addresses"
-  isnamespace = "0"
   Constraint Enum <<codeList>> "AD_GeometryMethodValue" {
     * identifier = "Addresses::GeometryMethodValue"
     byAdministrator
     byOtherParty
     fromFeature
   }
-  Class <<featureType>> "AddressComponent" {
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> alternativeIdentifier : TEXT [0..1]
-    <<voidable>> status : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "AddressComponent" {
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> alternativeIdentifier TEXT
+    <<voidable>> status TEXT CHECK(AD_StatusValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "AD_LocatorLevelValue" {
@@ -29,13 +28,13 @@ Container <<applicationSchema>> "Addresses" {
     * tableName = "AD_AdminUnitName"
     id INTEGER NOT NULL PRIMARY KEY
     level TEXT NOT NULL CHECK(AU_AdministrativeHierarchyLevel)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    adminUnit_AdministrativeUnit INTEGER
-    <<voidable>> alternativeIdentifier : TEXT [0..1]
-    <<voidable>> status : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<reference>> adminUnit_AdministrativeUnit INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> alternativeIdentifier TEXT
+    <<voidable>> status TEXT CHECK(AD_StatusValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "AD_ThoroughfareName" {
@@ -47,12 +46,12 @@ Container <<applicationSchema>> "Addresses" {
     * identifier = "Addresses::ThoroughfareName"
     * tableName = "AD_ThoroughfareName"
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> alternativeIdentifier : TEXT [0..1]
-    <<voidable>> status : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> alternativeIdentifier TEXT
+    <<voidable>> status TEXT CHECK(AD_StatusValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "AD_LocatorDesignatorTypeValue" {
@@ -185,13 +184,13 @@ Container <<applicationSchema>> "Addresses" {
     * identifier = "Addresses::AddressAreaName"
     * tableName = "AD_AddressAreaName"
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> alternativeIdentifier : TEXT [0..1]
-    namedPlace_NamedPlace INTEGER
-    <<voidable>> status : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> namedPlace_NamedPlace INTEGER
+    <<voidable>> alternativeIdentifier TEXT
+    <<voidable>> status TEXT CHECK(AD_StatusValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "AD_Address" {
@@ -213,14 +212,14 @@ Container <<applicationSchema>> "Addresses" {
     * identifier = "Addresses::Address"
     * tableName = "AD_Address"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    beginLifespanVersion DATETIME
-    endLifespanVersion DATETIME
-    alternativeIdentifier TEXT
-    parentAddress INTEGER
-    status TEXT CHECK(AD_StatusValue)
-    validFrom DATETIME
-    validTo DATETIME
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> parentAddress INTEGER
+    <<voidable>> alternativeIdentifier TEXT
+    <<reference>> inspireId INTEGER
+    <<voidable>> status TEXT CHECK(AD_StatusValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
   }
   Attributes <<dataType>> "AD_PartOfName" {
     * description = "A part of the full name resulting from the subdivision of the thoroughfare name into separate, semantic parts, using the same language and script as the full thoroughfare name.
@@ -256,12 +255,12 @@ Container <<applicationSchema>> "Addresses" {
     * tableName = "AD_PostalDescriptor"
     id INTEGER NOT NULL PRIMARY KEY
     postCode TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> alternativeIdentifier : TEXT [0..1]
-    <<voidable>> status : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> alternativeIdentifier TEXT
+    <<voidable>> status TEXT CHECK(AD_StatusValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Attributes <<dataType>> "AD_AddressRepresentation" {
@@ -273,9 +272,9 @@ Container <<applicationSchema>> "Addresses" {
     * identifier = "Addresses::AddressRepresentation"
     * tableName = "AD_AddressRepresentation"
     id INTEGER NOT NULL PRIMARY KEY
-    locatorDesignators TEXT
-    addressFeature INTEGER
-    postCode TEXT
+    <<voidable>>, <<reference>> addressFeature INTEGER
+    <<array>> locatorDesignators TEXT
+    <<voidable>> postCode TEXT
   }
   Feature <<dataType>> "AD_GeographicPosition" {
     * description = "The position of a characteristic point which represents the location of the address according to a certain specification, including information on the origin of the position."
@@ -284,8 +283,8 @@ Container <<applicationSchema>> "Addresses" {
     default BOOLEAN NOT NULL
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    method TEXT CHECK(AD_GeometryMethodValue)
-    specification TEXT CHECK(AD_GeometrySpecificationValue)
+    <<voidable>> method TEXT CHECK(AD_GeometryMethodValue)
+    <<voidable>> specification TEXT CHECK(AD_GeometrySpecificationValue)
   }
   Relation "AD_AdminUnitName_name" {
     * profile = "attributes"
@@ -430,12 +429,6 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_<<missing>>_BuildingAndBuildingUnitInfo" {
-    * profile = "attributes"
-    * tableName = "AD_AddressRepresentation_<<missing>>_BuildingAndBuildingUnitInfo"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
 }
 Container <<applicationSchema>> "AdministrativeUnits" {
   * fileName = "AdministrativeUnits"
@@ -451,7 +444,7 @@ Container <<applicationSchema>> "AdministrativeUnits" {
 }
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
-  Attributes "BASE_Identifier" {
+  Attributes <<dataType>> "BASE_Identifier" {
     * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
@@ -464,7 +457,7 @@ Container <<applicationSchema>> "Base Types" {
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
   Metadata "Unknown" {
     * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
@@ -493,7 +486,7 @@ Container <<applicationSchema>> "Base Types" {
 }
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
-  Attributes "BASE2_SimpleGeographicalName" {
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
     * tableName = "BASE2_SimpleGeographicalName"
     id INTEGER NOT NULL PRIMARY KEY
     language TEXT

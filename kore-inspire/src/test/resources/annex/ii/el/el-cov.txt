@@ -14,14 +14,14 @@ Container <<applicationSchema>> "ElevationGridCoverage" {
     SOURCE Adapted from [ISO 19123:2005]."
     * identifier = "ElevationGridCoverage::ElevationGridCoverage"
     * tableName = "EL_COV_ElevationGridCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
+    metadata Any
     propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    rangeSet Any
+    rangeType RecordType NOT NULL
     surfaceType TEXT NOT NULL CHECK(EL_BAS_SurfaceTypeValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME

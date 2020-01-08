@@ -117,13 +117,24 @@ object FloatType : KoreClass by koreClass({
 
 /**
  * 64-bit IEEE floating point number.
- * Stored as SQLite INTEGER with values in the range [-128, 127].
+ * Stored as SQLite REAL.
  */
 object DoubleType : KoreClass by koreClass({
     superTypes.add(GpkgDataType)
     name = "DOUBLE"
 }) {
     operator fun invoke(): KoreDataType = create(DoubleType, GeoPackageDataType.DOUBLE)
+}
+
+/**
+ * 64-bit IEEE floating point number.
+ * Stored as SQLite REAL.
+ */
+object RealType : KoreClass by koreClass({
+    superTypes.add(GpkgDataType)
+    name = "REAL"
+}) {
+    operator fun invoke(): KoreDataType = create(RealType, GeoPackageDataType.REAL)
 }
 
 /**

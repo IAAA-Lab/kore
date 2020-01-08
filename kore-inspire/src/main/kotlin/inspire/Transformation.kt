@@ -47,6 +47,7 @@ val transformation = { options: Map<String, Any> ->
             rule(`ISO 19107 - Geometry types`)
             rule(`ISO 19115 - Basic types`)
             rule(`ISO 19139 - Metadata XML Implementation Types`)
+            rule(`Other types`)
             rule(`Replace boundaries by Identifier`)
             rule(`Flatten union types`)
             rule(`UoM is added as a separate property`)

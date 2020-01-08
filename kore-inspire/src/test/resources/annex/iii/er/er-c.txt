@@ -5,7 +5,7 @@ Container <<applicationSchema>> "Energy Resources Coverage" {
     averageMeanWindPowerDensity
     averageMeanWindSpeed
   }
-  Constraint Enum <<codeList>> "ER_C_PotentialTypeValue" {
+  Abstract Constraint Enum <<codeList>> "ER_C_PotentialTypeValue" {
     * identifier = "Energy Resources Coverage::PotentialTypeValue"
   }
   Constraint Enum <<codeList>> "ER_C_TidalPotentialValue" {
@@ -29,14 +29,14 @@ Container <<applicationSchema>> "Energy Resources Coverage" {
     SOURCE Adapted from "Coverage" [ISO 19123:2005]."
     * identifier = "Energy Resources Coverage::RenewableAndWastePotentialCoverage"
     * tableName = "ER_C_RenewableAndWastePotentialCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
+    metadata Any
     potentialType TEXT NOT NULL CHECK(ER_C_PotentialTypeValue)
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    rangeSet Any
+    rangeType RecordType NOT NULL
     typeOfResource TEXT NOT NULL CHECK(ER_B_RenewableAndWasteValue)
     verticalExtent_verticalExtent_range_upperBound TEXT
     verticalExtent_verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)

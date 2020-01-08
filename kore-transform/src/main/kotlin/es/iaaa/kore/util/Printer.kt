@@ -100,6 +100,7 @@ private fun KorePackage.prettyPrintClassifiers(relevantList: List<KoreObject>): 
  */
 fun KoreClass.toClassName(relevantList: List<KoreObject>): String =
     listOf(
+        if (isAbstract) "Abstract" else "",
         metaClass?.name ?: "Class",
         prettyPrintStereotypes(relevantList),
         "\"$name\""

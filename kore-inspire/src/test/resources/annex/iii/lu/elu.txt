@@ -62,7 +62,7 @@ Container <<applicationSchema>> "Land Use Nomenclature" {
   Constraint Enum <<codeList>> "LUNOM_HILUCSValue" {
     * identifier = "Land Use Nomenclature::HILUCSValue"
   }
-  Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
+  Abstract Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
     * identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
 }

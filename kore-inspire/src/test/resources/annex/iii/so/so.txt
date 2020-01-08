@@ -31,8 +31,8 @@ Container <<applicationSchema>> "Soil" {
     uom_formula TEXT
     uom_measureType TEXT CHECK(GML_MeasureType)
     uom_nameStandardUnit TEXT
-    uom_offsetToStandardUnit DOUBLE
-    uom_scaleToStandardUnit DOUBLE
+    uom_offsetToStandardUnit REAL
+    uom_scaleToStandardUnit REAL
     uom_uomName TEXT
     uom_uomSymbol TEXT
   }
@@ -54,17 +54,17 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_SoilLayer"
     id INTEGER NOT NULL PRIMARY KEY
     layerType TEXT NOT NULL CHECK(SO_LayerTypeValue)
-    profileElementDepthRange_lowerValue : DOUBLE [0..1]
-    profileElementDepthRange_uom_formula : TEXT [0..1]
-    profileElementDepthRange_uom_measureType : TEXT [0..1]
-    profileElementDepthRange_uom_nameStandardUnit : TEXT [0..1]
-    profileElementDepthRange_uom_offsetToStandardUnit : DOUBLE [0..1]
-    profileElementDepthRange_uom_scaleToStandardUnit : DOUBLE [0..1]
-    profileElementDepthRange_uom_uomName : TEXT [0..1]
-    profileElementDepthRange_uom_uomSymbol : TEXT [0..1]
-    profileElementDepthRange_upperValue : DOUBLE [0..1]
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    profileElementDepthRange_lowerValue REAL
+    profileElementDepthRange_uom_formula TEXT
+    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
+    profileElementDepthRange_uom_nameStandardUnit TEXT
+    profileElementDepthRange_uom_offsetToStandardUnit REAL
+    profileElementDepthRange_uom_scaleToStandardUnit REAL
+    profileElementDepthRange_uom_uomName TEXT
+    profileElementDepthRange_uom_uomSymbol TEXT
+    profileElementDepthRange_upperValue REAL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>>, <<array>> layerRockTypes TEXT
     <<voidable>> layerGenesisEnvironment TEXT CHECK(GE_EventEnvironmentValue)
     <<voidable>> layerGenesisProcess TEXT CHECK(GE_EventProcessValue)
@@ -84,12 +84,12 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::ObservedSoilProfile"
     * tableName = "SO_ObservedSoilProfile"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> localIdentifier : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> localIdentifier TEXT
     <<reference>> location INTEGER
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
     <<voidable>> isDescribedBy ProfileElement [0..*] as ref
@@ -116,15 +116,15 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::RangeType"
     * tableName = "SO_RangeType"
     id INTEGER NOT NULL PRIMARY KEY
-    lowerValue DOUBLE
+    lowerValue REAL
     uom_formula TEXT
     uom_measureType TEXT CHECK(GML_MeasureType)
     uom_nameStandardUnit TEXT
-    uom_offsetToStandardUnit DOUBLE
-    uom_scaleToStandardUnit DOUBLE
+    uom_offsetToStandardUnit REAL
+    uom_scaleToStandardUnit REAL
     uom_uomName TEXT
     uom_uomSymbol TEXT
-    upperValue DOUBLE
+    upperValue REAL
   }
   Constraint Enum <<codeList>> "SO_FAOPrimeValue" {
     * identifier = "Soil::FAOPrimeValue"
@@ -179,8 +179,8 @@ Container <<applicationSchema>> "Soil" {
     uom_formula TEXT
     uom_measureType TEXT CHECK(GML_MeasureType)
     uom_nameStandardUnit TEXT
-    uom_offsetToStandardUnit DOUBLE
-    uom_scaleToStandardUnit DOUBLE
+    uom_offsetToStandardUnit REAL
+    uom_scaleToStandardUnit REAL
     uom_uomName TEXT
     uom_uomSymbol TEXT
   }
@@ -191,15 +191,15 @@ Container <<applicationSchema>> "Soil" {
   }
   Class "DerivedProfilePresenceInSoilBody" {
     conID = "EAID_8DB35F17_EA63_4c56_9C45_5CD8C3508143"
-    derivedProfilePercentageRange_lowerValue : DOUBLE [0..1]
+    derivedProfilePercentageRange_lowerValue : REAL [0..1]
     derivedProfilePercentageRange_uom_formula : TEXT [0..1]
     derivedProfilePercentageRange_uom_measureType : TEXT [0..1]
     derivedProfilePercentageRange_uom_nameStandardUnit : TEXT [0..1]
-    derivedProfilePercentageRange_uom_offsetToStandardUnit : DOUBLE [0..1]
-    derivedProfilePercentageRange_uom_scaleToStandardUnit : DOUBLE [0..1]
+    derivedProfilePercentageRange_uom_offsetToStandardUnit : REAL [0..1]
+    derivedProfilePercentageRange_uom_scaleToStandardUnit : REAL [0..1]
     derivedProfilePercentageRange_uom_uomName : TEXT [0..1]
     derivedProfilePercentageRange_uom_uomSymbol : TEXT [0..1]
-    derivedProfilePercentageRange_upperValue : DOUBLE [0..1]
+    derivedProfilePercentageRange_upperValue : REAL [0..1]
   }
   Constraint Enum <<codeList>> "SO_SoilDerivedObjectParameterNameValue" {
     * identifier = "Soil::SoilDerivedObjectParameterNameValue"
@@ -273,12 +273,12 @@ Container <<applicationSchema>> "Soil" {
   Constraint Enum <<codeList>> "SO_SoilInvestigationPurposeValue" {
     * identifier = "Soil::SoilInvestigationPurposeValue"
   }
-  Class <<featureType>> "SoilProfile" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> localIdentifier : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "SoilProfile" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> localIdentifier TEXT
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
     <<voidable>> isDescribedBy ProfileElement [0..*] as ref
@@ -295,19 +295,19 @@ Container <<applicationSchema>> "Soil" {
     EXAMPLE coverage indicating the confidence level of the pH values reported in the associated SoilThemeCoverage."
     * identifier = "Soil::SoilThemeDescriptiveCoverage"
     * tableName = "SO_SoilThemeDescriptiveCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
     soilThemeDescriptiveParameter_soilThemeDescriptiveParameterName TEXT NOT NULL
     soilThemeDescriptiveParameter_uom_formula TEXT
     soilThemeDescriptiveParameter_uom_measureType TEXT CHECK(GML_MeasureType)
     soilThemeDescriptiveParameter_uom_nameStandardUnit TEXT
-    soilThemeDescriptiveParameter_uom_offsetToStandardUnit DOUBLE
-    soilThemeDescriptiveParameter_uom_scaleToStandardUnit DOUBLE
+    soilThemeDescriptiveParameter_uom_offsetToStandardUnit REAL
+    soilThemeDescriptiveParameter_uom_scaleToStandardUnit REAL
     soilThemeDescriptiveParameter_uom_uomName TEXT
     soilThemeDescriptiveParameter_uom_uomSymbol TEXT
     <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
@@ -316,18 +316,18 @@ Container <<applicationSchema>> "Soil" {
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     domainExtent EX_Extent [1..*] as ref
   }
-  Class <<featureType>> "ProfileElement" {
-    profileElementDepthRange_lowerValue : DOUBLE [0..1]
-    profileElementDepthRange_uom_formula : TEXT [0..1]
-    profileElementDepthRange_uom_measureType : TEXT [0..1]
-    profileElementDepthRange_uom_nameStandardUnit : TEXT [0..1]
-    profileElementDepthRange_uom_offsetToStandardUnit : DOUBLE [0..1]
-    profileElementDepthRange_uom_scaleToStandardUnit : DOUBLE [0..1]
-    profileElementDepthRange_uom_uomName : TEXT [0..1]
-    profileElementDepthRange_uom_uomSymbol : TEXT [0..1]
-    profileElementDepthRange_upperValue : DOUBLE [0..1]
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+  Abstract Class <<featureType>> "ProfileElement" {
+    profileElementDepthRange_lowerValue REAL
+    profileElementDepthRange_uom_formula TEXT
+    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
+    profileElementDepthRange_uom_nameStandardUnit TEXT
+    profileElementDepthRange_uom_offsetToStandardUnit REAL
+    profileElementDepthRange_uom_scaleToStandardUnit REAL
+    profileElementDepthRange_uom_uomName TEXT
+    profileElementDepthRange_uom_uomSymbol TEXT
+    profileElementDepthRange_upperValue REAL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     isPartOf SoilProfile as ref
     <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
@@ -360,19 +360,19 @@ Container <<applicationSchema>> "Soil" {
     SOURCE Adapted from "Coverage" [ISO 19123:2005]."
     * identifier = "Soil::SoilThemeCoverage"
     * tableName = "SO_SoilThemeCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
     soilThemeParameter_soilThemeParameterName TEXT NOT NULL CHECK(SO_SoilDerivedObjectParameterNameValue)
     soilThemeParameter_uom_formula TEXT
     soilThemeParameter_uom_measureType TEXT CHECK(GML_MeasureType)
     soilThemeParameter_uom_nameStandardUnit TEXT
-    soilThemeParameter_uom_offsetToStandardUnit DOUBLE
-    soilThemeParameter_uom_scaleToStandardUnit DOUBLE
+    soilThemeParameter_uom_offsetToStandardUnit REAL
+    soilThemeParameter_uom_scaleToStandardUnit REAL
     soilThemeParameter_uom_uomName TEXT
     soilThemeParameter_uom_uomSymbol TEXT
     <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
@@ -394,16 +394,16 @@ Container <<applicationSchema>> "Soil" {
     SOURCE2 GLOSSARY OF SOIL SCIENCE TERMS"
     * identifier = "Soil::ParticleSizeFractionType"
     * tableName = "SO_ParticleSizeFractionType"
-    fractionContent TEXT NOT NULL
-    fractionParticleSizeRange_lowerValue DOUBLE
+    fractionContent REAL NOT NULL
+    fractionParticleSizeRange_lowerValue REAL
     fractionParticleSizeRange_uom_formula TEXT
     fractionParticleSizeRange_uom_measureType TEXT CHECK(GML_MeasureType)
     fractionParticleSizeRange_uom_nameStandardUnit TEXT
-    fractionParticleSizeRange_uom_offsetToStandardUnit DOUBLE
-    fractionParticleSizeRange_uom_scaleToStandardUnit DOUBLE
+    fractionParticleSizeRange_uom_offsetToStandardUnit REAL
+    fractionParticleSizeRange_uom_scaleToStandardUnit REAL
     fractionParticleSizeRange_uom_uomName TEXT
     fractionParticleSizeRange_uom_uomSymbol TEXT
-    fractionParticleSizeRange_upperValue DOUBLE
+    fractionParticleSizeRange_upperValue REAL
     id INTEGER NOT NULL PRIMARY KEY
   }
   Feature <<featureType>> "SO_SoilSite" {
@@ -464,18 +464,18 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::SoilHorizon"
     * tableName = "SO_SoilHorizon"
     id INTEGER NOT NULL PRIMARY KEY
-    profileElementDepthRange_lowerValue : DOUBLE [0..1]
-    profileElementDepthRange_uom_formula : TEXT [0..1]
-    profileElementDepthRange_uom_measureType : TEXT [0..1]
-    profileElementDepthRange_uom_nameStandardUnit : TEXT [0..1]
-    profileElementDepthRange_uom_offsetToStandardUnit : DOUBLE [0..1]
-    profileElementDepthRange_uom_scaleToStandardUnit : DOUBLE [0..1]
-    profileElementDepthRange_uom_uomName : TEXT [0..1]
-    profileElementDepthRange_uom_uomSymbol : TEXT [0..1]
-    profileElementDepthRange_upperValue : DOUBLE [0..1]
+    profileElementDepthRange_lowerValue REAL
+    profileElementDepthRange_uom_formula TEXT
+    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
+    profileElementDepthRange_uom_nameStandardUnit TEXT
+    profileElementDepthRange_uom_offsetToStandardUnit REAL
+    profileElementDepthRange_uom_scaleToStandardUnit REAL
+    profileElementDepthRange_uom_uomName TEXT
+    profileElementDepthRange_uom_uomSymbol TEXT
+    profileElementDepthRange_upperValue REAL
     <<voidable>>, <<reference>> FAOHorizonNotation INTEGER
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     isPartOf SoilProfile as ref
     <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
@@ -490,11 +490,11 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::DerivedSoilProfile"
     * tableName = "SO_DerivedSoilProfile"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> localIdentifier : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> localIdentifier TEXT
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
     <<voidable>> isDescribedBy ProfileElement [0..*] as ref

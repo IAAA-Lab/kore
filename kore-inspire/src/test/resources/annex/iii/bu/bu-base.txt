@@ -4,7 +4,7 @@ Container <<applicationSchema>> "BuildingsBase" {
     * identifier = "BuildingsBase::ConditionOfConstructionValue"
     obligation = "implementingRule"
   }
-  Class <<featureType>> "AbstractBuilding" {
+  Abstract Class <<featureType>> "AbstractBuilding" {
     Governance = "<<missing>>"
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
     <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
@@ -33,7 +33,7 @@ Container <<applicationSchema>> "BuildingsBase" {
     * identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
     obligation = "implementingRule"
   }
-  Class <<featureType>> "Building" {
+  Abstract Class <<featureType>> "Building" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
     <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
@@ -61,7 +61,7 @@ Container <<applicationSchema>> "BuildingsBase" {
     * identifier = "BuildingsBase::ElevationReferenceValue"
     obligation = "implementingRule"
   }
-  Class <<featureType>> "BuildingPart" {
+  Abstract Class <<featureType>> "BuildingPart" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
     <<voidable>>, <<array>> buildingNatures : TEXT [0..1]
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
@@ -146,7 +146,7 @@ Container <<applicationSchema>> "BuildingsBase" {
     <<voidable>> verticalGeometryEstimatedAccuracy TEXT
     <<voidable>> verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
   }
-  Class <<featureType>> "AbstractConstruction" {
+  Abstract Class <<featureType>> "AbstractConstruction" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
     <<voidable>> conditionOfConstruction : TEXT [0..1]

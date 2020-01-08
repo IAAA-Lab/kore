@@ -8,7 +8,7 @@ Container <<applicationSchema>> "HumanHealth" {
     CI95ofGM_uom TEXT CHECK(GML_UomIdentifier)
     CI95ofP95 TEXT
     CI95ofP95_uom TEXT CHECK(GML_UomIdentifier)
-    LOQ DOUBLE
+    LOQ REAL
     P50 TEXT
     P50_uom TEXT CHECK(GML_UomIdentifier)
     P90 TEXT
@@ -21,7 +21,7 @@ Container <<applicationSchema>> "HumanHealth" {
     maximum TEXT
     maximum_uom TEXT CHECK(GML_UomIdentifier)
     numberOfPartecipants INTEGER NOT NULL
-    pinLOD DOUBLE
+    pinLOD REAL
   }
   Constraint Enum <<codeList>> "HH_GroundWaterQualityComponentTypeValue" {
     * identifier = "HumanHealth::GroundWaterQualityComponentTypeValue"
@@ -35,7 +35,7 @@ Container <<applicationSchema>> "HumanHealth" {
   Constraint Enum <<codeList>> "HH_EnvHealthDeterminantTypeValue" {
     * identifier = "HumanHealth::EnvHealthDeterminantTypeValue"
   }
-  Class <<featureType>> "HealthStatisticalData" {
+  Abstract Class <<featureType>> "HealthStatisticalData" {
     <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
   }
   Attributes <<dataType>> "HH_AgeRangeType" {
@@ -61,7 +61,7 @@ Container <<applicationSchema>> "HumanHealth" {
     ageRange_startAge_week INTEGER
     ageRange_startAge_year INTEGER
     generalHealthName TEXT NOT NULL CHECK(HH_GeneralHealthTypeValue)
-    generalHealthValue DOUBLE NOT NULL
+    generalHealthValue REAL NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
@@ -110,14 +110,14 @@ Container <<applicationSchema>> "HumanHealth" {
     * tableName = "HH_DiseaseMeasure"
     diseaseMeasureType TEXT NOT NULL CHECK(HH_DiseaseMeasureTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    value DOUBLE NOT NULL
+    value REAL NOT NULL
   }
   Class <<type>> "UomNoise" {
     formula : TEXT [0..1]
     measureType : TEXT
     nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : DOUBLE [0..1]
-    scaleToStandardUnit : DOUBLE [0..1]
+    offsetToStandardUnit : REAL [0..1]
+    scaleToStandardUnit : REAL [0..1]
     source : TEXT
     uomName : TEXT
     uomSymbol : TEXT
@@ -162,7 +162,7 @@ Container <<applicationSchema>> "HumanHealth" {
     * identifier = "HumanHealth::HealthServicesStatistic"
     * tableName = "HH_HealthServicesStatistic"
     healthServiceType TEXT NOT NULL CHECK(HH_HealthServicesTypeValue)
-    healthServiceValue DOUBLE NOT NULL
+    healthServiceValue REAL NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
@@ -185,7 +185,7 @@ Container <<applicationSchema>> "HumanHealth" {
   Constraint Enum <<codeList>> "HH_StatisticalAggregationMethodValue" {
     * identifier = "HumanHealth::StatisticalAggregationMethodValue"
   }
-  Constraint Enum <<codeList>> "HH_ComponentTypeValue" {
+  Abstract Constraint Enum <<codeList>> "HH_ComponentTypeValue" {
     * identifier = "HumanHealth::ComponentTypeValue"
   }
   Feature <<featureType>> "HH_EnvHealthDeterminantMeasure" {
@@ -219,7 +219,7 @@ Container <<applicationSchema>> "HumanHealth" {
     biomarkerStatisticalParameter_CI95ofGM_uom TEXT CHECK(GML_UomIdentifier)
     biomarkerStatisticalParameter_CI95ofP95 TEXT
     biomarkerStatisticalParameter_CI95ofP95_uom TEXT CHECK(GML_UomIdentifier)
-    biomarkerStatisticalParameter_LOQ DOUBLE
+    biomarkerStatisticalParameter_LOQ REAL
     biomarkerStatisticalParameter_P50 TEXT
     biomarkerStatisticalParameter_P50_uom TEXT CHECK(GML_UomIdentifier)
     biomarkerStatisticalParameter_P90 TEXT
@@ -231,7 +231,7 @@ Container <<applicationSchema>> "HumanHealth" {
     biomarkerStatisticalParameter_maximum TEXT
     biomarkerStatisticalParameter_maximum_uom TEXT CHECK(GML_UomIdentifier)
     biomarkerStatisticalParameter_numberOfPartecipants INTEGER NOT NULL
-    biomarkerStatisticalParameter_pinLOD DOUBLE
+    biomarkerStatisticalParameter_pinLOD REAL
     gender TEXT NOT NULL CHECK(BASE2_GenderValue)
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
@@ -245,11 +245,11 @@ Container <<applicationSchema>> "HumanHealth" {
     uom_measureType : TEXT
     uom_media : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
-    value : TEXT
+    value : REAL
     uom UnitOfMeasure as ref
   }
   Constraint Enum <<codeList>> "HH_ICDValue" {
@@ -259,12 +259,12 @@ Container <<applicationSchema>> "HumanHealth" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_source : TEXT
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
-    value : TEXT
+    value : REAL
     uom UnitOfMeasure as ref
   }
   Class <<type>> "UomConcentration" {
@@ -273,8 +273,8 @@ Container <<applicationSchema>> "HumanHealth" {
     measureType : TEXT
     media : TEXT
     nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : DOUBLE [0..1]
-    scaleToStandardUnit : DOUBLE [0..1]
+    offsetToStandardUnit : REAL [0..1]
+    scaleToStandardUnit : REAL [0..1]
     uomName : TEXT
     uomSymbol : TEXT
     measure Measure [0..*] as ref
@@ -327,33 +327,17 @@ Container "Units of Measure" {
     volume
     weight
   }
-  Class "UnitOfMeasure" {
+  Abstract Class "UnitOfMeasure" {
     formula : TEXT [0..1]
     measureType : TEXT
     nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : DOUBLE [0..1]
-    scaleToStandardUnit : DOUBLE [0..1]
+    offsetToStandardUnit : REAL [0..1]
+    scaleToStandardUnit : REAL [0..1]
     uomName : TEXT
     uomSymbol : TEXT
     measure Measure [0..*] as ref
   }
   Constraint Enum "GML_UomIdentifier" {}
-}
-Container "Text" {
-  * fileName = "Text"
-  Class <<type>>, <<type>> "Character" {}
-  Class <<type>>, <<type>> "CharacterString" {
-    characterSet : TEXT
-    maxLength : INTEGER
-    size : INTEGER
-    elements Character [-2..*] as ref
-  }
-  Constraint Enum <<codeList>> "_CharacterSetCode" {
-    * identifier = "Text::CharacterSetCode"
-    ISO10646-1
-    ISO10646-2
-    ISO8859
-  }
 }
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
@@ -368,9 +352,9 @@ Container <<applicationSchema>> "Base Types" {
     * identifier = "Base Types::Identifier"
     * tableName = "BASE_Identifier"
     id INTEGER NOT NULL PRIMARY KEY
-    localId CharacterString NOT NULL
-    namespace CharacterString NOT NULL
-    <<lifeCycleInfo>>, <<voidable>> versionId CharacterString
+    localId TEXT NOT NULL
+    namespace TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
   Metadata "Unknown" {
     * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"

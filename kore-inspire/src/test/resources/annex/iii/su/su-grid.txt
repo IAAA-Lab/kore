@@ -131,7 +131,7 @@ Container <<applicationSchema>> "Base Types" {
   }
 }
 Package <<applicationSchema>> "Energy Statistics" {
-  Class <<dataType>> "AggregatedEnergy" {
+  Abstract Class <<dataType>> "AggregatedEnergy" {
     measureValue : TEXT
     measureValue_uom : TEXT
     <<voidable>> label : TEXT [0..1]

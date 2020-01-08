@@ -24,12 +24,12 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     Cabinets represent mountable node objects that can contain smaller utility devices and cables."
     * identifier = "Common Utility Network Elements::Cabinet"
     * tableName = "US_NET_COMMON_Cabinet"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
@@ -43,15 +43,15 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     thermal
     water
   }
-  Class <<featureType>> "UtilityLinkSet" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> utilityDeliveryType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
-    <<voidable>> warningType : TEXT [0..1]
+  Abstract Class <<featureType>> "UtilityLinkSet" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
@@ -65,30 +65,30 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * identifier = "Common Utility Network Elements::Pipe"
     * tableName = "US_NET_COMMON_Pipe"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> pipeDiameter TEXT
     <<voidable>> pipeDiameter_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> pressure TEXT
     <<voidable>> pressure_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> utilityDeliveryType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
-    <<voidable>> warningType : TEXT [0..1]
+    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
-  Class <<featureType>> "UtilityNodeContainer" {
-    geometry : POINT
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+  Abstract Class <<featureType>> "UtilityNodeContainer" {
+    geometry POINT NOT NULL
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
@@ -99,14 +99,14 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     Poles represent node objects that can support utility devices and cables."
     * identifier = "Common Utility Network Elements::Pole"
     * tableName = "US_NET_COMMON_Pole"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> poleHeight TEXT
     <<voidable>> poleHeight_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
@@ -120,16 +120,16 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * identifier = "Common Utility Network Elements::Duct"
     * tableName = "US_NET_COMMON_Duct"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> ductWidth TEXT
     <<voidable>> ductWidth_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> utilityDeliveryType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
-    <<voidable>> warningType : TEXT [0..1]
+    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
@@ -143,12 +143,12 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * identifier = "Common Utility Network Elements::UtilityLinkSequence"
     * tableName = "US_NET_COMMON_UtilityLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
@@ -161,38 +161,38 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     Towers represent node objects that support reservoirs, cables or antennas."
     * identifier = "Common Utility Network Elements::Tower"
     * tableName = "US_NET_COMMON_Tower"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> towerHeight TEXT
     <<voidable>> towerHeight_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
-  Class <<featureType>> "Cable" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> utilityDeliveryType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
-    <<voidable>> warningType : TEXT [0..1]
+  Abstract Class <<featureType>> "Cable" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
-  Class <<featureType>> "UtilityNetworkElement" {
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+  Abstract Class <<featureType>> "UtilityNetworkElement" {
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
@@ -203,14 +203,14 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     private
     transport
   }
-  Class <<featureType>> "UtilityNode" {
-    geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+  Abstract Class <<featureType>> "UtilityNode" {
+    geometry POINT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -236,12 +236,12 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     </ul>"
     * identifier = "Common Utility Network Elements::Manhole"
     * tableName = "US_NET_COMMON_Manhole"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
@@ -257,16 +257,16 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     So e.g. for the electricity network, the "ElectricityAppurtenanceTypeValue" codelist should be used."
     * identifier = "Common Utility Network Elements::Appurtenance"
     * tableName = "US_NET_COMMON_Appurtenance"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> appurtenanceType TEXT CHECK(US_NET_COMMON_AppurtenanceTypeValue)
-    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> specificAppurtenanceType TEXT CHECK(US_NET_COMMON_SpecificAppurtenanceTypeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -280,15 +280,15 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     A linear spatial object that describes the geometry and connectivity of a utility network between two points in the network."
     * identifier = "Common Utility Network Elements::UtilityLink"
     * tableName = "US_NET_COMMON_UtilityLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref

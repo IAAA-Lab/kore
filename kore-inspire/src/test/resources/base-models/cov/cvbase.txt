@@ -1,5 +1,5 @@
 Package <<applicationSchema>> "Coverages (Base)" {
-  Class <<featureType>> "Coverage" {
+  Abstract Class <<featureType>> "Coverage" {
     rangeType_typeName_aName : TEXT
     metadata Any [0..*] as ref
   }

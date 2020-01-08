@@ -13,6 +13,15 @@ val `add geopackage primary column`: Transform = { _, _ ->
     addAttributeWhen({ it.idColumn() }) { it.metaClass in listOf(FeaturesTable, AttributesTable) }
 }
 
+val `ensure column metaclass`: Transform = { _, _ ->
+    patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
+        allAttributes().forEach {
+            it.metaClass = Column
+            it.columnName = it.name
+        }
+    }
+}
+
 val `copy documentation to column description`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = { metaClass == Column && title == null }) {
         findTaggedValue("description")?.let { text ->
@@ -86,7 +95,7 @@ val `remove unused tags`: Transform = { _, _ ->
             "vocabulary", "extendableByMS", "asDictionary", "codeList", "gmlProfileSchema", "xmlns", "xsdDocument",
             "targetNamespace", "xsdEncodingRule", "byValuePropertyType", "isCollection", "noPropertyType",
             "xsdEncodingRule", "extensibility", "inspireConcept", "codeSpace", "dictionaryIdentifier",
-            "memberIdentifierStem", "object_style", "gmlMixin"
+            "memberIdentifierStem", "object_style", "gmlMixin", "isnamespace"
         )
     )
 }
@@ -105,6 +114,7 @@ private fun KoreClass?.isStorable(): Boolean =
 
 val `After rules`: List<Transform> = listOf(
     `add geopackage primary column`,
+    `ensure column metaclass`,
     `copy documentation to column description`,
     `copy documentation to table description`,
     `mark containers`,

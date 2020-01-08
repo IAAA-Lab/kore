@@ -6,7 +6,6 @@ import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
-import es.iaaa.kore.transform.rules.setTypeWhen
 
 /**
  * ISO 19107 defines a set of Geometry types, which need to be mapped to the types available in GeoPackage.
@@ -14,11 +13,12 @@ import es.iaaa.kore.transform.rules.setTypeWhen
 val `ISO 19107 - Geometry types`: Transform = { _, _ ->
 
     val standardMappings = mapOf(
+        "GM_Point" to PointType(),
+        "GM_MultiPoint" to MultiPointType(),
         "GM_Curve" to CurveType(),
         "GM_MultiCurve" to MultiCurveType(),
         "GM_MultiSurface" to MultiSurfaceType(),
         "GM_Object" to GeometryType(),
-        "GM_Point" to PointType(),
         "GM_Polygon" to PolygonType(),
         "GM_Surface" to SurfaceType()
     )

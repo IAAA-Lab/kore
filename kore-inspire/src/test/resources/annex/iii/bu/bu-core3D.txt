@@ -4,17 +4,17 @@ Container <<applicationSchema>> "Buildings3D" {
     * description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD2 representation."
     * identifier = "Buildings3D::BuildingGeometry3DLoD2"
     * tableName = "BU_CORE3D_BuildingGeometry3DLoD2"
-    geometryMultiSurface : MULTISURFACE [0..1]
-    geometrySolid : BLOB [0..1]
-    geometrySolid_content_type : TEXT [0..1]
+    geometryMultiSurface MULTISURFACE
+    geometrySolid BLOB
+    geometrySolid_content_type TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
-    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy TEXT
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
-    <<voidable>> terrainIntersection : MULTICURVE [0..1]
-    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
-    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
-    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> terrainIntersection MULTICURVE
+    <<voidable>> verticalGeometryEstimatedAccuracy TEXT
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
   }
   Class <<featureType>> "BuildingPart" {
     geometry3DLoD1_geometryMultiSurface : MULTISURFACE [0..1]
@@ -75,31 +75,31 @@ Container <<applicationSchema>> "Buildings3D" {
     <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
   }
   Class <<dataType>> "BuildingGeometry3DLoD" {
-    geometryMultiSurface : MULTISURFACE [0..1]
-    geometrySolid : BLOB [0..1]
-    geometrySolid_content_type : TEXT [0..1]
-    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
-    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
-    <<voidable>> terrainIntersection : MULTICURVE [0..1]
-    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
-    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
-    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
+    geometryMultiSurface MULTISURFACE
+    geometrySolid BLOB
+    geometrySolid_content_type TEXT
+    <<voidable>> horizontalGeometryEstimatedAccuracy TEXT
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> terrainIntersection MULTICURVE
+    <<voidable>> verticalGeometryEstimatedAccuracy TEXT
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
   }
   Attributes <<dataType>> "BU_CORE3D_BuildingGeometry3DLoD1" {
     * description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD 1 representation."
     * identifier = "Buildings3D::BuildingGeometry3DLoD1"
     * tableName = "BU_CORE3D_BuildingGeometry3DLoD1"
-    geometryMultiSurface : MULTISURFACE [0..1]
-    geometrySolid : BLOB [0..1]
-    geometrySolid_content_type : TEXT [0..1]
+    geometryMultiSurface MULTISURFACE
+    geometrySolid BLOB
+    geometrySolid_content_type TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
-    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy TEXT
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> horizontalGeometryReference TEXT CHECK(BU_BASE_HorizontalGeometryReferenceValue)
-    <<voidable>> terrainIntersection : MULTICURVE [0..1]
-    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
-    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
-    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
+    <<voidable>> terrainIntersection MULTICURVE
+    <<voidable>> verticalGeometryEstimatedAccuracy TEXT
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
     <<voidable>> verticalGeometryReference3DTop TEXT CHECK(BU_BASE_ElevationReferenceValue)
   }
   Class <<featureType>> "Building" {

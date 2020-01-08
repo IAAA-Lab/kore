@@ -11,10 +11,10 @@ Container <<applicationSchema>> "Cable Transport Network" {
     * identifier = "Cable Transport Network::CablewayLinkSequence"
     * tableName = "TN_C_CablewayLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -24,12 +24,12 @@ Container <<applicationSchema>> "Cable Transport Network" {
     * description = "A point spatial object that is used to represent connectivity between two consecutive cableway links."
     * identifier = "Cable Transport Network::CablewayNode"
     * tableName = "TN_C_CablewayNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -41,10 +41,10 @@ Container <<applicationSchema>> "Cable Transport Network" {
     * identifier = "Cable Transport Network::CablewayLinkSet"
     * tableName = "TN_C_CablewayLinkSet"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -57,14 +57,14 @@ Container <<applicationSchema>> "Cable Transport Network" {
     NOTE Cableway transport is a form of transport based on a cable suspended normally from a set of consecutive towers."
     * identifier = "Cable Transport Network::CablewayLink"
     * tableName = "TN_C_CablewayLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> cablewayType TEXT CHECK(TN_C_CablewayTypeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref

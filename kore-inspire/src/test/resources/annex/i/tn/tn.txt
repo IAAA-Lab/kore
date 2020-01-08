@@ -1,11 +1,11 @@
 Container <<applicationSchema>> "Common Transport Elements" {
   * fileName = "Common Transport Elements"
-  Class <<featureType>> "TransportArea" {
+  Abstract Class <<featureType>> "TransportArea" {
     geometry : SURFACE
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -17,10 +17,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
     * tableName = "TN_VerticalPosition"
     id INTEGER NOT NULL PRIMARY KEY
     verticalPosition TEXT NOT NULL CHECK(BASE_VerticalPositionValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -39,10 +39,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
     * tableName = "TN_ConditionOfFacility"
     currentStatus TEXT NOT NULL CHECK(BASE_ConditionOfFacilityValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -56,10 +56,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
     authority_name TEXT NOT NULL
     authority_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -69,18 +69,18 @@ Container <<applicationSchema>> "Common Transport Elements" {
     * tableName = "TN_TrafficFlowDirection"
     direction TEXT NOT NULL CHECK(NET_LinkDirectionValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Class <<featureType>> "TransportLinkSequence" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+  Abstract Class <<featureType>> "TransportLinkSequence" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -95,10 +95,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
     measure TEXT NOT NULL
     measure_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     restrictionType TEXT NOT NULL CHECK(TN_RestrictionTypeValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -112,10 +112,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
     authority_name TEXT NOT NULL
     authority_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -125,36 +125,36 @@ Container <<applicationSchema>> "Common Transport Elements" {
     EXAMPLE Examples of routes along which marker posts can be found are roads, railway lines and navigable waterways."
     * identifier = "Common Transport Elements::MarkerPost"
     * tableName = "TN_MarkerPost"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     location TEXT NOT NULL
     location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> route TransportLinkSet [0..1] as ref
   }
-  Class <<featureType>> "TransportPoint" {
-    geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "TransportPoint" {
+    geometry POINT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Class <<featureType>> "TransportLinkSet" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+  Abstract Class <<featureType>> "TransportLinkSet" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -162,12 +162,12 @@ Container <<applicationSchema>> "Common Transport Elements" {
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> post TN_MarkerPost [0..*] as ref
   }
-  Class <<featureType>> "TransportNode" {
+  Abstract Class <<featureType>> "TransportNode" {
     geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -181,18 +181,18 @@ Container <<applicationSchema>> "Common Transport Elements" {
     * tableName = "TN_AccessRestriction"
     id INTEGER NOT NULL PRIMARY KEY
     restriction TEXT NOT NULL CHECK(TN_AccessRestrictionValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Class <<featureType>> "TransportProperty" {
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "TransportProperty" {
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -206,13 +206,13 @@ Container <<applicationSchema>> "Common Transport Elements" {
     maximumTripleAxleWeight
     maximumWidth
   }
-  Class <<featureType>> "TransportLink" {
+  Abstract Class <<featureType>> "TransportLink" {
     centrelineGeometry : CURVE
     fictitious : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     endNode_Node BASE_Identifier [0..1] as ref
@@ -242,9 +242,9 @@ Container <<applicationSchema>> "Common Transport Elements" {
     elements_NetworkElement BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
   }
-  Class <<featureType>> "TransportObject" {
-    <<voidable>> geographicalName_language : TEXT [0..1]
-    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+  Abstract Class <<featureType>> "TransportObject" {
+    <<voidable>> geographicalName_language TEXT
+    <<voidable>> geographicalName_spelling_text TEXT
   }
   Relation "TN_TransportNetwork_inspireId" {
     * profile = "attributes"

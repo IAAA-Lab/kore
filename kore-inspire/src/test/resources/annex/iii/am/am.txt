@@ -49,7 +49,7 @@ Container <<applicationSchema>> "Area Management Restriction and Regulation Zone
     waste
     water
   }
-  Constraint Enum <<codeList>> "AM_SpecialisedZoneTypeCode" {
+  Abstract Constraint Enum <<codeList>> "AM_SpecialisedZoneTypeCode" {
     * identifier = "Area Management Restriction and Regulation Zones::SpecialisedZoneTypeCode"
   }
   Relation "AM_ManagementRestrictionOrRegulationZone_relatedZone" {

@@ -17,7 +17,7 @@ Container <<applicationSchema>> "Sea Regions" {
     This describes a sea region according to the characteristics of the sea surface rather than characteristics of the water column in general. It is analogous to the concept of LandCover (INSPIRE Annex III)."
     * identifier = "Sea Regions::SeaSurfaceArea"
     * tableName = "SR_SeaSurfaceArea"
-    geometry : GEOMETRY [0..1]
+    geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
     surfaceType TEXT NOT NULL CHECK(SR_SeaSurfaceClassificationValue)
   }
@@ -67,7 +67,7 @@ Container <<applicationSchema>> "Sea Regions" {
     This describes a sea region according to the characteristics of the sea bed  rather than characteristics of the water column in general.  It does not include the subsea geology and is analogous to the concept of LandCover (INSPIRE Annex III)."
     * identifier = "Sea Regions::SeaBedArea"
     * tableName = "SR_SeaBedArea"
-    geometry : GEOMETRY [0..1]
+    geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
     <<array>> surfaceTypes TEXT NOT NULL
   }
@@ -134,8 +134,8 @@ Container <<applicationSchema>> "Sea Regions" {
   Constraint Enum <<codeList>> "SR_SeaBedCoverValue" {
     * identifier = "Sea Regions::SeaBedCoverValue"
   }
-  Class <<featureType>> "MarineLayer" {
-    geometry : GEOMETRY [0..1]
+  Abstract Class <<featureType>> "MarineLayer" {
+    geometry GEOMETRY
   }
   Constraint Enum <<codeList>> "SR_SeaSurfaceClassificationValue" {
     * identifier = "Sea Regions::SeaSurfaceClassificationValue"
@@ -149,14 +149,14 @@ Container <<applicationSchema>> "Sea Regions" {
     The part of the marine environment that is exposed (not covered in water) during a normal tidal cycle."
     * identifier = "Sea Regions::InterTidalArea"
     * tableName = "SR_InterTidalArea"
-    geometry : MULTISURFACE
+    geometry MULTISURFACE NOT NULL
     highWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
     lowWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> composition : TEXT [0..1]
-    <<voidable>> delineationKnown : BOOLEAN [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> composition TEXT CHECK(HY_P_ShoreTypeValue)
+    <<voidable>> delineationKnown BOOLEAN
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -347,7 +347,7 @@ Container <<applicationSchema>> "Base Types" {
   }
 }
 Package <<applicationSchema>> "Observable Properties" {
-  GF_PropertyType <<type>> "AbstractObservableProperty" {
+  Abstract GF_PropertyType <<type>> "AbstractObservableProperty" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     <<array>> labels : TEXT [0..1]

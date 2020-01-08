@@ -8,12 +8,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     NOTE That part of a river, harbour and so on, where the main navigable channel for vessels of larger size lies. It is also the usual course followed by vessels entering or leaving harbours, called 'ship channel' [IHO Hidrographic Registry]."
     * identifier = "Water Transport Network::FairwayArea"
     * tableName = "TN_W_FairwayArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -23,10 +23,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::FerryCrossing"
     * tableName = "TN_W_FerryCrossing"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -47,12 +47,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     SOURCE [IHO Hydrographic Registry]."
     * identifier = "Water Transport Network::TrafficSeparationSchemeRoundabout"
     * tableName = "TN_W_TrafficSeparationSchemeRoundabout"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -62,11 +62,11 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::FerryUse"
     * tableName = "TN_W_FerryUse"
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<array>> ferryUses TEXT NOT NULL
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -76,10 +76,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     * tableName = "TN_W_CEMTClass"
     CEMTClass TEXT NOT NULL CHECK(TN_W_CEMTClassValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -92,13 +92,13 @@ Container <<applicationSchema>> "Water Transport Network" {
     terminal
     turningBasin
   }
-  Class <<featureType>> "TrafficSeparationScheme" {}
-  Class <<featureType>> "WaterNode" {
-    geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "TrafficSeparationScheme" {}
+  Abstract Class <<featureType>> "WaterNode" {
+    geometry POINT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -111,12 +111,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     NOTE It is used to connect the port with the rest of the water transport network, by means of the different waterway links which arrive to / depart from it."
     * identifier = "Water Transport Network::PortNode"
     * tableName = "TN_W_PortNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -129,13 +129,13 @@ Container <<applicationSchema>> "Water Transport Network" {
     NOTE Water Transport Networks will use the <i>WatercourseLink</i> class - provided by the INSPIRE Hydrography Data Specification - wherever possible."
     * identifier = "Water Transport Network::WaterwayLink"
     * tableName = "TN_W_WaterwayLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -150,12 +150,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     NOTE Navigational buoys may be classified according to: (a) their shape, appearance, or construction, such as barrel, can, cask, conical, cylindrical, dan, keg, nun, pillar, spar, spherical, or topmark buoy; (b) their colour, such as black, chequered, green, red buoy; (c) their location, such as bifurcation, fairway, junction, mid-channel, middle-ground, or turning buoy; (d) the various kinds of hazards or dangers to navigation which they mark, such as bar, isolated danger, fish trap, obstruction, spoil ground, telegraph or wreck buoy; (e) their particular purpose or use, such as anchor, anchorage, compass adjustment, dredging, farewell (or landfall), marker, quarantine, station (or watch), or warping buoy. [S-32 - IHO International Hydrographic Dictionary]."
     * identifier = "Water Transport Network::Buoy"
     * tableName = "TN_W_Buoy"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -164,12 +164,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     * description = "State of a water transport network element with regards to its completion and use."
     * identifier = "Water Transport Network::ConditionOfWaterFacility"
     * tableName = "TN_W_ConditionOfWaterFacility"
-    currentStatus : TEXT
+    currentStatus TEXT NOT NULL CHECK(BASE_ConditionOfFacilityValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -178,11 +178,11 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::MarineWaterway"
     * tableName = "TN_W_MarineWaterway"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> deepWaterRoute BOOLEAN
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -193,12 +193,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     * description = "An area spatial object which is used to represent the physical limits of all the facilities which constitute the terrestrial zone of a sea or inland port."
     * identifier = "Water Transport Network::PortArea"
     * tableName = "TN_W_PortArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -210,10 +210,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::WaterLinkSequence"
     * tableName = "TN_W_WaterLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -225,12 +225,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     SOURCE [IMO Ships Routeing, 6th Edition], [IHO Hydrographic Registry]."
     * identifier = "Water Transport Network::TrafficSeparationSchemeLane"
     * tableName = "TN_W_TrafficSeparationSchemeLane"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -239,13 +239,13 @@ Container <<applicationSchema>> "Water Transport Network" {
     * description = "A point spatial object which is used to represent the connectivity between two different waterway links, or between a waterway link and a watercourse link, in the water transport network."
     * identifier = "Water Transport Network::WaterwayNode"
     * tableName = "TN_W_WaterwayNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> formOfWaterwayNode TEXT CHECK(TN_W_FormOfWaterwayNodeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -258,12 +258,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     SOURCE [IHO Hydrographic Registry]."
     * identifier = "Water Transport Network::TrafficSeparationSchemeSeparator"
     * tableName = "TN_W_TrafficSeparationSchemeSeparator"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -274,12 +274,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     SOURCE [IHO Hydrographic Registry]."
     * identifier = "Water Transport Network::TrafficSeparationSchemeCrossing"
     * tableName = "TN_W_TrafficSeparationSchemeCrossing"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -304,10 +304,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::InlandWaterway"
     * tableName = "TN_W_InlandWaterway"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -320,21 +320,21 @@ Container <<applicationSchema>> "Water Transport Network" {
     SOURCE  [S-32 - IHO International Hydrographic Dictionary]."
     * identifier = "Water Transport Network::Beacon"
     * tableName = "TN_W_Beacon"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
-  Class <<featureType>> "Waterway" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "Waterway" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -346,13 +346,13 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::RestrictionForWaterVehicles"
     * tableName = "TN_W_RestrictionForWaterVehicles"
     id INTEGER NOT NULL PRIMARY KEY
-    measure : TEXT
-    measure_uom : TEXT
-    restrictionType : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    measure TEXT NOT NULL
+    measure_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    restrictionType TEXT NOT NULL CHECK(TN_RestrictionTypeValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -360,21 +360,21 @@ Container <<applicationSchema>> "Water Transport Network" {
     * description = "Indicates the direction of the flow of water transport traffic in relation to the direction of the water transport link vector."
     * identifier = "Water Transport Network::WaterTrafficFlowDirection"
     * tableName = "TN_W_WaterTrafficFlowDirection"
-    direction : TEXT
+    direction TEXT NOT NULL CHECK(NET_LinkDirectionValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Class <<featureType>> "TrafficSeparationSchemeArea" {
-    geometry : SURFACE
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "TrafficSeparationSchemeArea" {
+    geometry SURFACE NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref

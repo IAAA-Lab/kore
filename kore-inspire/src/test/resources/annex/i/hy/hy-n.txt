@@ -7,8 +7,8 @@ Container <<applicationSchema>> "Hydro - Network" {
     * identifier = "Hydro - Network::WatercourseSeparatedCrossing"
     * tableName = "HY_N_WatercourseSeparatedCrossing"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     element_Link BASE_Identifier [2..*] as ref
     inspireId BASE_Identifier [0..1] as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
@@ -31,10 +31,10 @@ Container <<applicationSchema>> "Hydro - Network" {
     NOTE May represent a physical confluence, bifurcation/confluence/vanishing point etc, or it may be associated with a hydrographic point of interest or facility."
     * identifier = "Hydro - Network::HydroNode"
     * tableName = "HY_N_HydroNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> hydroNodeCategory TEXT CHECK(HY_N_HydroNodeCategoryValue)
     inspireId BASE_Identifier [0..1] as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
@@ -60,11 +60,11 @@ Container <<applicationSchema>> "Hydro - Network" {
     - virtual network segment in transitional water area"
     * identifier = "Hydro - Network::WatercourseLink"
     * tableName = "HY_N_WatercourseLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> flowDirection TEXT CHECK(NET_LinkDirectionValue)
     <<voidable>> length TEXT
     <<voidable>> length_uom TEXT CHECK(GML_UomIdentifier)
@@ -81,8 +81,8 @@ Container <<applicationSchema>> "Hydro - Network" {
     * identifier = "Hydro - Network::WatercourseLinkSequence"
     * tableName = "HY_N_WatercourseLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref

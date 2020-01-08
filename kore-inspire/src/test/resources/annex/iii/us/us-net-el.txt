@@ -36,18 +36,18 @@ Container <<applicationSchema>> "Electricity Network" {
     * identifier = "Electricity Network::ElectricityCable"
     * tableName = "US_NET_EL_ElectricityCable"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> nominalVoltage TEXT
     <<voidable>> nominalVoltage_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> operatingVoltage TEXT
     <<voidable>> operatingVoltage_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> utilityDeliveryType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
-    <<voidable>> warningType : TEXT [0..1]
+    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref

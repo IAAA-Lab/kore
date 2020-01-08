@@ -1,18 +1,18 @@
 Container <<applicationSchema>> "Network" {
   * fileName = "Network"
-  Class <<featureType>> "Node" {
+  Abstract Class <<featureType>> "Node" {
     geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
     <<voidable>> spokeEnd Link [0..*] as ref
     <<voidable>> spokeStart Link [0..*] as ref
   }
-  Class <<featureType>> "NetworkArea" {
+  Abstract Class <<featureType>> "NetworkArea" {
     geometry : SURFACE
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
@@ -23,8 +23,8 @@ Container <<applicationSchema>> "Network" {
     * identifier = "Network::NetworkConnection"
     * tableName = "NET_NetworkConnection"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> type TEXT CHECK(NET_ConnectionTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
@@ -37,9 +37,9 @@ Container <<applicationSchema>> "Network" {
     <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Class <<featureType>> "LinkSequence" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+  Abstract Class <<featureType>> "LinkSequence" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
@@ -77,13 +77,13 @@ Container <<applicationSchema>> "Network" {
     <<voidable>> offset_uom TEXT CHECK(GML_UomIdentifier)
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Class <<featureType>> "GeneralisedLink" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+  Abstract Class <<featureType>> "GeneralisedLink" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Class <<featureType>> "NetworkProperty" {
+  Abstract Class <<featureType>> "NetworkProperty" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -118,24 +118,24 @@ Container <<applicationSchema>> "Network" {
     * identifier = "Network::GradeSeparatedCrossing"
     * tableName = "NET_GradeSeparatedCrossing"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Class <<featureType>> "Link" {
+  Abstract Class <<featureType>> "Link" {
     centrelineGeometry : CURVE
     fictitious : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     endNode Node [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode Node [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
-  Class <<featureType>> "NetworkElement" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+  Abstract Class <<featureType>> "NetworkElement" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
@@ -146,9 +146,9 @@ Container <<applicationSchema>> "Network" {
     id INTEGER NOT NULL PRIMARY KEY
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Class <<featureType>> "LinkSet" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+  Abstract Class <<featureType>> "LinkSet" {
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }

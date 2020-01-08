@@ -41,11 +41,11 @@ Container <<applicationSchema>> "Population distribution - demography" {
     measurementUnit_formula TEXT
     measurementUnit_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     measurementUnit_nameStandardUnit TEXT
-    measurementUnit_offsetToStandardUnit DOUBLE
-    measurementUnit_scaleToStandardUnit DOUBLE
+    measurementUnit_offsetToStandardUnit REAL
+    measurementUnit_scaleToStandardUnit REAL
     measurementUnit_uomName TEXT NOT NULL
     measurementUnit_uomSymbol TEXT NOT NULL
-    notCountedProportion TEXT
+    notCountedProportion REAL
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
     <<reference>> inspireId INTEGER
@@ -67,12 +67,12 @@ Container <<applicationSchema>> "Population distribution - demography" {
     * description = "The pieces of datum of the distribution."
     * identifier = "Population distribution - demography::StatisticalValue"
     * tableName = "PD_StatisticalValue"
-    approximatelyLocatedPopulationProportion TEXT
-    conventionallyLocatedProportion TEXT
+    approximatelyLocatedPopulationProportion REAL
+    conventionallyLocatedProportion REAL
     id INTEGER NOT NULL PRIMARY KEY
     specialValue TEXT CHECK(PD_SpecialValue)
     status TEXT NOT NULL CHECK(PD_StatisticalDataStatusValue)
-    value TEXT
+    value REAL
     <<reference>> dimensions INTEGER
   }
   Attributes <<dataType>> "PD_Dimensions" {

@@ -23,7 +23,7 @@ Container <<applicationSchema>> "Land Use Nomenclature" {
     id INTEGER NOT NULL PRIMARY KEY
     percentage INTEGER NOT NULL
   }
-  Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
+  Abstract Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
     * identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
   Class <<union>> "HILUCSPresence" {

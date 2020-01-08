@@ -31,7 +31,7 @@ Container <<applicationSchema>> "Geology" {
     * tableName = "GE_AnthropogenicGeomorphologicFeature"
     anthropogenicGeomorphologicFeatureType TEXT NOT NULL CHECK(GE_AnthropogenicGeomorphologicFeatureTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
   Attributes <<featureType>> "GE_ShearDisplacementStructure" {
@@ -42,7 +42,7 @@ Container <<applicationSchema>> "Geology" {
     * tableName = "GE_ShearDisplacementStructure"
     faultType TEXT NOT NULL CHECK(GE_FaultTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
   Attributes <<featureType>> "GE_GeologicUnit" {
@@ -55,7 +55,7 @@ Container <<applicationSchema>> "Geology" {
     * tableName = "GE_GeologicUnit"
     geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
   Constraint Enum <<codeList>> "GE_GeologicUnitTypeValue" {
@@ -73,11 +73,11 @@ Container <<applicationSchema>> "Geology" {
     id INTEGER NOT NULL PRIMARY KEY
     naturalGeomorphologicFeatureType TEXT NOT NULL CHECK(GE_NaturalGeomorphologicFeatureTypeValue)
     <<voidable>> activity TEXT CHECK(GE_GeomorphologicActivityValue)
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
-  Class <<featureType>> "GeologicStructure" {
-    <<voidable>> name : TEXT [0..1]
+  Abstract Class <<featureType>> "GeologicStructure" {
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
   Constraint Enum <<codeList>> "GE_FoldProfileTypeValue" {
@@ -108,8 +108,8 @@ Container <<applicationSchema>> "Geology" {
   Constraint Enum <<codeList>> "GE_ThematicClassificationValue" {
     * identifier = "Geology::ThematicClassificationValue"
   }
-  Class <<featureType>> "GeomorphologicFeature" {
-    <<voidable>> name : TEXT [0..1]
+  Abstract Class <<featureType>> "GeomorphologicFeature" {
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
   Constraint Enum <<codeList>> "GE_EventEnvironmentValue" {
@@ -118,8 +118,8 @@ Container <<applicationSchema>> "Geology" {
   Constraint Enum <<codeList>> "GE_AnthropogenicGeomorphologicFeatureTypeValue" {
     * identifier = "Geology::AnthropogenicGeomorphologicFeatureTypeValue"
   }
-  Class <<featureType>> "GeologicFeature" {
-    <<voidable>> name : TEXT [0..1]
+  Abstract Class <<featureType>> "GeologicFeature" {
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
   }
   Constraint Enum <<codeList>> "GE_FaultTypeValue" {
@@ -135,7 +135,7 @@ Container <<applicationSchema>> "Geology" {
     * identifier = "Geology::Fold"
     * tableName = "GE_Fold"
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     <<voidable>> profileType TEXT CHECK(GE_FoldProfileTypeValue)
     inspireId BASE_Identifier as ref
   }
@@ -262,7 +262,7 @@ Container "Units of Measure" {
 }
 Container "Data quality information" {
   * fileName = "Data quality information"
-  Class "DQ_PositionalAccuracy" {
+  Abstract Class "DQ_PositionalAccuracy" {
     evaluationMethodDescription : TEXT [0..1]
     evaluationMethodType : TEXT [0..1]
     measureDescription : TEXT [0..1]
@@ -272,7 +272,7 @@ Container "Data quality information" {
     <<array>> nameOfMeasures : TEXT [0..1]
     evaluationProcedure BASE2_SimpleCitation [0..1] as ref
   }
-  Class "DQ_Result" {}
+  Abstract Class "DQ_Result" {}
   Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
     * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -345,8 +345,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -429,8 +429,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -445,14 +445,14 @@ Package "Simple Components" {
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
     <<property>> updatable : BOOLEAN [0..1]
-    <<property>> value : DOUBLE [0..1]
+    <<property>> value : REAL [0..1]
   }
   Class <<type>> "NilValues" {
     xsdDerivation = "true"
   }
 }
 Package "Coordinate Reference Systems" {
-  Class <<type>> "SC_CRS" {
+  Abstract Class <<type>> "SC_CRS" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     alias : GenericName [0..*]
@@ -479,7 +479,7 @@ Package "Names" {
     aName : TEXT
     scope NameSpace as ref
   }
-  Class <<type>>, <<type>> "GenericName" {
+  Abstract Class <<type>>, <<type>> "GenericName" {
     scope NameSpace as ref
   }
   Class <<type>> "ScopedName" {

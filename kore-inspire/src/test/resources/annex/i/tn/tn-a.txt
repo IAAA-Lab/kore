@@ -8,14 +8,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE Examples of Designated points are compulsory and non-compulsory reporting points."
     * identifier = "Air Transport Network::DesignatedPoint"
     * tableName = "TN_A_DesignatedPoint"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    significantPoint : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    significantPoint BOOLEAN NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -33,12 +33,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     * identifier = "Air Transport Network::AirspaceArea"
     * tableName = "TN_A_AirspaceArea"
     AirspaceAreaType TEXT NOT NULL CHECK(TN_A_AirspaceAreaTypeValue)
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -52,12 +52,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     * identifier = "Air Transport Network::AirRoute"
     * tableName = "TN_A_AirRoute"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> airRouteType TEXT CHECK(TN_A_AirRouteTypeValue)
     <<voidable>> designator TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -73,10 +73,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     altitude TEXT NOT NULL
     altitude_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -94,13 +94,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE This includes aircraft/helicopter stand taxilines, apron taxiways, rapid exit taxiways, air taxiways etc."
     * identifier = "Air Transport Network::TaxiwayArea"
     * tableName = "TN_A_TaxiwayArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -115,14 +115,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE 2 It corresponds to the initial approach during the landing phase. Each airport/heliport could have various STAR linking significant points (usually connected to air routes) to the points designated to start the landing on a specific runway."
     * identifier = "Air Transport Network::StandardInstrumentArrival"
     * tableName = "TN_A_StandardInstrumentArrival"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -160,14 +160,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     EXAMPLE A typical example is the runway threshold [AIXM5.0]."
     * identifier = "Air Transport Network::RunwayCentrelinePoint"
     * tableName = "TN_A_RunwayCentrelinePoint"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     pointRole TEXT NOT NULL CHECK(TN_A_PointRoleValue)
-    significantPoint : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    significantPoint BOOLEAN NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -184,15 +184,15 @@ Container <<applicationSchema>> "Air Transport Network" {
     SOURCE [AIXM5.0]."
     * identifier = "Air Transport Network::AerodromeNode"
     * tableName = "TN_A_AerodromeNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    significantPoint : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    significantPoint BOOLEAN NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designatorIATA TEXT
     <<voidable>> locationIndicatorICAO TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -209,14 +209,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE 2 It corresponds to the take-off phase. Each airport/heliport could have various SID linking the different runways to one or various significant points, usually connected to air routes."
     * identifier = "Air Transport Network::StandardInstrumentDeparture"
     * tableName = "TN_A_StandardInstrumentDeparture"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -230,20 +230,20 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     length TEXT NOT NULL
     length_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Class <<featureType>> "AirLink" {
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "AirLink" {
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -256,10 +256,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     * tableName = "TN_A_AerodromeCategory"
     aerodromeCategory TEXT NOT NULL CHECK(TN_A_AerodromeCategoryValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -273,14 +273,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE 2 The runway strip is a defined area including the runway and stopway, if provided, intended : a) to reduce the risk of damage to aircraft running off a runway; and b) to protect aircraft flying over it during take-off or landing operations [ICAO]."
     * identifier = "Air Transport Network::RunwayArea"
     * tableName = "TN_A_RunwayArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
     <<voidable>> runwayType TEXT CHECK(TN_A_RunwayTypeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -297,10 +297,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     altitude TEXT NOT NULL
     altitude_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -316,15 +316,15 @@ Container <<applicationSchema>> "Air Transport Network" {
     The Navaid Equipment share business rules like paired frequencies [AIXM5.0]."
     * identifier = "Air Transport Network::Navaid"
     * tableName = "TN_A_Navaid"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    significantPoint : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    significantPoint BOOLEAN NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
     <<voidable>> navaidType TEXT CHECK(TN_A_NavaidTypeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -338,10 +338,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     width TEXT NOT NULL
     width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -357,13 +357,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE 3 A specific runway of an airport/heliport usually has more than one IAP, depending on the landing direction on it."
     * identifier = "Air Transport Network::InstrumentApproachProcedure"
     * tableName = "TN_A_InstrumentApproachProcedure"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -381,14 +381,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     SOURCE [AIXM5.0]."
     * identifier = "Air Transport Network::TouchDownLiftOff"
     * tableName = "TN_A_TouchDownLiftOff"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    significantPoint : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    significantPoint BOOLEAN NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> designator TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -413,13 +413,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     - Instrument Approach Procedure (IAP), corresponding to the final approach and arrival during the landing phase."
     * identifier = "Air Transport Network::ProcedureLink"
     * tableName = "TN_A_ProcedureLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -432,12 +432,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     SOURCE [Apron - AIXM5.0]."
     * identifier = "Air Transport Network::ApronArea"
     * tableName = "TN_A_ApronArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -450,12 +450,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE An area spatial object which is used to represent the physical limits of all the facilities which form part of an inland aerodrome."
     * identifier = "Air Transport Network::AerodromeArea"
     * tableName = "TN_A_AerodromeArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -482,10 +482,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     altitude TEXT NOT NULL
     altitude_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -504,14 +504,14 @@ Container <<applicationSchema>> "Air Transport Network" {
     NOTE The presence of air nodes (normally defining Significant Points) is not mandated."
     * identifier = "Air Transport Network::AirRouteLink"
     * tableName = "TN_A_AirRouteLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> airRouteLinkClass TEXT CHECK(TN_A_AirRouteLinkClassValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -524,10 +524,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     * tableName = "TN_A_UseRestriction"
     id INTEGER NOT NULL PRIMARY KEY
     restriction TEXT NOT NULL CHECK(TN_A_AirUseRestrictionValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -535,12 +535,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     * description = "State of an air transport network element with regards to its completion and use."
     * identifier = "Air Transport Network::ConditionOfAirFacility"
     * tableName = "TN_A_ConditionOfAirFacility"
-    currentStatus : TEXT
+    currentStatus TEXT NOT NULL CHECK(BASE_ConditionOfFacilityValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -563,20 +563,20 @@ Container <<applicationSchema>> "Air Transport Network" {
     * tableName = "TN_A_SurfaceComposition"
     id INTEGER NOT NULL PRIMARY KEY
     surfaceComposition TEXT NOT NULL CHECK(TN_A_SurfaceCompositionValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
-  Class <<featureType>> "AirNode" {
-    geometry : POINT
-    significantPoint : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "AirNode" {
+    geometry POINT NOT NULL
+    significantPoint BOOLEAN NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -593,10 +593,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     * tableName = "TN_A_AerodromeType"
     aerodromeType TEXT NOT NULL CHECK(TN_A_AerodromeTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -609,10 +609,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     * identifier = "Air Transport Network::AirLinkSequence"
     * tableName = "TN_A_AirLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref

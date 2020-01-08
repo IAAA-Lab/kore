@@ -43,26 +43,26 @@ Container <<applicationSchema>> "Energy Resources Vector" {
     <font color="#222226">Renewable energy is energy that is naturally occurring and theoretically inexhausatable that is not derived from fossil or nuclear fuel. Waste is a fuel that may consist of many materials coming from combustible industrial, institutional, hospital and household wastes such as rubber, plastics, waste fossil oils and other similar commodities. It is either solid or liquid in form, renewable or non-renewable, biodegradable or non-biodegradable.</font>"
     * identifier = "Energy Resources Vector::RenewableAndWasteResource"
     * tableName = "ER_V_RenewableAndWasteResource"
-    ClassificationAndQuantificationFramework : TEXT [0..1]
+    ClassificationAndQuantificationFramework TEXT CHECK(ER_B_ClassificationAndQuantificationFrameworkValue)
     dateOfDetermination_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     typeOfResource TEXT NOT NULL CHECK(ER_B_RenewableAndWasteValue)
-    verticalExtent_verticalExtent_range_upperBound : TEXT [0..1]
-    verticalExtent_verticalExtent_range_upperBound_uom : TEXT [0..1]
-    verticalExtent_verticalExtent_scalar : TEXT [0..1]
-    verticalExtent_verticalExtent_scalar_uom : TEXT [0..1]
-    verticalExtent_verticalReference : TEXT [0..1]
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    verticalExtent_verticalExtent_range_upperBound TEXT
+    verticalExtent_verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_verticalExtent_scalar TEXT
+    verticalExtent_verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> Capacity TEXT
     <<voidable>> Capacity_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> dateOfDetermination_date8601 DATE
     <<voidable>> dateOfDetermination_dateTime8601 DATETIME
     <<voidable>> dateOfDetermination_time8601 TEXT
     <<voidable>> dateOfDetermination_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound : TEXT [0..1]
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom : TEXT [0..1]
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
     inspireId BASE_Identifier as ref
     <<voidable>> exploitationPeriod ER_V_ExploitationPeriodType [0..*] as ref
     <<voidable>> reportingAuthority BASE2_RelatedParty [0..*] as ref
@@ -74,40 +74,40 @@ Container <<applicationSchema>> "Energy Resources Vector" {
     <font color="#222226">Solid fossil fuels are those non-renewable hydrocarbon energy resources that are naturally found in the solid state i.e. coals and peat. Hydrocarbons cover various types of natural gas and petroleum resources.</font>"
     * identifier = "Energy Resources Vector::FossilFuelResource"
     * tableName = "ER_V_FossilFuelResource"
-    ClassificationAndQuantificationFramework : TEXT [0..1]
+    ClassificationAndQuantificationFramework TEXT CHECK(ER_B_ClassificationAndQuantificationFrameworkValue)
     dateOfDiscovery_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    verticalExtent_verticalExtent_range_upperBound : TEXT [0..1]
-    verticalExtent_verticalExtent_range_upperBound_uom : TEXT [0..1]
-    verticalExtent_verticalExtent_scalar : TEXT [0..1]
-    verticalExtent_verticalExtent_scalar_uom : TEXT [0..1]
-    verticalExtent_verticalReference : TEXT [0..1]
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    verticalExtent_verticalExtent_range_upperBound TEXT
+    verticalExtent_verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_verticalExtent_scalar TEXT
+    verticalExtent_verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> dateOfDiscovery_date8601 DATE
     <<voidable>> dateOfDiscovery_dateTime8601 DATETIME
     <<voidable>> dateOfDiscovery_time8601 TEXT
     <<voidable>> dateOfDiscovery_time8601_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound : TEXT [0..1]
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom : TEXT [0..1]
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
     inspireId BASE_Identifier as ref
     <<voidable>> exploitationPeriod ER_V_ExploitationPeriodType [0..*] as ref
     <<voidable>> reportingAuthority BASE2_RelatedParty [0..*] as ref
     <<voidable>> resourceName BASE2_SimpleGeographicalName [0..*] as ref
   }
-  Class <<featureType>> "VectorEnergyResource" {
-    ClassificationAndQuantificationFramework : TEXT [0..1]
-    geometry : GEOMETRY
-    verticalExtent_verticalExtent_range_upperBound : TEXT [0..1]
-    verticalExtent_verticalExtent_range_upperBound_uom : TEXT [0..1]
-    verticalExtent_verticalExtent_scalar : TEXT [0..1]
-    verticalExtent_verticalExtent_scalar_uom : TEXT [0..1]
-    verticalExtent_verticalReference : TEXT [0..1]
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound : TEXT [0..1]
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom : TEXT [0..1]
+  Abstract Class <<featureType>> "VectorEnergyResource" {
+    ClassificationAndQuantificationFramework TEXT CHECK(ER_B_ClassificationAndQuantificationFrameworkValue)
+    geometry GEOMETRY NOT NULL
+    verticalExtent_verticalExtent_range_upperBound TEXT
+    verticalExtent_verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_verticalExtent_scalar TEXT
+    verticalExtent_verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
+    verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
     inspireId BASE_Identifier as ref
     <<voidable>> exploitationPeriod ER_V_ExploitationPeriodType [0..*] as ref
     <<voidable>> reportingAuthority BASE2_RelatedParty [0..*] as ref

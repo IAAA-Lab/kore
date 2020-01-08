@@ -10,13 +10,13 @@ Container <<applicationSchema>> "Hydrogeology" {
     approximateQuantityOfFlow_singleQuantity_value_nilReason_URI <<missing>>
     approximateQuantityOfFlow_singleQuantity_value_value TEXT
     approximateQuantityOfFlow_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     naturalObjectType TEXT NOT NULL CHECK(GE_HG_NaturalObjectTypeValue)
     <<voidable>>, <<reference>> groundWaterBody INTEGER
     <<voidable>> approximateQuantityOfFlow_quantityInterval QuantityRange
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
     <<voidable>> waterPersistence TEXT CHECK(GE_HG_WaterPersistenceValue)
     inspireId BASE_Identifier [0..1] as ref
   }
@@ -29,16 +29,16 @@ Container <<applicationSchema>> "Hydrogeology" {
     An underground geological formation able to store and yield water."
     * identifier = "Hydrogeology::Aquifer"
     * tableName = "GE_HG_Aquifer"
-    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
-    approximateDepth_singleQuantity_value_value : TEXT [0..1]
-    approximateDepth_singleQuantity_value_value_uom : TEXT [0..1]
-    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
-    approximateThickness_singleQuantity_value_value : TEXT [0..1]
-    approximateThickness_singleQuantity_value_value_uom : TEXT [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateDepth_singleQuantity_value_nilReason_URI <<missing>>
+    approximateDepth_singleQuantity_value_value TEXT
+    approximateDepth_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateThickness_singleQuantity_value_nilReason_URI <<missing>>
+    approximateThickness_singleQuantity_value_value TEXT
+    approximateThickness_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     aquiferType TEXT NOT NULL CHECK(GE_HG_AquiferTypeValue)
-    geologicUnitType : TEXT
+    geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
     mediaType TEXT NOT NULL CHECK(GE_HG_AquiferMediaTypeValue)
     permeabilityCoefficient_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
@@ -54,14 +54,14 @@ Container <<applicationSchema>> "Hydrogeology" {
     vulnerabilityToPollution_singleQuantity_value_value TEXT
     vulnerabilityToPollution_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>>, <<reference>> aquiferSystem INTEGER
-    <<voidable>> approximateDepth_quantityInterval : QuantityRange [0..1]
-    <<voidable>> approximateThickness_quantityInterval : QuantityRange [0..1]
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> approximateDepth_quantityInterval QuantityRange
+    <<voidable>> approximateThickness_quantityInterval QuantityRange
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
     <<voidable>> hydroGeochemicalRockType TEXT CHECK(GE_HG_HydroGeochemicalRockTypeValue)
     <<voidable>> isExploited BOOLEAN
     <<voidable>> isMainInSystem BOOLEAN
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     <<voidable>> permeabilityCoefficient_quantityInterval QuantityRange
     <<voidable>> storativityCoefficient_quantityInterval QuantityRange
     <<voidable>> vulnerabilityToPollution_quantityInterval QuantityRange
@@ -98,22 +98,22 @@ Container <<applicationSchema>> "Hydrogeology" {
     <<reference>> piezometricState_piezometricSurface_surfaceRectifiedGrid_RectifiedGridCoverage INTEGER
     <<reference>> piezometricState_piezometricSurface_surfaceReferencableGrid_ReferenceableGridCoverage INTEGER
   }
-  Class <<featureType>> "HydrogeologicalObject" {
-    geometry : GEOMETRY
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
+  Abstract Class <<featureType>> "HydrogeologicalObject" {
+    geometry GEOMETRY NOT NULL
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "GE_HG_NaturalObjectTypeValue" {
     * identifier = "Hydrogeology::NaturalObjectTypeValue"
   }
-  Class <<featureType>> "HydrogeologicalObjectManMade" {
-    geometry : GEOMETRY
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> statusCode : TEXT [0..1]
-    <<lifeCycleInfo - voidable>> validFrom : DATETIME
-    <<lifeCycleInfo - voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "HydrogeologicalObjectManMade" {
+    geometry GEOMETRY NOT NULL
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
+    <<voidable>> statusCode TEXT CHECK(GE_HG_StatusCodeTypeValue)
+    <<lifeCycleInfo - voidable>> validFrom DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "GE_HG_WaterPersistenceValue" {
@@ -128,21 +128,21 @@ Container <<applicationSchema>> "Hydrogeology" {
     A formation which, although porous and capable of absorbing water slowly, will not transmit water fast enough to furnish an appreciable supply for a well or spring. Aquicludes are characterized by very low values of "leakage" (the ratio of vertical <i>Hydraulic Conductivity </i>to thickness), so that they transmit only minor inter-aquifer flow and also have very low rates of yield from compressible storage. Therefore, they constitute boundaries of aquifer flow systems."
     * identifier = "Hydrogeology::Aquiclude"
     * tableName = "GE_HG_Aquiclude"
-    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
-    approximateDepth_singleQuantity_value_value : TEXT [0..1]
-    approximateDepth_singleQuantity_value_value_uom : TEXT [0..1]
-    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
-    approximateThickness_singleQuantity_value_value : TEXT [0..1]
-    approximateThickness_singleQuantity_value_value_uom : TEXT [0..1]
-    geologicUnitType : TEXT
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateDepth_singleQuantity_value_nilReason_URI <<missing>>
+    approximateDepth_singleQuantity_value_value TEXT
+    approximateDepth_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateThickness_singleQuantity_value_nilReason_URI <<missing>>
+    approximateThickness_singleQuantity_value_value TEXT
+    approximateThickness_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> approximateDepth_quantityInterval : QuantityRange [0..1]
-    <<voidable>> approximateThickness_quantityInterval : QuantityRange [0..1]
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> approximateDepth_quantityInterval QuantityRange
+    <<voidable>> approximateThickness_quantityInterval QuantityRange
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
     <<voidable>> geologicHistory_GeologicEvent BASE_Identifier [0..*] as ref
     <<voidable>> geologicStructure_GeologicStructure BASE_Identifier [0..*] as ref
@@ -155,22 +155,22 @@ Container <<applicationSchema>> "Hydrogeology" {
     NOTE: The Aquifer System components and their attributes (including geometry) are relatively stable over time except in special cases."
     * identifier = "Hydrogeology::AquiferSystem"
     * tableName = "GE_HG_AquiferSystem"
-    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
-    approximateDepth_singleQuantity_value_value : TEXT [0..1]
-    approximateDepth_singleQuantity_value_value_uom : TEXT [0..1]
-    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
-    approximateThickness_singleQuantity_value_value : TEXT [0..1]
-    approximateThickness_singleQuantity_value_value_uom : TEXT [0..1]
-    geologicUnitType : TEXT
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateDepth_singleQuantity_value_nilReason_URI <<missing>>
+    approximateDepth_singleQuantity_value_value TEXT
+    approximateDepth_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateThickness_singleQuantity_value_nilReason_URI <<missing>>
+    approximateThickness_singleQuantity_value_value TEXT
+    approximateThickness_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>> approximateDepth_quantityInterval : QuantityRange [0..1]
-    <<voidable>> approximateThickness_quantityInterval : QuantityRange [0..1]
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> approximateDepth_quantityInterval QuantityRange
+    <<voidable>> approximateThickness_quantityInterval QuantityRange
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
     <<voidable>> isLayered BOOLEAN
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
     <<voidable>> geologicHistory_GeologicEvent BASE_Identifier [0..*] as ref
     <<voidable>> geologicStructure_GeologicStructure BASE_Identifier [0..*] as ref
@@ -186,16 +186,16 @@ Container <<applicationSchema>> "Hydrogeology" {
     NOTE: ActiveWell by extracting, recharging or dewatering influences and changes the state of groundwater resources."
     * identifier = "Hydrogeology::ActiveWell"
     * tableName = "GE_HG_ActiveWell"
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<reference>> borehole_Borehole INTEGER
     <<voidable>>, <<reference>> environmentalMonitoringFacility_EnvironmentalMonitoringFacility INTEGER
     <<array>> activityTypes TEXT NOT NULL
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> statusCode : TEXT [0..1]
-    <<lifeCycleInfo - voidable>> validFrom : DATETIME
-    <<lifeCycleInfo - voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
+    <<voidable>> statusCode TEXT CHECK(GE_HG_StatusCodeTypeValue)
+    <<lifeCycleInfo - voidable>> validFrom DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "GE_HG_HydroGeochemicalRockTypeValue" {
@@ -207,10 +207,10 @@ Container <<applicationSchema>> "Hydrogeology" {
     It does not yield water freely to wells, but may transmit appreciable water to or from adjacent aquifers and, where sufficiently thick, may constitute an important ground-water storage unit. Aquitards are characterized by values of leakance that may range from relatively low to relatively high. A really extensive aquitard of relatively low leakance may function regionally as boundaries of aquifer flow systems."
     * identifier = "Hydrogeology::Aquitard"
     * tableName = "GE_HG_Aquitard"
-    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
-    approximateDepth_singleQuantity_value_value : TEXT [0..1]
-    approximateDepth_singleQuantity_value_value_uom : TEXT [0..1]
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateDepth_singleQuantity_value_nilReason_URI <<missing>>
+    approximateDepth_singleQuantity_value_value TEXT
+    approximateDepth_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
     approximatePermeabilityCoefficient_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
     approximatePermeabilityCoefficient_singleQuantity_value_nilReason_URI <<missing>>
     approximatePermeabilityCoefficient_singleQuantity_value_value TEXT
@@ -219,39 +219,39 @@ Container <<applicationSchema>> "Hydrogeology" {
     approximateStorativityCoefficient_singleQuantity_value_nilReason_URI <<missing>>
     approximateStorativityCoefficient_singleQuantity_value_value TEXT
     approximateStorativityCoefficient_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
-    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
-    approximateThickness_singleQuantity_value_value : TEXT [0..1]
-    approximateThickness_singleQuantity_value_value_uom : TEXT [0..1]
-    geologicUnitType : TEXT
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateThickness_singleQuantity_value_nilReason_URI <<missing>>
+    approximateThickness_singleQuantity_value_value TEXT
+    approximateThickness_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<reference>> aquiferSystem INTEGER
-    <<voidable>> approximateDepth_quantityInterval : QuantityRange [0..1]
+    <<voidable>> approximateDepth_quantityInterval QuantityRange
     <<voidable>> approximatePermeabilityCoefficient_quantityInterval QuantityRange
     <<voidable>> approximateStorativityCoefficient_quantityInterval QuantityRange
-    <<voidable>> approximateThickness_quantityInterval : QuantityRange [0..1]
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> approximateThickness_quantityInterval QuantityRange
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
     <<voidable>> geologicHistory_GeologicEvent BASE_Identifier [0..*] as ref
     <<voidable>> geologicStructure_GeologicStructure BASE_Identifier [0..*] as ref
   }
-  Class <<featureType>> "HydrogeologicalUnit" {
-    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateDepth_singleQuantity_value_nilReason_URI [0..1]
-    approximateDepth_singleQuantity_value_value : TEXT [0..1]
-    approximateDepth_singleQuantity_value_value_uom : TEXT [0..1]
-    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration [0..1]
-    approximateThickness_singleQuantity_value_nilReason_URI [0..1]
-    approximateThickness_singleQuantity_value_value : TEXT [0..1]
-    approximateThickness_singleQuantity_value_value_uom : TEXT [0..1]
-    geologicUnitType : TEXT
-    <<voidable>> approximateDepth_quantityInterval : QuantityRange [0..1]
-    <<voidable>> approximateThickness_quantityInterval : QuantityRange [0..1]
-    <<lifeCycleInfo - voidable>> beginLifespanVersion : DATETIME
-    <<lifeCycleInfo - voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> name : TEXT [0..1]
+  Abstract Class <<featureType>> "HydrogeologicalUnit" {
+    approximateDepth_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateDepth_singleQuantity_value_nilReason_URI <<missing>>
+    approximateDepth_singleQuantity_value_value TEXT
+    approximateDepth_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    approximateThickness_singleQuantity_value_nilReason_NilReasonEnumeration <<missing>>
+    approximateThickness_singleQuantity_value_nilReason_URI <<missing>>
+    approximateThickness_singleQuantity_value_value TEXT
+    approximateThickness_singleQuantity_value_value_uom TEXT CHECK(GML_UomIdentifier)
+    geologicUnitType TEXT NOT NULL CHECK(GE_GeologicUnitTypeValue)
+    <<voidable>> approximateDepth_quantityInterval QuantityRange
+    <<voidable>> approximateThickness_quantityInterval QuantityRange
+    <<lifeCycleInfo - voidable>> beginLifespanVersion DATETIME NOT NULL
+    <<lifeCycleInfo - voidable>> endLifespanVersion DATETIME
+    <<voidable>> name TEXT
     inspireId BASE_Identifier as ref
     <<voidable>> geologicHistory_GeologicEvent BASE_Identifier [0..*] as ref
     <<voidable>> geologicStructure_GeologicStructure BASE_Identifier [0..*] as ref
@@ -477,7 +477,7 @@ Container "Units of Measure" {
 }
 Container "Data quality information" {
   * fileName = "Data quality information"
-  Class "DQ_PositionalAccuracy" {
+  Abstract Class "DQ_PositionalAccuracy" {
     evaluationMethodDescription : TEXT [0..1]
     evaluationMethodType : TEXT [0..1]
     measureDescription : TEXT [0..1]
@@ -487,7 +487,7 @@ Container "Data quality information" {
     <<array>> nameOfMeasures : TEXT [0..1]
     evaluationProcedure BASE2_SimpleCitation [0..1] as ref
   }
-  Class "DQ_Result" {}
+  Abstract Class "DQ_Result" {}
   Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
     * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -554,8 +554,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -638,8 +638,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -654,7 +654,7 @@ Package "Simple Components" {
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
     <<property>> updatable : BOOLEAN [0..1]
-    <<property>> value : DOUBLE [0..1]
+    <<property>> value : REAL [0..1]
   }
   Class <<type>> "NilValues" {
     xsdDerivation = "true"
@@ -667,7 +667,7 @@ Package "EA Model" {
 }
 
 Package "Coordinate Reference Systems" {
-  Class <<type>> "SC_CRS" {
+  Abstract Class <<type>> "SC_CRS" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     alias : GenericName [0..*]
@@ -694,7 +694,7 @@ Package "Names" {
     aName : TEXT
     scope NameSpace as ref
   }
-  Class <<type>>, <<type>> "GenericName" {
+  Abstract Class <<type>>, <<type>> "GenericName" {
     scope NameSpace as ref
   }
   Class <<type>> "ScopedName" {

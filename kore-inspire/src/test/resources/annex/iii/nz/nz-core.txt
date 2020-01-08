@@ -1,13 +1,13 @@
 Container <<applicationSchema>> "NaturalRiskZones" {
   * fileName = "NaturalRiskZones"
-  Class <<featureType>> "AbstractObservedEvent" {
-    typeOfHazard_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> nameOfEvent : TEXT [0..1]
-    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "AbstractObservedEvent" {
+    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> nameOfEvent TEXT
+    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref
   }
@@ -23,18 +23,18 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * description = "A coverage representating continuous information about exposed elements."
     * identifier = "NaturalRiskZones::ExposedElementCoverage"
     * tableName = "NZ_CORE_ExposedElementCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
     typeOfElement_exposedElementCategory TEXT NOT NULL CHECK(NZ_CORE_ExposedElementCategoryValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> validFrom : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> validFrom DATETIME
+    <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
     <<voidable>> typeOfElement_specificExposedElementType TEXT CHECK(NZ_CORE_SpecificExposedElementTypeValue)
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     inspireId BASE_Identifier as ref
@@ -54,12 +54,12 @@ Container <<applicationSchema>> "NaturalRiskZones" {
   Constraint Enum <<codeList>> "NZ_CORE_SpecificHazardTypeValue" {
     * identifier = "NaturalRiskZones::SpecificHazardTypeValue"
   }
-  Class <<featureType>> "AbstractHazardArea" {
-    determinationMethod : TEXT
-    typeOfHazard_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
+  Abstract Class <<featureType>> "AbstractHazardArea" {
+    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
+    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     inspireId BASE_Identifier as ref
   }
   Feature <<featureType>> "NZ_CORE_ExposedElement" {
@@ -68,10 +68,10 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * tableName = "NZ_CORE_ExposedElement"
     geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> validFrom : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> validFrom DATETIME
+    <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
     inspireId BASE_Identifier as ref
     <<voidable>> sourceOfSpatialRepresentation_AbstractFeature BASE_Identifier [0..1] as ref
   }
@@ -85,19 +85,19 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     levelOfVulnerability_quantitativeValue_unitOfMeasure_formula TEXT
     levelOfVulnerability_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     levelOfVulnerability_quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_offsetToStandardUnit DOUBLE
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_scaleToStandardUnit DOUBLE
+    levelOfVulnerability_quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
+    levelOfVulnerability_quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
     levelOfVulnerability_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
     levelOfVulnerability_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
-    levelOfVulnerability_quantitativeValue_value TEXT NOT NULL
+    levelOfVulnerability_quantitativeValue_value REAL NOT NULL
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_formula TEXT
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_offsetToStandardUnit DOUBLE
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_scaleToStandardUnit DOUBLE
+    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
+    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
     magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
-    magnitudeOrIntensityOfHazard_quantitativeValue_value TEXT NOT NULL
+    magnitudeOrIntensityOfHazard_quantitativeValue_value REAL NOT NULL
     sourceOfVulnerability_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     typeOfElement_exposedElementCategory TEXT NOT NULL CHECK(NZ_CORE_ExposedElementCategoryValue)
     <<voidable>> levelOfVulnerability_assessmentMethod_date DATE
@@ -134,11 +134,11 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     quantitativeValue_unitOfMeasure_formula TEXT
     quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    quantitativeValue_unitOfMeasure_offsetToStandardUnit DOUBLE
-    quantitativeValue_unitOfMeasure_scaleToStandardUnit DOUBLE
+    quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
+    quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
     quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
     quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
-    quantitativeValue_value TEXT NOT NULL
+    quantitativeValue_value REAL NOT NULL
     <<voidable>> assessmentMethod_date DATE
     <<voidable>> assessmentMethod_level LegislationLevelValue
     <<voidable>> assessmentMethod_link TEXT
@@ -150,21 +150,21 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * description = "Discrete spatial objects representing a natural hazard."
     * identifier = "NaturalRiskZones::HazardArea"
     * tableName = "NZ_CORE_HazardArea"
-    determinationMethod : TEXT
+    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    likelihoodOfOccurrence_quantitativeLikelihood_probabilityOfOccurrence_value DOUBLE NOT NULL
-    typeOfHazard_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
+    likelihoodOfOccurrence_quantitativeLikelihood_probabilityOfOccurrence_value REAL NOT NULL
+    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_date DATE
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_level LegislationLevelValue
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_link TEXT
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_name TEXT
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     <<voidable>> likelihoodOfOccurrence_qualitativeLikelihood TEXT
-    <<voidable>> likelihoodOfOccurrence_quantitativeLikelihood_returnPeriod TEXT
-    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
+    <<voidable>> likelihoodOfOccurrence_quantitativeLikelihood_returnPeriod REAL
+    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     inspireId BASE_Identifier as ref
   }
   Feature <<featureType>> "NZ_CORE_ObservedEvent" {
@@ -173,13 +173,13 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * tableName = "NZ_CORE_ObservedEvent"
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    typeOfHazard_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> nameOfEvent : TEXT [0..1]
-    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> nameOfEvent TEXT
+    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref
   }
@@ -192,21 +192,21 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     levelOfRisk_quantitativeValue_unitOfMeasure_formula TEXT
     levelOfRisk_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     levelOfRisk_quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    levelOfRisk_quantitativeValue_unitOfMeasure_offsetToStandardUnit DOUBLE
-    levelOfRisk_quantitativeValue_unitOfMeasure_scaleToStandardUnit DOUBLE
+    levelOfRisk_quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
+    levelOfRisk_quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
     levelOfRisk_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
     levelOfRisk_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
-    levelOfRisk_quantitativeValue_value TEXT NOT NULL
-    sourceOfRisk_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
+    levelOfRisk_quantitativeValue_value REAL NOT NULL
+    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
     <<voidable>> levelOfRisk_assessmentMethod_date DATE
     <<voidable>> levelOfRisk_assessmentMethod_level LegislationLevelValue
     <<voidable>> levelOfRisk_assessmentMethod_link TEXT
     <<voidable>> levelOfRisk_assessmentMethod_name TEXT
     <<voidable>> levelOfRisk_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     <<voidable>> levelOfRisk_qualitativeValue TEXT
-    <<voidable>> sourceOfRisk_specificHazardType : TEXT [0..1]
+    <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     inspireId BASE_Identifier as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
@@ -214,18 +214,18 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * description = "A coverage representing continuous information about a type of natural hazard."
     * identifier = "NaturalRiskZones::HazardCoverage"
     * tableName = "NZ_CORE_HazardCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    determinationMethod : TEXT
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
-    typeOfHazard_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
+    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     inspireId BASE_Identifier as ref
   }
@@ -233,26 +233,26 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * description = "A coverage representation of natural risks."
     * identifier = "NaturalRiskZones::RiskCoverage"
     * tableName = "NZ_CORE_RiskCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
-    sourceOfRisk_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> sourceOfRisk_specificHazardType : TEXT [0..1]
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
+    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     inspireId BASE_Identifier as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
-  Class <<featureType>> "AbstractExposedElement" {
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> validFrom : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> validTo : DATETIME [0..1]
+  Abstract Class <<featureType>> "AbstractExposedElement" {
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> validFrom DATETIME
+    <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
     inspireId BASE_Identifier as ref
     <<voidable>> sourceOfSpatialRepresentation_AbstractFeature BASE_Identifier [0..1] as ref
   }
@@ -261,18 +261,18 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * identifier = "NaturalRiskZones::QuantitativeLikelihood"
     * tableName = "NZ_CORE_QuantitativeLikelihood"
     id INTEGER NOT NULL PRIMARY KEY
-    probabilityOfOccurrence_value DOUBLE NOT NULL
-    <<voidable>> returnPeriod TEXT
+    probabilityOfOccurrence_value REAL NOT NULL
+    <<voidable>> returnPeriod REAL
   }
   Constraint Enum <<codeList>> "NZ_CORE_ExposedElementCategoryValue" {
     * identifier = "NaturalRiskZones::ExposedElementCategoryValue"
     obligation = "ImplementingRule"
   }
-  Class <<featureType>> "AbstractRiskZone" {
-    sourceOfRisk_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> sourceOfRisk_specificHazardType : TEXT [0..1]
+  Abstract Class <<featureType>> "AbstractRiskZone" {
+    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     inspireId BASE_Identifier as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
@@ -283,33 +283,33 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * identifier = "NaturalRiskZones::LikelihoodOfOccurrence"
     * tableName = "NZ_CORE_LikelihoodOfOccurrence"
     id INTEGER NOT NULL PRIMARY KEY
-    quantitativeLikelihood_probabilityOfOccurrence_value DOUBLE NOT NULL
+    quantitativeLikelihood_probabilityOfOccurrence_value REAL NOT NULL
     <<voidable>> assessmentMethod_date DATE
     <<voidable>> assessmentMethod_level LegislationLevelValue
     <<voidable>> assessmentMethod_link TEXT
     <<voidable>> assessmentMethod_name TEXT
     <<voidable>> assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     <<voidable>> qualitativeLikelihood TEXT
-    <<voidable>> quantitativeLikelihood_returnPeriod TEXT
+    <<voidable>> quantitativeLikelihood_returnPeriod REAL
   }
   Attributes <<featureType>> "NZ_CORE_ObservedEventCoverage" {
     * description = "A coverage representing continuous information about observed events."
     * identifier = "NaturalRiskZones::ObservedEventCoverage"
     * tableName = "NZ_CORE_ObservedEventCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
-    typeOfHazard_hazardCategory : TEXT
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
-    <<voidable>> nameOfEvent : TEXT [0..1]
-    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
+    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>> nameOfEvent TEXT
+    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     inspireId BASE_Identifier as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref

@@ -537,7 +537,7 @@ Package "Metadata application information" {
     has MD_Metadata [1..*] as ref
     partOf DS_Aggregate [0..*] as ref
   }
-  Class "DS_Aggregate" {
+  Abstract Class "DS_Aggregate" {
     RationalRose$Java:ConstructorIs = "public"
     RationalRose$Java:Final = "False"
     RationalRose$Java:GenerateDefaultConstructor = "True"

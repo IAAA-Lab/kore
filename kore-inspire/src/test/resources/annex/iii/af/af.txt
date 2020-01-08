@@ -36,13 +36,13 @@ Container <<applicationSchema>> "Agricultural and Aquaculture Facilities Model" 
     03.1  fishing is excluded."
     * identifier = "Agricultural and Aquaculture Facilities Model::Holding"
     * tableName = "AF_Holding"
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> name : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> name TEXT
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     function ACT_CORE_Function [1..*] as ref
     inspireId BASE_Identifier as ref
     thematicId BASE2_ThematicIdentifier [0..*] as ref

@@ -29,13 +29,13 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     upper TEXT NOT NULL
     upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
-  Class <<featureType>> "HydroPointOfInterest" {
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+  Abstract Class <<featureType>> "HydroPointOfInterest" {
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -48,13 +48,13 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Crossing"
     * tableName = "HY_P_Crossing"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     <<voidable>> type TEXT CHECK(HY_P_CrossingTypeValue)
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
@@ -68,13 +68,13 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Lock"
     * tableName = "HY_P_Lock"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -91,32 +91,32 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::ShorelineConstruction"
     * tableName = "HY_P_ShorelineConstruction"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Class <<featureType>> "SurfaceWater" {
-    geometry : GEOMETRY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    localType_characterSetCode : TEXT [0..1]
-    localType_country : TEXT [0..1]
-    localType_languageCode : TEXT [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> localType_text : TEXT [0..1]
-    <<voidable>> origin : TEXT [0..1]
-    <<voidable>> persistence : TEXT [0..1]
-    <<voidable>> tidal : BOOLEAN [0..1]
+  Abstract Class <<featureType>> "SurfaceWater" {
+    geometry GEOMETRY NOT NULL
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> localType_text TEXT
+    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
+    <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
+    <<voidable>> tidal BOOLEAN
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
@@ -145,14 +145,14 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     SOURCE [EuroRegionalMap]."
     * identifier = "Hydro - Physical Waters::Watercourse"
     * tableName = "HY_P_Watercourse"
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    localType_characterSetCode : TEXT [0..1]
-    localType_country : TEXT [0..1]
-    localType_languageCode : TEXT [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
     streamOrder_order TEXT
     streamOrder_orderScheme TEXT
     streamOrder_scope TEXT
@@ -160,17 +160,17 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     width_lower_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     width_upper TEXT NOT NULL
     width_upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> delineationKnown BOOLEAN
     <<voidable>> length TEXT
     <<voidable>> length_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> level TEXT CHECK(BASE_VerticalPositionValue)
-    <<voidable>> localType_text : TEXT [0..1]
-    <<voidable>> origin : TEXT [0..1]
-    <<voidable>> persistence : TEXT [0..1]
-    <<voidable>> tidal : BOOLEAN [0..1]
+    <<voidable>> localType_text TEXT
+    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
+    <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
+    <<voidable>> tidal BOOLEAN
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
@@ -241,13 +241,13 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Sluice"
     * tableName = "HY_P_Sluice"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -260,38 +260,38 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Ford"
     * tableName = "HY_P_Ford"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Class <<featureType>> "FluvialPoint" {
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+  Abstract Class <<featureType>> "FluvialPoint" {
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
-  Class <<featureType>> "ManMadeObject" {
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+  Abstract Class <<featureType>> "ManMadeObject" {
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -308,13 +308,13 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Embankment"
     * tableName = "HY_P_Embankment"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -327,12 +327,12 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Rapids"
     * tableName = "HY_P_Rapids"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -358,26 +358,26 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     NOTE It may occur in a natural terrain depression in which water collects, or may be impounded by a dam, or formed by its bed being hollowed out of the soil, or formed by embanking and/or damming up a natural hollow (for example: by a beaver dam). It may be connected to inflowing / outflowing watercourses or other standing waters."
     * identifier = "Hydro - Physical Waters::StandingWater"
     * tableName = "HY_P_StandingWater"
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    localType_characterSetCode : TEXT [0..1]
-    localType_country : TEXT [0..1]
-    localType_languageCode : TEXT [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
+    localType_country TEXT CHECK(GMD_CountryCode)
+    localType_languageCode TEXT CHECK(GMD_LanguageCode)
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> elevation TEXT
     <<voidable>> elevation_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> localType_text : TEXT [0..1]
+    <<voidable>> localType_text TEXT
     <<voidable>> meanDepth TEXT
     <<voidable>> meanDepth_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> origin : TEXT [0..1]
-    <<voidable>> persistence : TEXT [0..1]
+    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
+    <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
     <<voidable>> surfaceArea TEXT
     <<voidable>> surfaceArea_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> tidal : BOOLEAN [0..1]
+    <<voidable>> tidal BOOLEAN
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
@@ -433,12 +433,12 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::Falls"
     * tableName = "HY_P_Falls"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geometry GEOMETRY
     <<voidable>> height TEXT
     <<voidable>> height_uom TEXT CHECK(GML_UomIdentifier)
     inspireId BASE_Identifier as ref
@@ -453,13 +453,13 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * identifier = "Hydro - Physical Waters::DamOrWeir"
     * tableName = "HY_P_DamOrWeir"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfDetail_distance : TEXT [0..1]
-    levelOfDetail_distance_uom : TEXT [0..1]
-    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> condition : TEXT [0..1]
-    <<voidable>> geometry : GEOMETRY [0..1]
+    levelOfDetail_distance TEXT
+    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
+    levelOfDetail_equivalentScale_denominator INTEGER
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> geometry GEOMETRY
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref

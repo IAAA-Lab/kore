@@ -8,16 +8,16 @@ Container <<applicationSchema>> "Environmental Management Facilities" {
     The functions considered for the Environmental Facilities Theme fall mainly under the NACE rev. 2 category E "Water supply; Sewerage; Waste management and remediation activities"."
     * identifier = "Environmental Management Facilities::EnvironmentalManagementFacility"
     * tableName = "US_EMF_EnvironmentalManagementFacility"
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>>, <<reference>> facilityDescription INTEGER
     <<voidable>>, <<array>> types TEXT
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     <<voidable>> status TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     function ACT_CORE_Function [1..*] as ref
     inspireId BASE_Identifier as ref
     thematicId BASE2_ThematicIdentifier [0..*] as ref
@@ -112,11 +112,11 @@ Container <<applicationSchema>> "Activity Complex" {
     amount_unitOfMeasure_formula TEXT
     amount_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     amount_unitOfMeasure_nameStandardUnit TEXT
-    amount_unitOfMeasure_offsetToStandardUnit DOUBLE
-    amount_unitOfMeasure_scaleToStandardUnit DOUBLE
+    amount_unitOfMeasure_offsetToStandardUnit REAL
+    amount_unitOfMeasure_scaleToStandardUnit REAL
     amount_unitOfMeasure_uomName TEXT NOT NULL
     amount_unitOfMeasure_uomSymbol TEXT NOT NULL
-    amount_value TEXT NOT NULL
+    amount_value REAL NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inputOutput TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
   }

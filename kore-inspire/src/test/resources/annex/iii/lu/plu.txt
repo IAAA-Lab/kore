@@ -41,7 +41,7 @@ Container <<applicationSchema>> "Planned Land Use" {
     * tableName = "PLU_DimensioningIndicationRealValue"
     id INTEGER NOT NULL PRIMARY KEY
     indicationReference TEXT NOT NULL
-    value DOUBLE NOT NULL
+    value REAL NOT NULL
   }
   Attributes <<dataType>> "PLU_OrdinanceValue" {
     * description = "Reference to administrative ordinance. Ordinance is a regulation/rule that is adopted by an authority that is legally mandated to take such ordinance."
@@ -64,11 +64,11 @@ Container <<applicationSchema>> "Planned Land Use" {
     value_unitOfMeasure_formula TEXT
     value_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
     value_unitOfMeasure_nameStandardUnit TEXT
-    value_unitOfMeasure_offsetToStandardUnit DOUBLE
-    value_unitOfMeasure_scaleToStandardUnit DOUBLE
+    value_unitOfMeasure_offsetToStandardUnit REAL
+    value_unitOfMeasure_scaleToStandardUnit REAL
     value_unitOfMeasure_uomName TEXT NOT NULL
     value_unitOfMeasure_uomSymbol TEXT NOT NULL
-    value_value TEXT NOT NULL
+    value_value REAL NOT NULL
   }
   Feature <<featureType>> "PLU_ZoningElement" {
     * description = "A spatial object which is homogeneous regarding the permitted uses of land based on zoning which separate one set of land uses from another.
@@ -132,7 +132,7 @@ Container <<applicationSchema>> "Planned Land Use" {
   Constraint Enum <<codeList>> "PLU_LevelOfSpatialPlanValue" {
     * identifier = "Planned Land Use::LevelOfSpatialPlanValue"
   }
-  Constraint Enum <<codeList>> "PLU_SpecificSupplementaryRegulationValue" {
+  Abstract Constraint Enum <<codeList>> "PLU_SpecificSupplementaryRegulationValue" {
     * identifier = "Planned Land Use::SpecificSupplementaryRegulationValue"
   }
   Attributes <<dataType>> "PLU_BackgroundMapValue" {
@@ -176,7 +176,7 @@ Container <<applicationSchema>> "Planned Land Use" {
   Constraint Enum <<codeList>> "PLU_ProcessStepGeneralValue" {
     * identifier = "Planned Land Use::ProcessStepGeneralValue"
   }
-  Constraint Enum <<codeList>> "PLU_PlanTypeNameValue" {
+  Abstract Constraint Enum <<codeList>> "PLU_PlanTypeNameValue" {
     * identifier = "Planned Land Use::PlanTypeNameValue"
   }
   Relation "PLU_SupplementaryRegulation_plan" {
@@ -286,7 +286,7 @@ Container <<applicationSchema>> "Land Use Nomenclature" {
   Constraint Enum <<codeList>> "LUNOM_HILUCSValue" {
     * identifier = "Land Use Nomenclature::HILUCSValue"
   }
-  Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
+  Abstract Constraint Enum <<codeList>> "LUNOM_LandUseClassificationValue" {
     * identifier = "Land Use Nomenclature::LandUseClassificationValue"
   }
 }

@@ -6,10 +6,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * tableName = "TN_RA_RailwayStationCode"
     id INTEGER NOT NULL PRIMARY KEY
     stationCode TEXT NOT NULL
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -19,10 +19,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * tableName = "TN_RA_RailwayElectrification"
     electrified BOOLEAN NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -41,10 +41,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     speed TEXT NOT NULL
     speed_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -53,10 +53,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * identifier = "Railway Transport Network::RailwayLinkSequence"
     * tableName = "TN_RA_RailwayLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -66,13 +66,13 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * description = "A point spatial object which represents a significant point along the railway network or defines an intersection of railway tracks used to describe its connectivity."
     * identifier = "Railway Transport Network::RailwayNode"
     * tableName = "TN_RA_RailwayNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -85,12 +85,12 @@ Container <<applicationSchema>> "Railway Transport Network" {
     DEFINITION Railway yard: An area crossed by a number of parallel railway tracks (usually more than two) interconnected between them, which are used to stop trains in order to load / unload freight without interrupting the traffic of a main railway line."
     * identifier = "Railway Transport Network::RailwayYardArea"
     * tableName = "TN_RA_RailwayYardArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -99,14 +99,14 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * description = "A railway node which represents the location of a railway station along the railway network."
     * identifier = "Railway Transport Network::RailwayStationNode"
     * tableName = "TN_RA_RailwayStationNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
     <<voidable>> numberOfPlatforms INTEGER
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -123,12 +123,12 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * description = "An area spatial object which is used to represent the topographical limits of the facilities of a railway station (buildings, railway yards, installations and equipment) devoted to carry out railway station operations."
     * identifier = "Railway Transport Network::RailwayStationArea"
     * tableName = "TN_RA_RailwayStationArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -139,10 +139,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * tableName = "TN_RA_RailwayUse"
     id INTEGER NOT NULL PRIMARY KEY
     use TEXT NOT NULL CHECK(TN_RA_RailwayUseValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -152,13 +152,13 @@ Container <<applicationSchema>> "Railway Transport Network" {
     NOTE Railway links can be used to represent stretches of railway with one or multiple tracks."
     * identifier = "Railway Transport Network::RailwayLink"
     * tableName = "TN_RA_RailwayLink"
-    centrelineGeometry : CURVE
+    centrelineGeometry CURVE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> fictitious BOOLEAN
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -178,10 +178,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * tableName = "TN_RA_RailwayType"
     id INTEGER NOT NULL PRIMARY KEY
     type TEXT NOT NULL CHECK(TN_RA_RailwayTypeValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -192,11 +192,11 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * identifier = "Railway Transport Network::RailwayLine"
     * tableName = "TN_RA_RailwayLine"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> railwayLineCode TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -215,13 +215,13 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * identifier = "Railway Transport Network::NominalTrackGauge"
     * tableName = "TN_RA_NominalTrackGauge"
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> nominalGauge TEXT
     <<voidable>> nominalGaugeCategory TEXT CHECK(TN_RA_TrackGaugeCategoryValue)
     <<voidable>> nominalGauge_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -229,12 +229,12 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * description = "Surface occupied by a railway track, including ballast."
     * identifier = "Railway Transport Network::RailwayArea"
     * tableName = "TN_RA_RailwayArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -258,11 +258,11 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * tableName = "TN_RA_NumberOfTracks"
     id INTEGER NOT NULL PRIMARY KEY
     numberOfTracks INTEGER NOT NULL
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> minMaxNumberOfTracks TEXT CHECK(TN_RA_MinMaxTrackValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -272,13 +272,13 @@ Container <<applicationSchema>> "Railway Transport Network" {
     DEFINTION Railway yard: An area crossed by a number of parallel railway tracks (usually more than two) interconnected between them, which are used to stop trains in order to load / unload freight without interrupting the traffic of a main railway line."
     * identifier = "Railway Transport Network::RailwayYardNode"
     * tableName = "TN_RA_RailwayYardNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref

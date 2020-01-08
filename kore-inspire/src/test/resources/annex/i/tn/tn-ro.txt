@@ -22,12 +22,12 @@ Container <<applicationSchema>> "Road Transport Network" {
     EXAMPLES Gas station, rest area, toll area."
     * identifier = "Road Transport Network::RoadServiceArea"
     * tableName = "TN_RO_RoadServiceArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -36,13 +36,13 @@ Container <<applicationSchema>> "Road Transport Network" {
     * description = "A point spatial object that is used to either represent connectivity between two road links or to represent a significant spatial object such as a services station or  roundabout."
     * identifier = "Road Transport Network::RoadNode"
     * tableName = "TN_RO_RoadNode"
-    geometry : POINT
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> formOfRoadNode TEXT CHECK(TN_RO_FormOfRoadNodeValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -55,11 +55,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     * tableName = "TN_RO_RoadServiceType"
     id INTEGER NOT NULL PRIMARY KEY
     type TEXT NOT NULL CHECK(TN_RO_RoadServiceTypeValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<array>> availableFacilities TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -113,12 +113,12 @@ Container <<applicationSchema>> "Road Transport Network" {
     * tableName = "TN_RO_NumberOfLanes"
     id INTEGER NOT NULL PRIMARY KEY
     numberOfLanes INTEGER NOT NULL
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> direction TEXT CHECK(NET_LinkDirectionValue)
     <<voidable>> minMaxNumberOfLanes TEXT CHECK(TN_RO_MinMaxLaneValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -130,10 +130,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     * tableName = "TN_RO_FormOfWay"
     formOfWay TEXT NOT NULL CHECK(TN_RO_FormOfWayValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -182,12 +182,12 @@ Container <<applicationSchema>> "Road Transport Network" {
     EAXMPLE Pedestrian areas."
     * identifier = "Road Transport Network::RoadArea"
     * tableName = "TN_RO_RoadArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -206,10 +206,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     * tableName = "TN_RO_RoadSurfaceCategory"
     id INTEGER NOT NULL PRIMARY KEY
     surfaceCategory TEXT NOT NULL CHECK(TN_RO_RoadSurfaceCategoryValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -219,13 +219,13 @@ Container <<applicationSchema>> "Road Transport Network" {
     Road links can represent paths, bicycle roads, single carriageways, multiple carriageway roads and even fictitious trajectories across traffic squares."
     * identifier = "Road Transport Network::RoadLink"
     * tableName = "TN_RO_RoadLink"
-    centrelineGeometry : CURVE
-    fictitious : BOOLEAN
+    centrelineGeometry CURVE NOT NULL
+    fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -237,10 +237,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     * identifier = "Road Transport Network::RoadLinkSequence"
     * tableName = "TN_RO_RoadLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -264,10 +264,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     name_language TEXT
     name_spelling_text TEXT NOT NULL
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -275,12 +275,12 @@ Container <<applicationSchema>> "Road Transport Network" {
     * description = "Surface that represents the part of a road which is used for the normal traffic of vehicles."
     * identifier = "Road Transport Network::VehicleTrafficArea"
     * tableName = "TN_RO_VehicleTrafficArea"
-    geometry : SURFACE
+    geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -305,12 +305,12 @@ Container <<applicationSchema>> "Road Transport Network" {
     * identifier = "Road Transport Network::Road"
     * tableName = "TN_RO_Road"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> localRoadCode TEXT
     <<voidable>> nationalRoadCode TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -335,10 +335,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     * tableName = "TN_RO_FunctionalRoadClass"
     functionalClass TEXT NOT NULL CHECK(TN_RO_FunctionalRoadClassValue)
     id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -352,15 +352,15 @@ Container <<applicationSchema>> "Road Transport Network" {
     speedLimitMinMaxType TEXT NOT NULL CHECK(TN_RO_SpeedLimitMinMaxValue) DEFAULT 'Maximum'
     speedLimitValue TEXT NOT NULL
     speedLimitValue_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> areaCondition TEXT CHECK(TN_RO_AreaConditionValue)
     <<voidable>> direction TEXT CHECK(NET_LinkDirectionValue)
     <<voidable>> laneExtension INTEGER
     <<voidable>> speedLimitSource TEXT CHECK(TN_RO_SpeedLimitSourceValue)
     <<voidable>> startLane INTEGER
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     <<voidable>> vehicleType TEXT CHECK(TN_RO_VehicleTypeValue)
     <<voidable>> weatherCondition TEXT CHECK(TN_RO_WeatherConditionValue)
     inspireId BASE_Identifier [0..1] as ref
@@ -375,11 +375,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     width TEXT NOT NULL
     width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> measuredRoadPart TEXT CHECK(TN_RO_RoadPartValue)
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -390,11 +390,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     * identifier = "Road Transport Network::ERoad"
     * tableName = "TN_RO_ERoad"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>> europeanRouteNumber TEXT
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref

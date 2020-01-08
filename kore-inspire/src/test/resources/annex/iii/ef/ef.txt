@@ -4,20 +4,18 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     * description = "Corresponds to a period during which the EnvironmentalMonitoringFacility has been up and running."
     * identifier = "EnvironmentalMonitoringFacilities::OperationalActivityPeriod"
     * tableName = "EF_OperationalActivityPeriod"
-    activityTime TM_Object NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
   }
   Class "Hierarchy" {
     conID = "EAID_5AAEC28B_7F66_4f88_8EB5_20A9C2F133DD"
-    <<voidable>> linkingTime : TM_Object [0..1]
   }
-  Class <<featureType>> "AbstractMonitoringObject" {
-    geometry : GEOMETRY [0..1]
-    mediaMonitoreds : TEXT
-    <<voidable>> additionalDescription : TEXT [0..1]
-    <<voidable>> names : TEXT [0..1]
-    <<voidable>> onlineResources : TEXT [0..1]
-    <<voidable>> purposes : TEXT [0..1]
+  Abstract Class <<featureType>> "AbstractMonitoringObject" {
+    geometry GEOMETRY
+    <<voidable>>, <<array>> names TEXT
+    <<voidable>>, <<array>> onlineResources TEXT
+    <<voidable>>, <<array>> purposes TEXT
+    <<voidable>> additionalDescription TEXT
+    <<array>> mediaMonitoreds TEXT NOT NULL
     inspireId BASE_Identifier as ref
     <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
@@ -36,18 +34,18 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     The methodology used in the laboratory should be provided with observational data."
     * identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringFacility"
     * tableName = "EF_EnvironmentalMonitoringFacility"
-    geometry : GEOMETRY [0..1]
+    geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    mediaMonitoreds : TEXT
-    <<voidable>> additionalDescription : TEXT [0..1]
-    measurementRegime TEXT CHECK(EF_MeasurementRegimeValue)
-    mobile BOOLEAN
-    <<voidable>> names : TEXT [0..1]
-    <<voidable>> onlineResources : TEXT [0..1]
-    <<voidable>> purposes : TEXT [0..1]
-    representativePoint POINT
-    resultAcquisitionSources TEXT
-    specialisedEMFType TEXT CHECK(EF_SpecialisedEMFTypeValue)
+    <<voidable>>, <<array>> names TEXT
+    <<voidable>>, <<array>> onlineResources TEXT
+    <<voidable>>, <<array>> purposes TEXT
+    <<voidable>>, <<array>> resultAcquisitionSources TEXT
+    <<voidable>> additionalDescription TEXT
+    <<voidable>> measurementRegime TEXT CHECK(EF_MeasurementRegimeValue)
+    <<array>> mediaMonitoreds TEXT NOT NULL
+    <<voidable>> mobile BOOLEAN
+    <<voidable>> representativePoint POINT
+    <<voidable>> specialisedEMFType TEXT CHECK(EF_SpecialisedEMFTypeValue)
     inspireId BASE_Identifier as ref
     <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> hasObservation_OM_Observation BASE_Identifier [0..*] as ref
@@ -76,13 +74,13 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     isActive = "false"
     propertyType = "{F655FA4D-B711-4fd1-A13E-56CA2E60A726}"
   }
-  Class <<featureType>> "AbstractMonitoringFeature" {
-    geometry : GEOMETRY [0..1]
-    mediaMonitoreds : TEXT
-    <<voidable>> additionalDescription : TEXT [0..1]
-    <<voidable>> names : TEXT [0..1]
-    <<voidable>> onlineResources : TEXT [0..1]
-    <<voidable>> purposes : TEXT [0..1]
+  Abstract Class <<featureType>> "AbstractMonitoringFeature" {
+    geometry GEOMETRY
+    <<voidable>>, <<array>> names TEXT
+    <<voidable>>, <<array>> onlineResources TEXT
+    <<voidable>>, <<array>> purposes TEXT
+    <<voidable>> additionalDescription TEXT
+    <<array>> mediaMonitoreds TEXT NOT NULL
     inspireId BASE_Identifier as ref
     <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> hasObservation_OM_Observation BASE_Identifier [0..*] as ref
@@ -106,11 +104,11 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     legalAct_link TEXT
     legalAct_name TEXT NOT NULL
     legalAct_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-    description TEXT
-    observationRequired BOOLEAN
-    observingCapabilityRequired BOOLEAN
-    reportDate DATETIME
-    reportedEnvelope TEXT
+    <<voidable>> description TEXT
+    <<voidable>> observationRequired BOOLEAN
+    <<voidable>> observingCapabilityRequired BOOLEAN
+    <<voidable>> reportDate DATETIME
+    <<voidable>> reportedEnvelope TEXT
   }
   Attributes <<featureType>> "EF_EnvironmentalMonitoringProgramme" {
     * description = "Framework based on policy relevant documents defining the target of a collection of observations and/or the deployment of AbstractMonitoringFeatures on the field.
@@ -118,13 +116,13 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     Usually an Environmental Monitoring Programme has a long term perspective over at least a few years."
     * identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringProgramme"
     * tableName = "EF_EnvironmentalMonitoringProgramme"
-    geometry : GEOMETRY [0..1]
+    geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    mediaMonitoreds : TEXT
-    <<voidable>> additionalDescription : TEXT [0..1]
-    <<voidable>> names : TEXT [0..1]
-    <<voidable>> onlineResources : TEXT [0..1]
-    <<voidable>> purposes : TEXT [0..1]
+    <<voidable>>, <<array>> names TEXT
+    <<voidable>>, <<array>> onlineResources TEXT
+    <<voidable>>, <<array>> purposes TEXT
+    <<voidable>> additionalDescription TEXT
+    <<array>> mediaMonitoreds TEXT NOT NULL
     inspireId BASE_Identifier as ref
     <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
@@ -140,12 +138,11 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     * identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringActivity"
     * tableName = "EF_EnvironmentalMonitoringActivity"
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId INTEGER
-    activityConditions TEXT
-    activityTime TM_Object
-    boundingBox POLYGON
-    onlineResources TEXT
-    responsibleParty INTEGER
+    <<voidable>>, <<array>> onlineResources TEXT
+    <<voidable>>, <<reference>> responsibleParty INTEGER
+    <<voidable>> activityConditions TEXT
+    <<voidable>> boundingBox POLYGON
+    <<reference>> inspireId INTEGER
     <<voidable>> uses AbstractMonitoringFeature [0..*] as ref
   }
   Constraint Enum <<codeList>> "EF_ResultNatureValue" {
@@ -162,32 +159,30 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     * identifier = "EnvironmentalMonitoringFacilities::ObservingCapability"
     * tableName = "EF_ObservingCapability"
     id INTEGER NOT NULL PRIMARY KEY
-    procedure_OM_Process INTEGER
-    featureOfInterest_GFI_Feature INTEGER
-    observingTime TM_Object
-    onlineResource TEXT
-    processType TEXT CHECK(EF_ProcessTypeValue)
-    resultNature TEXT CHECK(EF_ResultNatureValue)
+    <<voidable>>, <<reference>> featureOfInterest_GFI_Feature INTEGER
+    <<voidable>> onlineResource TEXT
+    <<reference>> procedure_OM_Process INTEGER
+    <<voidable>> processType TEXT CHECK(EF_ProcessTypeValue)
+    <<voidable>> resultNature TEXT CHECK(EF_ResultNatureValue)
   }
   Constraint Enum <<codeList>> "EF_ResultAcquisitionSourceValue" {
     * identifier = "EnvironmentalMonitoringFacilities::ResultAcquisitionSourceValue"
   }
   Class "NetworkFacility" {
     conID = "EAID_2470952E_658F_4465_8B30_5854E0A98920"
-    <<voidable>> linkingTime : TM_Object [0..1]
   }
   Attributes <<featureType>> "EF_EnvironmentalMonitoringNetwork" {
     * description = "Administrative or organisational grouping of EnvironmentalMonitoringFacilities managed the same way for a specific purpose, targeting a specific area. Each network respects common rules aiming at ensuring coherence of the observations, especially for purposes of EnvironmentalMonitoringFacilities, mandatory parameters selection, measurement methods and measurement regime."
     * identifier = "EnvironmentalMonitoringFacilities::EnvironmentalMonitoringNetwork"
     * tableName = "EF_EnvironmentalMonitoringNetwork"
-    geometry : GEOMETRY [0..1]
+    geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
-    mediaMonitoreds : TEXT
-    <<voidable>> additionalDescription : TEXT [0..1]
-    <<voidable>> names : TEXT [0..1]
-    <<voidable>> onlineResources : TEXT [0..1]
-    organisationLevel TEXT CHECK(BASE2_LegislationLevelValue)
-    <<voidable>> purposes : TEXT [0..1]
+    <<voidable>>, <<array>> names TEXT
+    <<voidable>>, <<array>> onlineResources TEXT
+    <<voidable>>, <<array>> purposes TEXT
+    <<voidable>> additionalDescription TEXT
+    <<array>> mediaMonitoreds TEXT NOT NULL
+    <<voidable>> organisationLevel TEXT CHECK(BASE2_LegislationLevelValue)
     inspireId BASE_Identifier as ref
     <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> hasObservation_OM_Observation BASE_Identifier [0..*] as ref
@@ -217,29 +212,11 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
   }
-  Relation "EF_EnvironmentalMonitoringFacility_<<missing>>_GroundWaterBody" {
-    * profile = "attributes"
-    * tableName = "EF_EnvironmentalMonitoringFacility_<<missing>>_GroundWaterBody"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
-  Relation "EF_EnvironmentalMonitoringFacility_<<missing>>_ActiveWell" {
-    * profile = "attributes"
-    * tableName = "EF_EnvironmentalMonitoringFacility_<<missing>>_ActiveWell"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
-  }
   Relation "EF_EnvironmentalMonitoringProgramme_triggers" {
     * profile = "features"
     * tableName = "EF_EnvironmentalMonitoringProgramme_triggers"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
-  }
-  Relation "EF_EnvironmentalMonitoringProgramme_<<missing>>_AbstractObservedEvent" {
-    * profile = "attributes"
-    * tableName = "EF_EnvironmentalMonitoringProgramme_<<missing>>_AbstractObservedEvent"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "EF_EnvironmentalMonitoringActivity_responsibleParty" {
     * profile = "attributes"
@@ -272,18 +249,29 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
 }
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_Contact" {
+    * description = "Communication channels by which it is possible to gain access to someone or something."
+    * identifier = "Base Types 2::Contact"
+    * tableName = "BASE2_Contact"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> address INTEGER
+    <<voidable>>, <<array>> telephoneFacsimiles TEXT
+    <<voidable>>, <<array>> telephoneVoices TEXT
+    <<voidable>> electronicMailAddress TEXT
+    <<voidable>> website TEXT
+  }
   Constraint Enum <<codeList>> "BASE2_PartyRoleValue" {
     * identifier = "Base Types 2::PartyRoleValue"
   }
-  Attributes "BASE2_RelatedParty" {
+  Attributes <<dataType>> "BASE2_RelatedParty" {
     * description = "An organisation or a person with a role related to a resource.
   
     NOTE 1 A party, typically an individual person, acting as a general point of contact for a resource can be specified without providing any particular role."
     * identifier = "Base Types 2::RelatedParty"
     * tableName = "BASE2_RelatedParty"
     id INTEGER NOT NULL PRIMARY KEY
-    roles TEXT
-    contact Contact [0..1] as ref
+    <<voidable>>, <<reference>> contact INTEGER
+    <<voidable>>, <<array>> roles TEXT
   }
   Constraint Enum <<codeList>> "BASE2_LegislationLevelValue" {
     * identifier = "Base Types 2::LegislationLevelValue"
@@ -297,7 +285,7 @@ Container <<applicationSchema>> "Base Types 2" {
     DocumentCitation
     LegislationCitation
   }
-  Attributes "BASE2_SimpleCitation" {
+  Attributes <<dataType>> "BASE2_SimpleCitation" {
     * tableName = "BASE2_SimpleCitation"
     date DATE
     id INTEGER NOT NULL PRIMARY KEY
@@ -306,10 +294,83 @@ Container <<applicationSchema>> "Base Types 2" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+  Relation "BASE2_RelatedParty_contact" {
+    * profile = "attributes"
+    * relatedReference = "attribute BASE2_RelatedParty#contact"
+    * tableName = "BASE2_RelatedParty_contact"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
+  }
+  Relation "BASE2_Contact_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute BASE2_Contact#address"
+    * tableName = "BASE2_Contact_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
+  }
+}
+Container <<applicationSchema>> "Addresses" {
+  * fileName = "Addresses"
+  Attributes <<dataType>> "AD_AddressRepresentation" {
+    * description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
+  
+    NOTE 1 The data type includes the all necessary readable address components as well as the address locator(s), which allows the identification of the address spatial objects, e.g., country, region, municipality, address area, post code, street name and address number. It also includes an optional reference to the full address spatial object.
+  
+    NOTE 2 The datatype could be used in application schemas that wish to include address information e.g. in a dataset that registers buildings or properties."
+    * identifier = "Addresses::AddressRepresentation"
+    * tableName = "AD_AddressRepresentation"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> addressFeature_Address INTEGER
+    <<array>> locatorDesignators TEXT
+    <<voidable>> postCode TEXT
+  }
+  Relation "AD_AddressRepresentation_adminUnit" {
+    * profile = "attributes"
+    * tableName = "AD_AddressRepresentation_adminUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_locatorName" {
+    * profile = "attributes"
+    * tableName = "AD_AddressRepresentation_locatorName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_addressArea" {
+    * profile = "attributes"
+    * tableName = "AD_AddressRepresentation_addressArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_postName" {
+    * profile = "attributes"
+    * tableName = "AD_AddressRepresentation_postName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_thoroughfare" {
+    * profile = "attributes"
+    * tableName = "AD_AddressRepresentation_thoroughfare"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "AD_AddressRepresentation_addressFeature_Address" {
+    * profile = "attributes"
+    * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
+    * tableName = "AD_AddressRepresentation_addressFeature_Address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
 }
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
-  Attributes "BASE_Identifier" {
+  Attributes <<dataType>> "BASE_Identifier" {
     * description = "External unique object identifier published by the responsible body, which may be used by external applications to reference the spatial object.
   
     NOTE1 External object identifiers are distinct from thematic object identifiers.
@@ -322,7 +383,7 @@ Container <<applicationSchema>> "Base Types" {
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
-    versionId TEXT
+    <<lifeCycleInfo>>, <<voidable>> versionId TEXT
   }
   Metadata "Unknown" {
     * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
@@ -347,11 +408,6 @@ Container <<applicationSchema>> "Base Types" {
     * mimeType = "text/plain"
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-}
-Package "Temporal Objects" {
-  Class "TM_Object" {
-    <<missing>>_OM_TemporalObservation BASE_Identifier [0..*] as ref
   }
 }
 Package "EA Model" {

@@ -6,15 +6,15 @@ Container <<applicationSchema>> "LandCoverRaster" {
     This representation allows Land Cover data being supported by rectified grid coverage (ISO 19123)."
     * identifier = "LandCoverRaster::LandCoverGridCoverage"
     * tableName = "LCR_LandCoverGridCoverage"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
+    metadata Any
     name TEXT NOT NULL
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    rangeSet Any
+    rangeType RecordType NOT NULL
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<reference>> inspireId INTEGER

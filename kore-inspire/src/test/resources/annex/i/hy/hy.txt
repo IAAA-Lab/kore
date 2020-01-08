@@ -11,7 +11,7 @@ Container <<applicationSchema>> "Hydro - base" {
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
   }
-  Class <<featureType>> "HydroObject" {
+  Abstract Class <<featureType>> "HydroObject" {
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }

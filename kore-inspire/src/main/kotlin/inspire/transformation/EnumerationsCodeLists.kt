@@ -6,9 +6,8 @@ import es.iaaa.kore.KoreClass
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.references
 import es.iaaa.kore.transform.Transform
-import es.iaaa.kore.transform.Transformations
 import es.iaaa.kore.transform.rules.patch
-import es.iaaa.kore.transform.rules.setTypeWhen
+import es.iaaa.kore.transform.rules.mapEntry
 
 /**
  * All types that have the stereotype `enumeration`are converted to GeoPackage data column constraints of type enum.
@@ -45,7 +44,7 @@ private fun processLists(
         patched.add(this)
         conversion.track(this)
     }
-    setTypeWhen(TextType(), predicate = {
+    mapEntry(typePredicate = {
         it.type in patched
     }, preset = {
         val type = it.type
@@ -53,5 +52,5 @@ private fun processLists(
             it.geoPackageSpec().add(type)
         }
         conversion.track(it)
-    })
+    }, targetType = TextType())
 }

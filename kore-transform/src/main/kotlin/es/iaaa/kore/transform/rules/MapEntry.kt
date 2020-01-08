@@ -21,14 +21,14 @@ import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
 
-internal class SetTypeWhen(
+internal class MapEntry(
     val type: KoreClassifier,
     val predicate: (KoreTypedElement) -> Boolean,
     val preset: (KoreTypedElement) -> Unit
 ) : Transformation {
 
     override fun process(target: Model) {
-        val from = target.allRelevantContent()
+        val from = target.allContent()
         from.filterIsInstance<KoreTypedElement>().filter(predicate).forEach {
             preset(it)
             it.type = type
@@ -36,10 +36,11 @@ internal class SetTypeWhen(
     }
 }
 
-fun Transformations.setTypeWhen(
-    type: KoreClassifier,
-    predicate: (KoreTypedElement) -> Boolean,
-    preset: (KoreTypedElement) -> Unit = {}
+fun Transformations.mapEntry(
+    type: String? = null,
+    typePredicate: (KoreTypedElement) -> Boolean = { true },
+    preset: (KoreTypedElement) -> Unit = {},
+    targetType: KoreClassifier
 ) {
-    add(SetTypeWhen(type, predicate, preset))
+    add(MapEntry(targetType, type?.let { { e: KoreTypedElement -> e.type?.name == it} } ?: typePredicate, preset))
 }

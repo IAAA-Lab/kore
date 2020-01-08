@@ -1,6 +1,5 @@
 Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
   * fileName = "ProductionAndIndustrialFacilities"
-  isnamespace = "0"
   Constraint Enum <<codeList>> "PF_InstallationTypeValue" {
     * identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
   }
@@ -50,7 +49,7 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     <<voidable>> geometry GEOMETRY
     <<voidable>> typeOfBuilding TypeOfProductionBuildingValue [0..*] as ref
   }
-  Class <<featureType>> "TechnicalUnit" {}
+  Abstract Class <<featureType>> "TechnicalUnit" {}
   Class <<featureType>> "ProductionInstallation" {
     pointGeometry : POINT [0..1]
     thematicId_identifier : TEXT [0..1]
@@ -102,16 +101,16 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     A production facility groups together a single installation, set of installations or production processes (stationary or mobile), which can be defined within a single geographical boundary, organizational unit or production process. A production facility can also be identified as one or more installations located on the same site that are operated by the same natural or legal person and in which production activities are being carried out. Such a facility groups potentially the land, buildings, and equipment used in carrying on an industrial business or other undertaking or service."
     * identifier = "ProductionAndIndustrialFacilities::ProductionFacility"
     * tableName = "PF_ProductionFacility"
-    geometry : GEOMETRY
+    geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     riverBasinDistrict TEXT CHECK(PF_RiverBasinDistrictValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>>, <<reference>> hostingSite INTEGER
-    <<voidable>> name : TEXT [0..1]
+    <<voidable>> name TEXT
     <<voidable>> surfaceGeometry SURFACE
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
     function ACT_CORE_Function [1..*] as ref
     inspireId BASE_Identifier as ref
     thematicId BASE2_ThematicIdentifier [0..*] as ref

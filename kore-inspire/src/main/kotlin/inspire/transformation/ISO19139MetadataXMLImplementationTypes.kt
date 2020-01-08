@@ -6,14 +6,14 @@ import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.TextType
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
-import es.iaaa.kore.transform.rules.setTypeWhen
+import es.iaaa.kore.transform.rules.mapEntry
 import kotlin.math.min
 
 /**
  * URI is encoded as TEXT.
  */
 val `ISO 19139 type - URI`: Transform = { _, _ ->
-    setTypeWhen(TextType(), predicate = { it.type?.name == "URI" })
+    mapEntry(type = "URI", targetType = TextType())
 }
 
 /**

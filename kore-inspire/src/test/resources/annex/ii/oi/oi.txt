@@ -6,7 +6,7 @@ Container <<applicationSchema>> "Orthoimagery" {
     NOTE The geometry of an aggregated mosaic element corresponds to the union of the contributing areas, in the mosaic, of several input images."
     * identifier = "Orthoimagery::AggregatedMosaicElement"
     * tableName = "OI_AggregatedMosaicElement"
-    geometry : MULTISURFACE
+    geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId BASE_Identifier [0..1] as ref
   }
@@ -21,15 +21,15 @@ Container <<applicationSchema>> "Orthoimagery" {
     * identifier = "Orthoimagery::OrthoimageCoverage"
     * tableName = "OI_OrthoimageCoverage"
     beginLifespanVersion_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     endLifespanVersion_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     id INTEGER NOT NULL PRIMARY KEY
     interpolationType TEXT NOT NULL CHECK(OI_InterpolationMethodValue) DEFAULT 'nearestneighbor'
-    metadata : Any [0..*]
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    metadata Any
+    rangeSet Any
+    rangeType RecordType NOT NULL
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion_date8601 DATE
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion_dateTime8601 DATETIME
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion_time8601 TEXT
@@ -50,7 +50,7 @@ Container <<applicationSchema>> "Orthoimagery" {
     NOTE The geometry of a single mosaic element corresponds exactly to the contributing area, in the mosaic, of the single input image."
     * identifier = "Orthoimagery::SingleMosaicElement"
     * tableName = "OI_SingleMosaicElement"
-    geometry : MULTISURFACE
+    geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>> imageSourceReference TEXT
     inspireId BASE_Identifier [0..1] as ref
@@ -66,8 +66,8 @@ Container <<applicationSchema>> "Orthoimagery" {
   Constraint Enum <<codeList>> "OI_InterpolationMethodValue" {
     * identifier = "Orthoimagery::InterpolationMethodValue"
   }
-  Class <<featureType>> "MosaicElement" {
-    geometry : MULTISURFACE
+  Abstract Class <<featureType>> "MosaicElement" {
+    geometry MULTISURFACE NOT NULL
     inspireId BASE_Identifier [0..1] as ref
   }
   Relation "OI_OrthoimageCoverage_contributingOrthoimageCoverage" {

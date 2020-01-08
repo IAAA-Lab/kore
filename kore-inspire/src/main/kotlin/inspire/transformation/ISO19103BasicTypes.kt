@@ -4,18 +4,19 @@ package inspire.transformation
 
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
-import es.iaaa.kore.transform.rules.setTypeWhen
+import es.iaaa.kore.transform.rules.mapEntry
 
 /**
  * All ISO 19103 property types are transformed to the simple types that GeoPackage knows about.
  */
 val `ISO 19103 - Basic types`: Transform = { _, _ ->
-    setTypeWhen(TextType(), predicate = { it.type?.name == "CharacterString" })
-    setTypeWhen(BooleanType(), predicate = { it.type?.name == "Boolean" })
-    setTypeWhen(IntegerType(), predicate = { it.type?.name == "Integer" })
-    setTypeWhen(DoubleType(), predicate = { it.type?.name == "Real" })
-    setTypeWhen(TextType(), predicate = { it.type?.name == "Number" })
-    setTypeWhen(TextType(), predicate = { it.type?.name == "Decimal" })
-    setTypeWhen(DateTimeType(), predicate = { it.type?.name == "DateTime" })
-    setTypeWhen(DateType(), predicate = { it.type?.name == "Date" })
+    mapEntry(type = "CharacterString", targetType = TextType())
+    mapEntry(type = "URI", targetType = TextType())
+    mapEntry(type = "Boolean", targetType = BooleanType())
+    mapEntry(type = "Integer", targetType = IntegerType())
+    mapEntry(type = "Real", targetType = RealType())
+    mapEntry(type = "Decimal", targetType = RealType())
+    mapEntry(type = "Number", targetType = RealType())
+    mapEntry(type = "Date", targetType = DateType())
+    mapEntry(type = "DateTime", targetType = DateTimeType())
 }

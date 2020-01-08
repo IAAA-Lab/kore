@@ -10,10 +10,10 @@ Container <<leaf>> "Specialised Observations::Gridded Observations" {
     * identifier = "Gridded Observations::GridSeriesObservation"
     * tableName = "OMSO_GridSeriesObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -29,10 +29,10 @@ Container <<leaf>> "Specialised Observations::Gridded Observations" {
     * identifier = "Gridded Observations::GridObservation"
     * tableName = "OMSO_GridObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -48,7 +48,7 @@ Container <<leaf>> "Specialised Observations::Point Observations" {
     The PointObservationCollection is a collection of separate PointObservations. In the case where it is useful to group together a set of otherwise independent PointObservations the PointObservationCollection should be used to make this grouping. The grouping may be made on any basis e.g. it may be useful to group together PointObservations made by the same instrument or Environmental Facility, or in a particular measurement campaign. Each member of the PointObservationCollection must be a single PointObservation."
     * identifier = "Point Observations::PointObservationCollection"
     * tableName = "OMSO_PointObservationCollection"
-    extent : EX_Extent
+    extent EX_Extent NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId BASE_Identifier as ref
     member_OM_Observation BASE_Identifier [1..*] as ref
@@ -60,10 +60,10 @@ Container <<leaf>> "Specialised Observations::Point Observations" {
     * identifier = "Point Observations::MultiPointObservation"
     * tableName = "OMSO_MultiPointObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -77,10 +77,10 @@ Container <<leaf>> "Specialised Observations::Point Observations" {
     * identifier = "Point Observations::PointObservation"
     * tableName = "OMSO_PointObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -94,10 +94,10 @@ Container <<leaf>> "Specialised Observations::Point Observations" {
     * identifier = "Point Observations::PointTimeSeriesObservation"
     * tableName = "OMSO_PointTimeSeriesObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -111,16 +111,16 @@ Container <<leaf>> "Specialised Observations::Trajectory and Profile Observation
     * description = "A triple set of Time, location, value (measurement). For example, at a point along a trajectory."
     * identifier = "Trajectory and Profile Observations::TimeLocationValueTriple"
     * tableName = "OMSO_TimeLocationValueTriple"
-    geometry : TM_Instant
-    geometry_anyOther : TM_TemporalPosition [0..1]
-    geometry_date8601 : DATE [0..1]
-    geometry_dateTime8601 : DATETIME [0..1]
-    geometry_time8601 : TEXT [0..1]
-    geometry_time8601_uom : TEXT [0..1]
+    geometry TM_Instant NOT NULL
+    geometry_anyOther TM_TemporalPosition
+    geometry_date8601 DATE
+    geometry_dateTime8601 DATETIME
+    geometry_time8601 TEXT
+    geometry_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
     location_direct_coordinate <<missing>>
     location_direct_dimension INTEGER
-    value : Record
+    value Record NOT NULL
     collection Timeseries [0..*] as ref
     collection CVT_DiscreteTimeInstantCoverage [0..*] as ref
     collection CV_DiscreteCoverage [0..*] as ref
@@ -133,10 +133,10 @@ Container <<leaf>> "Specialised Observations::Trajectory and Profile Observation
     * identifier = "Trajectory and Profile Observations::TrajectoryObservation"
     * tableName = "OMSO_TrajectoryObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -150,10 +150,10 @@ Container <<leaf>> "Specialised Observations::Trajectory and Profile Observation
     * identifier = "Trajectory and Profile Observations::ProfileObservation"
     * tableName = "OMSO_ProfileObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -172,10 +172,10 @@ Container <<leaf>> "Gridded Observations" {
     * identifier = "Gridded Observations::GridSeriesObservation"
     * tableName = "OMSO_GridSeriesObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -191,10 +191,10 @@ Container <<leaf>> "Gridded Observations" {
     * identifier = "Gridded Observations::GridObservation"
     * tableName = "OMSO_GridObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -210,7 +210,7 @@ Container <<leaf>> "Point Observations" {
     The PointObservationCollection is a collection of separate PointObservations. In the case where it is useful to group together a set of otherwise independent PointObservations the PointObservationCollection should be used to make this grouping. The grouping may be made on any basis e.g. it may be useful to group together PointObservations made by the same instrument or Environmental Facility, or in a particular measurement campaign. Each member of the PointObservationCollection must be a single PointObservation."
     * identifier = "Point Observations::PointObservationCollection"
     * tableName = "OMSO_PointObservationCollection"
-    extent : EX_Extent
+    extent EX_Extent NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inspireId BASE_Identifier as ref
     member_OM_Observation BASE_Identifier [1..*] as ref
@@ -222,10 +222,10 @@ Container <<leaf>> "Point Observations" {
     * identifier = "Point Observations::MultiPointObservation"
     * tableName = "OMSO_MultiPointObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -239,10 +239,10 @@ Container <<leaf>> "Point Observations" {
     * identifier = "Point Observations::PointObservation"
     * tableName = "OMSO_PointObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -256,10 +256,10 @@ Container <<leaf>> "Point Observations" {
     * identifier = "Point Observations::PointTimeSeriesObservation"
     * tableName = "OMSO_PointTimeSeriesObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -273,16 +273,16 @@ Container <<leaf>> "Trajectory and Profile Observations" {
     * description = "A triple set of Time, location, value (measurement). For example, at a point along a trajectory."
     * identifier = "Trajectory and Profile Observations::TimeLocationValueTriple"
     * tableName = "OMSO_TimeLocationValueTriple"
-    geometry : TM_Instant
-    geometry_anyOther : TM_TemporalPosition [0..1]
-    geometry_date8601 : DATE [0..1]
-    geometry_dateTime8601 : DATETIME [0..1]
-    geometry_time8601 : TEXT [0..1]
-    geometry_time8601_uom : TEXT [0..1]
+    geometry TM_Instant NOT NULL
+    geometry_anyOther TM_TemporalPosition
+    geometry_date8601 DATE
+    geometry_dateTime8601 DATETIME
+    geometry_time8601 TEXT
+    geometry_time8601_uom TEXT CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
     location_direct_coordinate <<missing>>
     location_direct_dimension INTEGER
-    value : Record
+    value Record NOT NULL
     collection Timeseries [0..*] as ref
     collection CVT_DiscreteTimeInstantCoverage [0..*] as ref
     collection CV_DiscreteCoverage [0..*] as ref
@@ -295,10 +295,10 @@ Container <<leaf>> "Trajectory and Profile Observations" {
     * identifier = "Trajectory and Profile Observations::TrajectoryObservation"
     * tableName = "OMSO_TrajectoryObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -312,10 +312,10 @@ Container <<leaf>> "Trajectory and Profile Observations" {
     * identifier = "Trajectory and Profile Observations::ProfileObservation"
     * tableName = "OMSO_ProfileObservation"
     id INTEGER NOT NULL PRIMARY KEY
-    phenomenonTime : TM_Object
-    resultQuality : DQ_Element [0..*]
-    resultTime : TM_Instant
-    validTime : TM_Period [0..1]
+    phenomenonTime TM_Object NOT NULL
+    resultQuality DQ_Element
+    resultTime TM_Instant NOT NULL
+    validTime TM_Period
     featureOfInterest_GFI_Feature BASE_Identifier as ref
     featureOfInterest_SF_SpatialSamplingFeature BASE_Identifier [0..*] as ref
     parameter _NamedValue [0..*] as ref
@@ -579,7 +579,7 @@ Container "Metadata extension information" {
 }
 Container "Data quality information" {
   * fileName = "Data quality information"
-  Class "DQ_Element" {
+  Abstract Class "DQ_Element" {
     evaluationMethodDescription : TEXT [0..1]
     evaluationMethodType : TEXT [0..1]
     evaluationProcedure_date : DATE [0..1]
@@ -598,7 +598,7 @@ Container "Data quality information" {
     <<array>> nameOfMeasures : TEXT [0..1]
     result DQ_Result [1..2] as ref
   }
-  Class "DQ_PositionalAccuracy" {
+  Abstract Class "DQ_PositionalAccuracy" {
     evaluationMethodDescription : TEXT [0..1]
     evaluationMethodType : TEXT [0..1]
     evaluationProcedure_date : DATE [0..1]
@@ -617,7 +617,7 @@ Container "Data quality information" {
     <<array>> nameOfMeasures : TEXT [0..1]
     result DQ_Result [1..2] as ref
   }
-  Class "DQ_Result" {}
+  Abstract Class "DQ_Result" {}
   Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
     * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal
@@ -1055,8 +1055,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -1139,8 +1139,8 @@ Package "Simple Components" {
     uom_formula : TEXT [0..1]
     uom_measureType : TEXT
     uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : DOUBLE [0..1]
-    uom_scaleToStandardUnit : DOUBLE [0..1]
+    uom_offsetToStandardUnit : REAL [0..1]
+    uom_scaleToStandardUnit : REAL [0..1]
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
@@ -1155,7 +1155,7 @@ Package "Simple Components" {
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
     <<property>> updatable : BOOLEAN [0..1]
-    <<property>> value : DOUBLE [0..1]
+    <<property>> value : REAL [0..1]
   }
   Class <<type>> "NilValues" {
     xsdDerivation = "true"
@@ -1174,7 +1174,7 @@ Package "Reference system information" {
   }
 }
 Package "Coordinate Reference Systems" {
-  Class <<type>> "SC_CRS" {
+  Abstract Class <<type>> "SC_CRS" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
     alias : GenericName [0..*]
@@ -1201,7 +1201,7 @@ Package "Names" {
     aName : TEXT
     scope NameSpace as ref
   }
-  Class <<type>>, <<type>> "GenericName" {
+  Abstract Class <<type>>, <<type>> "GenericName" {
     scope NameSpace as ref
   }
   Class <<type>> "ScopedName" {

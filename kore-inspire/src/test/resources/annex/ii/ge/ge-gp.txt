@@ -1,27 +1,27 @@
 Container <<applicationSchema>> "Geophysics" {
   * fileName = "Geophysics"
-  Class <<featureType>> "GeophObject" {
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
-    lineage : LI_Lineage [0..1]
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
+  Abstract Class <<featureType>> "GeophObject" {
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+    lineage LI_Lineage
+    positionalAccuracy DQ_PositionalAccuracy
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -38,30 +38,30 @@ Container <<applicationSchema>> "Geophysics" {
   Constraint Enum <<codeList>> "GE_GP_StationTypeValue" {
     * identifier = "Geophysics::StationTypeValue"
   }
-  Class <<featureType>> "GeophMeasurement" {
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
-    lineage : LI_Lineage [0..1]
-    platformType : TEXT
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
-    <<voidable>>, <<array>> relatedNetworks : TEXT [0..1]
+  Abstract Class <<featureType>> "GeophMeasurement" {
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+    lineage LI_Lineage
+    platformType TEXT NOT NULL CHECK(GE_GP_PlatformTypeValue)
+    positionalAccuracy DQ_PositionalAccuracy
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
+    <<voidable>>, <<array>> relatedNetworks TEXT
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -86,29 +86,29 @@ Container <<applicationSchema>> "Geophysics" {
     * identifier = "Geophysics::Campaign"
     * tableName = "GE_GP_Campaign"
     campaignType TEXT NOT NULL CHECK(GE_GP_CampaignTypeValue)
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
     id INTEGER NOT NULL PRIMARY KEY
-    lineage : LI_Lineage [0..1]
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
+    lineage LI_Lineage
+    positionalAccuracy DQ_PositionalAccuracy
     surveyType TEXT NOT NULL CHECK(GE_GP_SurveyTypeValue)
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
     <<voidable>>, <<reference>> client INTEGER
     <<voidable>>, <<reference>> contractor INTEGER
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
@@ -125,27 +125,27 @@ Container <<applicationSchema>> "Geophysics" {
     <<voidable>> largerWork BASE_Identifier [0..*] as ref
   }
   Class <<featureType>> "GeophObjectSet" {
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
-    lineage : LI_Lineage [0..1]
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
+    lineage LI_Lineage
+    positionalAccuracy DQ_PositionalAccuracy
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -167,31 +167,31 @@ Container <<applicationSchema>> "Geophysics" {
     NOTE 1. Processing results of geophStations are often vertical curve coverages"
     * identifier = "Geophysics::GeophStation"
     * tableName = "GE_GP_GeophStation"
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
     id INTEGER NOT NULL PRIMARY KEY
-    lineage : LI_Lineage [0..1]
-    platformType : TEXT
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
+    lineage LI_Lineage
+    platformType TEXT NOT NULL CHECK(GE_GP_PlatformTypeValue)
+    positionalAccuracy DQ_PositionalAccuracy
     stationType TEXT NOT NULL CHECK(GE_GP_StationTypeValue)
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
-    <<voidable>>, <<array>> relatedNetworks : TEXT [0..1]
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
+    <<voidable>>, <<array>> relatedNetworks TEXT
     <<voidable>>, <<array>> stationRanks TEXT
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
@@ -218,31 +218,31 @@ Container <<applicationSchema>> "Geophysics" {
     NOTE1. Processing results of geophSwaths can be both surface and solid coverages"
     * identifier = "Geophysics::GeophSwath"
     * tableName = "GE_GP_GeophSwath"
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
     id INTEGER NOT NULL PRIMARY KEY
-    lineage : LI_Lineage [0..1]
-    platformType : TEXT
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
+    lineage LI_Lineage
+    platformType TEXT NOT NULL CHECK(GE_GP_PlatformTypeValue)
+    positionalAccuracy DQ_PositionalAccuracy
     swathType TEXT NOT NULL CHECK(GE_GP_SwathTypeValue)
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
-    <<voidable>>, <<array>> relatedNetworks : TEXT [0..1]
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
+    <<voidable>>, <<array>> relatedNetworks TEXT
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -271,31 +271,31 @@ Container <<applicationSchema>> "Geophysics" {
     NOTE1. Processing results of geophProfiles are often vertical surface coverages"
     * identifier = "Geophysics::GeophProfile"
     * tableName = "GE_GP_GeophProfile"
-    citation_date : DATE [0..1]
-    citation_level : LegislationLevelValue [0..1]
-    citation_link : TEXT [0..1]
-    citation_name : TEXT
-    citation_type : TEXT
-    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
-    distributionInfo_distributorContact_individualName : TEXT [0..1]
-    distributionInfo_distributorContact_organisationName : TEXT [0..1]
-    distributionInfo_distributorContact_positionName : TEXT [0..1]
-    distributionInfo_distributorContact_role : TEXT
+    citation_date DATE
+    citation_level LegislationLevelValue
+    citation_link TEXT
+    citation_name TEXT NOT NULL
+    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
+    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
+    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
+    distributionInfo_distributorContact_individualName TEXT
+    distributionInfo_distributorContact_organisationName TEXT
+    distributionInfo_distributorContact_positionName TEXT
+    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
     id INTEGER NOT NULL PRIMARY KEY
-    lineage : LI_Lineage [0..1]
-    platformType : TEXT
-    positionalAccuracy : DQ_PositionalAccuracy [0..2]
+    lineage LI_Lineage
+    platformType TEXT NOT NULL CHECK(GE_GP_PlatformTypeValue)
+    positionalAccuracy DQ_PositionalAccuracy
     profileType TEXT NOT NULL CHECK(GE_GP_ProfileTypeValue)
-    verticalExtent_maximumValue : DOUBLE
-    verticalExtent_minimumValue : DOUBLE
-    <<voidable>>, <<array>> relatedNetworks : TEXT [0..1]
+    verticalExtent_maximumValue REAL NOT NULL
+    verticalExtent_minimumValue REAL NOT NULL
+    <<voidable>>, <<array>> relatedNetworks TEXT
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -479,7 +479,7 @@ Container "Data quality information" {
   Class "LI_Lineage" {
     statement : TEXT [0..1]
   }
-  Class "DQ_PositionalAccuracy" {
+  Abstract Class "DQ_PositionalAccuracy" {
     evaluationMethodDescription : TEXT [0..1]
     evaluationMethodType : TEXT [0..1]
     measureDescription : TEXT [0..1]
@@ -489,7 +489,7 @@ Container "Data quality information" {
     <<array>> nameOfMeasures : TEXT [0..1]
     evaluationProcedure BASE2_SimpleCitation [0..1] as ref
   }
-  Class "DQ_Result" {}
+  Abstract Class "DQ_Result" {}
   Constraint Enum <<codeList>> "GMD_DQ_EvaluationMethodTypeCode" {
     * identifier = "Data quality information::DQ_EvaluationMethodTypeCode"
     directExternal

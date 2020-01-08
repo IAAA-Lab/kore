@@ -4,15 +4,15 @@ Container <<applicationSchema>> "Gridded Land Use" {
     * description = "An existing land use grid is a collection of pixels for which information on existing (present or past) land use is provided. The HILUCS system shall be used for classification."
     * identifier = "Gridded Land Use::ExistingLandUseGrid"
     * tableName = "GELU_ExistingLandUseGrid"
-    coverageFunction_ruleDefinition : TEXT [0..1]
-    coverageFunction_ruleReference : TEXT [0..1]
-    domainSet : Any
+    coverageFunction_ruleDefinition TEXT
+    coverageFunction_ruleReference TEXT
+    domainSet Any NOT NULL
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata : Any [0..*]
+    metadata Any
     name TEXT NOT NULL
-    rangeSet : Any [0..*]
-    rangeType : RecordType
+    rangeSet Any
+    rangeType RecordType NOT NULL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<reference>> inspireId INTEGER

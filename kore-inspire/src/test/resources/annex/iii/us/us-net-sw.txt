@@ -12,19 +12,19 @@ Container <<applicationSchema>> "Sewer Network" {
     * identifier = "Sewer Network::SewerPipe"
     * tableName = "US_NET_SW_SewerPipe"
     id INTEGER NOT NULL PRIMARY KEY
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> currentStatus : TEXT [0..1]
-    <<voidable>> pipeDiameter : TEXT [0..1]
-    <<voidable>> pipeDiameter_uom : TEXT [0..1]
-    <<voidable>> pressure : TEXT [0..1]
-    <<voidable>> pressure_uom : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> pipeDiameter TEXT
+    <<voidable>> pipeDiameter_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> pressure TEXT
+    <<voidable>> pressure_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> sewerWaterType TEXT CHECK(US_NET_SW_SewerWaterTypeValue)
-    <<voidable>> utilityDeliveryType : TEXT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    <<voidable>> verticalPosition : TEXT [0..1]
-    <<voidable>> warningType : TEXT [0..1]
+    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
+    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> cables_Cable BASE_Identifier [0..*] as ref
