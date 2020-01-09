@@ -460,21 +460,6 @@ Container <<applicationSchema>> "Geology" {
     * identifier = "Geology::ThematicClassValue"
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-}
 Container "Data quality information" {
   * fileName = "Data quality information"
   Abstract Class "DQ_PositionalAccuracy" {
@@ -551,13 +536,6 @@ Package "Simple Components" {
     Default: true
     Description: class implemented as new type + element, or by applying constraints only
     "
-    uom_formula : TEXT [0..1]
-    uom_measureType : TEXT
-    uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : REAL [0..1]
-    uom_scaleToStandardUnit : REAL [0..1]
-    uom_uomName : TEXT
-    uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
     <<property>> constraint : AllowedValues [0..1]
     <<property>> definition : ScopedName [0..1]
@@ -569,6 +547,7 @@ Package "Simple Components" {
     <<property>> optional : BOOLEAN [0..1]
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> uom : TEXT
     <<property>> updatable : BOOLEAN [0..1]
     <<property>> value SWE_RealPair [0..1] as ref
   }
@@ -635,13 +614,6 @@ Package "Simple Components" {
     Default: true
     Description: class implemented as new type + element, or by applying constraints only
     "
-    uom_formula : TEXT [0..1]
-    uom_measureType : TEXT
-    uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : REAL [0..1]
-    uom_scaleToStandardUnit : REAL [0..1]
-    uom_uomName : TEXT
-    uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
     <<property>> constraint : AllowedValues [0..1]
     <<property>> definition : ScopedName [0..1]
@@ -653,6 +625,7 @@ Package "Simple Components" {
     <<property>> optional : BOOLEAN [0..1]
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> uom : TEXT
     <<property>> updatable : BOOLEAN [0..1]
     <<property>> value : REAL [0..1]
   }
@@ -666,6 +639,10 @@ Package "EA Model" {
   
 }
 
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
+}
 Package "Coordinate Reference Systems" {
   Abstract Class <<type>> "SC_CRS" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)

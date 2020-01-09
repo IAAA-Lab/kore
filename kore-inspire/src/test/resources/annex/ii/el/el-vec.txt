@@ -182,34 +182,6 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     tropicLowerLowWater
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Class "Measure" {
-    value : REAL
-    uom UnitOfMeasure as ref
-  }
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-  Abstract Class "UnitOfMeasure" {
-    formula : TEXT [0..1]
-    measureType : TEXT
-    nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : REAL [0..1]
-    scaleToStandardUnit : REAL [0..1]
-    uomName : TEXT
-    uomSymbol : TEXT
-    measure Measure [0..*] as ref
-  }
-}
 Package <<applicationSchema>> "Base Types" {
   Metadata "Unknown" {
     * metadata = "http://inspire.ec.europa.eu/codelist/VoidReasonValue/Unknown"
@@ -235,6 +207,14 @@ Package <<applicationSchema>> "Base Types" {
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Class "Measure" {
+    value : REAL
+    uom TEXT as ref
+  }
+  Constraint Enum "GML_UomIdentifier" {}
 }
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"

@@ -24,7 +24,8 @@ import es.iaaa.kore.transform.Transformations
 internal class MapEntry(
     val type: KoreClassifier,
     val predicate: (KoreTypedElement) -> Boolean,
-    val preset: (KoreTypedElement) -> Unit
+    val preset: (KoreTypedElement) -> Unit,
+    val postset: (KoreTypedElement) -> Unit
 ) : Transformation {
 
     override fun process(target: Model) {
@@ -32,6 +33,7 @@ internal class MapEntry(
         from.filterIsInstance<KoreTypedElement>().filter(predicate).forEach {
             preset(it)
             it.type = type
+            postset(it)
         }
     }
 }
@@ -40,7 +42,8 @@ fun Transformations.mapEntry(
     type: String? = null,
     typePredicate: (KoreTypedElement) -> Boolean = { true },
     preset: (KoreTypedElement) -> Unit = {},
+    postset: (KoreTypedElement) -> Unit = {},
     targetType: KoreClassifier
 ) {
-    add(MapEntry(targetType, type?.let { { e: KoreTypedElement -> e.type?.name == it} } ?: typePredicate, preset))
+    add(MapEntry(targetType, type?.let { { e: KoreTypedElement -> e.type?.name == it} } ?: typePredicate, preset, postset))
 }

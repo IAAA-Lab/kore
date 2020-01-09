@@ -122,6 +122,7 @@ Container <<applicationSchema>> "HumanHealth" {
     uomName : TEXT
     uomSymbol : TEXT
     measure Measure [0..*] as ref
+    subunit TEXT [0..1] as ref
   }
   Constraint Enum <<codeList>> "HH_CODValue" {
     * identifier = "HumanHealth::CODValue"
@@ -250,7 +251,7 @@ Container <<applicationSchema>> "HumanHealth" {
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     value : REAL
-    uom UnitOfMeasure as ref
+    uom TEXT as ref
   }
   Constraint Enum <<codeList>> "HH_ICDValue" {
     * identifier = "HumanHealth::ICDValue"
@@ -265,7 +266,7 @@ Container <<applicationSchema>> "HumanHealth" {
     uom_uomName : TEXT
     uom_uomSymbol : TEXT
     value : REAL
-    uom UnitOfMeasure as ref
+    uom TEXT as ref
   }
   Class <<type>> "UomConcentration" {
     component : TEXT
@@ -278,6 +279,7 @@ Container <<applicationSchema>> "HumanHealth" {
     uomName : TEXT
     uomSymbol : TEXT
     measure Measure [0..*] as ref
+    subunit TEXT [0..1] as ref
   }
   Constraint Enum <<codeList>> "HH_BathingWaterQualityComponentTypeValue" {
     * identifier = "HumanHealth::BathingWaterQualityComponentTypeValue"
@@ -326,16 +328,6 @@ Container "Units of Measure" {
     velocity
     volume
     weight
-  }
-  Abstract Class "UnitOfMeasure" {
-    formula : TEXT [0..1]
-    measureType : TEXT
-    nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : REAL [0..1]
-    scaleToStandardUnit : REAL [0..1]
-    uomName : TEXT
-    uomSymbol : TEXT
-    measure Measure [0..*] as ref
   }
   Constraint Enum "GML_UomIdentifier" {}
 }

@@ -246,20 +246,6 @@ Container <<applicationSchema>> "Base Types 2" {
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-}
 Container "Data quality information" {
   * fileName = "Data quality information"
   Abstract Class "DQ_PositionalAccuracy" {
@@ -342,13 +328,6 @@ Package "Simple Components" {
     Default: true
     Description: class implemented as new type + element, or by applying constraints only
     "
-    uom_formula : TEXT [0..1]
-    uom_measureType : TEXT
-    uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : REAL [0..1]
-    uom_scaleToStandardUnit : REAL [0..1]
-    uom_uomName : TEXT
-    uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
     <<property>> constraint : AllowedValues [0..1]
     <<property>> definition : ScopedName [0..1]
@@ -360,6 +339,7 @@ Package "Simple Components" {
     <<property>> optional : BOOLEAN [0..1]
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> uom : TEXT
     <<property>> updatable : BOOLEAN [0..1]
     <<property>> value SWE_RealPair [0..1] as ref
   }
@@ -426,13 +406,6 @@ Package "Simple Components" {
     Default: true
     Description: class implemented as new type + element, or by applying constraints only
     "
-    uom_formula : TEXT [0..1]
-    uom_measureType : TEXT
-    uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : REAL [0..1]
-    uom_scaleToStandardUnit : REAL [0..1]
-    uom_uomName : TEXT
-    uom_uomSymbol : TEXT
     <<property>> axisID : TEXT [0..1]
     <<property>> constraint : AllowedValues [0..1]
     <<property>> definition : ScopedName [0..1]
@@ -444,6 +417,7 @@ Package "Simple Components" {
     <<property>> optional : BOOLEAN [0..1]
     <<property>> quality : Quality [0..*]
     <<property>> referenceFrame : SC_CRS [0..1]
+    <<property>> uom : TEXT
     <<property>> updatable : BOOLEAN [0..1]
     <<property>> value : REAL [0..1]
   }
@@ -559,6 +533,10 @@ Package "Coordinate Operations" {
     sourceCRS SC_CRS [0..1] as ref
     targetCRS SC_CRS [0..1] as ref
   }
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }
 Package "dictionary" {
   Class <<type>> "Dictionary" {

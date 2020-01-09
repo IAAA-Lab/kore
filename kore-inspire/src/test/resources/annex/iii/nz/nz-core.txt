@@ -82,21 +82,9 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * identifier = "NaturalRiskZones::VulnerabilityAssessment"
     * tableName = "NZ_CORE_VulnerabilityAssessment"
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_formula TEXT
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
-    levelOfVulnerability_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
+    levelOfVulnerability_quantitativeValue_unitOfMeasure TEXT NOT NULL CHECK(GML_UomIdentifier)
     levelOfVulnerability_quantitativeValue_value REAL NOT NULL
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_formula TEXT
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
-    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
+    magnitudeOrIntensityOfHazard_quantitativeValue_unitOfMeasure TEXT NOT NULL CHECK(GML_UomIdentifier)
     magnitudeOrIntensityOfHazard_quantitativeValue_value REAL NOT NULL
     sourceOfVulnerability_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     typeOfElement_exposedElementCategory TEXT NOT NULL CHECK(NZ_CORE_ExposedElementCategoryValue)
@@ -131,13 +119,7 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * identifier = "NaturalRiskZones::LevelOrIntensity"
     * tableName = "NZ_CORE_LevelOrIntensity"
     id INTEGER NOT NULL PRIMARY KEY
-    quantitativeValue_unitOfMeasure_formula TEXT
-    quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
-    quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
-    quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
-    quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
+    quantitativeValue_unitOfMeasure TEXT NOT NULL CHECK(GML_UomIdentifier)
     quantitativeValue_value REAL NOT NULL
     <<voidable>> assessmentMethod_date DATE
     <<voidable>> assessmentMethod_level LegislationLevelValue
@@ -189,13 +171,7 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * tableName = "NZ_CORE_RiskZone"
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    levelOfRisk_quantitativeValue_unitOfMeasure_formula TEXT
-    levelOfRisk_quantitativeValue_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    levelOfRisk_quantitativeValue_unitOfMeasure_nameStandardUnit TEXT
-    levelOfRisk_quantitativeValue_unitOfMeasure_offsetToStandardUnit REAL
-    levelOfRisk_quantitativeValue_unitOfMeasure_scaleToStandardUnit REAL
-    levelOfRisk_quantitativeValue_unitOfMeasure_uomName TEXT NOT NULL
-    levelOfRisk_quantitativeValue_unitOfMeasure_uomSymbol TEXT NOT NULL
+    levelOfRisk_quantitativeValue_unitOfMeasure TEXT NOT NULL CHECK(GML_UomIdentifier)
     levelOfRisk_quantitativeValue_value REAL NOT NULL
     sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
@@ -352,21 +328,6 @@ Container "Temporal Reference System" {
     unknow
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-}
 Container "Quadrilateral Grid" {
   * fileName = "Quadrilateral Grid"
   Constraint Enum <<codeList>> "CIS_CV_SequenceType" {
@@ -481,4 +442,8 @@ Package "Temporal Objects" {
     nextEdge TM_Edge [0..*] as ref
     previousEdge TM_Edge [0..*] as ref
   }
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

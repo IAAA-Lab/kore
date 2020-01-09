@@ -61,13 +61,7 @@ Container <<applicationSchema>> "Planned Land Use" {
     * tableName = "PLU_DimensioningIndicationMeasureValue"
     id INTEGER NOT NULL PRIMARY KEY
     indicationReference TEXT NOT NULL
-    value_unitOfMeasure_formula TEXT
-    value_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    value_unitOfMeasure_nameStandardUnit TEXT
-    value_unitOfMeasure_offsetToStandardUnit REAL
-    value_unitOfMeasure_scaleToStandardUnit REAL
-    value_unitOfMeasure_uomName TEXT NOT NULL
-    value_unitOfMeasure_uomSymbol TEXT NOT NULL
+    value_unitOfMeasure TEXT NOT NULL CHECK(GML_UomIdentifier)
     value_value REAL NOT NULL
   }
   Feature <<featureType>> "PLU_ZoningElement" {
@@ -267,20 +261,6 @@ Container <<applicationSchema>> "Base Types 2" {
     LegislationCitation
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-}
 Container <<applicationSchema>> "Land Use Nomenclature" {
   * fileName = "Land Use Nomenclature"
   Constraint Enum <<codeList>> "LUNOM_HILUCSValue" {
@@ -338,3 +318,7 @@ Package "EA Model" {
   
 }
 
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
+}

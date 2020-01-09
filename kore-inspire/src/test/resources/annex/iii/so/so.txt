@@ -28,13 +28,7 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_SoilThemeParameterType"
     id INTEGER NOT NULL PRIMARY KEY
     soilThemeParameterName TEXT NOT NULL CHECK(SO_SoilDerivedObjectParameterNameValue)
-    uom_formula TEXT
-    uom_measureType TEXT CHECK(GML_MeasureType)
-    uom_nameStandardUnit TEXT
-    uom_offsetToStandardUnit REAL
-    uom_scaleToStandardUnit REAL
-    uom_uomName TEXT
-    uom_uomSymbol TEXT
+    uom TEXT CHECK(GML_UomIdentifier)
   }
   Attributes <<featureType>> "SO_SoilLayer" {
     * description = "domain of a soil with a certain vertical extension developed through non-pedogenic processes, displaying a change in structure and/or composition to possibly over- or underlying adjacent domains, or a grouping of soil horizons or other sub-domains with a special purpose.
@@ -55,13 +49,7 @@ Container <<applicationSchema>> "Soil" {
     id INTEGER NOT NULL PRIMARY KEY
     layerType TEXT NOT NULL CHECK(SO_LayerTypeValue)
     profileElementDepthRange_lowerValue REAL
-    profileElementDepthRange_uom_formula TEXT
-    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    profileElementDepthRange_uom_nameStandardUnit TEXT
-    profileElementDepthRange_uom_offsetToStandardUnit REAL
-    profileElementDepthRange_uom_scaleToStandardUnit REAL
-    profileElementDepthRange_uom_uomName TEXT
-    profileElementDepthRange_uom_uomSymbol TEXT
+    profileElementDepthRange_uom TEXT CHECK(GML_UomIdentifier)
     profileElementDepthRange_upperValue REAL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
@@ -117,13 +105,7 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_RangeType"
     id INTEGER NOT NULL PRIMARY KEY
     lowerValue REAL
-    uom_formula TEXT
-    uom_measureType TEXT CHECK(GML_MeasureType)
-    uom_nameStandardUnit TEXT
-    uom_offsetToStandardUnit REAL
-    uom_scaleToStandardUnit REAL
-    uom_uomName TEXT
-    uom_uomSymbol TEXT
+    uom TEXT CHECK(GML_UomIdentifier)
     upperValue REAL
   }
   Constraint Enum <<codeList>> "SO_FAOPrimeValue" {
@@ -176,13 +158,7 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_SoilThemeDescriptiveParameterType"
     id INTEGER NOT NULL PRIMARY KEY
     soilThemeDescriptiveParameterName TEXT NOT NULL
-    uom_formula TEXT
-    uom_measureType TEXT CHECK(GML_MeasureType)
-    uom_nameStandardUnit TEXT
-    uom_offsetToStandardUnit REAL
-    uom_scaleToStandardUnit REAL
-    uom_uomName TEXT
-    uom_uomSymbol TEXT
+    uom TEXT CHECK(GML_UomIdentifier)
   }
   Constraint Enum <<codeList>> "SO_WRBSpecifierValue" {
     * identifier = "Soil::WRBSpecifierValue"
@@ -192,13 +168,7 @@ Container <<applicationSchema>> "Soil" {
   Class "DerivedProfilePresenceInSoilBody" {
     conID = "EAID_8DB35F17_EA63_4c56_9C45_5CD8C3508143"
     derivedProfilePercentageRange_lowerValue : REAL [0..1]
-    derivedProfilePercentageRange_uom_formula : TEXT [0..1]
-    derivedProfilePercentageRange_uom_measureType : TEXT [0..1]
-    derivedProfilePercentageRange_uom_nameStandardUnit : TEXT [0..1]
-    derivedProfilePercentageRange_uom_offsetToStandardUnit : REAL [0..1]
-    derivedProfilePercentageRange_uom_scaleToStandardUnit : REAL [0..1]
-    derivedProfilePercentageRange_uom_uomName : TEXT [0..1]
-    derivedProfilePercentageRange_uom_uomSymbol : TEXT [0..1]
+    derivedProfilePercentageRange_uom : TEXT [0..1]
     derivedProfilePercentageRange_upperValue : REAL [0..1]
   }
   Constraint Enum <<codeList>> "SO_SoilDerivedObjectParameterNameValue" {
@@ -303,13 +273,7 @@ Container <<applicationSchema>> "Soil" {
     rangeSet Any
     rangeType RecordType NOT NULL
     soilThemeDescriptiveParameter_soilThemeDescriptiveParameterName TEXT NOT NULL
-    soilThemeDescriptiveParameter_uom_formula TEXT
-    soilThemeDescriptiveParameter_uom_measureType TEXT CHECK(GML_MeasureType)
-    soilThemeDescriptiveParameter_uom_nameStandardUnit TEXT
-    soilThemeDescriptiveParameter_uom_offsetToStandardUnit REAL
-    soilThemeDescriptiveParameter_uom_scaleToStandardUnit REAL
-    soilThemeDescriptiveParameter_uom_uomName TEXT
-    soilThemeDescriptiveParameter_uom_uomSymbol TEXT
+    soilThemeDescriptiveParameter_uom TEXT CHECK(GML_UomIdentifier)
     <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
     <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<reference>> isDescribing INTEGER
@@ -318,13 +282,7 @@ Container <<applicationSchema>> "Soil" {
   }
   Abstract Class <<featureType>> "ProfileElement" {
     profileElementDepthRange_lowerValue REAL
-    profileElementDepthRange_uom_formula TEXT
-    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    profileElementDepthRange_uom_nameStandardUnit TEXT
-    profileElementDepthRange_uom_offsetToStandardUnit REAL
-    profileElementDepthRange_uom_scaleToStandardUnit REAL
-    profileElementDepthRange_uom_uomName TEXT
-    profileElementDepthRange_uom_uomSymbol TEXT
+    profileElementDepthRange_uom TEXT CHECK(GML_UomIdentifier)
     profileElementDepthRange_upperValue REAL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
@@ -368,13 +326,7 @@ Container <<applicationSchema>> "Soil" {
     rangeSet Any
     rangeType RecordType NOT NULL
     soilThemeParameter_soilThemeParameterName TEXT NOT NULL CHECK(SO_SoilDerivedObjectParameterNameValue)
-    soilThemeParameter_uom_formula TEXT
-    soilThemeParameter_uom_measureType TEXT CHECK(GML_MeasureType)
-    soilThemeParameter_uom_nameStandardUnit TEXT
-    soilThemeParameter_uom_offsetToStandardUnit REAL
-    soilThemeParameter_uom_scaleToStandardUnit REAL
-    soilThemeParameter_uom_uomName TEXT
-    soilThemeParameter_uom_uomSymbol TEXT
+    soilThemeParameter_uom TEXT CHECK(GML_UomIdentifier)
     <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
     <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> validTimeFrom DATE
@@ -396,13 +348,7 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_ParticleSizeFractionType"
     fractionContent REAL NOT NULL
     fractionParticleSizeRange_lowerValue REAL
-    fractionParticleSizeRange_uom_formula TEXT
-    fractionParticleSizeRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    fractionParticleSizeRange_uom_nameStandardUnit TEXT
-    fractionParticleSizeRange_uom_offsetToStandardUnit REAL
-    fractionParticleSizeRange_uom_scaleToStandardUnit REAL
-    fractionParticleSizeRange_uom_uomName TEXT
-    fractionParticleSizeRange_uom_uomSymbol TEXT
+    fractionParticleSizeRange_uom TEXT CHECK(GML_UomIdentifier)
     fractionParticleSizeRange_upperValue REAL
     id INTEGER NOT NULL PRIMARY KEY
   }
@@ -465,13 +411,7 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_SoilHorizon"
     id INTEGER NOT NULL PRIMARY KEY
     profileElementDepthRange_lowerValue REAL
-    profileElementDepthRange_uom_formula TEXT
-    profileElementDepthRange_uom_measureType TEXT CHECK(GML_MeasureType)
-    profileElementDepthRange_uom_nameStandardUnit TEXT
-    profileElementDepthRange_uom_offsetToStandardUnit REAL
-    profileElementDepthRange_uom_scaleToStandardUnit REAL
-    profileElementDepthRange_uom_uomName TEXT
-    profileElementDepthRange_uom_uomSymbol TEXT
+    profileElementDepthRange_uom TEXT CHECK(GML_UomIdentifier)
     profileElementDepthRange_upperValue REAL
     <<voidable>>, <<reference>> FAOHorizonNotation INTEGER
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
@@ -628,20 +568,6 @@ Container <<applicationSchema>> "Base Types 2" {
     LegislationCitation
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-}
 Container <<applicationSchema>> "Geology" {
   * fileName = "Geology"
   Constraint Enum <<codeList>> "GE_LithologyValue" {
@@ -761,4 +687,8 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
     <<array>> startPoints TEXT
   }
+}
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
 }

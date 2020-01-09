@@ -6,13 +6,7 @@ Container <<applicationSchema>> "Activity Complex" {
     NOTE Depending on the thematic scope it can refer to different terms as Biomass, Bio-Waste, Fuel, Organic Solvents, Waste Water, Waste for disposal or recovery, Primary Materials, etc."
     * identifier = "Activity Complex::InputOutputAmount"
     * tableName = "ACT_CORE_InputOutputAmount"
-    amount_unitOfMeasure_formula TEXT
-    amount_unitOfMeasure_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    amount_unitOfMeasure_nameStandardUnit TEXT
-    amount_unitOfMeasure_offsetToStandardUnit REAL
-    amount_unitOfMeasure_scaleToStandardUnit REAL
-    amount_unitOfMeasure_uomName TEXT NOT NULL
-    amount_unitOfMeasure_uomSymbol TEXT NOT NULL
+    amount_unitOfMeasure TEXT NOT NULL CHECK(GML_UomIdentifier)
     amount_value REAL NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     inputOutput TEXT NOT NULL CHECK(ACT_CORE_InputOutputValue)
@@ -180,21 +174,6 @@ Container <<applicationSchema>> "Activity Complex" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Capacity(id)
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-  Constraint Enum "GML_UomIdentifier" {}
-}
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
   Attributes <<dataType>> "BASE2_Contact" {
@@ -353,3 +332,7 @@ Package "EA Model" {
   Class "applicationSchema" {}
 }
 
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
+}

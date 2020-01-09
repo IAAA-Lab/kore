@@ -38,13 +38,7 @@ Container <<applicationSchema>> "Population distribution - demography" {
     id INTEGER NOT NULL PRIMARY KEY
     measure TEXT NOT NULL CHECK(PD_VariableValue)
     measurementMethod TEXT NOT NULL CHECK(PD_StatisticsMeasurementMethodValue)
-    measurementUnit_formula TEXT
-    measurementUnit_measureType TEXT NOT NULL CHECK(GML_MeasureType)
-    measurementUnit_nameStandardUnit TEXT
-    measurementUnit_offsetToStandardUnit REAL
-    measurementUnit_scaleToStandardUnit REAL
-    measurementUnit_uomName TEXT NOT NULL
-    measurementUnit_uomSymbol TEXT NOT NULL
+    measurementUnit TEXT NOT NULL CHECK(GML_UomIdentifier)
     notCountedProportion REAL
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
@@ -143,20 +137,6 @@ Container <<applicationSchema>> "Population distribution - demography" {
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
-Container "Units of Measure" {
-  * fileName = "Units of Measure"
-  Constraint Enum <<codeList>> "GML_MeasureType" {
-    * identifier = "Units of Measure::MeasureType"
-    angle
-    area
-    length
-    scale
-    time
-    velocity
-    volume
-    weight
-  }
-}
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
   Attributes <<dataType>> "BASE_Identifier" {
@@ -203,3 +183,7 @@ Package "EA Model" {
   Class "applicationSchema" {}
 }
 
+Container "Units of Measure" {
+  * fileName = "Units of Measure"
+  Constraint Enum "GML_UomIdentifier" {}
+}

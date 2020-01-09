@@ -28,7 +28,7 @@ val `UoM is added as a separate property`: Transform = { conversion, _ ->
     }
 
     val uom by lazy {
-        uomPackage.enumConstraint("UomIdentifier")
+        uomPackage.findClassifier("UomIdentifier") ?: uomPackage.enumConstraint("UomIdentifier")
     }
 
     val measure by lazy {
