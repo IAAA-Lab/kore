@@ -1,21 +1,29 @@
 Container <<applicationSchema>> "CadastralParcels" {
   * fileName = "CadastralParcels"
-  Class <<featureType>> "CadastralZoning" {
-    geometry : MULTISURFACE
-    label : TEXT
-    nationalCadastalZoningReference : TEXT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> estimatedAccuracy : TEXT [0..1]
-    <<voidable>> estimatedAccuracy_uom : TEXT [0..1]
-    <<voidable>> level : TEXT [0..1]
-    <<voidable>> originalMapScaleDenominator : INTEGER [0..1]
-    <<voidable>> referencePoint : POINT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> levelName GMD_LocalisedCharacterString [0..*] as ref
-    <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
+  Feature <<featureType>> "CP_CadastralZoning" {
+    * description = "Intermediary areas used in order to divide national territory into cadastral parcels.
+  
+    NOTE 1 In the INSPIRE context, cadastral zonings are to be used to carry metadata information and to facilitate portrayal and search of data.
+  
+    NOTE 2 Cadastral zonings have generally been defined when cadastral maps were created for the first time.
+  
+    EXAMPLE Municipality, section, parish, district, block."
+    * identifier = "CadastralParcels::CadastralZoning"
+    * tableName = "CP_CadastralZoning"
+    geometry MULTISURFACE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT NOT NULL
+    nationalCadastalZoningReference TEXT NOT NULL
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> upperLevelUnit INTEGER
+    <<voidable>> estimatedAccuracy TEXT
+    <<voidable>> estimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
+    <<voidable>> level TEXT CHECK(CP_CadastralZoningLevelValue)
+    <<voidable>> originalMapScaleDenominator INTEGER
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
   }
   Feature <<featureType>> "CP_CadastralBoundary" {
     * description = "Part of the outline of a cadastral parcel. One cadastral boundary may be shared by two neighbouring cadastral parcels.
@@ -33,20 +41,27 @@ Container <<applicationSchema>> "CadastralParcels" {
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
   }
-  Class <<featureType>> "CadastralParcel" {
-    modeldocument = "null"
-    geometry : GEOMETRY
-    label : TEXT
-    nationalCadastralReference : TEXT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> areaValue : TEXT [0..1]
-    <<voidable>> areaValue_uom : TEXT [0..1]
-    <<voidable>> referencePoint : POINT [0..1]
-    <<voidable>> validFrom : DATETIME [0..1]
-    <<voidable>> validTo : DATETIME [0..1]
-    inspireId BASE_Identifier as ref
-    <<voidable>> administrativeUnit_AdministrativeUnit BASE_Identifier [0..1] as ref
+  Feature <<featureType>> "CP_CadastralParcel" {
+    * description = "Areas defined by cadastral registers or equivalent.
+  
+    SOURCE [INSPIRE Directive:2007].
+  
+    NOTE As much as possible, in the INSPIRE context, cadastral parcels should be forming a partition of national territory. Cadastral parcel should be considered as a single area of Earth surface (land and/or water), under homogeneous real property rights and unique ownership, real property rights and ownership being defined by national law (adapted from UN ECE 2004 and WG-CPI, 2006). By unique ownership is meant that the ownership is held by one or several joint owners for the whole parcel."
+    * identifier = "CadastralParcels::CadastralParcel"
+    * tableName = "CP_CadastralParcel"
+    geometry GEOMETRY NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT NOT NULL
+    nationalCadastralReference TEXT NOT NULL
+    <<voidable>>, <<reference>> administrativeUnit_AdministrativeUnit INTEGER
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> zoning INTEGER
+    <<voidable>> areaValue TEXT
+    <<voidable>> areaValue_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
+    <<voidable>> validFrom DATETIME
+    <<voidable>> validTo DATETIME
   }
   Constraint Enum <<codeList>> "CP_CadastralZoningLevelValue" {
     * identifier = "CadastralParcels::CadastralZoningLevelValue"
@@ -79,11 +94,80 @@ Container <<applicationSchema>> "CadastralParcels" {
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
   }
+  Feature <<featureType>> "CP_CadastralZoning_referencePoint" {
+    * tableName = "CP_CadastralZoning_referencePoint"
+    id INTEGER NOT NULL PRIMARY KEY
+    referencePoint POINT
+  }
+  Feature <<featureType>> "CP_CadastralParcel_referencePoint" {
+    * tableName = "CP_CadastralParcel_referencePoint"
+    id INTEGER NOT NULL PRIMARY KEY
+    referencePoint POINT
+  }
+  Relation "CP_CadastralZoning_upperLevelUnit" {
+    * profile = "features"
+    * relatedReference = "attribute CP_CadastralZoning#upperLevelUnit"
+    * tableName = "CP_CadastralZoning_upperLevelUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES CP_CadastralZoning(id)
+  }
+  Relation "CP_CadastralZoning_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute CP_CadastralZoning#inspireId"
+    * tableName = "CP_CadastralZoning_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "CP_CadastralZoning_levelName" {
+    * profile = "attributes"
+    * tableName = "CP_CadastralZoning_levelName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_LocalisedCharacterString(id)
+  }
+  Relation "CP_CadastralZoning_name" {
+    * profile = "attributes"
+    * tableName = "CP_CadastralZoning_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "CP_CadastralBoundary_parcel" {
+    * profile = "features"
+    * tableName = "CP_CadastralBoundary_parcel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES CP_CadastralParcel(id)
+  }
   Relation "CP_CadastralBoundary_inspireId" {
     * profile = "attributes"
     * relatedReference = "attribute CP_CadastralBoundary#inspireId"
     * tableName = "CP_CadastralBoundary_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralBoundary(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "CP_CadastralParcel_zoning" {
+    * profile = "features"
+    * relatedReference = "attribute CP_CadastralParcel#zoning"
+    * tableName = "CP_CadastralParcel_zoning"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES CP_CadastralZoning(id)
+  }
+  Relation "CP_CadastralParcel_basicPropertyUnit" {
+    * profile = "attributes"
+    * tableName = "CP_CadastralParcel_basicPropertyUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES CP_BasicPropertyUnit(id)
+  }
+  Relation "CP_CadastralParcel_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute CP_CadastralParcel#inspireId"
+    * tableName = "CP_CadastralParcel_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "CP_CadastralParcel_administrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute CP_CadastralParcel#administrativeUnit_AdministrativeUnit"
+    * tableName = "CP_CadastralParcel_administrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "CP_BasicPropertyUnit_inspireId" {

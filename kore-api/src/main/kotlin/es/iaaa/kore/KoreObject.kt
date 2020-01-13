@@ -108,6 +108,17 @@ fun KoreObject.references(name: String, source: String? = null): Boolean = when 
 }
 
 /**
+ * Checks if an annotation of a [KoreObject] references to a named element.
+ */
+fun KoreObject.removeReference(name: String, source: String? = null) {
+    if (this is KoreModelElement) {
+        getAnnotation(source)?.references?.removeIf { item ->
+            item is KoreNamedElement && item.name == name
+        }
+    }
+}
+
+/**
  * Checks if an annotation of a [KoreObject] references to none.
  */
 fun KoreObject.hasNoReferences(source: String? = null): Boolean = when (this) {

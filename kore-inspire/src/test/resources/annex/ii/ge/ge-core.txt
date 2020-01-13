@@ -178,14 +178,17 @@ Container <<applicationSchema>> "Geology" {
   Constraint Enum <<codeList>> "GE_EventProcessValue" {
     * identifier = "Geology::EventProcessValue"
   }
-  Class <<featureType>> "Borehole" {
-    elevation_coordinate
-    elevation_dimension : INTEGER
-    location : POINT
-    <<voidable>>, <<array>> purposes : TEXT [0..1]
-    <<voidable>> boreholeLength : Quantity [0..1]
-    <<voidable>> downholeGeometry : CURVE [0..1]
-    inspireId BASE_Identifier as ref
+  Feature <<featureType>> "GE_Borehole" {
+    * description = "A borehole is the generalized term for any narrow shaft drilled in the ground."
+    * identifier = "Geology::Borehole"
+    * tableName = "GE_Borehole"
+    elevation_coordinate <<missing>> NOT NULL
+    elevation_dimension INTEGER NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    location POINT NOT NULL
+    <<voidable>>, <<array>> purposes TEXT
+    <<voidable>> boreholeLength Quantity
+    <<reference>> inspireId INTEGER
   }
   Attributes <<dataType>> "GE_ThematicClass" {
     * description = "A generic thematic classifier to enable the reclassification of Geologic Features with user defined classes appropriate to thematic maps.
@@ -196,6 +199,11 @@ Container <<applicationSchema>> "Geology" {
     id INTEGER NOT NULL PRIMARY KEY
     themeClass TEXT NOT NULL CHECK(GE_ThematicClassValue)
     themeClassification TEXT NOT NULL CHECK(GE_ThematicClassificationValue)
+  }
+  Feature <<featureType>> "GE_Borehole_downholeGeometry" {
+    * tableName = "GE_Borehole_downholeGeometry"
+    downholeGeometry CURVE NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
   }
   Relation "GE_GeologicUnit_composition" {
     * profile = "attributes"
@@ -208,6 +216,12 @@ Container <<applicationSchema>> "Geology" {
     * tableName = "GE_GeologicCollection_mapMember"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicCollection(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_MappedFeature(id)
+  }
+  Relation "GE_GeologicCollection_boreholeMember" {
+    * profile = "features"
+    * tableName = "GE_GeologicCollection_boreholeMember"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicCollection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_Borehole(id)
   }
   Relation "GE_GeologicCollection_inspireId" {
     * profile = "attributes"
@@ -226,6 +240,19 @@ Container <<applicationSchema>> "Geology" {
     * profile = "attributes"
     * tableName = "GE_GeologicCollection_geophObjectSet_GeophObjectSet"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GeologicCollection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_Borehole_logElement" {
+    * profile = "attributes"
+    * tableName = "GE_Borehole_logElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_Borehole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GE_MappedInterval(id)
+  }
+  Relation "GE_Borehole_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_Borehole#inspireId"
+    * tableName = "GE_Borehole_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_Borehole(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }

@@ -10,27 +10,98 @@ Container <<applicationSchema>> "AdministrativeAndSocialGovernmentalServices" {
   Constraint Enum <<codeList>> "US_GOVSERV_ServiceTypeValue" {
     * identifier = "AdministrativeAndSocialGovernmentalServices::ServiceTypeValue"
   }
-  Class <<featureType>> "GovernmentalService" {
-    serviceLocation_serviceLocationByGeometry : GEOMETRY [0..1]
-    serviceType : TEXT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
-    <<voidable>> areaOfResponsibility_areaOfResponsibilityByPolygon : MULTISURFACE [0..1]
-    inspireId BASE_Identifier as ref
-    serviceLocation_serviceLocationByActivityComplex_ActivityComplex BASE_Identifier [0..1] as ref
-    serviceLocation_serviceLocationByAddress_Address BASE_Identifier [0..1] as ref
-    serviceLocation_serviceLocationByBuilding_Building BASE_Identifier [0..1] as ref
-    serviceLocation_serviceLocationByUtilityNode_UtilityNode BASE_Identifier [0..1] as ref
-    <<voidable>> areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit BASE_Identifier [0..1] as ref
-    <<voidable>> areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace BASE_Identifier [0..1] as ref
-    <<version>> areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement BASE_Identifier [0..1] as ref
-    <<voidable>> pointOfContact BASE2_Contact [0..*] as ref
+  Feature <<featureType>> "US_GOVSERV_GovernmentalService" {
+    * description = "Administrative and social governmental services such as public administrations, civil protection sites, schools and hospitals provided by Public Administrative Bodies or by private institutions as far as they are covered by the scope of the INSPIRE directive. This scope is mapped to the values of the corresponding code list serviceType Value.
+  
+    The accordant sites are commonly presented in governmental and municipal portals and map systems as "point of interest"-data, and may be point-based locations of a variety of categories of municipal and governmental services and social infrastructure. The spatial object type itself is generic in terms of the modelling approach, that the concrete type of a GovernmentalService is determined by the value of the attribute serviceType."
+    * identifier = "AdministrativeAndSocialGovernmentalServices::GovernmentalService"
+    * tableName = "US_GOVSERV_GovernmentalService"
+    id INTEGER NOT NULL PRIMARY KEY
+    serviceLocation_serviceLocationByGeometry GEOMETRY
+    serviceType TEXT NOT NULL CHECK(US_GOVSERV_ServiceTypeValue)
+    <<voidable>>, <<reference>> areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit INTEGER
+    <<voidable>>, <<reference>> areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace INTEGER
+    <<version>>, <<reference>> areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement INTEGER
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<reference>> serviceLocation_serviceLocationByActivityComplex_ActivityComplex INTEGER
+    <<reference>> serviceLocation_serviceLocationByAddress_Address INTEGER
+    <<reference>> serviceLocation_serviceLocationByBuilding_Building INTEGER
+    <<reference>> serviceLocation_serviceLocationByUtilityNode_UtilityNode INTEGER
   }
   Class <<union>> "AreaOfResponsibilityType" {
     areaOfResponsibilityByPolygon : MULTISURFACE
     areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit BASE_Identifier [1..*] as ref
     areaOfResponsibilityByNamedPlace_NamedPlace BASE_Identifier [1..*] as ref
     areaOfResponsibilityByNetwork NET_NetworkReference [1..*] as ref
+  }
+  Feature <<featureType>> "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByPolygon" {
+    * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByPolygon"
+    areaOfResponsibility_areaOfResponsibilityByPolygon MULTISURFACE
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Relation "US_GOVSERV_GovernmentalService_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#inspireId"
+    * tableName = "US_GOVSERV_GovernmentalService_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_pointOfContact" {
+    * profile = "attributes"
+    * tableName = "US_GOVSERV_GovernmentalService_pointOfContact"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit"
+    * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace"
+    * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement"
+    * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByAddress_Address" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#serviceLocation_serviceLocationByAddress_Address"
+    * tableName = "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByAddress_Address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByBuilding_Building" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#serviceLocation_serviceLocationByBuilding_Building"
+    * tableName = "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByBuilding_Building"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByActivityComplex_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#serviceLocation_serviceLocationByActivityComplex_ActivityComplex"
+    * tableName = "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByActivityComplex_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByUtilityNode_UtilityNode" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_GOVSERV_GovernmentalService#serviceLocation_serviceLocationByUtilityNode_UtilityNode"
+    * tableName = "US_GOVSERV_GovernmentalService_serviceLocation_serviceLocationByUtilityNode_UtilityNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container <<applicationSchema>> "Base Types 2" {

@@ -3,18 +3,22 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
   Constraint Enum <<codeList>> "PF_InstallationTypeValue" {
     * identifier = "ProductionAndIndustrialFacilities::InstallationTypeValue"
   }
-  Class <<featureType>> "ProductionInstallationPart" {
-    pointGeometry : POINT [0..1]
-    thematicId_identifier : TEXT [0..1]
-    thematicId_identifierScheme : TEXT [0..1]
-    <<voidable>>, <<array>> descriptions : TEXT [0..1]
-    <<voidable>>, <<array>> names : TEXT [0..1]
-    <<voidable>> surfaceGeometry : SURFACE [0..1]
-    <<voidable>> technique : TEXT [0..1]
-    <<voidable>> type : TEXT [0..1]
-    groupingInstallation ProductionInstallation as ref
-    inspireId BASE_Identifier as ref
-    <<voidable>> status PF_StatusType [0..*] as ref
+  Feature <<featureType>> "PF_ProductionInstallationPart" {
+    * description = "A single engineered facility that performs specific functionalities related with a production activity.
+  
+    This level of description covers specific parts of the Production Installation which must be registered by the legal mandate of the competent authorities. Points of emission as chimneys (for pollutants) or tanks (for special products), will be included in this definition."
+    * identifier = "ProductionAndIndustrialFacilities::ProductionInstallationPart"
+    * tableName = "PF_ProductionInstallationPart"
+    id INTEGER NOT NULL PRIMARY KEY
+    pointGeometry POINT
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+    <<voidable>>, <<array>> descriptions TEXT
+    <<voidable>>, <<array>> names TEXT
+    <<reference>> groupingInstallation INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> technique TEXT CHECK(PF_PollutionAbatementTechniqueValue)
+    <<voidable>> type TEXT CHECK(PF_InstallationPartTypeValue)
   }
   Attributes <<dataType>> "PF_StatusType" {
     * description = "The state or condition of a technical component, with regard to the functional and operational order, in which it is arranged for a limited or extended time period.
@@ -50,18 +54,23 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     <<voidable>> typeOfBuilding TypeOfProductionBuildingValue [0..*] as ref
   }
   Abstract Class <<featureType>> "TechnicalUnit" {}
-  Class <<featureType>> "ProductionInstallation" {
-    pointGeometry : POINT [0..1]
-    thematicId_identifier : TEXT [0..1]
-    thematicId_identifierScheme : TEXT [0..1]
-    <<voidable>>, <<array>> descriptions : TEXT [0..1]
-    <<voidable>>, <<array>> names : TEXT [0..1]
-    <<voidable>> surfaceGeometry : SURFACE [0..1]
-    <<voidable>> type : TEXT [0..1]
-    groupingFacility PF_ProductionFacility as ref
-    inspireId BASE_Identifier as ref
-    <<voidable>> groupedInstallationPart ProductionInstallationPart [0..*] as ref
-    <<voidable>> status PF_StatusType [0..*] as ref
+  Feature <<featureType>> "PF_ProductionInstallation" {
+    * description = "A technical unit, such as machinery,  apparatus, devices or equipment placed in position or connected for use.
+  
+    Stationary technical unit part of a facility where one or more activities are carried out, and any other directly associated activities which have a technical connection to the activities carried out on that site and which could have an effect on the environment.
+  
+    May be a technical unit within an establishment in which dangerous substances are produced, used, handled or stored."
+    * identifier = "ProductionAndIndustrialFacilities::ProductionInstallation"
+    * tableName = "PF_ProductionInstallation"
+    id INTEGER NOT NULL PRIMARY KEY
+    pointGeometry POINT
+    thematicId_identifier TEXT
+    thematicId_identifierScheme TEXT
+    <<voidable>>, <<array>> descriptions TEXT
+    <<voidable>>, <<array>> names TEXT
+    <<reference>> groupingFacility INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> type TEXT CHECK(PF_InstallationTypeValue)
   }
   Feature <<featureType>> "PF_ProductionSite" {
     * description = "All land at a distinct geographic location where the production facility was, is, or is intended to be located. This includes all infrastructure, equipment and materials;
@@ -114,10 +123,39 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     function ACT_CORE_Function [1..*] as ref
     inspireId BASE_Identifier as ref
     thematicId BASE2_ThematicIdentifier [0..*] as ref
-    <<voidable>> groupedInstallation ProductionInstallation [0..*] as ref
   }
   Constraint Enum <<codeList>> "PF_PollutionAbatementTechniqueValue" {
     * identifier = "ProductionAndIndustrialFacilities::PollutionAbatementTechniqueValue"
+  }
+  Feature <<featureType>> "PF_ProductionInstallationPart_surfaceGeometry" {
+    * tableName = "PF_ProductionInstallationPart_surfaceGeometry"
+    id INTEGER NOT NULL PRIMARY KEY
+    surfaceGeometry SURFACE
+  }
+  Feature <<featureType>> "PF_ProductionInstallation_surfaceGeometry" {
+    * tableName = "PF_ProductionInstallation_surfaceGeometry"
+    id INTEGER NOT NULL PRIMARY KEY
+    surfaceGeometry SURFACE
+  }
+  Relation "PF_ProductionInstallationPart_groupingInstallation" {
+    * profile = "features"
+    * relatedReference = "attribute PF_ProductionInstallationPart#groupingInstallation"
+    * tableName = "PF_ProductionInstallationPart_groupingInstallation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionInstallation(id)
+  }
+  Relation "PF_ProductionInstallationPart_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute PF_ProductionInstallationPart#inspireId"
+    * tableName = "PF_ProductionInstallationPart_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionInstallationPart_status" {
+    * profile = "attributes"
+    * tableName = "PF_ProductionInstallationPart_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
   Relation "PF_ProductionBuilding_groupedFacility" {
     * profile = "features"
@@ -136,6 +174,26 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     * tableName = "PF_ProductionBuilding_building_AbstractBuilding"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionInstallation_groupingFacility" {
+    * profile = "features"
+    * relatedReference = "attribute PF_ProductionInstallation#groupingFacility"
+    * tableName = "PF_ProductionInstallation_groupingFacility"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
+  }
+  Relation "PF_ProductionInstallation_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute PF_ProductionInstallation#inspireId"
+    * tableName = "PF_ProductionInstallation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionInstallation_status" {
+    * profile = "attributes"
+    * tableName = "PF_ProductionInstallation_status"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
   Relation "PF_ProductionSite_hostedFacility" {
     * profile = "features"

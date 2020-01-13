@@ -11,5 +11,6 @@ class Stereotypes {
         const val featureType: String = "featureType"
         const val union: String = "union"
         const val applicationSchema: String = "applicationSchema"
+        const val voidable: String = "voidable"
     }
 }
