@@ -74,41 +74,41 @@ val `standardize type`: Transform = fixStereotype(Stereotypes.type)
  * Patch add missing xmlns
  */
 val `add missing xmlns`: Transform = { _, _ ->
-    patch<KoreNamedElement>( predicate = { name == "Units of Measure" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "Units of Measure" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "gml")
     }
-    patch<KoreNamedElement>( predicate = { name == "ISO 19136 GML" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19136 GML" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "gml")
     }
-    patch<KoreNamedElement>( predicate = { name == "Quadrilateral Grid" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "Quadrilateral Grid" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "cis")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19156:2011 Observations and Measurements" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19156:2011 Observations and Measurements" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19133 Tracking and Navigation" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19133 Tracking and Navigation" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19110 Methodology for feature cataloguing" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19110 Methodology for feature cataloguing" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19115-2:2009 Metadata - Imagery" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19115-2:2009 Metadata - Imagery" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19119 Services" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19119 Services" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19115:2006 Metadata (Corrigendum)" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19115:2006 Metadata (Corrigendum)" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "gmd")
     }
     // TODO Review
-    patch<KoreNamedElement>( predicate = { name == "ISO 19103:2005 Schema Language" }, global = true ) {
+    patch<KoreNamedElement>(predicate = { name == "ISO 19103:2005 Schema Language" }, global = true) {
         getAnnotation()?.details?.put("xmlns", "")
     }
 
@@ -119,7 +119,7 @@ fun fixStereotype(value: String): Transform = { _, _ ->
         getAnnotation()
             ?.references
             ?.filterIsInstance<KoreNamedElement>()
-            ?.any {  value.equals(it.name, true) }
+            ?.any { value.equals(it.name, true) }
             ?: false
     }, global = true) {
         getAnnotation()
@@ -146,4 +146,5 @@ val `Before rules`: List<Transform> = listOf(
 )
 
 
-fun KoreModelElement.addStereotype(stereotype: String) = findOrCreateAnnotation().references.add(koreClass { name = stereotype })
+fun KoreModelElement.addStereotype(stereotype: String) =
+    findOrCreateAnnotation().references.add(koreClass { name = stereotype })

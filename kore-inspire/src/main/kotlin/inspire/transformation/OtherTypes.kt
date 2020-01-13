@@ -2,7 +2,7 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.models.gpkg.*
+import es.iaaa.kore.models.gpkg.IntegerType
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.mapEntry
 
@@ -14,4 +14,4 @@ import es.iaaa.kore.transform.rules.mapEntry
 val `Other types`: Transform = { _, _ ->
     mapEntry(type = "Short", targetType = IntegerType())
     mapEntry(type = "Long", targetType = IntegerType())
- }
+}

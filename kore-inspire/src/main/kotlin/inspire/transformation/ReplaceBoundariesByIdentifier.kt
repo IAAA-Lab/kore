@@ -1,3 +1,5 @@
+@file:Suppress("ObjectPropertyName")
+
 package inspire.transformation
 
 import es.iaaa.kore.*
@@ -7,7 +9,8 @@ import es.iaaa.kore.transform.rules.patch
 val `Replace boundaries by Identifier`: Transform = { conversion, _ ->
 
     val identifier by lazy {
-        conversion.model.allContent().filterIsInstance<KoreClass>().find { it.id == "CB20C133_5AA4_4671_80C7_8ED2879AB0D9" } ?: throw Exception("Unexpected error")
+        conversion.model.allContent().filterIsInstance<KoreClass>().find { it.id == "CB20C133_5AA4_4671_80C7_8ED2879AB0D9" }
+            ?: throw Exception("Unexpected error")
     }
 
     patch<KoreAttribute> {

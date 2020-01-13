@@ -2,9 +2,11 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreObject
 import es.iaaa.kore.models.gpkg.FeaturesTable
 import es.iaaa.kore.models.gpkg.GeometryType
+import es.iaaa.kore.references
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.setMetMetaclassWhen
 

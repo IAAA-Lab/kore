@@ -2,7 +2,7 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.models.gpkg.*
+import es.iaaa.kore.models.gpkg.TextType
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.mapEntry
 

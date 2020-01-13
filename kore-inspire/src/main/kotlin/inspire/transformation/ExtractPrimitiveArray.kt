@@ -8,7 +8,6 @@ import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 import org.atteo.evo.inflector.English
-import java.lang.Exception
 
 /**
  * Property types for properties with a cardinality greater than 1 and a simple property type (e.g. String, Integer,

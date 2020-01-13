@@ -6,8 +6,8 @@ import es.iaaa.kore.KoreClass
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.references
 import es.iaaa.kore.transform.Transform
-import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.mapEntry
+import es.iaaa.kore.transform.rules.patch
 
 /**
  * All types that have the stereotype `enumeration`are converted to GeoPackage data column constraints of type enum.

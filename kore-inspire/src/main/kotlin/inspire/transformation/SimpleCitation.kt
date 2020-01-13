@@ -36,9 +36,9 @@ val `Simple Citation`: Transform = { conversion, _ ->
     val simpleCitationType by lazy {
         koreClass {
             name = "SimpleCitationType"
-            attribute { name = "CI_Citation" ; lowerBound = 1 }
-            attribute { name = "LegislationCitation" ; lowerBound = 1 }
-            attribute { name = "DocumentCitation" ; lowerBound = 1 }
+            attribute { name = "CI_Citation"; lowerBound = 1 }
+            attribute { name = "LegislationCitation"; lowerBound = 1 }
+            attribute { name = "DocumentCitation"; lowerBound = 1 }
             container = baseTypes2
             stereotype(Stereotypes.enumeration)
         }
@@ -47,17 +47,23 @@ val `Simple Citation`: Transform = { conversion, _ ->
     val simpleCitation by lazy {
         koreClass {
             name = "SimpleCitation"
-            attribute { name = "name" ; type = characterString ; lowerBound = 1 }
-            attribute { name = "type" ; type = simpleCitationType ; lowerBound = 1 }
-            attribute { name = "level" ; type = legislationLevelValue }
-            attribute { name = "date" ; type = date }
-            attribute { name = "link" ; type = url }
+            attribute { name = "name"; type = characterString; lowerBound = 1 }
+            attribute { name = "type"; type = simpleCitationType; lowerBound = 1 }
+            attribute { name = "level"; type = legislationLevelValue }
+            attribute { name = "date"; type = date }
+            attribute { name = "link"; type = url }
             container = baseTypes2
             stereotype(Stereotypes.dataType)
         }
     }
 
-    patch<KoreAttribute>(predicate = { type?.name in listOf("CI_Citation", "LegislationCitation", "DocumentCitation")}) {
+    patch<KoreAttribute>(predicate = {
+        type?.name in listOf(
+            "CI_Citation",
+            "LegislationCitation",
+            "DocumentCitation"
+        )
+    }) {
         type = simpleCitation
     }
 }

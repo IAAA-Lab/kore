@@ -14,7 +14,8 @@ val `Move voidable geometries in feature types with multiple geometries to relat
         val allGeometries = attributes
             .filter { attribute ->
                 GeometryType.isInstance(attribute.type) &&
-                        attribute.upperBound == 1}
+                        attribute.upperBound == 1
+            }
         val voidableGeometries = allGeometries.filter { it.references(Stereotypes.voidable) }
         if (allGeometries.size - voidableGeometries.size == 1) {
             val sourceName = name

@@ -4,7 +4,6 @@ package inspire.transformation
 
 import es.iaaa.kore.KoreClass
 import es.iaaa.kore.KorePackage
-import es.iaaa.kore.findDefaultNamedReferences
 import es.iaaa.kore.models.gpkg.metadata
 import es.iaaa.kore.models.gpkg.mimeType
 import es.iaaa.kore.models.gpkg.scope
@@ -13,14 +12,13 @@ import es.iaaa.kore.references
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.setLowerBoundWhen
-import java.net.URL
 
 /**
  * If a property has exactly a cardinality of 1 but has the stereotype <<voidable>>,
  * it is mapped to a column that allows null values.
  */
 val `Voidable mapped as nullable`: Transform = { _, _ ->
-    setLowerBoundWhen(0) { it.findDefaultNamedReferences().any { ref -> ref.name == "voidable" } }
+    setLowerBoundWhen(0) { it.references(Stereotypes.voidable) }
 }
 
 val `load authoritative descriptions of the reasons for void values as metadata`: Transform = { conversion, _ ->

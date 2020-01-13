@@ -5,8 +5,8 @@ package inspire.transformation
 import es.iaaa.kore.*
 import es.iaaa.kore.models.gpkg.TextType
 import es.iaaa.kore.transform.Transform
-import es.iaaa.kore.transform.rules.patch
 import es.iaaa.kore.transform.rules.mapEntry
+import es.iaaa.kore.transform.rules.patch
 import kotlin.math.min
 
 /**

@@ -2,7 +2,10 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KorePackage
+import es.iaaa.kore.findTaggedValue
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.addAttributeWhen
@@ -95,7 +98,7 @@ val `remove unused tags`: Transform = { _, _ ->
             "vocabulary", "extendableByMS", "asDictionary", "codeList", "gmlProfileSchema", "xmlns", "xsdDocument",
             "targetNamespace", "xsdEncodingRule", "byValuePropertyType", "isCollection", "noPropertyType",
             "xsdEncodingRule", "extensibility", "inspireConcept", "codeSpace", "dictionaryIdentifier",
-            "memberIdentifierStem", "object_style", "gmlMixin", "isnamespace"
+            "memberIdentifierStem", "object_style", "gmlMixin", "isnamespace", "modeldocument"
         )
     )
 }
@@ -103,9 +106,9 @@ val `remove unused tags`: Transform = { _, _ ->
 val `audit`: Transform = { _, _ ->
     patch<KoreAttribute>(predicate = {
         !GpkgDataType.isInstance(type) &&
-        metaClass != EnumConstraintValue
+                metaClass != EnumConstraintValue
     }) {
-//        println("${containingClass?.container?.name} ${containingClass?.name} $name ${type?.name} ${type?.id}")
+        //        println("${containingClass?.container?.name} ${containingClass?.name} $name ${type?.name} ${type?.id}")
     }
 }
 

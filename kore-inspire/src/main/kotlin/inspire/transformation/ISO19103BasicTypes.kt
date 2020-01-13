@@ -10,7 +10,7 @@ import es.iaaa.kore.transform.rules.mapEntry
 /**
  * All ISO 19103 property types are transformed to the simple types that GeoPackage knows about.
  */
-val `ISO 19103 - Basic types`: Transform = {conversion, _ ->
+val `ISO 19103 - Basic types`: Transform = { conversion, _ ->
 
     val uom by lazy {
         val uomPackage = conversion.model

@@ -1,4 +1,5 @@
 @file:Suppress("ObjectPropertyName")
+
 package inspire.transformation
 
 import es.iaaa.kore.models.gpkg.AttributesTable

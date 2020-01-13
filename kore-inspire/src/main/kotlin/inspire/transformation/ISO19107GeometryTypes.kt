@@ -2,7 +2,9 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.KoreTypedElement
+import es.iaaa.kore.attribute
 import es.iaaa.kore.models.gpkg.*
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
@@ -34,7 +36,7 @@ val `ISO 19107 - Geometry types`: Transform = { _, _ ->
         type = standardMappings[type?.name]
     }
 
-    patch<KoreTypedElement>(predicate = { nonStandardMappings.contains(type?.name)}, global = true) {
+    patch<KoreTypedElement>(predicate = { nonStandardMappings.contains(type?.name) }, global = true) {
         if ("GM_Solid" == type?.name) {
             (container as KoreClass).attribute {
                 name = this@patch.name + "_content_type"

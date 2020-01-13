@@ -33,9 +33,9 @@ val transformation = { options: Map<String, Any> ->
             helper.set(inspireResourceHelper)
             boundary.set { source, target ->
                 if (source is KoreReference) {
-                    source.isNavigable && !target.references("featureType")
+                    source.isNavigable && !target.references(Stereotypes.featureType)
                 } else {
-                    !target.references("featureType")
+                    !target.references(Stereotypes.featureType)
                 }
             }
         }

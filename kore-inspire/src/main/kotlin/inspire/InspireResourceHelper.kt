@@ -9,11 +9,11 @@ import es.iaaa.kore.resource.ResourceHelper
 
 val inspireResourceHelper = ResourceHelper(
     alias = mapOf(
- //       "eaxmiid25" to "2CF3B75E_8B1F_4853_B0B4_10C65AD71551", // Distance
- //       "eaxmiid189" to "AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
- //       "eaxmiid190" to "CB20C133_5AA4_4671_80C7_8ED2879AB0D9", // Identifier
- //       "eaxmiid191" to "E548F6CD_653D_4dc7_AAF3_2E510C1453E0", // GeographicalName
- //       "eaxmiid197" to "F8A23D50_CB8F_4c91_BD7F_C2082467D81A"  // PT_FreeText
+        //       "eaxmiid25" to "2CF3B75E_8B1F_4853_B0B4_10C65AD71551", // Distance
+        //       "eaxmiid189" to "AE1AC547_B120_4488_A63F_60A8A7441D7A", // LocalisedCharacterString
+        //       "eaxmiid190" to "CB20C133_5AA4_4671_80C7_8ED2879AB0D9", // Identifier
+        //       "eaxmiid191" to "E548F6CD_653D_4dc7_AAF3_2E510C1453E0", // GeographicalName
+        //       "eaxmiid197" to "F8A23D50_CB8F_4c91_BD7F_C2082467D81A"  // PT_FreeText
     ),
     selectType = { target, candidates ->
         val noNames = candidates.map { it.fullName }.distinct() == listOf(null)
