@@ -21,7 +21,6 @@ Container <<applicationSchema>> "Safety" {
     <<voidable>> isIntentional BOOLEAN
     <<voidable>> isMajor BOOLEAN
     <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
-    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
   Constraint Enum <<codeList>> "HH_SA_BuildingUseValue" {
     * identifier = "Safety::BuildingUseValue"
@@ -59,7 +58,6 @@ Container <<applicationSchema>> "Safety" {
     <<voidable>> isIntentional BOOLEAN
     <<voidable>> isMajor BOOLEAN
     <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
-    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
   Attributes <<featureType>> "HH_SA_NaturalHazardRelatedEvent" {
     * description = "A natural incident resulting in a negative effect on humans, property or the environment."
@@ -80,7 +78,6 @@ Container <<applicationSchema>> "Safety" {
     <<voidable>> isIntentional BOOLEAN
     <<voidable>> isMajor BOOLEAN
     <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
-    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
   Attributes <<dataType>> "HH_SA_EventConsequence" {
     * description = "The harm an event caused for humans, propriety."
@@ -113,7 +110,6 @@ Container <<applicationSchema>> "Safety" {
     <<voidable>> isIntentional BOOLEAN
     <<voidable>> isMajor BOOLEAN
     <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
-    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
   Attributes <<featureType>> "HH_SA_HazardousMaterialRelatedEvent" {
     * description = "An event resulted by<b> </b>substances that have the ability to harm humans, property, or the environment."
@@ -134,7 +130,6 @@ Container <<applicationSchema>> "Safety" {
     <<voidable>> isIntentional BOOLEAN
     <<voidable>> isMajor BOOLEAN
     <<reference>> locationUnit_administrativeUnit_AdministrativeUnit INTEGER
-    <<voidable>> causeOfEvent PT_FreeText [0..*] as ref
   }
   Attributes <<dataType>> "HH_SA_FireOrExplosionLocalityType" {
     * description = "Characteristics of the place where the fire or explosion occurs."
@@ -171,6 +166,18 @@ Container <<applicationSchema>> "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "HH_SA_Event_causeOfEvent" {
+    * profile = "attributes"
+    * tableName = "HH_SA_Event_causeOfEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_Event_eventDescription" {
+    * profile = "attributes"
+    * tableName = "HH_SA_Event_eventDescription"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "HH_SA_Event_sourceReference" {
     * profile = "attributes"
     * tableName = "HH_SA_Event_sourceReference"
@@ -197,6 +204,42 @@ Container <<applicationSchema>> "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
   }
+  Relation "HH_SA_TrafficRelatedEvent_trafficRelatedEventInformation" {
+    * profile = "attributes"
+    * tableName = "HH_SA_TrafficRelatedEvent_trafficRelatedEventInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_EventInformation_title" {
+    * profile = "attributes"
+    * tableName = "HH_SA_EventInformation_title"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_EventInformation_preventionAndPreparedness" {
+    * profile = "attributes"
+    * tableName = "HH_SA_EventInformation_preventionAndPreparedness"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_EventInformation_lessonsLearned" {
+    * profile = "attributes"
+    * tableName = "HH_SA_EventInformation_lessonsLearned"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_EventInformation_eventSequences" {
+    * profile = "attributes"
+    * tableName = "HH_SA_EventInformation_eventSequences"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_EventInformation_environmentalDamage" {
+    * profile = "attributes"
+    * tableName = "HH_SA_EventInformation_environmentalDamage"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
 }
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
@@ -214,119 +257,19 @@ Container <<applicationSchema>> "Base Types 2" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
 }
 Container <<applicationSchema>> "NaturalRiskZones" {
   * fileName = "NaturalRiskZones"
   Constraint Enum <<codeList>> "NZ_CORE_NaturalHazardCategoryValue" {
     * identifier = "NaturalRiskZones::NaturalHazardCategoryValue"
     obligation = "implementingRule"
-  }
-}
-Container "ISO 00639 Language Codes" {
-  * fileName = "ISO 00639 Language Codes"
-  Constraint Enum <<codeList>> "GMD_LanguageCode" {
-    * identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
-  }
-}
-Container "ISO 03166 Country Codes" {
-  * fileName = "ISO 03166 Country Codes"
-  Constraint Enum <<codeList>> "GMD_CountryCode" {
-    * identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-}
-Container "Identification information" {
-  * fileName = "Identification information"
-  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
-    * identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-}
-Container "Text" {
-  * fileName = "Text"
-  Class <<type>>, <<type>> "Character" {}
-  Class <<type>>, <<type>> "CharacterString" {
-    characterSet : TEXT
-    maxLength : INTEGER
-    size : INTEGER
-    elements Character [-2..*] as ref
-  }
-  Constraint Enum <<codeList>> "_CharacterSetCode" {
-    * identifier = "Text::CharacterSetCode"
-    ISO10646-1
-    ISO10646-2
-    ISO8859
   }
 }
 Container <<applicationSchema>> "Network" {
@@ -387,10 +330,6 @@ Container <<applicationSchema>> "Base Types" {
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
-}
-Container "Cultural and linguistic adapdability" {
-  * fileName = "Cultural and linguistic adapdability"
-  CharacterString "PT_FreeText" {}
 }
 Package "EA Model" {
   Class "applicationSchema" {}

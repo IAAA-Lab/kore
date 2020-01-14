@@ -112,15 +112,19 @@ Container <<applicationSchema>> "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     value REAL NOT NULL
   }
-  Class <<type>> "UomNoise" {
-    formula : TEXT [0..1]
-    measureType : TEXT
-    nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : REAL [0..1]
-    scaleToStandardUnit : REAL [0..1]
-    source : TEXT
-    uomName : TEXT
-    uomSymbol : TEXT
+  Attributes <<type>> "HH_UomNoise" {
+    * description = "A unit of measure for noise intensity."
+    * identifier = "HumanHealth::UomNoise"
+    * tableName = "HH_UomNoise"
+    formula TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    nameStandardUnit TEXT
+    offsetToStandardUnit REAL
+    scaleToStandardUnit REAL
+    source TEXT NOT NULL CHECK(HH_NoiseSourceTypeValue)
+    uomName TEXT NOT NULL
+    uomSymbol TEXT NOT NULL
     measure Measure [0..*] as ref
     subunit TEXT [0..1] as ref
   }
@@ -240,44 +244,56 @@ Container <<applicationSchema>> "HumanHealth" {
     <<reference>> refersTo INTEGER
     <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
   }
-  Class <<type>> "Concentration" {
-    uom_component : TEXT
-    uom_formula : TEXT [0..1]
-    uom_measureType : TEXT
-    uom_media : TEXT
-    uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : REAL [0..1]
-    uom_scaleToStandardUnit : REAL [0..1]
-    uom_uomName : TEXT
-    uom_uomSymbol : TEXT
-    value : REAL
+  Attributes <<type>> "HH_Concentration" {
+    * description = "A measure of concentration of a specified component in a specified media."
+    * identifier = "HumanHealth::Concentration"
+    * tableName = "HH_Concentration"
+    id INTEGER NOT NULL PRIMARY KEY
+    uom_component TEXT NOT NULL CHECK(HH_ComponentTypeValue)
+    uom_formula TEXT
+    uom_measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    uom_media TEXT NOT NULL CHECK(HH_MediaTypeValue)
+    uom_nameStandardUnit TEXT
+    uom_offsetToStandardUnit REAL
+    uom_scaleToStandardUnit REAL
+    uom_uomName TEXT NOT NULL
+    uom_uomSymbol TEXT NOT NULL
+    value REAL NOT NULL
     uom TEXT as ref
   }
   Constraint Enum <<codeList>> "HH_ICDValue" {
     * identifier = "HumanHealth::ICDValue"
   }
-  Class <<type>> "NoiseMeasure" {
-    uom_formula : TEXT [0..1]
-    uom_measureType : TEXT
-    uom_nameStandardUnit : TEXT [0..1]
-    uom_offsetToStandardUnit : REAL [0..1]
-    uom_scaleToStandardUnit : REAL [0..1]
-    uom_source : TEXT
-    uom_uomName : TEXT
-    uom_uomSymbol : TEXT
-    value : REAL
+  Attributes <<type>> "HH_NoiseMeasure" {
+    * description = "A measure of noise intensity."
+    * identifier = "HumanHealth::NoiseMeasure"
+    * tableName = "HH_NoiseMeasure"
+    id INTEGER NOT NULL PRIMARY KEY
+    uom_formula TEXT
+    uom_measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    uom_nameStandardUnit TEXT
+    uom_offsetToStandardUnit REAL
+    uom_scaleToStandardUnit REAL
+    uom_source TEXT NOT NULL CHECK(HH_NoiseSourceTypeValue)
+    uom_uomName TEXT NOT NULL
+    uom_uomSymbol TEXT NOT NULL
+    value REAL NOT NULL
     uom TEXT as ref
   }
-  Class <<type>> "UomConcentration" {
-    component : TEXT
-    formula : TEXT [0..1]
-    measureType : TEXT
-    media : TEXT
-    nameStandardUnit : TEXT [0..1]
-    offsetToStandardUnit : REAL [0..1]
-    scaleToStandardUnit : REAL [0..1]
-    uomName : TEXT
-    uomSymbol : TEXT
+  Attributes <<type>> "HH_UomConcentration" {
+    * description = "A unit of measure for concentration of a specified component within a specified media."
+    * identifier = "HumanHealth::UomConcentration"
+    * tableName = "HH_UomConcentration"
+    component TEXT NOT NULL CHECK(HH_ComponentTypeValue)
+    formula TEXT
+    id INTEGER NOT NULL PRIMARY KEY
+    measureType TEXT NOT NULL CHECK(GML_MeasureType)
+    media TEXT NOT NULL CHECK(HH_MediaTypeValue)
+    nameStandardUnit TEXT
+    offsetToStandardUnit REAL
+    scaleToStandardUnit REAL
+    uomName TEXT NOT NULL
+    uomSymbol TEXT NOT NULL
     measure Measure [0..*] as ref
     subunit TEXT [0..1] as ref
   }
@@ -306,6 +322,24 @@ Container <<applicationSchema>> "HumanHealth" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_BiomarkerThematicMetadata(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_Biomarker(id)
   }
+  Relation "HH_BiomarkerThematicMetadata_studyType" {
+    * profile = "attributes"
+    * tableName = "HH_BiomarkerThematicMetadata_studyType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_BiomarkerThematicMetadata(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_BiomarkerThematicMetadata_areaType" {
+    * profile = "attributes"
+    * tableName = "HH_BiomarkerThematicMetadata_areaType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_BiomarkerThematicMetadata(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_BiomarkerThematicMetadata_specificSubPopulation" {
+    * profile = "attributes"
+    * tableName = "HH_BiomarkerThematicMetadata_specificSubPopulation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_BiomarkerThematicMetadata(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
 }
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
@@ -314,6 +348,13 @@ Container <<applicationSchema>> "Base Types 2" {
     female
     male
     unknown
+  }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
   }
 }
 Container "Units of Measure" {

@@ -14,24 +14,6 @@ val `remove references to undefined Data Type`: Transform = { _, _ ->
 }
 
 /**
- * Patch: add dataType refinement to PT_Locale (4F7072DC_5423_4978_8EA2_1DE43135931B)
- */
-val `add Data Type tag to PT_Locale`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { id == "4F7072DC_5423_4978_8EA2_1DE43135931B" }) {
-        addStereotype(Stereotypes.dataType)
-    }
-}
-
-/**
- * Patch: add dataType refinement to LocalisedCharacterString (AE1AC547_B120_4488_A63F_60A8A7441D7A)
- */
-val `add Data Type tag to LocalisedCharacterString`: Transform = { _, _ ->
-    patch<KoreClass>(predicate = { id == "AE1AC547_B120_4488_A63F_60A8A7441D7A" }) {
-        addStereotype(Stereotypes.dataType)
-    }
-}
-
-/**
  * Patch: fix typo in edgeMatched default value
  */
 val `standardize edgeMatched default value`: Transform = { _, _ ->
@@ -133,8 +115,6 @@ fun fixStereotype(value: String): Transform = { _, _ ->
 
 val `Before rules`: List<Transform> = listOf(
     `remove references to undefined Data Type`,
-    `add Data Type tag to PT_Locale`,
-    `add Data Type tag to LocalisedCharacterString`,
     `standardize edgeMatched default value`,
     `standardize codeList`,
     `standardize union`,

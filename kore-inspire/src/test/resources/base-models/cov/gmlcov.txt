@@ -11,10 +11,10 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeType RecordType NOT NULL
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    rangeSet Any [0..*] as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
   }
   Attributes <<featureType>> "GMLCOV_ReferenceableGridCoverage" {
     * description = "Coverage whose domain consists of a referenceable grid
@@ -27,10 +27,10 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeType RecordType NOT NULL
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    rangeSet Any [0..*] as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
   }
   Class <<union>> "CoverageFunction" {
     ruleDefinition : TEXT
@@ -40,10 +40,10 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
   Abstract Class <<featureType>> "CoverageByDomainAndRange" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    metadata Any
-    rangeType RecordType NOT NULL
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    rangeSet Any [0..*] as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
   }
   Attributes <<dataType>> "GMLCOV_GridFunction" {
     * description = "An explicit mapping rule for grid geometries"
@@ -65,6 +65,56 @@ Container "Quadrilateral Grid" {
     boustrophedonic
     linear
     spiral
+  }
+}
+Container "Records and Class Metadata" {
+  * fileName = "Records and Class Metadata"
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes <<type>>, <<type>> "_Type" {
+    * description = "Type is used here for as a generic concept for any metalanguage description of an object class."
+    * identifier = "Records and Class Metadata::Type"
+    * tableName = "_Type"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    schema Schema [0..*] as ref
+  }
+  Attributes <<type>>, <<type>> "_RecordType" {
+    * description = "A RecordType is a look up mechanism that associates AttributeNames to TypeNames. AttributeNames are locally mapped. TypeNames are most often either primitives, or other types in the same schema as this record. Because the RecordType can control the structure of a set of Records, it is essentially a metaclass for that set of records view as a class.
+  
+    A RecordType is a NameSpace for its included attributeTypes."
+    * identifier = "Records and Class Metadata::RecordType"
+    * tableName = "_RecordType"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    <<reference>> memberType INTEGER
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+  Relation "_RecordType_memberType" {
+    * profile = "attributes"
+    * relatedReference = "attribute _RecordType#memberType"
+    * tableName = "_RecordType_memberType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _RecordType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Type(id)
   }
 }
 Package <<applicationSchema>> "Base Types" {
@@ -91,14 +141,6 @@ Package <<applicationSchema>> "Base Types" {
     * mimeType = "text/plain"
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-}
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
-  Class <<type>>, <<type>> "RecordType" {
-    typeName_aName : TEXT
-    record Record [0..*] as ref
-    schema Schema [0..*] as ref
   }
 }
 Package "EA Model" {

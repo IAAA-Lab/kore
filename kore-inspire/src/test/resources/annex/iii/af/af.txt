@@ -58,6 +58,7 @@ Container <<applicationSchema>> "Agricultural and Aquaculture Facilities Model" 
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     <<array>> activities TEXT NOT NULL
+    <<reference>> value INTEGER
   }
   Constraint Enum <<codeList>> "AF_LivestockSpeciesValue" {
     * identifier = "Agricultural and Aquaculture Facilities Model::LivestockSpeciesValue"
@@ -75,7 +76,7 @@ Container <<applicationSchema>> "Agricultural and Aquaculture Facilities Model" 
   }
   Relation "AF_null_contains" {
     * profile = "features"
-    * relatedReference = "attribute AF_Site#null"
+    * relatedReference = "attribute AF_Site#value"
     * tableName = "AF_null_contains"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Holding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AF_Site(id)
@@ -108,6 +109,34 @@ Container <<applicationSchema>> "Activity Complex" {
   }
   Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
     * identifier = "Activity Complex::InputOutputValue"
+  }
+  Relation "ACT_CORE_Function_description" {
+    * profile = "attributes"
+    * tableName = "ACT_CORE_Function_description"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_ThematicIdentifier" {
+    * description = "Thematic identifier to uniquely identify the spatial object.
+  
+    Some spatial objects may be assigned multiple unique identifiers.
+  
+    These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
+    * identifier = "Base Types 2::ThematicIdentifier"
+    * tableName = "BASE2_ThematicIdentifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    identifier TEXT NOT NULL
+    identifierScheme TEXT NOT NULL
+  }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
   }
 }
 Container <<applicationSchema>> "Base Types" {
@@ -150,21 +179,6 @@ Container <<applicationSchema>> "Base Types" {
     * mimeType = "text/plain"
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-}
-Container <<applicationSchema>> "Base Types 2" {
-  * fileName = "Base Types 2"
-  Attributes <<dataType>> "BASE2_ThematicIdentifier" {
-    * description = "Thematic identifier to uniquely identify the spatial object.
-  
-    Some spatial objects may be assigned multiple unique identifiers.
-  
-    These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
-    * identifier = "Base Types 2::ThematicIdentifier"
-    * tableName = "BASE2_ThematicIdentifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    identifier TEXT NOT NULL
-    identifierScheme TEXT NOT NULL
   }
 }
 Package "EA Model" {

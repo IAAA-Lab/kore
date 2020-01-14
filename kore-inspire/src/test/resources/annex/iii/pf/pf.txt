@@ -275,6 +275,13 @@ Container <<applicationSchema>> "Base Types 2" {
     name TEXT NOT NULL
     type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
   }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
 }
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
@@ -344,6 +351,12 @@ Container <<applicationSchema>> "Activity Complex" {
   }
   Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
     * identifier = "Activity Complex::InputOutputValue"
+  }
+  Relation "ACT_CORE_Function_description" {
+    * profile = "attributes"
+    * tableName = "ACT_CORE_Function_description"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
 }
 Package "EA Model" {

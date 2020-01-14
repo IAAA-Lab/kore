@@ -8,13 +8,9 @@ Container <<applicationSchema>> "LandCoverRaster" {
     * tableName = "LCR_LandCoverGridCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
     name TEXT NOT NULL
-    rangeSet Any
-    rangeType RecordType NOT NULL
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<reference>> inspireId INTEGER
@@ -22,6 +18,10 @@ Container <<applicationSchema>> "LandCoverRaster" {
     <<voidable>> validFrom DATE
     <<voidable>> validTo DATE
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainSet _Any as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
   }
   Relation "LCR_LandCoverGridCoverage_inspireId" {
     * profile = "attributes"
@@ -84,6 +84,31 @@ Container <<applicationSchema>> "Base Types 2" {
     language TEXT
     spelling_text TEXT NOT NULL
   }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
+  Relation "BASE2_RelatedParty_individualName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_individualName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_organisationName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_organisationName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_positionName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_positionName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
@@ -97,6 +122,18 @@ Container <<applicationSchema>> "Base Types 2" {
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
+  }
+  Relation "BASE2_Contact_contactInstructions" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_contactInstructions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_Contact_hoursOfService" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_hoursOfService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
 }
 Container "Quadrilateral Grid" {
@@ -144,6 +181,56 @@ Container <<applicationSchema>> "LandCoverNomenclature" {
     * tableName = "LCN_LandCoverNomenclature_responsibleParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES LCN_LandCoverNomenclature(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+}
+Container "Records and Class Metadata" {
+  * fileName = "Records and Class Metadata"
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes <<type>>, <<type>> "_Type" {
+    * description = "Type is used here for as a generic concept for any metalanguage description of an object class."
+    * identifier = "Records and Class Metadata::Type"
+    * tableName = "_Type"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    schema Schema [0..*] as ref
+  }
+  Attributes <<type>>, <<type>> "_RecordType" {
+    * description = "A RecordType is a look up mechanism that associates AttributeNames to TypeNames. AttributeNames are locally mapped. TypeNames are most often either primitives, or other types in the same schema as this record. Because the RecordType can control the structure of a set of Records, it is essentially a metaclass for that set of records view as a class.
+  
+    A RecordType is a NameSpace for its included attributeTypes."
+    * identifier = "Records and Class Metadata::RecordType"
+    * tableName = "_RecordType"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    <<reference>> memberType INTEGER
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+  Relation "_RecordType_memberType" {
+    * profile = "attributes"
+    * relatedReference = "attribute _RecordType#memberType"
+    * tableName = "_RecordType_memberType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _RecordType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Type(id)
   }
 }
 Container <<applicationSchema>> "Addresses" {
@@ -239,14 +326,6 @@ Container <<applicationSchema>> "Base Types" {
     * mimeType = "text/plain"
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-}
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
-  Class <<type>>, <<type>> "RecordType" {
-    typeName_aName : TEXT
-    record Record [0..*] as ref
-    schema Schema [0..*] as ref
   }
 }
 Container <<applicationSchema>> "Coverages (Domain and Range)" {

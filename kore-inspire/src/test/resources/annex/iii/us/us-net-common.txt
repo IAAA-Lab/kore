@@ -15,7 +15,6 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     utilityNetworkType TEXT NOT NULL CHECK(US_NET_COMMON_UtilityNetworkTypeValue)
     elements_NetworkElement BASE_Identifier [0..*] as ref
-    <<voidable>> disclaimer PT_FreeText [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
   }
   Attributes <<featureType>> "US_NET_COMMON_Cabinet" {
@@ -323,6 +322,12 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "US_NET_COMMON_UtilityNetwork_disclaimer" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_UtilityNetwork_disclaimer"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "US_NET_COMMON_Pipe_pipes" {
     * profile = "attributes"
     * tableName = "US_NET_COMMON_Pipe_pipes"
@@ -452,6 +457,31 @@ Container <<applicationSchema>> "Base Types 2" {
     language TEXT
     spelling_text TEXT NOT NULL
   }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
+  Relation "BASE2_RelatedParty_individualName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_individualName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_organisationName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_organisationName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_positionName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_positionName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
@@ -466,112 +496,17 @@ Container <<applicationSchema>> "Base Types 2" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-}
-Container "ISO 00639 Language Codes" {
-  * fileName = "ISO 00639 Language Codes"
-  Constraint Enum <<codeList>> "GMD_LanguageCode" {
-    * identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
+  Relation "BASE2_Contact_contactInstructions" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_contactInstructions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-}
-Container "ISO 03166 Country Codes" {
-  * fileName = "ISO 03166 Country Codes"
-  Constraint Enum <<codeList>> "GMD_CountryCode" {
-    * identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-}
-Container "Identification information" {
-  * fileName = "Identification information"
-  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
-    * identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-}
-Container "Text" {
-  * fileName = "Text"
-  Class <<type>>, <<type>> "Character" {}
-  Class <<type>>, <<type>> "CharacterString" {
-    characterSet : TEXT
-    maxLength : INTEGER
-    size : INTEGER
-    elements Character [-2..*] as ref
-  }
-  Constraint Enum <<codeList>> "_CharacterSetCode" {
-    * identifier = "Text::CharacterSetCode"
-    ISO10646-1
-    ISO10646-2
-    ISO8859
+  Relation "BASE2_Contact_hoursOfService" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_hoursOfService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
 }
 Container <<applicationSchema>> "Network" {
@@ -644,10 +579,6 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-}
-Container "Cultural and linguistic adapdability" {
-  * fileName = "Cultural and linguistic adapdability"
-  CharacterString "PT_FreeText" {}
 }
 Package "Location referencing mechanisms" {
   Class "NodeLocationReference" {

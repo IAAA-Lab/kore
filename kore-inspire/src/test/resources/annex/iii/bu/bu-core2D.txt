@@ -152,6 +152,28 @@ Container <<applicationSchema>> "BuildingsBase" {
     <<voidable>> lowReference TEXT CHECK(BU_BASE_ElevationReferenceValue)
     <<voidable>> status TEXT CHECK(BU_BASE_HeightStatusValue)
   }
+  Relation "BU_BASE_ExternalReference_informationSystemName" {
+    * profile = "attributes"
+    * tableName = "BU_BASE_ExternalReference_informationSystemName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_BASE_ExternalReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
 }
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
@@ -193,15 +215,6 @@ Container <<applicationSchema>> "Base Types" {
     * mimeType = "text/plain"
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-}
-Container <<applicationSchema>> "Base Types 2" {
-  * fileName = "Base Types 2"
-  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
-    * tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
   }
 }
 Package "EA Model" {

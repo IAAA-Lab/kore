@@ -110,6 +110,18 @@ Container <<applicationSchema>> "Population distribution - demography" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalDistribution(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "PD_StatisticalDistribution_universe" {
+    * profile = "attributes"
+    * tableName = "PD_StatisticalDistribution_universe"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalDistribution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "PD_StatisticalDistribution_domain" {
+    * profile = "attributes"
+    * tableName = "PD_StatisticalDistribution_domain"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalDistribution(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "PD_Classification_item" {
     * profile = "attributes"
     * tableName = "PD_Classification_item"
@@ -123,6 +135,18 @@ Container <<applicationSchema>> "Population distribution - demography" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalValue(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PD_Dimensions(id)
   }
+  Relation "PD_StatisticalValue_comment" {
+    * profile = "attributes"
+    * tableName = "PD_StatisticalValue_comment"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalValue(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "PD_StatisticalValue_flags" {
+    * profile = "attributes"
+    * tableName = "PD_StatisticalValue_flags"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_StatisticalValue(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "PD_Dimensions_thematic" {
     * profile = "attributes"
     * tableName = "PD_Dimensions_thematic"
@@ -135,6 +159,16 @@ Container <<applicationSchema>> "Population distribution - demography" {
     * tableName = "PD_Dimensions_spatial_StatisticalUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PD_Dimensions(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+}
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
   }
 }
 Container <<applicationSchema>> "Base Types" {

@@ -20,6 +20,9 @@ val `ensure column metaclass`: Transform = { _, _ ->
     patch<KoreClass>(predicate = { metaClass in listOf(FeaturesTable, AttributesTable) }) {
         allAttributes().forEach {
             it.metaClass = Column
+            if (it.name.isNullOrBlank()) {
+                it.name = "value"
+            }
             it.columnName = it.name
         }
     }

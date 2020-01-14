@@ -166,6 +166,7 @@ Container <<applicationSchema>> "Planned Land Use" {
     <<voidable>> planDocument_name TEXT
     <<voidable>> planDocument_type TEXT CHECK(BASE2_SimpleCitationType)
     <<voidable>> regulationText TEXT
+    <<reference>> value INTEGER
   }
   Constraint Enum <<codeList>> "PLU_ProcessStepGeneralValue" {
     * identifier = "Planned Land Use::ProcessStepGeneralValue"
@@ -227,7 +228,7 @@ Container <<applicationSchema>> "Planned Land Use" {
   }
   Relation "PLU_null_officialDocument" {
     * profile = "attributes"
-    * relatedReference = "attribute PLU_OfficialDocumentation#null"
+    * relatedReference = "attribute PLU_OfficialDocumentation#value"
     * tableName = "PLU_null_officialDocument"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SpatialPlan(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_OfficialDocumentation(id)

@@ -38,22 +38,33 @@ Container <<applicationSchema>> "Observable Properties" {
     label TEXT
     uom TEXT CHECK(GML_UomIdentifier)
   }
-  Class <<type>> "StatisticalMeasure" {
+  Attributes <<type>> "OMOP_StatisticalMeasure" {
+    * description = "A descripton of some statistical measure e.g. "daily maximum"
+  
+    A descripton of some statistical measure e.g. "daily maximum"
+  
+    The measure is usually some function over some time (e.g. an hour, a day)  or space (e.g. a length, area or volume)
+  
+    Other aggregation types can be supported via the 'otherAggregation' extension point."
+    * identifier = "Observable Properties::StatisticalMeasure"
+    * tableName = "OMOP_StatisticalMeasure"
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    aggregationArea : TEXT [0..1]
-    aggregationArea_uom : TEXT [0..1]
-    aggregationLength : TEXT [0..1]
-    aggregationLength_uom : TEXT [0..1]
-    aggregationVolume : TEXT [0..1]
-    aggregationVolume_uom : TEXT [0..1]
-    label : TEXT [0..1]
-    statisticalFunction : TEXT [0..1]
+    aggregationArea TEXT
+    aggregationArea_uom TEXT CHECK(GML_UomIdentifier)
+    aggregationLength TEXT
+    aggregationLength_uom TEXT CHECK(GML_UomIdentifier)
+    aggregationVolume TEXT
+    aggregationVolume_uom TEXT CHECK(GML_UomIdentifier)
+    id INTEGER NOT NULL PRIMARY KEY
+    label TEXT
+    statisticalFunction TEXT CHECK(OMOP_StatisticalFunctionTypeValue)
+    <<reference>> derivedFrom INTEGER
   }
   Abstract GF_PropertyType <<type>> "AbstractObservableProperty" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    <<array>> labels : TEXT [0..1]
+    <<array>> labels TEXT
   }
   Attributes <<dataType>> "OMOP_RangeBounds" {
     * description = "The start and end bounding values of a numerical range (e.g. start &gt;=50, end &lt;=99)"
@@ -79,11 +90,21 @@ Container <<applicationSchema>> "Observable Properties" {
     label TEXT
     <<array>> values TEXT NOT NULL
   }
-  Class <<type>> "CompositeObservableProperty" {
+  Attributes <<type>> "OMOP_CompositeObservableProperty" {
+    * description = "A composite of mulitple Observable Properties.
+  
+    A composite of multiple Observable Properties, for example U,V winds.
+  
+    There is no requirement that the observable properties in the composite are related to each other.
+  
+    A composite observable property  may have components which are observabel properties or other composite observable properties."
+    * identifier = "Observable Properties::CompositeObservableProperty"
+    * tableName = "OMOP_CompositeObservableProperty"
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    count : INTEGER
-    <<array>> labels : TEXT [0..1]
+    count INTEGER NOT NULL
+    id INTEGER NOT NULL PRIMARY KEY
+    <<array>> labels TEXT
   }
   Attributes <<dataType>> "OMOP_OtherConstraint" {
     * description = "A constraint, not modelled in a structured way, but may be described using the freetext 'description' attribute."
@@ -115,18 +136,43 @@ Container <<applicationSchema>> "Observable Properties" {
   Constraint Enum <<codeList>> "OMOP_PhenomenonTypeValue" {
     * identifier = "Observable Properties::PhenomenonTypeValue"
   }
-  Class <<type>> "ObservableProperty" {
+  Attributes <<type>> "OMOP_ObservableProperty" {
+    * description = "Represents a single observable property e.g. 'temperature'.
+  
+    The Observable Property represents a single observable property e.g. 'temperature'. It may have associations to additional constraints or measures that make it more complex e.g. 'daily mean temperature'."
+    * identifier = "Observable Properties::ObservableProperty"
+    * tableName = "OMOP_ObservableProperty"
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    basePhenomenon : TEXT
-    uom : TEXT [0..1]
-    <<array>> labels : TEXT [0..1]
+    basePhenomenon TEXT NOT NULL CHECK(OMOP_PhenomenonTypeValue)
+    id INTEGER NOT NULL PRIMARY KEY
+    uom TEXT CHECK(GML_UomIdentifier)
+    <<array>> labels TEXT
   }
   Relation "OMOP_RangeConstraint_value" {
     * profile = "attributes"
     * tableName = "OMOP_RangeConstraint_value"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOP_RangeConstraint(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOP_RangeBounds(id)
+  }
+  Relation "OMOP_StatisticalMeasure_derivedFrom" {
+    * profile = "attributes"
+    * relatedReference = "attribute OMOP_StatisticalMeasure#derivedFrom"
+    * tableName = "OMOP_StatisticalMeasure_derivedFrom"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOP_StatisticalMeasure(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOP_StatisticalMeasure(id)
+  }
+  Relation "OMOP_ObservableProperty_statisticalMeasure" {
+    * profile = "attributes"
+    * tableName = "OMOP_ObservableProperty_statisticalMeasure"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOP_ObservableProperty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOP_StatisticalMeasure(id)
+  }
+  Relation "OMOP_ObservableProperty_restriction" {
+    * profile = "attributes"
+    * tableName = "OMOP_ObservableProperty_restriction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOP_ObservableProperty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOP_Constraint(id)
   }
 }
 Package <<applicationSchema>> "Base Types" {

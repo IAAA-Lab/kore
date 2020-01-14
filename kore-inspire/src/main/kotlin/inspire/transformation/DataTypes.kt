@@ -16,11 +16,15 @@ val `Data Type stereotype to GeoPackage Attribute`: Transform = { _, _ ->
     setMetMetaclassWhen(AttributesTable, predicate = canToAttribute(Stereotypes.dataType))
 }
 
+val `Type stereotype to GeoPackage Attribute`: Transform = { _, _ ->
+    setMetMetaclassWhen(AttributesTable, predicate = canToAttribute(Stereotypes.type))
+}
 
 /**
  * Conversion rules of data types.
  */
 val `Data types`: List<Transform> = listOf(
     `Data Type stereotype to GeoPackage Attribute`,
+    `Type stereotype to GeoPackage Attribute`,
     `simple feature-like Data Type stereotype to GeoPackage Feature`
 )

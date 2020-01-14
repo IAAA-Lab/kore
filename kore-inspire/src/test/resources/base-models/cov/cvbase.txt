@@ -1,7 +1,7 @@
 Package <<applicationSchema>> "Coverages (Base)" {
   Abstract Class <<featureType>> "Coverage" {
     rangeType_typeName_aName : TEXT
-    metadata Any [0..*] as ref
+    metadata _Any [0..*] as ref
   }
 }
 Package <<applicationSchema>> "Base Types" {
@@ -30,8 +30,27 @@ Package <<applicationSchema>> "Base Types" {
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
+Container "Records and Class Metadata" {
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
 }
 Package "EA Model" {
   Class "applicationSchema" {}

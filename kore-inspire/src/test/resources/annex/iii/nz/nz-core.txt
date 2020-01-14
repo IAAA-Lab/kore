@@ -25,11 +25,7 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * tableName = "NZ_CORE_ExposedElementCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
     typeOfElement_exposedElementCategory TEXT NOT NULL CHECK(NZ_CORE_ExposedElementCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
@@ -37,7 +33,11 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
     <<voidable>> typeOfElement_specificExposedElementType TEXT CHECK(NZ_CORE_SpecificExposedElementTypeValue)
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainSet _Any as ref
     inspireId BASE_Identifier as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
     <<voidable>> sourceOfSpatialRepresentation_AbstractFeature BASE_Identifier [0..1] as ref
   }
   Attributes <<dataType>> "NZ_CORE_NaturalHazardClassification" {
@@ -193,17 +193,17 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
     typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
     <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainSet _Any as ref
     inspireId BASE_Identifier as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
   }
   Attributes <<featureType>> "NZ_CORE_RiskCoverage" {
     * description = "A coverage representation of natural risks."
@@ -211,17 +211,17 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * tableName = "NZ_CORE_RiskCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
     sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
     <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainSet _Any as ref
     inspireId BASE_Identifier as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
   Abstract Class <<featureType>> "AbstractExposedElement" {
@@ -274,11 +274,7 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * tableName = "NZ_CORE_ObservedEventCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
     typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
@@ -287,7 +283,11 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    domainSet _Any as ref
     inspireId BASE_Identifier as ref
+    metadata _Any [0..*] as ref
+    rangeSet _Any [0..*] as ref
+    rangeType _RecordType as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref
   }
   Relation "NZ_CORE_ExposedElement_assessmentOfVulnerability" {
@@ -340,6 +340,56 @@ Container "Quadrilateral Grid" {
     spiral
   }
 }
+Container "Records and Class Metadata" {
+  * fileName = "Records and Class Metadata"
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes <<type>>, <<type>> "_Type" {
+    * description = "Type is used here for as a generic concept for any metalanguage description of an object class."
+    * identifier = "Records and Class Metadata::Type"
+    * tableName = "_Type"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    schema Schema [0..*] as ref
+  }
+  Attributes <<type>>, <<type>> "_RecordType" {
+    * description = "A RecordType is a look up mechanism that associates AttributeNames to TypeNames. AttributeNames are locally mapped. TypeNames are most often either primitives, or other types in the same schema as this record. Because the RecordType can control the structure of a set of Records, it is essentially a metaclass for that set of records view as a class.
+  
+    A RecordType is a NameSpace for its included attributeTypes."
+    * identifier = "Records and Class Metadata::RecordType"
+    * tableName = "_RecordType"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    <<reference>> memberType INTEGER
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+  Relation "_RecordType_memberType" {
+    * profile = "attributes"
+    * relatedReference = "attribute _RecordType#memberType"
+    * tableName = "_RecordType_memberType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _RecordType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Type(id)
+  }
+}
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
   Attributes <<dataType>> "BASE_Identifier" {
@@ -380,14 +430,6 @@ Container <<applicationSchema>> "Base Types" {
     * mimeType = "text/plain"
     * scope = "attributeType"
     * standardUri = "http://www.isotc211.org/2005/gmd"
-  }
-}
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
-  Class <<type>>, <<type>> "RecordType" {
-    typeName_aName : TEXT
-    record Record [0..*] as ref
-    schema Schema [0..*] as ref
   }
 }
 Package "EA Model" {

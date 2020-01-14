@@ -43,10 +43,11 @@ Container <<applicationSchema>> "LandCoverVector" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<reference>> inspireId INTEGER
+    <<reference>> value INTEGER
   }
   Relation "LCV_null_member" {
     * profile = "features"
-    * relatedReference = "attribute LCV_LandCoverUnit#null"
+    * relatedReference = "attribute LCV_LandCoverUnit#value"
     * tableName = "LCV_null_member"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES LCV_LandCoverDataset(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES LCV_LandCoverUnit(id)
@@ -131,6 +132,31 @@ Container <<applicationSchema>> "Base Types 2" {
     language TEXT
     spelling_text TEXT NOT NULL
   }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
+  Relation "BASE2_RelatedParty_individualName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_individualName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_organisationName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_organisationName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_positionName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_positionName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
@@ -144,6 +170,18 @@ Container <<applicationSchema>> "Base Types 2" {
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
+  }
+  Relation "BASE2_Contact_contactInstructions" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_contactInstructions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_Contact_hoursOfService" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_hoursOfService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
 }
 Container <<applicationSchema>> "LandCoverNomenclature" {

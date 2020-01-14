@@ -31,6 +31,12 @@ Container <<applicationSchema>> "Environmental Management Facilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
   }
+  Relation "US_EMF_EnvironmentalManagementFacility_serviceHours" {
+    * profile = "attributes"
+    * tableName = "US_EMF_EnvironmentalManagementFacility_serviceHours"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "US_EMF_EnvironmentalManagementFacility_facilityDescription" {
     * profile = "attributes"
     * relatedReference = "attribute US_EMF_EnvironmentalManagementFacility#facilityDescription"
@@ -101,6 +107,102 @@ Container <<applicationSchema>> "Base Types" {
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
+Container <<applicationSchema>> "Base Types 2" {
+  * fileName = "Base Types 2"
+  Attributes <<dataType>> "BASE2_Contact" {
+    * description = "Communication channels by which it is possible to gain access to someone or something."
+    * identifier = "Base Types 2::Contact"
+    * tableName = "BASE2_Contact"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> address INTEGER
+    <<voidable>>, <<array>> telephoneFacsimiles TEXT
+    <<voidable>>, <<array>> telephoneVoices TEXT
+    <<voidable>> electronicMailAddress TEXT
+    <<voidable>> website TEXT
+  }
+  Constraint Enum <<codeList>> "BASE2_PartyRoleValue" {
+    * identifier = "Base Types 2::PartyRoleValue"
+  }
+  Attributes <<dataType>> "BASE2_RelatedParty" {
+    * description = "An organisation or a person with a role related to a resource.
+  
+    NOTE 1 A party, typically an individual person, acting as a general point of contact for a resource can be specified without providing any particular role."
+    * identifier = "Base Types 2::RelatedParty"
+    * tableName = "BASE2_RelatedParty"
+    id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> contact INTEGER
+    <<voidable>>, <<array>> roles TEXT
+  }
+  Attributes <<dataType>> "BASE2_ThematicIdentifier" {
+    * description = "Thematic identifier to uniquely identify the spatial object.
+  
+    Some spatial objects may be assigned multiple unique identifiers.
+  
+    These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
+    * identifier = "Base Types 2::ThematicIdentifier"
+    * tableName = "BASE2_ThematicIdentifier"
+    id INTEGER NOT NULL PRIMARY KEY
+    identifier TEXT NOT NULL
+    identifierScheme TEXT NOT NULL
+  }
+  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
+    * tableName = "BASE2_SimpleGeographicalName"
+    id INTEGER NOT NULL PRIMARY KEY
+    language TEXT
+    spelling_text TEXT NOT NULL
+  }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
+  Relation "BASE2_Contact_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute BASE2_Contact#address"
+    * tableName = "BASE2_Contact_address"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
+  }
+  Relation "BASE2_Contact_contactInstructions" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_contactInstructions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_Contact_hoursOfService" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_hoursOfService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_individualName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_individualName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_organisationName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_organisationName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_positionName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_positionName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "BASE2_RelatedParty_contact" {
+    * profile = "attributes"
+    * relatedReference = "attribute BASE2_RelatedParty#contact"
+    * tableName = "BASE2_RelatedParty_contact"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
+  }
+}
 Container <<applicationSchema>> "Activity Complex" {
   * fileName = "Activity Complex"
   Attributes <<dataType>> "ACT_CORE_InputOutputAmount" {
@@ -167,6 +269,12 @@ Container <<applicationSchema>> "Activity Complex" {
   Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
     * identifier = "Activity Complex::InputOutputValue"
   }
+  Relation "ACT_CORE_ActivityComplexDescription_description" {
+    * profile = "attributes"
+    * tableName = "ACT_CORE_ActivityComplexDescription_description"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_ActivityComplexDescription(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "ACT_CORE_ActivityComplexDescription_address" {
     * profile = "attributes"
     * relatedReference = "attribute ACT_CORE_ActivityComplexDescription#address"
@@ -199,6 +307,12 @@ Container <<applicationSchema>> "Activity Complex" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Capacity(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputAmount(id)
   }
+  Relation "ACT_CORE_Capacity_description" {
+    * profile = "attributes"
+    * tableName = "ACT_CORE_Capacity_description"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Capacity(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
   Relation "ACT_CORE_Permission_Id" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Permission_Id"
@@ -210,6 +324,12 @@ Container <<applicationSchema>> "Activity Complex" {
     * tableName = "ACT_CORE_Permission_relatedParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+  Relation "ACT_CORE_Permission_description" {
+    * profile = "attributes"
+    * tableName = "ACT_CORE_Permission_description"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
   Relation "ACT_CORE_Permission_permittedFunction" {
     * profile = "attributes"
@@ -223,64 +343,11 @@ Container <<applicationSchema>> "Activity Complex" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Capacity(id)
   }
-}
-Container <<applicationSchema>> "Base Types 2" {
-  * fileName = "Base Types 2"
-  Attributes <<dataType>> "BASE2_Contact" {
-    * description = "Communication channels by which it is possible to gain access to someone or something."
-    * identifier = "Base Types 2::Contact"
-    * tableName = "BASE2_Contact"
-    id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<reference>> address INTEGER
-    <<voidable>>, <<array>> telephoneFacsimiles TEXT
-    <<voidable>>, <<array>> telephoneVoices TEXT
-    <<voidable>> electronicMailAddress TEXT
-    <<voidable>> website TEXT
-  }
-  Constraint Enum <<codeList>> "BASE2_PartyRoleValue" {
-    * identifier = "Base Types 2::PartyRoleValue"
-  }
-  Attributes <<dataType>> "BASE2_RelatedParty" {
-    * description = "An organisation or a person with a role related to a resource.
-  
-    NOTE 1 A party, typically an individual person, acting as a general point of contact for a resource can be specified without providing any particular role."
-    * identifier = "Base Types 2::RelatedParty"
-    * tableName = "BASE2_RelatedParty"
-    id INTEGER NOT NULL PRIMARY KEY
-    <<voidable>>, <<reference>> contact INTEGER
-    <<voidable>>, <<array>> roles TEXT
-  }
-  Attributes <<dataType>> "BASE2_ThematicIdentifier" {
-    * description = "Thematic identifier to uniquely identify the spatial object.
-  
-    Some spatial objects may be assigned multiple unique identifiers.
-  
-    These may have been established to meet data exchange requirements of different reporting obligations at International, European or national levels and/or internal data maintenance requirements."
-    * identifier = "Base Types 2::ThematicIdentifier"
-    * tableName = "BASE2_ThematicIdentifier"
-    id INTEGER NOT NULL PRIMARY KEY
-    identifier TEXT NOT NULL
-    identifierScheme TEXT NOT NULL
-  }
-  Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
-    * tableName = "BASE2_SimpleGeographicalName"
-    id INTEGER NOT NULL PRIMARY KEY
-    language TEXT
-    spelling_text TEXT NOT NULL
-  }
-  Relation "BASE2_Contact_address" {
+  Relation "ACT_CORE_Function_description" {
     * profile = "attributes"
-    * relatedReference = "attribute BASE2_Contact#address"
-    * tableName = "BASE2_Contact_address"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
-  }
-  Relation "BASE2_RelatedParty_contact" {
-    * profile = "attributes"
-    * relatedReference = "attribute BASE2_RelatedParty#contact"
-    * tableName = "BASE2_RelatedParty_contact"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
-    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
+    * tableName = "ACT_CORE_Function_description"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
 }
 Container <<applicationSchema>> "Addresses" {

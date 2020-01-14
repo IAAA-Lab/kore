@@ -108,12 +108,10 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     levelOfDetail_distance TEXT
     levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
     levelOfDetail_equivalentScale_denominator INTEGER
-    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    localType_country TEXT CHECK(GMD_CountryCode)
-    localType_languageCode TEXT CHECK(GMD_LanguageCode)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> localType_text TEXT
+    <<voidable>> localType TEXT
+    <<voidable>> localType_locale TEXT CHECK(BASE2_Locale)
     <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
     <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
     <<voidable>> tidal BOOLEAN
@@ -150,9 +148,6 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     levelOfDetail_distance TEXT
     levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
     levelOfDetail_equivalentScale_denominator INTEGER
-    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    localType_country TEXT CHECK(GMD_CountryCode)
-    localType_languageCode TEXT CHECK(GMD_LanguageCode)
     streamOrder_order TEXT
     streamOrder_orderScheme TEXT
     streamOrder_scope TEXT
@@ -167,7 +162,8 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>> length TEXT
     <<voidable>> length_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> level TEXT CHECK(BASE_VerticalPositionValue)
-    <<voidable>> localType_text TEXT
+    <<voidable>> localType TEXT
+    <<voidable>> localType_locale TEXT CHECK(BASE2_Locale)
     <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
     <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
     <<voidable>> tidal BOOLEAN
@@ -222,13 +218,11 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     * tableName = "HY_P_Wetland"
     geometry SURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    localType_country TEXT CHECK(GMD_CountryCode)
-    localType_languageCode TEXT CHECK(GMD_LanguageCode)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<reference>> inspireId INTEGER
-    <<voidable>> localType_text TEXT
+    <<voidable>> localType TEXT
+    <<voidable>> localType_locale TEXT CHECK(BASE2_Locale)
     <<voidable>> tidal BOOLEAN
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -363,14 +357,12 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     levelOfDetail_distance TEXT
     levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
     levelOfDetail_equivalentScale_denominator INTEGER
-    localType_characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    localType_country TEXT CHECK(GMD_CountryCode)
-    localType_languageCode TEXT CHECK(GMD_LanguageCode)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> elevation TEXT
     <<voidable>> elevation_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> localType_text TEXT
+    <<voidable>> localType TEXT
+    <<voidable>> localType_locale TEXT CHECK(BASE2_Locale)
     <<voidable>> meanDepth TEXT
     <<voidable>> meanDepth_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
@@ -600,97 +592,6 @@ Container <<applicationSchema>> "Base Types" {
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
-Container "ISO 00639 Language Codes" {
-  * fileName = "ISO 00639 Language Codes"
-  Constraint Enum <<codeList>> "GMD_LanguageCode" {
-    * identifier = "ISO 00639 Language Codes::LanguageCode"
-    Afrikaans
-    Albanian
-    Arabic
-    Basque
-    Belarusian
-    Bulgarian
-    Catalan
-    Chinese
-    Croatian
-    Czech
-    Danish
-    Dutch
-    English
-    Estonian
-    Faeroese
-    Finnish
-    French
-    French(Canadian)
-    German
-    Greek
-    Hawaian
-    Hebrew
-    Hungarian
-    Icelandic
-    Indonesian
-    Italian
-    Japanese
-    Korean
-    Latvian
-    Lithuanian
-    Malaysian
-    Norwegian
-    Polish
-    Portuguese
-    Romanian
-    Russian
-    Serbian
-    Slovak
-    Slovenian
-    Spanish
-    Swahili
-    Swedish
-    Turkish
-    Ukranian
-  }
-}
-Container "ISO 03166 Country Codes" {
-  * fileName = "ISO 03166 Country Codes"
-  Constraint Enum <<codeList>> "GMD_CountryCode" {
-    * identifier = "ISO 03166 Country Codes::CountryCode"
-  }
-}
-Container "Identification information" {
-  * fileName = "Identification information"
-  Constraint Enum <<codeList>> "GMD_MD_CharacterSetCode" {
-    * identifier = "Identification information::MD_CharacterSetCode"
-    (reservedforfutureuse)
-    8859part1
-    8859part10
-    8859part11
-    8859part13
-    8859part14
-    8859part15
-    8859part16
-    8859part2
-    8859part3
-    8859part4
-    8859part5
-    8859part6
-    8859part7
-    8859part8
-    8859part9
-    GB2312
-    big5
-    ebcdic
-    eucJP
-    eucKR
-    jis
-    shiftJIS
-    ucs2
-    ucs4
-    usAscii
-    utf16
-    utf7
-    utf8
-  }
-}
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
   Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
@@ -699,6 +600,7 @@ Container <<applicationSchema>> "Base Types 2" {
     language TEXT
     spelling_text TEXT NOT NULL
   }
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
 }
 Container <<applicationSchema>> "Hydro - base" {
   * fileName = "Hydro - base"

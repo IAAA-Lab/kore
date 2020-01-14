@@ -17,7 +17,7 @@ val `Flattening types`: Transform = { _, _ ->
     flattenTypes(predicate = canFlatten(), debugPredicate = { obj ->
         "name=${obj.name} id=${obj.id} canFlatten=${canFlatten()(obj)}"
     }, postFlatten = { old, new ->
-        new.name = "${old.name}_${new.name}"
+        new.name = if (new.name.isNullOrEmpty()) old.name else "${old.name}_${new.name}"
         new.lowerBound = kotlin.math.min(old.lowerBound, new.lowerBound)
         old.annotations.forEach { it.copy(new) }
     })
