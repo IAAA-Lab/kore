@@ -2,7 +2,6 @@ Container <<applicationSchema>> "BuildingsBase" {
   * fileName = "BuildingsBase"
   Constraint Enum <<codeList>> "BU_BASE_ConditionOfConstructionValue" {
     * identifier = "BuildingsBase::ConditionOfConstructionValue"
-    obligation = "implementingRule"
   }
   Abstract Class <<featureType>> "AbstractBuilding" {
     Governance = "<<missing>>"
@@ -31,7 +30,6 @@ Container <<applicationSchema>> "BuildingsBase" {
   }
   Constraint Enum <<codeList>> "BU_BASE_HorizontalGeometryReferenceValue" {
     * identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
-    obligation = "implementingRule"
   }
   Abstract Class <<featureType>> "Building" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
@@ -59,7 +57,6 @@ Container <<applicationSchema>> "BuildingsBase" {
   }
   Constraint Enum <<codeList>> "BU_BASE_ElevationReferenceValue" {
     * identifier = "BuildingsBase::ElevationReferenceValue"
-    obligation = "implementingRule"
   }
   Abstract Class <<featureType>> "BuildingPart" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
@@ -87,11 +84,9 @@ Container <<applicationSchema>> "BuildingsBase" {
   }
   Constraint Enum <<codeList>> "BU_BASE_BuildingNatureValue" {
     * identifier = "BuildingsBase::BuildingNatureValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_HeightStatusValue" {
     * identifier = "BuildingsBase::HeightStatusValue"
-    obligation = "implementingRule"
   }
   Attributes <<dataType>> "BU_BASE_Elevation" {
     * description = "This data types includes the elevation value itself  and information on how this elevation was measured."
@@ -105,7 +100,6 @@ Container <<applicationSchema>> "BuildingsBase" {
   Constraint Enum <<codeList>> "BU_BASE_CurrentUseValue" {
     * identifier = "BuildingsBase::CurrentUseValue"
     extensiblity = "narrower"
-    obligation = "implementingRule"
   }
   Attributes <<dataType>> "BU_BASE_DateOfEvent" {
     * description = "This data type includes the different possible ways to define the date of an event."

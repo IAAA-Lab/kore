@@ -2,10 +2,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
   * fileName = "Common Transport Elements"
   Abstract Class <<featureType>> "TransportArea" {
     geometry : SURFACE
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -19,9 +19,9 @@ Container <<applicationSchema>> "Common Transport Elements" {
     verticalPosition TEXT NOT NULL CHECK(BASE_VerticalPositionValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_AccessRestrictionValue" {
@@ -41,9 +41,9 @@ Container <<applicationSchema>> "Common Transport Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_OwnerAuthority" {
@@ -58,9 +58,9 @@ Container <<applicationSchema>> "Common Transport Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_TrafficFlowDirection" {
@@ -71,16 +71,16 @@ Container <<applicationSchema>> "Common Transport Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Abstract Class <<featureType>> "TransportLinkSequence" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -97,9 +97,9 @@ Container <<applicationSchema>> "Common Transport Elements" {
     restrictionType TEXT NOT NULL CHECK(TN_RestrictionTypeValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_MaintenanceAuthority" {
@@ -114,9 +114,9 @@ Container <<applicationSchema>> "Common Transport Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_MarkerPost" {
@@ -131,43 +131,42 @@ Container <<applicationSchema>> "Common Transport Elements" {
     location_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> route_TransportLinkSet INTEGER
     <<voidable>> geographicalName_language TEXT
     <<voidable>> geographicalName_spelling_text TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> route TransportLinkSet [0..1] as ref
   }
   Abstract Class <<featureType>> "TransportPoint" {
-    geometry POINT NOT NULL
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    geometry : POINT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Abstract Class <<featureType>> "TransportLinkSet" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> post TN_MarkerPost [0..*] as ref
   }
   Abstract Class <<featureType>> "TransportNode" {
     geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
@@ -183,16 +182,16 @@ Container <<applicationSchema>> "Common Transport Elements" {
     restriction TEXT NOT NULL CHECK(TN_AccessRestrictionValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Abstract Class <<featureType>> "TransportProperty" {
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
@@ -209,10 +208,10 @@ Container <<applicationSchema>> "Common Transport Elements" {
   Abstract Class <<featureType>> "TransportLink" {
     centrelineGeometry : CURVE
     fictitious : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
     <<voidable>> validFrom : DATETIME [0..1]
     <<voidable>> validTo : DATETIME [0..1]
     endNode_Node BASE_Identifier [0..1] as ref
@@ -236,20 +235,143 @@ Container <<applicationSchema>> "Common Transport Elements" {
     EXAMPLE All road transport can be considered one mode of transport for some applications. For other applications, it might be necessary to distinguish between different public road transport networks. Within water transport, marine and inland water transport can be considered to be separate modes of transport for some applications, as they use different types of ships."
     * identifier = "Common Transport Elements::TransportNetwork"
     * tableName = "TN_TransportNetwork"
+    elements_NetworkElement BASE_Identifier
     id INTEGER NOT NULL PRIMARY KEY
     typeOfTransport TEXT NOT NULL CHECK(TN_TransportTypeValue)
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
     <<reference>> inspireId INTEGER
-    elements_NetworkElement BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
   }
   Abstract Class <<featureType>> "TransportObject" {
-    <<voidable>> geographicalName_language TEXT
-    <<voidable>> geographicalName_spelling_text TEXT
+    <<voidable>> geographicalName_language : TEXT [0..1]
+    <<voidable>> geographicalName_spelling_text : TEXT [0..1]
+  }
+  Relation <<voidable>> "TN_VerticalPosition_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_VerticalPosition_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_VerticalPosition(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_VerticalPosition_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_VerticalPosition#inspireId"
+    * tableName = "TN_VerticalPosition_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_VerticalPosition(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_ConditionOfFacility_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_ConditionOfFacility_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_ConditionOfFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_ConditionOfFacility_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_ConditionOfFacility#inspireId"
+    * tableName = "TN_ConditionOfFacility_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_ConditionOfFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_OwnerAuthority_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_OwnerAuthority_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_OwnerAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_OwnerAuthority_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_OwnerAuthority#inspireId"
+    * tableName = "TN_OwnerAuthority_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_OwnerAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_TrafficFlowDirection_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_TrafficFlowDirection_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TrafficFlowDirection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_TrafficFlowDirection_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_TrafficFlowDirection#inspireId"
+    * tableName = "TN_TrafficFlowDirection_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TrafficFlowDirection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RestrictionForVehicles_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RestrictionForVehicles_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RestrictionForVehicles(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RestrictionForVehicles_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RestrictionForVehicles#inspireId"
+    * tableName = "TN_RestrictionForVehicles_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RestrictionForVehicles(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_MaintenanceAuthority_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_MaintenanceAuthority_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MaintenanceAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_MaintenanceAuthority_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_MaintenanceAuthority#inspireId"
+    * tableName = "TN_MaintenanceAuthority_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MaintenanceAuthority(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_MarkerPost_route_TransportLinkSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_MarkerPost#route_TransportLinkSet"
+    * tableName = "TN_MarkerPost_route_TransportLinkSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_MarkerPost_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_MarkerPost#inspireId"
+    * tableName = "TN_MarkerPost_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_MarkerPost_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_MarkerPost_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_MarkerPost(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_AccessRestriction_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_AccessRestriction_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_AccessRestriction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_AccessRestriction_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_AccessRestriction#inspireId"
+    * tableName = "TN_AccessRestriction_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_AccessRestriction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "TN_TransportNetwork_inspireId" {
     * profile = "attributes"
     * relatedReference = "attribute TN_TransportNetwork#inspireId"
     * tableName = "TN_TransportNetwork_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TransportNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_TransportNetwork_geographicalName" {
+    * profile = "attributes"
+    * tableName = "TN_TransportNetwork_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TransportNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_TransportNetwork_elements_NetworkElement" {
+    * profile = "attributes"
+    * tableName = "TN_TransportNetwork_elements_NetworkElement"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_TransportNetwork(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
@@ -365,7 +487,7 @@ Container <<applicationSchema>> "Network" {
     <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"

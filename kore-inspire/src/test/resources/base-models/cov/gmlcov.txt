@@ -11,10 +11,10 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> rangeType INTEGER
     metadata _Any [0..*] as ref
     rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
   }
   Attributes <<featureType>> "GMLCOV_ReferenceableGridCoverage" {
     * description = "Coverage whose domain consists of a referenceable grid
@@ -27,10 +27,10 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> rangeType INTEGER
     metadata _Any [0..*] as ref
     rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
   }
   Class <<union>> "CoverageFunction" {
     ruleDefinition : TEXT
@@ -38,8 +38,8 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     gridFunction GMLCOV_GridFunction as ref
   }
   Abstract Class <<featureType>> "CoverageByDomainAndRange" {
-    coverageFunction_ruleDefinition TEXT
-    coverageFunction_ruleReference TEXT
+    coverageFunction_ruleDefinition : TEXT [0..1]
+    coverageFunction_ruleReference : TEXT [0..1]
     coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     metadata _Any [0..*] as ref
     rangeSet _Any [0..*] as ref
@@ -53,6 +53,58 @@ Container <<applicationSchema>> "Coverages (Domain and Range)" {
     sequenceRule_scanDirection <<missing>>
     sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
     <<array>> startPoints TEXT
+  }
+  Relation "GMLCOV_RectifiedGridCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "GMLCOV_RectifiedGridCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_RectifiedGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GMLCOV_RectifiedGridCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute GMLCOV_RectifiedGridCoverage#coverageFunction_gridFunction"
+    * tableName = "GMLCOV_RectifiedGridCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_RectifiedGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "GMLCOV_RectifiedGridCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "GMLCOV_RectifiedGridCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_RectifiedGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GMLCOV_RectifiedGridCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute GMLCOV_RectifiedGridCoverage#rangeType"
+    * tableName = "GMLCOV_RectifiedGridCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_RectifiedGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation "GMLCOV_ReferenceableGridCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "GMLCOV_ReferenceableGridCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_ReferenceableGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GMLCOV_ReferenceableGridCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute GMLCOV_ReferenceableGridCoverage#coverageFunction_gridFunction"
+    * tableName = "GMLCOV_ReferenceableGridCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_ReferenceableGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "GMLCOV_ReferenceableGridCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "GMLCOV_ReferenceableGridCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_ReferenceableGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GMLCOV_ReferenceableGridCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute GMLCOV_ReferenceableGridCoverage#rangeType"
+    * tableName = "GMLCOV_ReferenceableGridCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMLCOV_ReferenceableGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
   }
 }
 Container "Quadrilateral Grid" {

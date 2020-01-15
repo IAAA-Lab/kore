@@ -2,19 +2,15 @@ Container <<applicationSchema>> "Population distribution - demography" {
   * fileName = "Population distribution - demography"
   Constraint Enum <<codeList>> "PD_ClassificationTypeValue" {
     * identifier = "Population distribution - demography::ClassificationTypeValue"
-    obligation = "TG"
   }
   Constraint Enum <<codeList>> "PD_NACECodeValue" {
     * identifier = "Population distribution - demography::NACECodeValue"
-    obligation = "TG"
   }
   Constraint Enum <<codeList>> "PD_SpecialValue" {
     * identifier = "Population distribution - demography::SpecialValue"
-    obligation = "IR"
   }
   Constraint Enum <<codeList>> "PD_AgeByYearValue" {
     * identifier = "Population distribution - demography::AgeByYearValue"
-    obligation = "TG"
   }
   Attributes <<dataType>> "PD_ClassificationItem" {
     * description = "An item composing a classification.
@@ -27,7 +23,6 @@ Container <<applicationSchema>> "Population distribution - demography" {
   }
   Constraint Enum <<codeList>> "PD_StatisticsMeasurementMethodValue" {
     * identifier = "Population distribution - demography::StatisticsMeasurementMethodValue"
-    obligation = "IR"
   }
   Feature <<featureType>> "PD_StatisticalDistribution" {
     * description = "Set of measures describing how a phenomenon is spread within some part of the 2D world."
@@ -46,7 +41,6 @@ Container <<applicationSchema>> "Population distribution - demography" {
   }
   Constraint Enum <<codeList>> "PD_VariableValue" {
     * identifier = "Population distribution - demography::VariableValue"
-    obligation = "TG"
   }
   Attributes <<dataType>> "PD_Classification" {
     * description = "A classification used for a statistical distribution.
@@ -78,18 +72,15 @@ Container <<applicationSchema>> "Population distribution - demography" {
   }
   Constraint Enum <<codeList>> "PD_StatisticalDataStatusValue" {
     * identifier = "Population distribution - demography::StatisticalDataStatusValue"
-    obligation = "IR"
   }
   Constraint Enum <<codeList>> "PD_AgeGroupValue" {
     * identifier = "Population distribution - demography::AgeGroupValue"
-    obligation = "TG"
   }
   Constraint Enum <<codeList>> "PD_ClassificationItemTypeValue" {
     * identifier = "Population distribution - demography::ClassificationItemTypeValue"
   }
   Constraint Enum <<codeList>> "PD_AgeBy5YearsValue" {
     * identifier = "Population distribution - demography::AgeBy5YearsValue"
-    obligation = "IR"
   }
   Relation "PD_StatisticalDistribution_value" {
     * profile = "attributes"

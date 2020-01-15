@@ -98,7 +98,7 @@ Container <<applicationSchema>> "Geographical Names" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "GN_NamedPlace_localType" {
+  Relation <<voidable>> "GN_NamedPlace_localType" {
     * profile = "attributes"
     * tableName = "GN_NamedPlace_localType"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
@@ -110,7 +110,7 @@ Container <<applicationSchema>> "Geographical Names" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GN_GeographicalName(id)
   }
-  Relation "GN_NamedPlace_relatedSpatialObject" {
+  Relation <<voidable>> "GN_NamedPlace_relatedSpatialObject" {
     * profile = "attributes"
     * tableName = "GN_NamedPlace_relatedSpatialObject"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GN_NamedPlace(id)

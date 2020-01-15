@@ -68,7 +68,7 @@ Container <<applicationSchema>> "AdministrativeUnits" {
     agreed
     notAgreed
   }
-  Relation "AU_boundary_admUnit" {
+  Relation <<voidable>> "AU_boundary_admUnit" {
     * profile = "features"
     * tableName = "AU_boundary_admUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
@@ -81,13 +81,13 @@ Container <<applicationSchema>> "AdministrativeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_AdministrativeUnit_administeredBy" {
+  Relation <<voidable>> "AU_AdministrativeUnit_administeredBy" {
     * profile = "features"
     * tableName = "AU_AdministrativeUnit_administeredBy"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_AdministrativeUnit(id)
   }
-  Relation "AU_AdministrativeUnit_lowerLevelUnit" {
+  Relation <<voidable>> "AU_AdministrativeUnit_lowerLevelUnit" {
     * profile = "features"
     * relatedReference = "attribute AU_AdministrativeUnit#upperLevelUnit"
     * tableName = "AU_AdministrativeUnit_lowerLevelUnit"
@@ -107,19 +107,19 @@ Container <<applicationSchema>> "AdministrativeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AU_AdministrativeUnit_nationalLevelName" {
+  Relation <<voidable>> "AU_AdministrativeUnit_nationalLevelName" {
     * profile = "attributes"
     * tableName = "AU_AdministrativeUnit_nationalLevelName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "AU_AdministrativeUnit_residenceOfAuthority" {
+  Relation <<voidable>> "AU_AdministrativeUnit_residenceOfAuthority" {
     * profile = "features"
     * tableName = "AU_AdministrativeUnit_residenceOfAuthority"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_AdministrativeUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AU_ResidenceOfAuthority(id)
   }
-  Relation "AU_Condominium_admUnit" {
+  Relation <<voidable>> "AU_Condominium_admUnit" {
     * profile = "features"
     * tableName = "AU_Condominium_admUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
@@ -132,7 +132,7 @@ Container <<applicationSchema>> "AdministrativeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AU_Condominium_name" {
+  Relation <<voidable>> "AU_Condominium_name" {
     * profile = "attributes"
     * tableName = "AU_Condominium_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AU_Condominium(id)

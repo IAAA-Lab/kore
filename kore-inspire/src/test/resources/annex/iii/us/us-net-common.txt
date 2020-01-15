@@ -12,10 +12,10 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     Using the "crossTheme" value, a utility network can be created that contains e.g. ducts, which can contain pipes and cables from various utility network types."
     * identifier = "Common Utility Network Elements::UtilityNetwork"
     * tableName = "US_NET_COMMON_UtilityNetwork"
+    elements_NetworkElement BASE_Identifier
     id INTEGER NOT NULL PRIMARY KEY
     utilityNetworkType TEXT NOT NULL CHECK(US_NET_COMMON_UtilityNetworkTypeValue)
-    elements_NetworkElement BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
   }
   Attributes <<featureType>> "US_NET_COMMON_Cabinet" {
     * description = "Simple cabinet object which may carry utility objects belonging to either single or multiple utility networks.
@@ -25,13 +25,13 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * tableName = "US_NET_COMMON_Cabinet"
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "US_NET_COMMON_UtilityNetworkTypeValue" {
     * identifier = "Common Utility Network Elements::UtilityNetworkTypeValue"
@@ -43,14 +43,14 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     water
   }
   Abstract Class <<featureType>> "UtilityLinkSet" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
-    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> utilityDeliveryType : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> warningType : TEXT [0..1]
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
@@ -66,7 +66,10 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> pipeDiameter TEXT
     <<voidable>> pipeDiameter_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> pressure TEXT
@@ -76,18 +79,15 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
-    inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Abstract Class <<featureType>> "UtilityNodeContainer" {
-    geometry POINT NOT NULL
-    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
-    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    geometry : POINT
+    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> verticalPosition : TEXT [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
@@ -100,15 +100,15 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * tableName = "US_NET_COMMON_Pole"
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> poleHeight TEXT
     <<voidable>> poleHeight_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "US_NET_COMMON_Duct" {
     * description = "A utility link or link sequence used to protect and guide cable and pipes via an encasing construction.
@@ -121,19 +121,19 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> ductWidth TEXT
     <<voidable>> ductWidth_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
     <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
-    inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "US_NET_COMMON_UtilityLinkSequence" {
     * description = "utility Link Sequence
@@ -142,17 +142,17 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * identifier = "Common Utility Network Elements::UtilityLinkSequence"
     * tableName = "US_NET_COMMON_UtilityLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "US_NET_COMMON_Tower" {
     * description = "Simple tower object which may carry utility objects belonging to either single or multiple utility networks.
@@ -162,25 +162,25 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * tableName = "US_NET_COMMON_Tower"
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> towerHeight TEXT
     <<voidable>> towerHeight_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Abstract Class <<featureType>> "Cable" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
-    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> utilityDeliveryType : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> verticalPosition : TEXT [0..1]
+    <<voidable>> warningType : TEXT [0..1]
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
@@ -188,10 +188,10 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Abstract Class <<featureType>> "UtilityNetworkElement" {
-    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
-    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> verticalPosition : TEXT [0..1]
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
@@ -203,13 +203,13 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     transport
   }
   Abstract Class <<featureType>> "UtilityNode" {
-    geometry POINT NOT NULL
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
-    <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
+    geometry : POINT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> currentStatus : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
+    <<voidable>> verticalPosition : TEXT [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -237,13 +237,13 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     * tableName = "US_NET_COMMON_Manhole"
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "US_NET_COMMON_AppurtenanceTypeValue" {
     * identifier = "Common Utility Network Elements::AppurtenanceTypeValue"
@@ -260,18 +260,18 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> appurtenanceType TEXT CHECK(US_NET_COMMON_AppurtenanceTypeValue)
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> specificAppurtenanceType TEXT CHECK(US_NET_COMMON_SpecificAppurtenanceTypeValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "US_NET_COMMON_UtilityLink" {
     * description = "utility Link
@@ -284,16 +284,16 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "US_NET_COMMON_SpecificAppurtenanceTypeValue" {
     * identifier = "Common Utility Network Elements::SpecificAppurtenanceTypeValue"
@@ -304,7 +304,7 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     net
     tape
   }
-  Relation "US_NET_COMMON_UtilityNetwork_networks" {
+  Relation <<voidable>> "US_NET_COMMON_UtilityNetwork_networks" {
     * profile = "attributes"
     * tableName = "US_NET_COMMON_UtilityNetwork_networks"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
@@ -316,23 +316,128 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
   }
-  Relation "US_NET_COMMON_UtilityNetwork_utilityFacilityReference_ActivityComplex" {
+  Relation <<voidable>> "US_NET_COMMON_UtilityNetwork_utilityFacilityReference_ActivityComplex" {
     * profile = "attributes"
     * tableName = "US_NET_COMMON_UtilityNetwork_utilityFacilityReference_ActivityComplex"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "US_NET_COMMON_UtilityNetwork_disclaimer" {
+  Relation <<voidable>> "US_NET_COMMON_UtilityNetwork_disclaimer" {
     * profile = "attributes"
     * tableName = "US_NET_COMMON_UtilityNetwork_disclaimer"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "US_NET_COMMON_Pipe_pipes" {
+  Relation <<voidable>> "US_NET_COMMON_UtilityNetwork_geographicalName" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_UtilityNetwork_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "US_NET_COMMON_UtilityNetwork_elements_NetworkElement" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_UtilityNetwork_elements_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Cabinet_nodes_UtilityNode" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Cabinet_nodes_UtilityNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Cabinet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Cabinet_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Cabinet#inspireId"
+    * tableName = "US_NET_COMMON_Cabinet_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Cabinet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Cabinet_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Cabinet#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Cabinet_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Cabinet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Cabinet_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Cabinet#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Cabinet_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Cabinet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pipe_pipes" {
     * profile = "attributes"
     * tableName = "US_NET_COMMON_Pipe_pipes"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_NET_COMMON_Pipe(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pipe_cables_Cable" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Pipe_cables_Cable"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pipe_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Pipe#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Pipe_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pipe_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Pipe#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Pipe_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Pipe_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Pipe_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Pipe_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Pipe#inspireId"
+    * tableName = "US_NET_COMMON_Pipe_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pipe_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Pipe_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pole_nodes_UtilityNode" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Pole_nodes_UtilityNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Pole_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Pole#inspireId"
+    * tableName = "US_NET_COMMON_Pole_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pole_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Pole#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Pole_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Pole_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Pole#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Pole_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Pole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "US_NET_COMMON_Duct_pipes" {
     * profile = "attributes"
@@ -340,11 +445,217 @@ Container <<applicationSchema>> "Common Utility Network Elements" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_NET_COMMON_Pipe(id)
   }
-  Relation "US_NET_COMMON_Duct_ducts" {
+  Relation <<voidable>> "US_NET_COMMON_Duct_cables_Cable" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Duct_cables_Cable"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Duct_ducts" {
     * profile = "attributes"
     * tableName = "US_NET_COMMON_Duct_ducts"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_NET_COMMON_Duct(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Duct_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Duct#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Duct_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Duct_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Duct#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Duct_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Duct_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Duct_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Duct_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Duct#inspireId"
+    * tableName = "US_NET_COMMON_Duct_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Duct_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Duct_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Duct(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_UtilityLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_UtilityLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_UtilityLinkSequence_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLinkSequence#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_UtilityLinkSequence_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_UtilityLinkSequence_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLinkSequence#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_UtilityLinkSequence_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_UtilityLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLinkSequence#inspireId"
+    * tableName = "US_NET_COMMON_UtilityLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_UtilityLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_UtilityLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Tower_nodes_UtilityNode" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Tower_nodes_UtilityNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Tower(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Tower_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Tower#inspireId"
+    * tableName = "US_NET_COMMON_Tower_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Tower(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Tower_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Tower#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Tower_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Tower(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Tower_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Tower#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Tower_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Tower(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Manhole_nodes_UtilityNode" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Manhole_nodes_UtilityNode"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Manhole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Manhole_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Manhole#inspireId"
+    * tableName = "US_NET_COMMON_Manhole_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Manhole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Manhole_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Manhole#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Manhole_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Manhole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Manhole_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Manhole#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Manhole_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Manhole(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Appurtenance_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Appurtenance#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_Appurtenance_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Appurtenance(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Appurtenance_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Appurtenance#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_Appurtenance_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Appurtenance(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Appurtenance_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Appurtenance_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Appurtenance(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Appurtenance_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Appurtenance_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Appurtenance(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_Appurtenance_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_Appurtenance#inspireId"
+    * tableName = "US_NET_COMMON_Appurtenance_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Appurtenance(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_Appurtenance_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_Appurtenance_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_Appurtenance(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_UtilityLink_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLink#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_COMMON_UtilityLink_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_UtilityLink_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLink#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_COMMON_UtilityLink_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_UtilityLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLink#startNode_Node"
+    * tableName = "US_NET_COMMON_UtilityLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_UtilityLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLink#endNode_Node"
+    * tableName = "US_NET_COMMON_UtilityLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_COMMON_UtilityLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_COMMON_UtilityLink#inspireId"
+    * tableName = "US_NET_COMMON_UtilityLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_COMMON_UtilityLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_COMMON_UtilityLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_COMMON_UtilityLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container <<applicationSchema>> "Base Types" {
@@ -442,10 +753,8 @@ Container <<applicationSchema>> "Base Types 2" {
     DocumentCitation
     LegislationCitation
   }
-  Attributes <<dataType>> "BASE2_SimpleCitation" {
-    * tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "SimpleCitation" {
     date DATE
-    id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
     link TEXT
     name TEXT NOT NULL
@@ -464,45 +773,45 @@ Container <<applicationSchema>> "Base Types 2" {
     locale TEXT NOT NULL CHECK(BASE2_Locale)
     value TEXT NOT NULL
   }
-  Relation "BASE2_RelatedParty_individualName" {
+  Relation <<voidable>> "BASE2_RelatedParty_individualName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_individualName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_organisationName" {
+  Relation <<voidable>> "BASE2_RelatedParty_organisationName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_organisationName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_positionName" {
+  Relation <<voidable>> "BASE2_RelatedParty_positionName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_positionName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_contact" {
+  Relation <<voidable>> "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
     * tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "BASE2_Contact_contactInstructions" {
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_contactInstructions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_Contact_hoursOfService" {
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_hoursOfService"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
@@ -554,25 +863,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"
@@ -582,8 +891,8 @@ Container <<applicationSchema>> "Addresses" {
 }
 Package "Location referencing mechanisms" {
   Class "NodeLocationReference" {
-    node_Node BASE_Identifier as ref
-    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
+    node_Node : BASE_Identifier
+    <<voidable>> networkReference : SimpleCitation [0..1]
   }
 }
 Package "EA Model" {

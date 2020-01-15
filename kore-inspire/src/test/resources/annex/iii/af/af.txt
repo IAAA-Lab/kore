@@ -36,16 +36,16 @@ Container <<applicationSchema>> "Agricultural and Aquaculture Facilities Model" 
     03.1  fishing is excluded."
     * identifier = "Agricultural and Aquaculture Facilities Model::Holding"
     * tableName = "AF_Holding"
+    function ACT_CORE_Function <<check [1..-1]>>
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    thematicId BASE2_ThematicIdentifier
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> name TEXT
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    function ACT_CORE_Function [1..*] as ref
-    inspireId BASE_Identifier as ref
-    thematicId BASE2_ThematicIdentifier [0..*] as ref
   }
   Feature <<featureType>> "AF_Site" {
     * description = "All land  at a same or distinct geographic location under the management control of a holding covering activities, products and services. This includes all infrastructure, equipment and materials. The geometry of the site  must be a point or a surface. Mulitpoint or multisurface is not allowed.
@@ -81,7 +81,26 @@ Container <<applicationSchema>> "Agricultural and Aquaculture Facilities Model" 
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Holding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AF_Site(id)
   }
-  Relation "AF_Site_includesAnimal" {
+  Relation "AF_Holding_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute AF_Holding#inspireId"
+    * tableName = "AF_Holding_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Holding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AF_Holding_thematicId" {
+    * profile = "attributes"
+    * tableName = "AF_Holding_thematicId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Holding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_ThematicIdentifier(id)
+  }
+  Relation "AF_Holding_function" {
+    * profile = "attributes"
+    * tableName = "AF_Holding_function"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Holding(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Function(id)
+  }
+  Relation <<voidable>> "AF_Site_includesAnimal" {
     * profile = "attributes"
     * tableName = "AF_Site_includesAnimal"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AF_Site(id)
@@ -110,7 +129,7 @@ Container <<applicationSchema>> "Activity Complex" {
   Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
     * identifier = "Activity Complex::InputOutputValue"
   }
-  Relation "ACT_CORE_Function_description" {
+  Relation <<voidable>> "ACT_CORE_Function_description" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Function_description"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)

@@ -61,9 +61,9 @@ Container <<applicationSchema>> "Energy Resources Vector" {
     <<voidable>> dateOfDetermination_dateTime8601 DATETIME
     <<voidable>> dateOfDetermination_time8601 TEXT
     <<voidable>> dateOfDetermination_time8601_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
     <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
     <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
-    inspireId BASE_Identifier as ref
     <<voidable>> exploitationPeriod ER_V_ExploitationPeriodType [0..*] as ref
     <<voidable>> reportingAuthority BASE2_RelatedParty [0..*] as ref
     <<voidable>> resourceName BASE2_SimpleGeographicalName [0..*] as ref
@@ -89,25 +89,25 @@ Container <<applicationSchema>> "Energy Resources Vector" {
     <<voidable>> dateOfDiscovery_dateTime8601 DATETIME
     <<voidable>> dateOfDiscovery_time8601 TEXT
     <<voidable>> dateOfDiscovery_time8601_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
     <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
     <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
-    inspireId BASE_Identifier as ref
     <<voidable>> exploitationPeriod ER_V_ExploitationPeriodType [0..*] as ref
     <<voidable>> reportingAuthority BASE2_RelatedParty [0..*] as ref
     <<voidable>> resourceName BASE2_SimpleGeographicalName [0..*] as ref
   }
   Abstract Class <<featureType>> "VectorEnergyResource" {
-    ClassificationAndQuantificationFramework TEXT CHECK(ER_B_ClassificationAndQuantificationFrameworkValue)
-    geometry GEOMETRY NOT NULL
-    verticalExtent_verticalExtent_range_upperBound TEXT
-    verticalExtent_verticalExtent_range_upperBound_uom TEXT CHECK(GML_UomIdentifier)
-    verticalExtent_verticalExtent_scalar TEXT
-    verticalExtent_verticalExtent_scalar_uom TEXT CHECK(GML_UomIdentifier)
-    verticalExtent_verticalReference TEXT CHECK(ER_B_VerticalReferenceValue)
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound TEXT
-    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom TEXT CHECK(GML_UomIdentifier)
+    ClassificationAndQuantificationFramework : TEXT [0..1]
+    geometry : GEOMETRY
+    verticalExtent_verticalExtent_range_upperBound : TEXT [0..1]
+    verticalExtent_verticalExtent_range_upperBound_uom : TEXT [0..1]
+    verticalExtent_verticalExtent_scalar : TEXT [0..1]
+    verticalExtent_verticalExtent_scalar_uom : TEXT [0..1]
+    verticalExtent_verticalReference : TEXT [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound : TEXT [0..1]
+    <<voidable>> verticalExtent_verticalExtent_range_lowerBound_uom : TEXT [0..1]
     inspireId BASE_Identifier as ref
     <<voidable>> exploitationPeriod ER_V_ExploitationPeriodType [0..*] as ref
     <<voidable>> reportingAuthority BASE2_RelatedParty [0..*] as ref
@@ -137,17 +137,67 @@ Container <<applicationSchema>> "Energy Resources Vector" {
     calorificScalar : TEXT
     calorificScalar_uom : TEXT
   }
-  Relation "ER_V_FossilFuelResourceType_quantity" {
+  Relation <<voidable>> "ER_V_FossilFuelResourceType_quantity" {
     * profile = "attributes"
     * tableName = "ER_V_FossilFuelResourceType_quantity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_FossilFuelResourceType(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ER_V_FossilFuelMeasure(id)
+  }
+  Relation <<voidable>> "ER_V_RenewableAndWasteResource_exploitationPeriod" {
+    * profile = "attributes"
+    * tableName = "ER_V_RenewableAndWasteResource_exploitationPeriod"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_RenewableAndWasteResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ER_V_ExploitationPeriodType(id)
+  }
+  Relation "ER_V_RenewableAndWasteResource_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute ER_V_RenewableAndWasteResource#inspireId"
+    * tableName = "ER_V_RenewableAndWasteResource_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_RenewableAndWasteResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "ER_V_RenewableAndWasteResource_reportingAuthority" {
+    * profile = "attributes"
+    * tableName = "ER_V_RenewableAndWasteResource_reportingAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_RenewableAndWasteResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+  Relation <<voidable>> "ER_V_RenewableAndWasteResource_resourceName" {
+    * profile = "attributes"
+    * tableName = "ER_V_RenewableAndWasteResource_resourceName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_RenewableAndWasteResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "ER_V_FossilFuelResource_resource" {
     * profile = "attributes"
     * tableName = "ER_V_FossilFuelResource_resource"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_FossilFuelResource(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ER_V_FossilFuelResourceType(id)
+  }
+  Relation <<voidable>> "ER_V_FossilFuelResource_exploitationPeriod" {
+    * profile = "attributes"
+    * tableName = "ER_V_FossilFuelResource_exploitationPeriod"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_FossilFuelResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ER_V_ExploitationPeriodType(id)
+  }
+  Relation "ER_V_FossilFuelResource_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute ER_V_FossilFuelResource#inspireId"
+    * tableName = "ER_V_FossilFuelResource_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_FossilFuelResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "ER_V_FossilFuelResource_reportingAuthority" {
+    * profile = "attributes"
+    * tableName = "ER_V_FossilFuelResource_reportingAuthority"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_FossilFuelResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+  Relation <<voidable>> "ER_V_FossilFuelResource_resourceName" {
+    * profile = "attributes"
+    * tableName = "ER_V_FossilFuelResource_resourceName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ER_V_FossilFuelResource(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
 }
 Container "Temporal Reference System" {
@@ -252,45 +302,45 @@ Container <<applicationSchema>> "Base Types 2" {
     locale TEXT NOT NULL CHECK(BASE2_Locale)
     value TEXT NOT NULL
   }
-  Relation "BASE2_RelatedParty_individualName" {
+  Relation <<voidable>> "BASE2_RelatedParty_individualName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_individualName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_organisationName" {
+  Relation <<voidable>> "BASE2_RelatedParty_organisationName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_organisationName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_positionName" {
+  Relation <<voidable>> "BASE2_RelatedParty_positionName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_positionName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_contact" {
+  Relation <<voidable>> "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
     * tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "BASE2_Contact_contactInstructions" {
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_contactInstructions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_Contact_hoursOfService" {
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_hoursOfService"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
@@ -324,25 +374,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"

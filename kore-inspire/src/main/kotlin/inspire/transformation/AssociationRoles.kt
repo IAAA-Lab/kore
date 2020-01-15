@@ -25,6 +25,7 @@ val `Association Roles`: Transform = { conversion, _ ->
             val relationProfile = if (type?.metaClass == AttributesTable) "attributes" else "features"
 
             toRelation(tableName, relationProfile)?.let {
+                annotations.forEach { annotation -> annotation.copy(it) }
                 it.relatedReference = when {
                     manyToOne -> opposite?.copyAsRefAttribute()
                     oneToOne -> copyAsRefAttribute()

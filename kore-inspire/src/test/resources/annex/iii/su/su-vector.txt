@@ -12,7 +12,6 @@ Container <<applicationSchema>> "Statistical Units Vector" {
   }
   Constraint Enum <<codeList>> "SU_VECTOR_EvolutionTypeValue" {
     * identifier = "Statistical Units Vector::EvolutionTypeValue"
-    obligation = "technicalGuidance"
   }
   Attributes <<featureType>> "SU_VECTOR_StatisticalTessellation" {
     * description = "A tesselation composed of area statistical units.
@@ -44,10 +43,10 @@ Container <<applicationSchema>> "Statistical Units Vector" {
     <<voidable>> landAreaValue_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> livableAreaValue TEXT
     <<voidable>> livableAreaValue_uom TEXT CHECK(GML_UomIdentifier)
+    statisticalMeasure AggregatedEnergy [0..*] as ref
   }
   Constraint Enum <<codeList>> "SU_VECTOR_GeometryTypeValue" {
     * identifier = "Statistical Units Vector::GeometryTypeValue"
-    obligation = "implementingRule"
   }
   Attributes <<voidable>>, <<featureType>> "SU_VECTOR_Evolution" {
     * description = "Representation of vector statistical unit evolution."
@@ -110,14 +109,14 @@ Container <<applicationSchema>> "Statistical Units Vector" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "SU_VECTOR_StatisticalTessellation_lower" {
+  Relation <<voidable>> "SU_VECTOR_StatisticalTessellation_lower" {
     * profile = "attributes"
     * relatedReference = "attribute SU_VECTOR_StatisticalTessellation#lower"
     * tableName = "SU_VECTOR_StatisticalTessellation_lower"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
   }
-  Relation "SU_VECTOR_StatisticalTessellation_units" {
+  Relation <<voidable>> "SU_VECTOR_StatisticalTessellation_units" {
     * profile = "attributes"
     * relatedReference = "attribute SU_VECTOR_AreaStatisticalUnit#tesselation"
     * tableName = "SU_VECTOR_StatisticalTessellation_units"
@@ -131,37 +130,68 @@ Container <<applicationSchema>> "Statistical Units Vector" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_StatisticalTessellation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SU_VECTOR_AreaStatisticalUnit_successors" {
+  Relation <<voidable>> "SU_VECTOR_AreaStatisticalUnit_successors" {
     * profile = "attributes"
     * tableName = "SU_VECTOR_AreaStatisticalUnit_successors"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
   }
-  Relation "SU_VECTOR_AreaStatisticalUnit_lowers" {
+  Relation <<voidable>> "SU_VECTOR_AreaStatisticalUnit_lowers" {
     * profile = "attributes"
     * tableName = "SU_VECTOR_AreaStatisticalUnit_lowers"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
   }
-  Relation "SU_VECTOR_AreaStatisticalUnit_administrativeUnit_AdministrativeUnit" {
+  Relation <<voidable>> "SU_VECTOR_AreaStatisticalUnit_evolutions" {
+    * profile = "attributes"
+    * tableName = "SU_VECTOR_AreaStatisticalUnit_evolutions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_Evolution(id)
+  }
+  Relation "SU_VECTOR_AreaStatisticalUnit_geometry" {
+    * profile = "features"
+    * tableName = "SU_VECTOR_AreaStatisticalUnit_geometry"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnitGeometry(id)
+  }
+  Relation <<voidable>> "SU_VECTOR_AreaStatisticalUnit_administrativeUnit_AdministrativeUnit" {
     * profile = "attributes"
     * tableName = "SU_VECTOR_AreaStatisticalUnit_administrativeUnit_AdministrativeUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SU_VECTOR_Evolution_initialUnitVersions" {
+  Relation "SU_VECTOR_AreaStatisticalUnit_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SU_VECTOR_AreaStatisticalUnit#inspireId"
+    * tableName = "SU_VECTOR_AreaStatisticalUnit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SU_VECTOR_AreaStatisticalUnit_thematicId" {
+    * profile = "attributes"
+    * tableName = "SU_VECTOR_AreaStatisticalUnit_thematicId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_ThematicIdentifier(id)
+  }
+  Relation "SU_VECTOR_AreaStatisticalUnit_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SU_VECTOR_AreaStatisticalUnit_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_AreaStatisticalUnit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SU_VECTOR_Evolution_initialUnitVersions" {
     * profile = "attributes"
     * tableName = "SU_VECTOR_Evolution_initialUnitVersions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_Evolution(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
   }
-  Relation "SU_VECTOR_Evolution_units" {
+  Relation <<voidable>> "SU_VECTOR_Evolution_units" {
     * profile = "attributes"
     * tableName = "SU_VECTOR_Evolution_units"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_Evolution(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SU_VECTOR_VectorStatisticalUnit(id)
   }
-  Relation "SU_VECTOR_Evolution_finalUnitVersions" {
+  Relation <<voidable>> "SU_VECTOR_Evolution_finalUnitVersions" {
     * profile = "attributes"
     * tableName = "SU_VECTOR_Evolution_finalUnitVersions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_VECTOR_Evolution(id)

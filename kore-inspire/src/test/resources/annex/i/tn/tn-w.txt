@@ -12,10 +12,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_FerryCrossing" {
@@ -25,11 +25,11 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
@@ -51,10 +51,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_FerryUse" {
@@ -65,10 +65,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<array>> ferryUses TEXT NOT NULL
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_CEMTClass" {
     * description = "Classification of an inland waterway according to CEMT (European Conference of Ministers of Transport)."
@@ -78,10 +78,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_W_FormOfWaterwayNodeValue" {
     * identifier = "Water Transport Network::FormOfWaterwayNodeValue"
@@ -94,11 +94,11 @@ Container <<applicationSchema>> "Water Transport Network" {
   }
   Abstract Class <<featureType>> "TrafficSeparationScheme" {}
   Abstract Class <<featureType>> "WaterNode" {
-    geometry POINT NOT NULL
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    geometry : POINT
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -115,10 +115,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -134,12 +134,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_Buoy" {
@@ -154,10 +154,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_ConditionOfWaterFacility" {
@@ -168,10 +168,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_MarineWaterway" {
     * description = "Waterway which is defined at sea waters."
@@ -180,12 +180,12 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> deepWaterRoute BOOLEAN
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
@@ -197,10 +197,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_WaterLinkSequence" {
@@ -210,13 +210,13 @@ Container <<applicationSchema>> "Water Transport Network" {
     * identifier = "Water Transport Network::WaterLinkSequence"
     * tableName = "TN_W_WaterLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_TrafficSeparationSchemeLane" {
@@ -229,10 +229,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_WaterwayNode" {
@@ -243,11 +243,11 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> formOfWaterwayNode TEXT CHECK(TN_W_FormOfWaterwayNodeValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -262,10 +262,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_TrafficSeparationSchemeCrossing" {
@@ -278,10 +278,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<enumeration>> "TN_W_CEMTClassValue" {
@@ -306,11 +306,11 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
@@ -324,17 +324,17 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Abstract Class <<featureType>> "Waterway" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     link_GeneralisedLink BASE_Identifier [1..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
@@ -351,10 +351,10 @@ Container <<applicationSchema>> "Water Transport Network" {
     restrictionType TEXT NOT NULL CHECK(TN_RestrictionTypeValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_W_WaterTrafficFlowDirection" {
     * description = "Indicates the direction of the flow of water transport traffic in relation to the direction of the water transport link vector."
@@ -364,20 +364,465 @@ Container <<applicationSchema>> "Water Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Abstract Class <<featureType>> "TrafficSeparationSchemeArea" {
-    geometry SURFACE NOT NULL
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    geometry : SURFACE
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+  }
+  Relation <<voidable>> "TN_W_FairwayArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_FairwayArea#geographicalName"
+    * tableName = "TN_W_FairwayArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FairwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_FairwayArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_FairwayArea#inspireId"
+    * tableName = "TN_W_FairwayArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FairwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_FairwayArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_FairwayArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FairwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_FerryCrossing_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_W_FerryCrossing_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_FerryCrossing_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_FerryCrossing#geographicalName"
+    * tableName = "TN_W_FerryCrossing_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_FerryCrossing_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_W_FerryCrossing_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_W_FerryCrossing_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_FerryCrossing#inspireId"
+    * tableName = "TN_W_FerryCrossing_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_FerryCrossing_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_FerryCrossing_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeRoundabout_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeRoundabout#geographicalName"
+    * tableName = "TN_W_TrafficSeparationSchemeRoundabout_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeRoundabout(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_TrafficSeparationSchemeRoundabout_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeRoundabout#inspireId"
+    * tableName = "TN_W_TrafficSeparationSchemeRoundabout_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeRoundabout(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeRoundabout_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_TrafficSeparationSchemeRoundabout_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeRoundabout(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_FerryUse_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_W_FerryUse_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryUse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_W_FerryUse_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_FerryUse#inspireId"
+    * tableName = "TN_W_FerryUse_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_FerryUse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_CEMTClass_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_W_CEMTClass_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_CEMTClass(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_W_CEMTClass_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_CEMTClass#inspireId"
+    * tableName = "TN_W_CEMTClass_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_CEMTClass(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_PortNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_W_PortNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_PortNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_W_PortNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_PortNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_PortNode#geographicalName"
+    * tableName = "TN_W_PortNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_PortNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_PortNode#inspireId"
+    * tableName = "TN_W_PortNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_PortNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_PortNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_W_WaterwayLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterwayLink#startNode_Node"
+    * tableName = "TN_W_WaterwayLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_W_WaterwayLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterwayLink#endNode_Node"
+    * tableName = "TN_W_WaterwayLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterwayLink_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterwayLink#geographicalName"
+    * tableName = "TN_W_WaterwayLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_WaterwayLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterwayLink#inspireId"
+    * tableName = "TN_W_WaterwayLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterwayLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterwayLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_Buoy_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_Buoy#geographicalName"
+    * tableName = "TN_W_Buoy_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_Buoy(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_Buoy_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_Buoy#inspireId"
+    * tableName = "TN_W_Buoy_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_Buoy(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_Buoy_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_Buoy_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_Buoy(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_ConditionOfWaterFacility_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_W_ConditionOfWaterFacility_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_ConditionOfWaterFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_W_ConditionOfWaterFacility_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_ConditionOfWaterFacility#inspireId"
+    * tableName = "TN_W_ConditionOfWaterFacility_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_ConditionOfWaterFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_MarineWaterway_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_W_MarineWaterway_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_MarineWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_MarineWaterway_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_MarineWaterway#geographicalName"
+    * tableName = "TN_W_MarineWaterway_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_MarineWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_MarineWaterway_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_W_MarineWaterway_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_MarineWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_W_MarineWaterway_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_MarineWaterway#inspireId"
+    * tableName = "TN_W_MarineWaterway_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_MarineWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_MarineWaterway_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_MarineWaterway_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_MarineWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_PortArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_PortArea#geographicalName"
+    * tableName = "TN_W_PortArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_PortArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_PortArea#inspireId"
+    * tableName = "TN_W_PortArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_PortArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_PortArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_PortArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterLinkSequence_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterLinkSequence#geographicalName"
+    * tableName = "TN_W_WaterLinkSequence_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_WaterLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation "TN_W_WaterLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterLinkSequence#inspireId"
+    * tableName = "TN_W_WaterLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeLane_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeLane#geographicalName"
+    * tableName = "TN_W_TrafficSeparationSchemeLane_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeLane(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_TrafficSeparationSchemeLane_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeLane#inspireId"
+    * tableName = "TN_W_TrafficSeparationSchemeLane_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeLane(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeLane_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_TrafficSeparationSchemeLane_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeLane(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterwayNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterwayNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterwayNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterwayNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterwayNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterwayNode#geographicalName"
+    * tableName = "TN_W_WaterwayNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_WaterwayNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterwayNode#inspireId"
+    * tableName = "TN_W_WaterwayNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterwayNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterwayNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeSeparator_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeSeparator#geographicalName"
+    * tableName = "TN_W_TrafficSeparationSchemeSeparator_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeSeparator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_TrafficSeparationSchemeSeparator_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeSeparator#inspireId"
+    * tableName = "TN_W_TrafficSeparationSchemeSeparator_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeSeparator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeSeparator_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_TrafficSeparationSchemeSeparator_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeSeparator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeCrossing_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeCrossing#geographicalName"
+    * tableName = "TN_W_TrafficSeparationSchemeCrossing_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_TrafficSeparationSchemeCrossing_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_TrafficSeparationSchemeCrossing#inspireId"
+    * tableName = "TN_W_TrafficSeparationSchemeCrossing_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_TrafficSeparationSchemeCrossing_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_TrafficSeparationSchemeCrossing_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_TrafficSeparationSchemeCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_InlandWaterway_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_W_InlandWaterway_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_InlandWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_InlandWaterway_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_InlandWaterway#geographicalName"
+    * tableName = "TN_W_InlandWaterway_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_InlandWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_InlandWaterway_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_W_InlandWaterway_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_InlandWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_W_InlandWaterway_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_InlandWaterway#inspireId"
+    * tableName = "TN_W_InlandWaterway_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_InlandWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_InlandWaterway_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_InlandWaterway_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_InlandWaterway(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_Beacon_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_Beacon#geographicalName"
+    * tableName = "TN_W_Beacon_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_Beacon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_W_Beacon_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_Beacon#inspireId"
+    * tableName = "TN_W_Beacon_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_Beacon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_Beacon_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_W_Beacon_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_Beacon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_RestrictionForWaterVehicles_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_W_RestrictionForWaterVehicles_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_RestrictionForWaterVehicles(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_W_RestrictionForWaterVehicles_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_RestrictionForWaterVehicles#inspireId"
+    * tableName = "TN_W_RestrictionForWaterVehicles_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_RestrictionForWaterVehicles(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_W_WaterTrafficFlowDirection_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_W_WaterTrafficFlowDirection_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterTrafficFlowDirection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_W_WaterTrafficFlowDirection_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_W_WaterTrafficFlowDirection#inspireId"
+    * tableName = "TN_W_WaterTrafficFlowDirection_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_W_WaterTrafficFlowDirection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container "basicTypes" {
@@ -498,7 +943,7 @@ Container <<applicationSchema>> "Network" {
     <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"

@@ -98,13 +98,13 @@ Container <<applicationSchema>> "MaritimeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_Baseline(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "MU_MaritimeZone_boundary" {
+  Relation <<voidable>> "MU_MaritimeZone_boundary" {
     * profile = "features"
     * tableName = "MU_MaritimeZone_boundary"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES MU_MaritimeBoundary(id)
   }
-  Relation "MU_MaritimeZone_baseline" {
+  Relation <<voidable>> "MU_MaritimeZone_baseline" {
     * profile = "attributes"
     * tableName = "MU_MaritimeZone_baseline"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
@@ -117,7 +117,7 @@ Container <<applicationSchema>> "MaritimeUnits" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "MU_MaritimeZone_name" {
+  Relation <<voidable>> "MU_MaritimeZone_name" {
     * profile = "attributes"
     * tableName = "MU_MaritimeZone_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES MU_MaritimeZone(id)

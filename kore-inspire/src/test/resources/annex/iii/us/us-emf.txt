@@ -8,53 +8,72 @@ Container <<applicationSchema>> "Environmental Management Facilities" {
     The functions considered for the Environmental Facilities Theme fall mainly under the NACE rev. 2 category E "Water supply; Sewerage; Waste management and remediation activities"."
     * identifier = "Environmental Management Facilities::EnvironmentalManagementFacility"
     * tableName = "US_EMF_EnvironmentalManagementFacility"
+    function ACT_CORE_Function <<check [1..-1]>>
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    thematicId BASE2_ThematicIdentifier
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>>, <<reference>> facilityDescription INTEGER
     <<voidable>>, <<array>> types TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> name TEXT
     <<voidable>> status TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    function ACT_CORE_Function [1..*] as ref
-    inspireId BASE_Identifier as ref
-    thematicId BASE2_ThematicIdentifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "US_EMF_EnvironmentalManagementFacilityTypeValue" {
     * identifier = "Environmental Management Facilities::EnvironmentalManagementFacilityTypeValue"
   }
-  Relation "US_EMF_EnvironmentalManagementFacility_parentFacility" {
+  Relation <<voidable>> "US_EMF_EnvironmentalManagementFacility_parentFacility" {
     * profile = "attributes"
     * tableName = "US_EMF_EnvironmentalManagementFacility_parentFacility"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
   }
-  Relation "US_EMF_EnvironmentalManagementFacility_serviceHours" {
+  Relation <<voidable>> "US_EMF_EnvironmentalManagementFacility_serviceHours" {
     * profile = "attributes"
     * tableName = "US_EMF_EnvironmentalManagementFacility_serviceHours"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "US_EMF_EnvironmentalManagementFacility_facilityDescription" {
+  Relation <<voidable>> "US_EMF_EnvironmentalManagementFacility_facilityDescription" {
     * profile = "attributes"
     * relatedReference = "attribute US_EMF_EnvironmentalManagementFacility#facilityDescription"
     * tableName = "US_EMF_EnvironmentalManagementFacility_facilityDescription"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_ActivityComplexDescription(id)
   }
-  Relation "US_EMF_EnvironmentalManagementFacility_physicalCapacity" {
+  Relation <<voidable>> "US_EMF_EnvironmentalManagementFacility_physicalCapacity" {
     * profile = "attributes"
     * tableName = "US_EMF_EnvironmentalManagementFacility_physicalCapacity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Capacity(id)
   }
-  Relation "US_EMF_EnvironmentalManagementFacility_permission" {
+  Relation <<voidable>> "US_EMF_EnvironmentalManagementFacility_permission" {
     * profile = "attributes"
     * tableName = "US_EMF_EnvironmentalManagementFacility_permission"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Permission(id)
+  }
+  Relation "US_EMF_EnvironmentalManagementFacility_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_EMF_EnvironmentalManagementFacility#inspireId"
+    * tableName = "US_EMF_EnvironmentalManagementFacility_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_EMF_EnvironmentalManagementFacility_thematicId" {
+    * profile = "attributes"
+    * tableName = "US_EMF_EnvironmentalManagementFacility_thematicId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_ThematicIdentifier(id)
+  }
+  Relation "US_EMF_EnvironmentalManagementFacility_function" {
+    * profile = "attributes"
+    * tableName = "US_EMF_EnvironmentalManagementFacility_function"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_EMF_EnvironmentalManagementFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Function(id)
   }
 }
 Container <<applicationSchema>> "Base Types" {
@@ -158,44 +177,44 @@ Container <<applicationSchema>> "Base Types 2" {
     locale TEXT NOT NULL CHECK(BASE2_Locale)
     value TEXT NOT NULL
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "BASE2_Contact_contactInstructions" {
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_contactInstructions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_Contact_hoursOfService" {
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_hoursOfService"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_individualName" {
+  Relation <<voidable>> "BASE2_RelatedParty_individualName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_individualName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_organisationName" {
+  Relation <<voidable>> "BASE2_RelatedParty_organisationName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_organisationName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_positionName" {
+  Relation <<voidable>> "BASE2_RelatedParty_positionName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_positionName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_contact" {
+  Relation <<voidable>> "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
     * tableName = "BASE2_RelatedParty_contact"
@@ -269,27 +288,27 @@ Container <<applicationSchema>> "Activity Complex" {
   Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
     * identifier = "Activity Complex::InputOutputValue"
   }
-  Relation "ACT_CORE_ActivityComplexDescription_description" {
+  Relation <<voidable>> "ACT_CORE_ActivityComplexDescription_description" {
     * profile = "attributes"
     * tableName = "ACT_CORE_ActivityComplexDescription_description"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_ActivityComplexDescription(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "ACT_CORE_ActivityComplexDescription_address" {
+  Relation <<voidable>> "ACT_CORE_ActivityComplexDescription_address" {
     * profile = "attributes"
     * relatedReference = "attribute ACT_CORE_ActivityComplexDescription#address"
     * tableName = "ACT_CORE_ActivityComplexDescription_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_ActivityComplexDescription(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "ACT_CORE_ActivityComplexDescription_contact" {
+  Relation <<voidable>> "ACT_CORE_ActivityComplexDescription_contact" {
     * profile = "attributes"
     * relatedReference = "attribute ACT_CORE_ActivityComplexDescription#contact"
     * tableName = "ACT_CORE_ActivityComplexDescription_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_ActivityComplexDescription(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "ACT_CORE_ActivityComplexDescription_relatedParty" {
+  Relation <<voidable>> "ACT_CORE_ActivityComplexDescription_relatedParty" {
     * profile = "attributes"
     * tableName = "ACT_CORE_ActivityComplexDescription_relatedParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_ActivityComplexDescription(id)
@@ -307,7 +326,7 @@ Container <<applicationSchema>> "Activity Complex" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Capacity(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_InputOutputAmount(id)
   }
-  Relation "ACT_CORE_Capacity_description" {
+  Relation <<voidable>> "ACT_CORE_Capacity_description" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Capacity_description"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Capacity(id)
@@ -319,31 +338,31 @@ Container <<applicationSchema>> "Activity Complex" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_ThematicIdentifier(id)
   }
-  Relation "ACT_CORE_Permission_relatedParty" {
+  Relation <<voidable>> "ACT_CORE_Permission_relatedParty" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Permission_relatedParty"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
   }
-  Relation "ACT_CORE_Permission_description" {
+  Relation <<voidable>> "ACT_CORE_Permission_description" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Permission_description"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "ACT_CORE_Permission_permittedFunction" {
+  Relation <<voidable>> "ACT_CORE_Permission_permittedFunction" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Permission_permittedFunction"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Function(id)
   }
-  Relation "ACT_CORE_Permission_permittedCapacity" {
+  Relation <<voidable>> "ACT_CORE_Permission_permittedCapacity" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Permission_permittedCapacity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Permission(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Capacity(id)
   }
-  Relation "ACT_CORE_Function_description" {
+  Relation <<voidable>> "ACT_CORE_Function_description" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Function_description"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)
@@ -377,25 +396,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"

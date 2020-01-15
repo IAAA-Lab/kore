@@ -10,19 +10,19 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     conID = "EAID_5AAEC28B_7F66_4f88_8EB5_20A9C2F133DD"
   }
   Abstract Class <<featureType>> "AbstractMonitoringObject" {
-    geometry GEOMETRY
-    <<voidable>>, <<array>> names TEXT
-    <<voidable>>, <<array>> onlineResources TEXT
-    <<voidable>>, <<array>> purposes TEXT
-    <<voidable>> additionalDescription TEXT
-    <<array>> mediaMonitoreds TEXT NOT NULL
+    geometry : GEOMETRY [0..1]
+    <<voidable>>, <<array>> names : TEXT [0..1]
+    <<voidable>>, <<array>> onlineResources : TEXT [0..1]
+    <<voidable>>, <<array>> purposes : TEXT [0..1]
+    <<voidable>> additionalDescription : TEXT [0..1]
+    <<array>> mediaMonitoreds : TEXT
     inspireId BASE_Identifier as ref
-    <<voidable>> broader AbstractMonitoringObject [0..1] as ref
+    <<voidable>> broader_AbstractMonitoringObject BASE_Identifier [0..1] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
-    <<voidable>> narrower AbstractMonitoringObject [0..*] as ref
+    <<voidable>> narrower_AbstractMonitoringObject BASE_Identifier [0..*] as ref
     <<voidable>> responsibleParty BASE2_RelatedParty [0..*] as ref
-    <<voidable>> supersededBy AbstractMonitoringObject [0..*] as ref
-    <<voidable>> supersedes AbstractMonitoringObject [0..*] as ref
+    <<voidable>> supersededBy_AbstractMonitoringObject BASE_Identifier [0..*] as ref
+    <<voidable>> supersedes_AbstractMonitoringObject BASE_Identifier [0..*] as ref
   }
   Feature <<featureType>> "EF_EnvironmentalMonitoringFacility" {
     * description = "A georeferenced object directly collecting or processing data about objects whose properties (e.g. physical, chemical, biological or other aspects of environmental conditions) are repeatedly observed or measured. An environmental monitoring facility can also host other environmental monitoring facilities.
@@ -36,26 +36,25 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     * tableName = "EF_EnvironmentalMonitoringFacility"
     geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> broader_AbstractMonitoringObject INTEGER
     <<voidable>>, <<array>> names TEXT
     <<voidable>>, <<array>> onlineResources TEXT
     <<voidable>>, <<array>> purposes TEXT
     <<voidable>>, <<array>> resultAcquisitionSources TEXT
     <<voidable>> additionalDescription TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> measurementRegime TEXT CHECK(EF_MeasurementRegimeValue)
     <<array>> mediaMonitoreds TEXT NOT NULL
     <<voidable>> mobile BOOLEAN
     <<voidable>> representativePoint POINT
     <<voidable>> specialisedEMFType TEXT CHECK(EF_SpecialisedEMFTypeValue)
-    inspireId BASE_Identifier as ref
-    <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> hasObservation_OM_Observation BASE_Identifier [0..*] as ref
-    <<voidable>> involvedIn EF_EnvironmentalMonitoringActivity [0..*] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
-    <<voidable>> narrower AbstractMonitoringObject [0..*] as ref
+    <<voidable>> narrower_AbstractMonitoringObject BASE_Identifier [0..*] as ref
     <<voidable>> reportedTo EF_ReportToLegalAct [0..*] as ref
     <<voidable>> responsibleParty BASE2_RelatedParty [0..*] as ref
-    <<voidable>> supersededBy AbstractMonitoringObject [0..*] as ref
-    <<voidable>> supersedes AbstractMonitoringObject [0..*] as ref
+    <<voidable>> supersededBy_AbstractMonitoringObject BASE_Identifier [0..*] as ref
+    <<voidable>> supersedes_AbstractMonitoringObject BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "EF_MeasurementRegimeValue" {
     * identifier = "EnvironmentalMonitoringFacilities::MeasurementRegimeValue"
@@ -75,22 +74,21 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     propertyType = "{F655FA4D-B711-4fd1-A13E-56CA2E60A726}"
   }
   Abstract Class <<featureType>> "AbstractMonitoringFeature" {
-    geometry GEOMETRY
-    <<voidable>>, <<array>> names TEXT
-    <<voidable>>, <<array>> onlineResources TEXT
-    <<voidable>>, <<array>> purposes TEXT
-    <<voidable>> additionalDescription TEXT
-    <<array>> mediaMonitoreds TEXT NOT NULL
+    geometry : GEOMETRY [0..1]
+    <<voidable>>, <<array>> names : TEXT [0..1]
+    <<voidable>>, <<array>> onlineResources : TEXT [0..1]
+    <<voidable>>, <<array>> purposes : TEXT [0..1]
+    <<voidable>> additionalDescription : TEXT [0..1]
+    <<array>> mediaMonitoreds : TEXT
     inspireId BASE_Identifier as ref
-    <<voidable>> broader AbstractMonitoringObject [0..1] as ref
+    <<voidable>> broader_AbstractMonitoringObject BASE_Identifier [0..1] as ref
     <<voidable>> hasObservation_OM_Observation BASE_Identifier [0..*] as ref
-    <<voidable>> involvedIn EF_EnvironmentalMonitoringActivity [0..*] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
-    <<voidable>> narrower AbstractMonitoringObject [0..*] as ref
+    <<voidable>> narrower_AbstractMonitoringObject BASE_Identifier [0..*] as ref
     <<voidable>> reportedTo EF_ReportToLegalAct [0..*] as ref
     <<voidable>> responsibleParty BASE2_RelatedParty [0..*] as ref
-    <<voidable>> supersededBy AbstractMonitoringObject [0..*] as ref
-    <<voidable>> supersedes AbstractMonitoringObject [0..*] as ref
+    <<voidable>> supersededBy_AbstractMonitoringObject BASE_Identifier [0..*] as ref
+    <<voidable>> supersedes_AbstractMonitoringObject BASE_Identifier [0..*] as ref
   }
   Attributes <<dataType>> "EF_ReportToLegalAct" {
     * description = "Information on the involvement of an AbstractMonitoringFeature in reporting. The information is specific per submitted reporting envelope and not per obligation/agreement.
@@ -118,18 +116,18 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     * tableName = "EF_EnvironmentalMonitoringProgramme"
     geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> broader_AbstractMonitoringObject INTEGER
     <<voidable>>, <<array>> names TEXT
     <<voidable>>, <<array>> onlineResources TEXT
     <<voidable>>, <<array>> purposes TEXT
     <<voidable>> additionalDescription TEXT
+    <<reference>> inspireId INTEGER
     <<array>> mediaMonitoreds TEXT NOT NULL
-    inspireId BASE_Identifier as ref
-    <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
-    <<voidable>> narrower AbstractMonitoringObject [0..*] as ref
+    <<voidable>> narrower_AbstractMonitoringObject BASE_Identifier [0..*] as ref
     <<voidable>> responsibleParty BASE2_RelatedParty [0..*] as ref
-    <<voidable>> supersededBy AbstractMonitoringObject [0..*] as ref
-    <<voidable>> supersedes AbstractMonitoringObject [0..*] as ref
+    <<voidable>> supersededBy_AbstractMonitoringObject BASE_Identifier [0..*] as ref
+    <<voidable>> supersedes_AbstractMonitoringObject BASE_Identifier [0..*] as ref
   }
   Feature <<featureType>> "EF_EnvironmentalMonitoringActivity" {
     * description = "Specific set of AbstractMonitoringFeatures used for a given domain in a coherent and concise timeframe, area and purpose. Usually the information collected is treated as one time step in a long term monitoring programme. It is a concrete realisation of a given EnvironmentalMonitoringProgramme.
@@ -143,7 +141,6 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     <<voidable>> activityConditions TEXT
     <<voidable>> boundingBox POLYGON
     <<reference>> inspireId INTEGER
-    <<voidable>> uses AbstractMonitoringFeature [0..*] as ref
   }
   Constraint Enum <<codeList>> "EF_ResultNatureValue" {
     * identifier = "EnvironmentalMonitoringFacilities::ResultNatureValue"
@@ -177,48 +174,171 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     * tableName = "EF_EnvironmentalMonitoringNetwork"
     geometry GEOMETRY
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> broader_AbstractMonitoringObject INTEGER
     <<voidable>>, <<array>> names TEXT
     <<voidable>>, <<array>> onlineResources TEXT
     <<voidable>>, <<array>> purposes TEXT
     <<voidable>> additionalDescription TEXT
+    <<reference>> inspireId INTEGER
     <<array>> mediaMonitoreds TEXT NOT NULL
     <<voidable>> organisationLevel TEXT CHECK(BASE2_LegislationLevelValue)
-    inspireId BASE_Identifier as ref
-    <<voidable>> broader AbstractMonitoringObject [0..1] as ref
     <<voidable>> hasObservation_OM_Observation BASE_Identifier [0..*] as ref
-    <<voidable>> involvedIn EF_EnvironmentalMonitoringActivity [0..*] as ref
     <<voidable>> legalBackground BASE2_SimpleCitation [0..*] as ref
-    <<voidable>> narrower AbstractMonitoringObject [0..*] as ref
+    <<voidable>> narrower_AbstractMonitoringObject BASE_Identifier [0..*] as ref
     <<voidable>> reportedTo EF_ReportToLegalAct [0..*] as ref
     <<voidable>> responsibleParty BASE2_RelatedParty [0..*] as ref
-    <<voidable>> supersededBy AbstractMonitoringObject [0..*] as ref
-    <<voidable>> supersedes AbstractMonitoringObject [0..*] as ref
+    <<voidable>> supersededBy_AbstractMonitoringObject BASE_Identifier [0..*] as ref
+    <<voidable>> supersedes_AbstractMonitoringObject BASE_Identifier [0..*] as ref
   }
-  Relation "EF_EnvironmentalMonitoringFacility_operationalActivityPeriod" {
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_operationalActivityPeriod" {
     * profile = "attributes"
     * tableName = "EF_EnvironmentalMonitoringFacility_operationalActivityPeriod"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_OperationalActivityPeriod(id)
   }
-  Relation "EF_EnvironmentalMonitoringFacility_belongsTo" {
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_belongsTo" {
     * profile = "attributes"
     * tableName = "EF_EnvironmentalMonitoringFacility_belongsTo"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
   }
-  Relation "EF_EnvironmentalMonitoringFacility_relatedTo" {
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_relatedTo" {
     * profile = "features"
     * tableName = "EF_EnvironmentalMonitoringFacility_relatedTo"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
   }
-  Relation "EF_EnvironmentalMonitoringProgramme_triggers" {
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_involvedIn" {
+    * profile = "features"
+    * tableName = "EF_EnvironmentalMonitoringFacility_involvedIn"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_supersedes_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_supersedes_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_supersededBy_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_supersededBy_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_broader_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * relatedReference = "attribute EF_EnvironmentalMonitoringFacility#broader_AbstractMonitoringObject"
+    * tableName = "EF_EnvironmentalMonitoringFacility_broader_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_narrower_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_narrower_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_observingCapability" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_observingCapability"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ObservingCapability(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_reportedTo" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_reportedTo"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ReportToLegalAct(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_hasObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_hasObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "EF_EnvironmentalMonitoringFacility_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute EF_EnvironmentalMonitoringFacility#inspireId"
+    * tableName = "EF_EnvironmentalMonitoringFacility_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_legalBackground" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_legalBackground"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringFacility_responsibleParty" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringFacility_responsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_triggers" {
     * profile = "features"
     * tableName = "EF_EnvironmentalMonitoringProgramme_triggers"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
   }
-  Relation "EF_EnvironmentalMonitoringActivity_responsibleParty" {
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_supersedes_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_supersedes_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_supersededBy_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_supersededBy_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_broader_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * relatedReference = "attribute EF_EnvironmentalMonitoringProgramme#broader_AbstractMonitoringObject"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_broader_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_narrower_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_narrower_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_observingCapability" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_observingCapability"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ObservingCapability(id)
+  }
+  Relation "EF_EnvironmentalMonitoringProgramme_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute EF_EnvironmentalMonitoringProgramme#inspireId"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_legalBackground" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_legalBackground"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringProgramme_responsibleParty" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringProgramme_responsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringProgramme(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringActivity_uses_AbstractMonitoringFeature" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringActivity_uses_AbstractMonitoringFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringActivity_responsibleParty" {
     * profile = "attributes"
     * relatedReference = "attribute EF_EnvironmentalMonitoringActivity#responsibleParty"
     * tableName = "EF_EnvironmentalMonitoringActivity_responsibleParty"
@@ -239,12 +359,80 @@ Container <<applicationSchema>> "EnvironmentalMonitoringFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_ObservingCapability(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "EF_ObservingCapability_featureOfInterest_GFI_Feature" {
+  Relation <<voidable>> "EF_ObservingCapability_featureOfInterest_GFI_Feature" {
     * profile = "attributes"
     * relatedReference = "attribute EF_ObservingCapability#featureOfInterest_GFI_Feature"
     * tableName = "EF_ObservingCapability_featureOfInterest_GFI_Feature"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_ObservingCapability(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_involvedIn" {
+    * profile = "features"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_involvedIn"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_EnvironmentalMonitoringActivity(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_supersedes_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_supersedes_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_supersededBy_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_supersededBy_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_broader_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * relatedReference = "attribute EF_EnvironmentalMonitoringNetwork#broader_AbstractMonitoringObject"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_broader_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_narrower_AbstractMonitoringObject" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_narrower_AbstractMonitoringObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_observingCapability" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_observingCapability"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ObservingCapability(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_reportedTo" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_reportedTo"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES EF_ReportToLegalAct(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_hasObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_hasObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "EF_EnvironmentalMonitoringNetwork_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute EF_EnvironmentalMonitoringNetwork#inspireId"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_legalBackground" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_legalBackground"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation <<voidable>> "EF_EnvironmentalMonitoringNetwork_responsibleParty" {
+    * profile = "attributes"
+    * tableName = "EF_EnvironmentalMonitoringNetwork_responsibleParty"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EF_EnvironmentalMonitoringNetwork(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
   }
 }
 Container <<applicationSchema>> "Base Types 2" {
@@ -307,45 +495,45 @@ Container <<applicationSchema>> "Base Types 2" {
     locale TEXT NOT NULL CHECK(BASE2_Locale)
     value TEXT NOT NULL
   }
-  Relation "BASE2_RelatedParty_individualName" {
+  Relation <<voidable>> "BASE2_RelatedParty_individualName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_individualName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_organisationName" {
+  Relation <<voidable>> "BASE2_RelatedParty_organisationName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_organisationName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_positionName" {
+  Relation <<voidable>> "BASE2_RelatedParty_positionName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_positionName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_contact" {
+  Relation <<voidable>> "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
     * tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "BASE2_Contact_contactInstructions" {
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_contactInstructions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_Contact_hoursOfService" {
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_hoursOfService"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
@@ -379,25 +567,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"

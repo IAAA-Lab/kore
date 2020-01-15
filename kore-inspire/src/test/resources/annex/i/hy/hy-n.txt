@@ -6,15 +6,15 @@ Container <<applicationSchema>> "Hydro - Network" {
     NOTE The crossing may legitimately break a no-intersection quality rule."
     * identifier = "Hydro - Network::WatercourseSeparatedCrossing"
     * tableName = "HY_N_WatercourseSeparatedCrossing"
+    element_Link BASE_Identifier <<check [2..-1]>>
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    element_Link BASE_Identifier [2..*] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
   }
   Constraint Enum <<codeList>> "HY_N_HydroNodeCategoryValue" {
     * identifier = "Hydro - Network::HydroNodeCategoryValue"
@@ -33,16 +33,16 @@ Container <<applicationSchema>> "Hydro - Network" {
     * tableName = "HY_N_HydroNode"
     geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
     <<voidable>> hydroNodeCategory TEXT CHECK(HY_N_HydroNodeCategoryValue)
-    inspireId BASE_Identifier [0..1] as ref
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
-    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> spokeEnd_Link BASE_Identifier
+    <<voidable>> spokeStart_Link BASE_Identifier
   }
   Attributes <<featureType>> "HY_N_WatercourseLink" {
     * description = "A segment of a watercourse within a hydrographic network.
@@ -63,32 +63,195 @@ Container <<applicationSchema>> "Hydro - Network" {
     centrelineGeometry CURVE NOT NULL
     fictitious BOOLEAN NOT NULL DEFAULT 'false'
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> endNode_Node INTEGER
     <<voidable>> flowDirection TEXT CHECK(NET_LinkDirectionValue)
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> length TEXT
     <<voidable>> length_uom TEXT CHECK(GML_UomIdentifier)
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<reference>> startNode_Node INTEGER
   }
   Attributes <<featureType>> "HY_N_WatercourseLinkSequence" {
     * description = "A sequence of watercourse links representing a non-branching path through a hydrographic network."
     * identifier = "Hydro - Network::WatercourseLinkSequence"
     * tableName = "HY_N_WatercourseLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
+    relatedHydroObject_HydroObject BASE_Identifier
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+  }
+  Relation <<voidable>> "HY_N_WatercourseSeparatedCrossing_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseSeparatedCrossing_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseSeparatedCrossing_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseSeparatedCrossing_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_N_WatercourseSeparatedCrossing_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseSeparatedCrossing_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_WatercourseSeparatedCrossing_element_Link" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseSeparatedCrossing_element_Link"
+    constraint = "ordered"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_WatercourseSeparatedCrossing_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_N_WatercourseSeparatedCrossing#inspireId"
+    * tableName = "HY_N_WatercourseSeparatedCrossing_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseSeparatedCrossing_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseSeparatedCrossing_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_HydroNode_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_N_HydroNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_N_HydroNode_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_N_HydroNode_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_N_HydroNode_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_N_HydroNode_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_HydroNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "HY_N_HydroNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_HydroNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "HY_N_HydroNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_HydroNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_N_HydroNode#inspireId"
+    * tableName = "HY_N_HydroNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_HydroNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "HY_N_HydroNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_HydroNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseLink_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseLink_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLink_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_N_WatercourseLink_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLink_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_WatercourseLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_N_WatercourseLink#startNode_Node"
+    * tableName = "HY_N_WatercourseLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_WatercourseLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_N_WatercourseLink#endNode_Node"
+    * tableName = "HY_N_WatercourseLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_WatercourseLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_N_WatercourseLink#inspireId"
+    * tableName = "HY_N_WatercourseLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseLinkSequence_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLinkSequence_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseLinkSequence_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLinkSequence_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_N_WatercourseLinkSequence_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLinkSequence_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_N_WatercourseLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation "HY_N_WatercourseLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_N_WatercourseLinkSequence#inspireId"
+    * tableName = "HY_N_WatercourseLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_N_WatercourseLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "HY_N_WatercourseLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_N_WatercourseLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container "basicTypes" {
@@ -106,10 +269,8 @@ Container <<applicationSchema>> "Base Types 2" {
     DocumentCitation
     LegislationCitation
   }
-  Attributes <<dataType>> "BASE2_SimpleCitation" {
-    * tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "SimpleCitation" {
     date DATE
-    id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
     link TEXT
     name TEXT NOT NULL
@@ -204,8 +365,8 @@ Container <<applicationSchema>> "Hydro - base" {
 }
 Package "Location referencing mechanisms" {
   Class "NodeLocationReference" {
-    node_Node BASE_Identifier as ref
-    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
+    node_Node : BASE_Identifier
+    <<voidable>> networkReference : SimpleCitation [0..1]
   }
 }
 Package "EA Model" {

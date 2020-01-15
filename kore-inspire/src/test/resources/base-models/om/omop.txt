@@ -64,7 +64,7 @@ Container <<applicationSchema>> "Observable Properties" {
   Abstract GF_PropertyType <<type>> "AbstractObservableProperty" {
     xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
     "
-    <<array>> labels TEXT
+    <<array>> labels : TEXT [0..1]
   }
   Attributes <<dataType>> "OMOP_RangeBounds" {
     * description = "The start and end bounding values of a numerical range (e.g. start &gt;=50, end &lt;=99)"
@@ -165,6 +165,7 @@ Container <<applicationSchema>> "Observable Properties" {
   Relation "OMOP_ObservableProperty_statisticalMeasure" {
     * profile = "attributes"
     * tableName = "OMOP_ObservableProperty_statisticalMeasure"
+    sequenceNumber = "4"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OMOP_ObservableProperty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES OMOP_StatisticalMeasure(id)
   }

@@ -326,6 +326,23 @@ Container "Citation and responsible party information" {
     * profile = "attributes"
     * relatedReference = "attribute GMD_CI_ResponsibleParty#contactInfo_phone"
     * tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
   }
@@ -333,6 +350,23 @@ Container "Citation and responsible party information" {
     * profile = "attributes"
     * relatedReference = "attribute GMD_CI_ResponsibleParty#contactInfo_address"
     * tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
@@ -462,14 +496,17 @@ Package "Metadata entity set information" {
     <<array>> hierarchyLevelNames : TEXT [0..1]
     <<array>> hierarchyLevels : TEXT [0..1]
     contact GMD_CI_ResponsibleParty [1..*] as ref
+    contentInfo_MD_ContentInformation BASE_Identifier [0..*] as ref
     dataQualityInfo DQ_DataQuality [0..*] as ref
     describes DS_DataSet [0..*] as ref
     describes CL_DataSet [0..*] as ref
     featureAttribute GF_AttributeType [0..*] as ref
     featureType GF_FeatureType [0..*] as ref
-    locale GMD_PT_Locale [0..*] as ref
+    identificationInfo_MD_Identification BASE_Identifier [1..*] as ref
+    locale PT_Locale [0..*] as ref
     propertyType GF_PropertyType [0..*] as ref
-    series DS_Aggregate [0..*] as ref
+    series_DS_Aggregate BASE_Identifier [0..*] as ref
+    spatialRepresentationInfo_MD_SpatialRepresentation BASE_Identifier [0..*] as ref
   }
 }
 Package "EA Model" {
@@ -535,43 +572,19 @@ Package "General Feature Model" {
 Package "Metadata application information" {
   Class "DS_DataSet" {
     has MD_Metadata [1..*] as ref
-    partOf DS_Aggregate [0..*] as ref
-  }
-  Abstract Class "DS_Aggregate" {
-    RationalRose$Java:ConstructorIs = "public"
-    RationalRose$Java:Final = "False"
-    RationalRose$Java:GenerateDefaultConstructor = "True"
-    RationalRose$Java:GenerateFinalizer = "False"
-    RationalRose$Java:GenerateInstanceInitializer = "False"
-    RationalRose$Java:GenerateStaticInitializer = "False"
-    RationalRose$Oracle8:CollectionOfREFS = "False"
-    RationalRose$Visual Basic:CollectionClass = "Collection"
-    RationalRose$Visual Basic:Creatable = "(221)"
-    RationalRose$Visual Basic:GenerateInitialization = "False"
-    RationalRose$Visual Basic:GenerateTermination = "False"
-    RationalRose$Visual Basic:OptionBase = "(none)"
-    RationalRose$Visual Basic:OptionCompare = "(none)"
-    RationalRose$Visual Basic:OptionExplicit = "True"
-    composedOf DS_DataSet [1..*] as ref
-    seriesMetadata MD_Metadata [1..*] as ref
-    subset DS_Aggregate [0..*] as ref
-    superset DS_Aggregate [0..*] as ref
+    partOf_DS_Aggregate BASE_Identifier [0..*] as ref
   }
 }
 Package "ISO 19144-1 Classification Systems" {
   Class "CL_DataSet" {
     has MD_Metadata [1..*] as ref
-    partOf DS_Aggregate [0..*] as ref
+    partOf_DS_Aggregate BASE_Identifier [0..*] as ref
   }
 }
-Container "Cultural and linguistic adapdability" {
-  * fileName = "Cultural and linguistic adapdability"
-  Attributes <<dataType>> "GMD_PT_Locale" {
-    * identifier = "Cultural and linguistic adapdability::PT_Locale"
-    * tableName = "GMD_PT_Locale"
-    characterSetCode TEXT CHECK(GMD_MD_CharacterSetCode)
-    country TEXT CHECK(GMD_CountryCode)
-    id INTEGER NOT NULL PRIMARY KEY
-    languageCode TEXT NOT NULL CHECK(GMD_LanguageCode)
+Package "Cultural and linguistic adapdability" {
+  Class "PT_Locale" {
+    characterSetCode : TEXT [0..1]
+    country : TEXT [0..1]
+    languageCode : TEXT
   }
 }

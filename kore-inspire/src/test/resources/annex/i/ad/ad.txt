@@ -7,12 +7,12 @@ Container <<applicationSchema>> "Addresses" {
     fromFeature
   }
   Abstract Class <<featureType>> "AddressComponent" {
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> alternativeIdentifier TEXT
-    <<voidable>> status TEXT CHECK(AD_StatusValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> alternativeIdentifier : TEXT [0..1]
+    <<voidable>> status : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "AD_LocatorLevelValue" {
@@ -32,10 +32,10 @@ Container <<applicationSchema>> "Addresses" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> alternativeIdentifier TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> status TEXT CHECK(AD_StatusValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "AD_ThoroughfareName" {
     * description = "An address component which represents the name of a passage or way through from one location to another.
@@ -49,10 +49,10 @@ Container <<applicationSchema>> "Addresses" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> alternativeIdentifier TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> status TEXT CHECK(AD_StatusValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "AD_LocatorDesignatorTypeValue" {
     * identifier = "Addresses::LocatorDesignatorTypeValue"
@@ -168,6 +168,7 @@ Container <<applicationSchema>> "Addresses" {
     * tableName = "AD_AddressLocator"
     id INTEGER NOT NULL PRIMARY KEY
     level TEXT NOT NULL CHECK(AD_LocatorLevelValue)
+    <<voidable>>, <<reference>> withinScopeOf_AddressComponent INTEGER
   }
   Attributes <<featureType>> "AD_AddressAreaName" {
     * description = "An address component which represents the name of a geographic area or locality that groups a number of addressable objects for addressing purposes, without being an administrative unit.
@@ -188,10 +189,10 @@ Container <<applicationSchema>> "Addresses" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>>, <<reference>> namedPlace_NamedPlace INTEGER
     <<voidable>> alternativeIdentifier TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> status TEXT CHECK(AD_StatusValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
   }
   Attributes <<featureType>> "AD_Address" {
     * description = "An identification of the fixed location of property by means of a structured composition of geographic names and identifiers.
@@ -258,10 +259,10 @@ Container <<applicationSchema>> "Addresses" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> alternativeIdentifier TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> status TEXT CHECK(AD_StatusValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
   }
   Attributes <<dataType>> "AD_AddressRepresentation" {
     * description = "Representation of an address spatial object for use in external application schemas that need to include the basic, address information in a readable way.
@@ -286,17 +287,36 @@ Container <<applicationSchema>> "Addresses" {
     <<voidable>> method TEXT CHECK(AD_GeometryMethodValue)
     <<voidable>> specification TEXT CHECK(AD_GeometrySpecificationValue)
   }
+  Relation <<voidable>> "AD_AdminUnitName_situatedWithin_AddressComponent" {
+    * profile = "attributes"
+    * tableName = "AD_AdminUnitName_situatedWithin_AddressComponent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "AD_AdminUnitName_name" {
     * profile = "attributes"
     * tableName = "AD_AdminUnitName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AdminUnitName_adminUnit_AdministrativeUnit" {
+  Relation <<voidable>> "AD_AdminUnitName_adminUnit_AdministrativeUnit" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AdminUnitName#adminUnit_AdministrativeUnit"
     * tableName = "AD_AdminUnitName_adminUnit_AdministrativeUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AD_AdminUnitName_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute AD_AdminUnitName#inspireId"
+    * tableName = "AD_AdminUnitName_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AdminUnitName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "AD_ThoroughfareName_situatedWithin_AddressComponent" {
+    * profile = "attributes"
+    * tableName = "AD_ThoroughfareName_situatedWithin_AddressComponent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "AD_ThoroughfareName_name" {
@@ -305,9 +325,16 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_ThoroughfareName_transportLink_TransportLink" {
+  Relation <<voidable>> "AD_ThoroughfareName_transportLink_TransportLink" {
     * profile = "attributes"
     * tableName = "AD_ThoroughfareName_transportLink_TransportLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AD_ThoroughfareName_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute AD_ThoroughfareName#inspireId"
+    * tableName = "AD_ThoroughfareName_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
@@ -317,11 +344,18 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_LocatorName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_ThoroughfareNameValue_nameParts" {
+  Relation <<voidable>> "AD_ThoroughfareNameValue_nameParts" {
     * profile = "attributes"
     * tableName = "AD_ThoroughfareNameValue_nameParts"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_ThoroughfareNameValue(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_PartOfName(id)
+  }
+  Relation <<voidable>> "AD_AddressLocator_withinScopeOf_AddressComponent" {
+    * profile = "attributes"
+    * relatedReference = "attribute AD_AddressLocator#withinScopeOf_AddressComponent"
+    * tableName = "AD_AddressLocator_withinScopeOf_AddressComponent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "AD_AddressLocator_designator" {
     * profile = "attributes"
@@ -335,20 +369,39 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressLocator(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_LocatorName(id)
   }
+  Relation <<voidable>> "AD_AddressAreaName_situatedWithin_AddressComponent" {
+    * profile = "attributes"
+    * tableName = "AD_AddressAreaName_situatedWithin_AddressComponent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "AD_AddressAreaName_name" {
     * profile = "attributes"
     * tableName = "AD_AddressAreaName_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressAreaName_namedPlace_NamedPlace" {
+  Relation <<voidable>> "AD_AddressAreaName_namedPlace_NamedPlace" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressAreaName#namedPlace_NamedPlace"
     * tableName = "AD_AddressAreaName_namedPlace_NamedPlace"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AD_Address_parentAddress" {
+  Relation "AD_AddressAreaName_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute AD_AddressAreaName#inspireId"
+    * tableName = "AD_AddressAreaName_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressAreaName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "AD_Address_component_AddressComponent" {
+    * profile = "attributes"
+    * tableName = "AD_Address_component_AddressComponent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "AD_Address_parentAddress" {
     * profile = "attributes"
     * relatedReference = "attribute AD_Address#parentAddress"
     * tableName = "AD_Address_parentAddress"
@@ -368,13 +421,13 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressLocator(id)
   }
-  Relation "AD_Address_parcel_CadastralParcel" {
+  Relation <<voidable>> "AD_Address_parcel_CadastralParcel" {
     * profile = "attributes"
     * tableName = "AD_Address_parcel_CadastralParcel"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "AD_Address_building_AbstractConstruction" {
+  Relation <<voidable>> "AD_Address_building_AbstractConstruction" {
     * profile = "attributes"
     * tableName = "AD_Address_building_AbstractConstruction"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
@@ -386,13 +439,26 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_Address(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_GeographicPosition(id)
   }
+  Relation <<voidable>> "AD_PostalDescriptor_situatedWithin_AddressComponent" {
+    * profile = "attributes"
+    * tableName = "AD_PostalDescriptor_situatedWithin_AddressComponent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_PostalDescriptor(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "AD_PostalDescriptor_postName" {
     * profile = "attributes"
     * tableName = "AD_PostalDescriptor_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_PostalDescriptor(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature" {
+  Relation "AD_PostalDescriptor_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute AD_PostalDescriptor#inspireId"
+    * tableName = "AD_PostalDescriptor_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_PostalDescriptor(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature"
     * tableName = "AD_AddressRepresentation_addressFeature"
@@ -411,19 +477,19 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)

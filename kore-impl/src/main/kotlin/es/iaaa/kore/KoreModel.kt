@@ -26,6 +26,10 @@ fun KoreAnnotation.copy(modelElement: KoreModelElement): KoreAnnotation =
 fun KoreAttribute.copy(target: KoreClass? = this.containingClass): KoreAttribute =
     koreAttribute(copyFromTo(this, target))
 
+fun KoreReference.copy(target: KoreClass? = this.containingClass): KoreReference =
+    koreReference(copyFromTo(this, target))
+
+
 fun koreClass(block: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply(block)
 
 fun koreClass(meta: KoreClass, block: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {

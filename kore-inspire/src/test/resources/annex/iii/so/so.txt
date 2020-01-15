@@ -54,11 +54,11 @@ Container <<applicationSchema>> "Soil" {
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
     <<voidable>>, <<array>> layerRockTypes TEXT
+    <<reference>> inspireId INTEGER
+    <<reference>> isPartOf_SoilProfile INTEGER
     <<voidable>> layerGenesisEnvironment TEXT CHECK(GE_EventEnvironmentValue)
     <<voidable>> layerGenesisProcess TEXT CHECK(GE_EventProcessValue)
     <<voidable>> layerGenesisProcessState TEXT CHECK(SO_LayerGenesisProcessStateValue)
-    inspireId BASE_Identifier [0..1] as ref
-    isPartOf SoilProfile as ref
     <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
     <<voidable>> profileElementObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
@@ -72,15 +72,15 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::ObservedSoilProfile"
     * tableName = "SO_ObservedSoilProfile"
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> WRBSoilName INTEGER
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> localIdentifier TEXT
     <<reference>> location INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
-    <<voidable>> isDescribedBy ProfileElement [0..*] as ref
+    <<voidable>> isDescribedBy_ProfileElement BASE_Identifier [0..*] as ref
     <<voidable>> otherSoilName SO_OtherSoilNameType [0..*] as ref
     <<voidable>> soilProfileObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
@@ -244,14 +244,14 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::SoilInvestigationPurposeValue"
   }
   Abstract Class <<featureType>> "SoilProfile" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> localIdentifier TEXT
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localIdentifier : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
-    <<voidable>> isDescribedBy ProfileElement [0..*] as ref
+    <<voidable>> isDescribedBy_ProfileElement BASE_Identifier [0..*] as ref
     <<voidable>> otherSoilName SO_OtherSoilNameType [0..*] as ref
     <<voidable>> soilProfileObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
@@ -267,27 +267,27 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_SoilThemeDescriptiveCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
+    metadata _Any
+    rangeSet _Any
     soilThemeDescriptiveParameter_soilThemeDescriptiveParameterName TEXT NOT NULL
     soilThemeDescriptiveParameter_uom TEXT CHECK(GML_UomIdentifier)
     <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
     <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<reference>> isDescribing INTEGER
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    <<reference>> rangeType INTEGER
     domainExtent EX_Extent [1..*] as ref
   }
   Abstract Class <<featureType>> "ProfileElement" {
-    profileElementDepthRange_lowerValue REAL
-    profileElementDepthRange_uom TEXT CHECK(GML_UomIdentifier)
-    profileElementDepthRange_upperValue REAL
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    profileElementDepthRange_lowerValue : REAL [0..1]
+    profileElementDepthRange_uom : TEXT [0..1]
+    profileElementDepthRange_upperValue : REAL [0..1]
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
-    isPartOf SoilProfile as ref
+    isPartOf_SoilProfile BASE_Identifier as ref
     <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
     <<voidable>> profileElementObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
@@ -320,18 +320,18 @@ Container <<applicationSchema>> "Soil" {
     * tableName = "SO_SoilThemeCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
+    metadata _Any
+    rangeSet _Any
     soilThemeParameter_soilThemeParameterName TEXT NOT NULL CHECK(SO_SoilDerivedObjectParameterNameValue)
     soilThemeParameter_uom TEXT CHECK(GML_UomIdentifier)
     <<lifeCycleInfo>> beginLifespanVersion DATETIME NOT NULL
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
     <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> rangeType INTEGER
     <<voidable>> validTimeFrom DATE
     <<voidable>> validTimeTo DATE
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
     domainExtent EX_Extent [1..*] as ref
   }
   Attributes <<dataType>> "SO_ParticleSizeFractionType" {
@@ -416,8 +416,8 @@ Container <<applicationSchema>> "Soil" {
     <<voidable>>, <<reference>> FAOHorizonNotation INTEGER
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    isPartOf SoilProfile as ref
+    <<reference>> inspireId INTEGER
+    <<reference>> isPartOf_SoilProfile INTEGER
     <<voidable>> particleSizeFraction SO_ParticleSizeFractionType [0..*] as ref
     <<voidable>> profileElementObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
@@ -430,18 +430,18 @@ Container <<applicationSchema>> "Soil" {
     * identifier = "Soil::DerivedSoilProfile"
     * tableName = "SO_DerivedSoilProfile"
     id INTEGER NOT NULL PRIMARY KEY
+    <<voidable>>, <<reference>> WRBSoilName INTEGER
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> localIdentifier TEXT
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> WRBSoilName SO_WRBSoilNameType [0..1] as ref
-    <<voidable>> isDescribedBy ProfileElement [0..*] as ref
+    <<voidable>> isDescribedBy_ProfileElement BASE_Identifier [0..*] as ref
     <<voidable>> otherSoilName SO_OtherSoilNameType [0..*] as ref
     <<voidable>> soilProfileObservation_OM_Observation BASE_Identifier [0..*] as ref
   }
-  Relation "SO_SoilBody_isDescribedBy" {
+  Relation <<voidable>> "SO_SoilBody_isDescribedBy" {
     * profile = "attributes"
     * tableName = "SO_SoilBody_isDescribedBy"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilBody(id)
@@ -454,12 +454,70 @@ Container <<applicationSchema>> "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilBody(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "SO_SoilLayer_isPartOf_SoilProfile" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilLayer#isPartOf_SoilProfile"
+    * tableName = "SO_SoilLayer_isPartOf_SoilProfile"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilLayer(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SO_SoilLayer_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilLayer#inspireId"
+    * tableName = "SO_SoilLayer_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilLayer(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SO_SoilLayer_particleSizeFraction" {
+    * profile = "attributes"
+    * tableName = "SO_SoilLayer_particleSizeFraction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilLayer(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ParticleSizeFractionType(id)
+  }
+  Relation <<voidable>> "SO_SoilLayer_profileElementObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "SO_SoilLayer_profileElementObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilLayer(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "SO_observedProfile_location" {
     * profile = "features"
     * relatedReference = "attribute SO_ObservedSoilProfile#location"
     * tableName = "SO_observedProfile_location"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilPlot(id)
+  }
+  Relation <<voidable>> "SO_ObservedSoilProfile_isDescribedBy_ProfileElement" {
+    * profile = "attributes"
+    * tableName = "SO_ObservedSoilProfile_isDescribedBy_ProfileElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SO_ObservedSoilProfile_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_ObservedSoilProfile#inspireId"
+    * tableName = "SO_ObservedSoilProfile_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SO_ObservedSoilProfile_WRBSoilName" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_ObservedSoilProfile#WRBSoilName"
+    * tableName = "SO_ObservedSoilProfile_WRBSoilName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBSoilNameType(id)
+  }
+  Relation <<voidable>> "SO_ObservedSoilProfile_otherSoilName" {
+    * profile = "attributes"
+    * tableName = "SO_ObservedSoilProfile_otherSoilName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_OtherSoilNameType(id)
+  }
+  Relation <<voidable>> "SO_ObservedSoilProfile_soilProfileObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "SO_ObservedSoilProfile_soilProfileObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_ObservedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SO_WRBSoilNameType_over" {
     * profile = "attributes"
@@ -474,19 +532,19 @@ Container <<applicationSchema>> "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_WRBSoilNameType(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBQualifierGroupType(id)
   }
-  Relation "SO_SoilDerivedObject_isBasedOnSoilBody" {
+  Relation <<voidable>> "SO_SoilDerivedObject_isBasedOnSoilBody" {
     * profile = "features"
     * tableName = "SO_SoilDerivedObject_isBasedOnSoilBody"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilBody(id)
   }
-  Relation "SO_SoilDerivedObject_isBasedOnObservedSoilProfile" {
+  Relation <<voidable>> "SO_SoilDerivedObject_isBasedOnObservedSoilProfile" {
     * profile = "attributes"
     * tableName = "SO_SoilDerivedObject_isBasedOnObservedSoilProfile"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ObservedSoilProfile(id)
   }
-  Relation "SO_SoilDerivedObject_isBasedOnSoilDerivedObject" {
+  Relation <<voidable>> "SO_SoilDerivedObject_isBasedOnSoilDerivedObject" {
     * profile = "features"
     * tableName = "SO_SoilDerivedObject_isBasedOnSoilDerivedObject"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
@@ -499,7 +557,7 @@ Container <<applicationSchema>> "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilDerivedObject(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SO_SoilDerivedObject_soilDerivedObjectObservation_OM_Observation" {
+  Relation <<voidable>> "SO_SoilDerivedObject_soilDerivedObjectObservation_OM_Observation" {
     * profile = "attributes"
     * relatedReference = "attribute SO_SoilDerivedObject#soilDerivedObjectObservation_OM_Observation"
     * tableName = "SO_SoilDerivedObject_soilDerivedObjectObservation_OM_Observation"
@@ -520,7 +578,73 @@ Container <<applicationSchema>> "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_SoilThemeCoverage(id)
   }
-  Relation "SO_SoilSite_isObservedOnLocation" {
+  Relation "SO_SoilThemeDescriptiveCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeDescriptiveCoverage#domainSet"
+    * tableName = "SO_SoilThemeDescriptiveCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "SO_SoilThemeDescriptiveCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "SO_SoilThemeDescriptiveCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "SO_SoilThemeDescriptiveCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeDescriptiveCoverage#coverageFunction_gridFunction"
+    * tableName = "SO_SoilThemeDescriptiveCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "SO_SoilThemeDescriptiveCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "SO_SoilThemeDescriptiveCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "SO_SoilThemeDescriptiveCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeDescriptiveCoverage#rangeType"
+    * tableName = "SO_SoilThemeDescriptiveCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeDescriptiveCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation "SO_SoilThemeCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeCoverage#domainSet"
+    * tableName = "SO_SoilThemeCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "SO_SoilThemeCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "SO_SoilThemeCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "SO_SoilThemeCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeCoverage#coverageFunction_gridFunction"
+    * tableName = "SO_SoilThemeCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "SO_SoilThemeCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "SO_SoilThemeCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "SO_SoilThemeCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilThemeCoverage#rangeType"
+    * tableName = "SO_SoilThemeCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilThemeCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation <<voidable>> "SO_SoilSite_isObservedOnLocation" {
     * profile = "features"
     * relatedReference = "attribute SO_SoilPlot#locatedOn"
     * tableName = "SO_SoilSite_isObservedOnLocation"
@@ -534,30 +658,88 @@ Container <<applicationSchema>> "Soil" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SO_SoilSite_soilSiteObservation_OM_Observation" {
+  Relation <<voidable>> "SO_SoilSite_soilSiteObservation_OM_Observation" {
     * profile = "attributes"
     * tableName = "SO_SoilSite_soilSiteObservation_OM_Observation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SO_SoilHorizon_FAOHorizonNotation" {
+  Relation "SO_SoilHorizon_isPartOf_SoilProfile" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilHorizon#isPartOf_SoilProfile"
+    * tableName = "SO_SoilHorizon_isPartOf_SoilProfile"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SO_SoilHorizon_FAOHorizonNotation" {
     * profile = "attributes"
     * relatedReference = "attribute SO_SoilHorizon#FAOHorizonNotation"
     * tableName = "SO_SoilHorizon_FAOHorizonNotation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_FAOHorizonNotationType(id)
   }
-  Relation "SO_SoilHorizon_otherHorizonNotation" {
+  Relation <<voidable>> "SO_SoilHorizon_otherHorizonNotation" {
     * profile = "attributes"
     * tableName = "SO_SoilHorizon_otherHorizonNotation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_OtherHorizonNotationType(id)
   }
-  Relation "SO_DerivedSoilProfile_isDerivedFrom" {
+  Relation "SO_SoilHorizon_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_SoilHorizon#inspireId"
+    * tableName = "SO_SoilHorizon_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SO_SoilHorizon_particleSizeFraction" {
+    * profile = "attributes"
+    * tableName = "SO_SoilHorizon_particleSizeFraction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ParticleSizeFractionType(id)
+  }
+  Relation <<voidable>> "SO_SoilHorizon_profileElementObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "SO_SoilHorizon_profileElementObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_SoilHorizon(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SO_DerivedSoilProfile_isDerivedFrom" {
     * profile = "attributes"
     * tableName = "SO_DerivedSoilProfile_isDerivedFrom"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_ObservedSoilProfile(id)
+  }
+  Relation <<voidable>> "SO_DerivedSoilProfile_isDescribedBy_ProfileElement" {
+    * profile = "attributes"
+    * tableName = "SO_DerivedSoilProfile_isDescribedBy_ProfileElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SO_DerivedSoilProfile_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_DerivedSoilProfile#inspireId"
+    * tableName = "SO_DerivedSoilProfile_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SO_DerivedSoilProfile_WRBSoilName" {
+    * profile = "attributes"
+    * relatedReference = "attribute SO_DerivedSoilProfile#WRBSoilName"
+    * tableName = "SO_DerivedSoilProfile_WRBSoilName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_WRBSoilNameType(id)
+  }
+  Relation <<voidable>> "SO_DerivedSoilProfile_otherSoilName" {
+    * profile = "attributes"
+    * tableName = "SO_DerivedSoilProfile_otherSoilName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SO_OtherSoilNameType(id)
+  }
+  Relation <<voidable>> "SO_DerivedSoilProfile_soilProfileObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "SO_DerivedSoilProfile_soilProfileObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SO_DerivedSoilProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container <<applicationSchema>> "Base Types 2" {
@@ -599,6 +781,56 @@ Container "Data quality information" {
     directExternal
     directInternal
     indirect
+  }
+}
+Container "Records and Class Metadata" {
+  * fileName = "Records and Class Metadata"
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes <<type>>, <<type>> "_Type" {
+    * description = "Type is used here for as a generic concept for any metalanguage description of an object class."
+    * identifier = "Records and Class Metadata::Type"
+    * tableName = "_Type"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    schema Schema [0..*] as ref
+  }
+  Attributes <<type>>, <<type>> "_RecordType" {
+    * description = "A RecordType is a look up mechanism that associates AttributeNames to TypeNames. AttributeNames are locally mapped. TypeNames are most often either primitives, or other types in the same schema as this record. Because the RecordType can control the structure of a set of Records, it is essentially a metaclass for that set of records view as a class.
+  
+    A RecordType is a NameSpace for its included attributeTypes."
+    * identifier = "Records and Class Metadata::RecordType"
+    * tableName = "_RecordType"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    <<reference>> memberType INTEGER
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+  Relation "_RecordType_memberType" {
+    * profile = "attributes"
+    * relatedReference = "attribute _RecordType#memberType"
+    * tableName = "_RecordType_memberType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _RecordType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Type(id)
   }
 }
 Container <<applicationSchema>> "Base Types" {
@@ -649,14 +881,6 @@ Package "EA Model" {
   
 }
 
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
-  Class <<type>>, <<type>> "RecordType" {
-    typeName_aName : TEXT
-    record Record [0..*] as ref
-    schema Schema [0..*] as ref
-  }
-}
 Package "Extent information" {
   Class "EX_Extent" {
     RationalRose$Java:ConstructorIs = "public"
@@ -674,6 +898,7 @@ Package "Extent information" {
     RationalRose$Visual Basic:OptionCompare = "(none)"
     RationalRose$Visual Basic:OptionExplicit = "True"
     description : TEXT [0..1]
+    geographicElement_EX_GeographicExtent BASE_Identifier [0..*] as ref
   }
 }
 Container <<applicationSchema>> "Coverages (Domain and Range)" {

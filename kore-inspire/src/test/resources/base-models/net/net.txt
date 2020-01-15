@@ -2,17 +2,17 @@ Container <<applicationSchema>> "Network" {
   * fileName = "Network"
   Abstract Class <<featureType>> "Node" {
     geometry : POINT
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
-    <<voidable>> spokeEnd Link [0..*] as ref
-    <<voidable>> spokeStart Link [0..*] as ref
+    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
+    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
   }
   Abstract Class <<featureType>> "NetworkArea" {
     geometry : SURFACE
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
@@ -25,8 +25,8 @@ Container <<applicationSchema>> "Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> type TEXT CHECK(NET_ConnectionTypeValue)
-    inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
   Attributes <<dataType>> "NET_LinkReference" {
@@ -34,12 +34,13 @@ Container <<applicationSchema>> "Network" {
     * identifier = "Network::LinkReference"
     * tableName = "NET_LinkReference"
     id INTEGER NOT NULL PRIMARY KEY
+    <<version>>, <<reference>> element_NetworkElement INTEGER
     <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
     involves TrafficRelatedEvent [0..*] as ref
   }
   Abstract Class <<featureType>> "LinkSequence" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     link NET_DirectedLink [1..*] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
@@ -53,9 +54,12 @@ Container <<applicationSchema>> "Network" {
     id INTEGER NOT NULL PRIMARY KEY
     toPosition TEXT NOT NULL
     toPosition_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
+    <<version>>, <<reference>> element_NetworkElement INTEGER
+    <<version>>, <<reference>> element_NetworkElement INTEGER
     <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
     <<voidable>> offset TEXT
     <<voidable>> offset_uom TEXT CHECK(GML_UomIdentifier)
+    involves TrafficRelatedEvent [0..*] as ref
     involves TrafficRelatedEvent [0..*] as ref
   }
   Attributes <<dataType>> "NET_DirectedLink" {
@@ -64,6 +68,7 @@ Container <<applicationSchema>> "Network" {
     * tableName = "NET_DirectedLink"
     direction TEXT NOT NULL CHECK(GML_Sign)
     id INTEGER NOT NULL PRIMARY KEY
+    <<reference>> link_Link INTEGER
   }
   Attributes <<dataType>> "NET_SimplePointReference" {
     * description = "A network reference that is restricted to a point on a linear network element. The point is the location on the network element at the position atPosition along the network."
@@ -72,14 +77,17 @@ Container <<applicationSchema>> "Network" {
     atPosition TEXT NOT NULL
     atPosition_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     id INTEGER NOT NULL PRIMARY KEY
+    <<version>>, <<reference>> element_NetworkElement INTEGER
+    <<version>>, <<reference>> element_NetworkElement INTEGER
     <<voidable>> applicableDirection TEXT CHECK(NET_LinkDirectionValue)
     <<voidable>> offset TEXT
     <<voidable>> offset_uom TEXT CHECK(GML_UomIdentifier)
     involves TrafficRelatedEvent [0..*] as ref
+    involves TrafficRelatedEvent [0..*] as ref
   }
   Abstract Class <<featureType>> "GeneralisedLink" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
@@ -120,22 +128,22 @@ Container <<applicationSchema>> "Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    inspireId BASE_Identifier [0..1] as ref
+    <<reference>> inspireId INTEGER
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
   Abstract Class <<featureType>> "Link" {
     centrelineGeometry : CURVE
     fictitious : BOOLEAN
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    endNode Node [0..1] as ref
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
-    startNode Node [0..1] as ref
+    startNode_Node BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
   Abstract Class <<featureType>> "NetworkElement" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
@@ -144,11 +152,12 @@ Container <<applicationSchema>> "Network" {
     * identifier = "Network::NetworkReference"
     * tableName = "NET_NetworkReference"
     id INTEGER NOT NULL PRIMARY KEY
+    <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
   Abstract Class <<featureType>> "LinkSet" {
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> inNetwork NET_Network [0..*] as ref
   }
@@ -159,9 +168,105 @@ Container <<applicationSchema>> "Network" {
     * identifier = "Network::Network"
     * tableName = "NET_Network"
     id INTEGER NOT NULL PRIMARY KEY
-    elements NetworkElement [0..*] as ref
+    elements_NetworkElement BASE_Identifier [0..*] as ref
   }
-  Relation "NET_Network_geographicalName" {
+  Relation "NET_NetworkConnection_element_NetworkElement" {
+    * profile = "attributes"
+    * tableName = "NET_NetworkConnection_element_NetworkElement"
+    constraint = "ordered"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkConnection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NET_NetworkConnection_inNetwork" {
+    * profile = "attributes"
+    * tableName = "NET_NetworkConnection_inNetwork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkConnection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
+  }
+  Relation "NET_NetworkConnection_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_NetworkConnection#inspireId"
+    * tableName = "NET_NetworkConnection_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkConnection(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "NET_LinkReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_LinkReference#element_NetworkElement"
+    * tableName = "NET_LinkReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_LinkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "NET_SimpleLinearReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_SimpleLinearReference#element_NetworkElement"
+    * tableName = "NET_SimpleLinearReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_SimpleLinearReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "NET_SimpleLinearReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_SimpleLinearReference#element_NetworkElement"
+    * tableName = "NET_SimpleLinearReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_SimpleLinearReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NET_DirectedLink_link_Link" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_DirectedLink#link_Link"
+    * tableName = "NET_DirectedLink_link_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_DirectedLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "NET_SimplePointReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_SimplePointReference#element_NetworkElement"
+    * tableName = "NET_SimplePointReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_SimplePointReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "NET_SimplePointReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_SimplePointReference#element_NetworkElement"
+    * tableName = "NET_SimplePointReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_SimplePointReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NET_CrossReference_element_NetworkElement" {
+    * profile = "attributes"
+    * tableName = "NET_CrossReference_element_NetworkElement"
+    constraint = "ordered"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_CrossReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NET_GradeSeparatedCrossing_element_Link" {
+    * profile = "attributes"
+    * tableName = "NET_GradeSeparatedCrossing_element_Link"
+    constraint = "ordered"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_GradeSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NET_GradeSeparatedCrossing_inNetwork" {
+    * profile = "attributes"
+    * tableName = "NET_GradeSeparatedCrossing_inNetwork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_GradeSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_Network(id)
+  }
+  Relation "NET_GradeSeparatedCrossing_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_GradeSeparatedCrossing#inspireId"
+    * tableName = "NET_GradeSeparatedCrossing_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_GradeSeparatedCrossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
+    * profile = "attributes"
+    * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
+    * tableName = "NET_NetworkReference_element_NetworkElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_NetworkReference(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NET_Network_geographicalName" {
     * profile = "attributes"
     * tableName = "NET_Network_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NET_Network(id)

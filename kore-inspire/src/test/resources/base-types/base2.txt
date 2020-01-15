@@ -226,44 +226,44 @@ Container <<applicationSchema>> "Base Types 2" {
     locale TEXT NOT NULL CHECK(BASE2_Locale)
     value TEXT NOT NULL
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "BASE2_Contact_contactInstructions" {
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_contactInstructions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_Contact_hoursOfService" {
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_hoursOfService"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_individualName" {
+  Relation <<voidable>> "BASE2_RelatedParty_individualName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_individualName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_organisationName" {
+  Relation <<voidable>> "BASE2_RelatedParty_organisationName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_organisationName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_positionName" {
+  Relation <<voidable>> "BASE2_RelatedParty_positionName" {
     * profile = "attributes"
     * tableName = "BASE2_RelatedParty_positionName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_RelatedParty_contact" {
+  Relation <<voidable>> "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
     * tableName = "BASE2_RelatedParty_contact"
@@ -318,25 +318,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"

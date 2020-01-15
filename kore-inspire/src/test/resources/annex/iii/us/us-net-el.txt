@@ -36,9 +36,14 @@ Container <<applicationSchema>> "Electricity Network" {
     * identifier = "Electricity Network::ElectricityCable"
     * tableName = "US_NET_EL_ElectricityCable"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> nominalVoltage TEXT
     <<voidable>> nominalVoltage_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> operatingVoltage TEXT
@@ -48,11 +53,39 @@ Container <<applicationSchema>> "Electricity Network" {
     <<voidable>> validTo DATETIME
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
+  }
+  Relation <<voidable>> "US_NET_EL_ElectricityCable_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_EL_ElectricityCable#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_EL_ElectricityCable_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_EL_ElectricityCable(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_EL_ElectricityCable_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_EL_ElectricityCable#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_EL_ElectricityCable_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_EL_ElectricityCable(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_EL_ElectricityCable_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "US_NET_EL_ElectricityCable_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_EL_ElectricityCable(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_EL_ElectricityCable_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_EL_ElectricityCable#inspireId"
+    * tableName = "US_NET_EL_ElectricityCable_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_EL_ElectricityCable(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_EL_ElectricityCable_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_EL_ElectricityCable_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_EL_ElectricityCable(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container <<applicationSchema>> "Base Types" {

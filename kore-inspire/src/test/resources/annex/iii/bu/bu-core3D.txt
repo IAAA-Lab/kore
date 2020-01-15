@@ -75,15 +75,15 @@ Container <<applicationSchema>> "Buildings3D" {
     <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
   }
   Class <<dataType>> "BuildingGeometry3DLoD" {
-    geometryMultiSurface MULTISURFACE
-    geometrySolid BLOB
-    geometrySolid_content_type TEXT
-    <<voidable>> horizontalGeometryEstimatedAccuracy TEXT
-    <<voidable>> horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> terrainIntersection MULTICURVE
-    <<voidable>> verticalGeometryEstimatedAccuracy TEXT
-    <<voidable>> verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
-    <<voidable>> verticalGeometryReference3DBottom TEXT CHECK(BU_BASE_ElevationReferenceValue)
+    geometryMultiSurface : MULTISURFACE [0..1]
+    geometrySolid : BLOB [0..1]
+    geometrySolid_content_type : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> horizontalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> terrainIntersection : MULTICURVE [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy : TEXT [0..1]
+    <<voidable>> verticalGeometryEstimatedAccuracy_uom : TEXT [0..1]
+    <<voidable>> verticalGeometryReference3DBottom : TEXT [0..1]
   }
   Attributes <<dataType>> "BU_CORE3D_BuildingGeometry3DLoD1" {
     * description = "Data type grouping the specific metadata attached to the 3D geometry, when provided by a LoD 1 representation."
@@ -166,23 +166,18 @@ Container <<applicationSchema>> "BuildingsBase" {
   * fileName = "BuildingsBase"
   Constraint Enum <<codeList>> "BU_BASE_ConditionOfConstructionValue" {
     * identifier = "BuildingsBase::ConditionOfConstructionValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_HorizontalGeometryReferenceValue" {
     * identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_ElevationReferenceValue" {
     * identifier = "BuildingsBase::ElevationReferenceValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_BuildingNatureValue" {
     * identifier = "BuildingsBase::BuildingNatureValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_HeightStatusValue" {
     * identifier = "BuildingsBase::HeightStatusValue"
-    obligation = "implementingRule"
   }
   Attributes <<dataType>> "BU_BASE_Elevation" {
     * description = "This data types includes the elevation value itself  and information on how this elevation was measured."
@@ -196,7 +191,6 @@ Container <<applicationSchema>> "BuildingsBase" {
   Constraint Enum <<codeList>> "BU_BASE_CurrentUseValue" {
     * identifier = "BuildingsBase::CurrentUseValue"
     extensiblity = "narrower"
-    obligation = "implementingRule"
   }
   Attributes <<dataType>> "BU_BASE_DateOfEvent" {
     * description = "This data type includes the different possible ways to define the date of an event."

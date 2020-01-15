@@ -1,13 +1,13 @@
 Container <<applicationSchema>> "NaturalRiskZones" {
   * fileName = "NaturalRiskZones"
   Abstract Class <<featureType>> "AbstractObservedEvent" {
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
-    <<voidable>> nameOfEvent TEXT
-    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    typeOfHazard_hazardCategory : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
+    <<voidable>> nameOfEvent : TEXT [0..1]
+    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref
   }
@@ -26,19 +26,19 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
+    metadata _Any
+    rangeSet _Any
     typeOfElement_exposedElementCategory TEXT NOT NULL CHECK(NZ_CORE_ExposedElementCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<reference>> sourceOfSpatialRepresentation_AbstractFeature INTEGER
     <<voidable>>, <<lifeCycleInfo>> validFrom DATETIME
     <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> rangeType INTEGER
     <<voidable>> typeOfElement_specificExposedElementType TEXT CHECK(NZ_CORE_SpecificExposedElementTypeValue)
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    domainSet _Any as ref
-    inspireId BASE_Identifier as ref
-    metadata _Any [0..*] as ref
-    rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
-    <<voidable>> sourceOfSpatialRepresentation_AbstractFeature BASE_Identifier [0..1] as ref
   }
   Attributes <<dataType>> "NZ_CORE_NaturalHazardClassification" {
     * description = "This class provides piece of information about the nature of the natural hazard as well as the type of hazard which is the source of risk."
@@ -55,11 +55,11 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     * identifier = "NaturalRiskZones::SpecificHazardTypeValue"
   }
   Abstract Class <<featureType>> "AbstractHazardArea" {
-    determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
-    typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
-    <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    determinationMethod : TEXT
+    typeOfHazard_hazardCategory : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
+    <<voidable>> typeOfHazard_specificHazardType : TEXT [0..1]
     inspireId BASE_Identifier as ref
   }
   Feature <<featureType>> "NZ_CORE_ExposedElement" {
@@ -70,10 +70,10 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<reference>> sourceOfSpatialRepresentation_AbstractFeature INTEGER
     <<voidable>>, <<lifeCycleInfo>> validFrom DATETIME
     <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
-    inspireId BASE_Identifier as ref
-    <<voidable>> sourceOfSpatialRepresentation_AbstractFeature BASE_Identifier [0..1] as ref
+    <<reference>> inspireId INTEGER
   }
   Attributes <<dataType>> "NZ_CORE_VulnerabilityAssessment" {
     * description = "Assessment of the vulnerability.
@@ -105,7 +105,6 @@ Container <<applicationSchema>> "NaturalRiskZones" {
   }
   Constraint Enum <<codeList>> "NZ_CORE_NaturalHazardCategoryValue" {
     * identifier = "NaturalRiskZones::NaturalHazardCategoryValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<enumeration>> "NZ_CORE_DeterminationMethodValue" {
     * identifier = "NaturalRiskZones::DeterminationMethodValue"
@@ -139,6 +138,7 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_date DATE
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_level LegislationLevelValue
     <<voidable>> likelihoodOfOccurrence_assessmentMethod_link TEXT
@@ -147,7 +147,6 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     <<voidable>> likelihoodOfOccurrence_qualitativeLikelihood TEXT
     <<voidable>> likelihoodOfOccurrence_quantitativeLikelihood_returnPeriod REAL
     <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    inspireId BASE_Identifier as ref
   }
   Feature <<featureType>> "NZ_CORE_ObservedEvent" {
     * description = "Discrete spatial objects representing natural phenomenon relevant to the study of natural hazards which occurred, or is currently occuring, and which has been observed."
@@ -158,11 +157,11 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> nameOfEvent TEXT
     <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref
   }
   Feature <<featureType>> "NZ_CORE_RiskZone" {
@@ -176,6 +175,8 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<reference>> source_AbstractHazardArea INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> levelOfRisk_assessmentMethod_date DATE
     <<voidable>> levelOfRisk_assessmentMethod_level LegislationLevelValue
     <<voidable>> levelOfRisk_assessmentMethod_link TEXT
@@ -183,7 +184,6 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     <<voidable>> levelOfRisk_assessmentMethod_type TEXT CHECK(BASE2_SimpleCitationType)
     <<voidable>> levelOfRisk_qualitativeValue TEXT
     <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    inspireId BASE_Identifier as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
   Attributes <<featureType>> "NZ_CORE_HazardCoverage" {
@@ -194,16 +194,16 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     coverageFunction_ruleReference TEXT
     determinationMethod TEXT NOT NULL CHECK(NZ_CORE_DeterminationMethodValue)
     id INTEGER NOT NULL PRIMARY KEY
+    metadata _Any
+    rangeSet _Any
     typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> rangeType INTEGER
     <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    domainSet _Any as ref
-    inspireId BASE_Identifier as ref
-    metadata _Any [0..*] as ref
-    rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
   }
   Attributes <<featureType>> "NZ_CORE_RiskCoverage" {
     * description = "A coverage representation of natural risks."
@@ -212,23 +212,24 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
+    metadata _Any
+    rangeSet _Any
     sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<voidable>>, <<reference>> source_AbstractHazardArea INTEGER
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> rangeType INTEGER
     <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    domainSet _Any as ref
-    inspireId BASE_Identifier as ref
-    metadata _Any [0..*] as ref
-    rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
   Abstract Class <<featureType>> "AbstractExposedElement" {
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> validFrom DATETIME
-    <<voidable>>, <<lifeCycleInfo>> validTo DATETIME
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> validFrom : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier as ref
     <<voidable>> sourceOfSpatialRepresentation_AbstractFeature BASE_Identifier [0..1] as ref
   }
@@ -242,13 +243,12 @@ Container <<applicationSchema>> "NaturalRiskZones" {
   }
   Constraint Enum <<codeList>> "NZ_CORE_ExposedElementCategoryValue" {
     * identifier = "NaturalRiskZones::ExposedElementCategoryValue"
-    obligation = "ImplementingRule"
   }
   Abstract Class <<featureType>> "AbstractRiskZone" {
-    sourceOfRisk_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
-    <<voidable>> sourceOfRisk_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
+    sourceOfRisk_hazardCategory : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion : DATETIME [0..1]
+    <<voidable>> sourceOfRisk_specificHazardType : TEXT [0..1]
     inspireId BASE_Identifier as ref
     <<voidable>> validityPeriod TM_Period [0..*] as ref
   }
@@ -275,38 +275,290 @@ Container <<applicationSchema>> "NaturalRiskZones" {
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
     id INTEGER NOT NULL PRIMARY KEY
+    metadata _Any
+    rangeSet _Any
     typeOfHazard_hazardCategory TEXT NOT NULL CHECK(NZ_CORE_NaturalHazardCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifeSpanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifeSpanVersion DATETIME
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> nameOfEvent TEXT
+    <<reference>> rangeType INTEGER
     <<voidable>> typeOfHazard_specificHazardType TEXT CHECK(NZ_CORE_SpecificHazardTypeValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    domainSet _Any as ref
-    inspireId BASE_Identifier as ref
-    metadata _Any [0..*] as ref
-    rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
     <<voidable>> isMonitoredBy_EnvironmentalMonitoringProgramme BASE_Identifier [0..*] as ref
   }
-  Relation "NZ_CORE_ExposedElement_assessmentOfVulnerability" {
+  Relation "NZ_CORE_ExposedElementCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElementCoverage#domainSet"
+    * tableName = "NZ_CORE_ExposedElementCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_ExposedElementCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_ExposedElementCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_ExposedElementCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElementCoverage#coverageFunction_gridFunction"
+    * tableName = "NZ_CORE_ExposedElementCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "NZ_CORE_ExposedElementCoverage_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElementCoverage#inspireId"
+    * tableName = "NZ_CORE_ExposedElementCoverage_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_ExposedElementCoverage_sourceOfSpatialRepresentation_AbstractFeature" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElementCoverage#sourceOfSpatialRepresentation_AbstractFeature"
+    * tableName = "NZ_CORE_ExposedElementCoverage_sourceOfSpatialRepresentation_AbstractFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_ExposedElementCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_ExposedElementCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_ExposedElementCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElementCoverage#rangeType"
+    * tableName = "NZ_CORE_ExposedElementCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElementCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation <<voidable>> "NZ_CORE_ExposedElement_assessmentOfVulnerability" {
     * profile = "attributes"
     * tableName = "NZ_CORE_ExposedElement_assessmentOfVulnerability"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElement(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_VulnerabilityAssessment(id)
   }
-  Relation "NZ_CORE_HazardArea_magnitudeOrIntensity" {
+  Relation "NZ_CORE_ExposedElement_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElement#inspireId"
+    * tableName = "NZ_CORE_ExposedElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_ExposedElement_sourceOfSpatialRepresentation_AbstractFeature" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ExposedElement#sourceOfSpatialRepresentation_AbstractFeature"
+    * tableName = "NZ_CORE_ExposedElement_sourceOfSpatialRepresentation_AbstractFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ExposedElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_HazardArea_source_AbstractObservedEvent" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_HazardArea_source_AbstractObservedEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_HazardArea_magnitudeOrIntensity" {
     * profile = "attributes"
     * tableName = "NZ_CORE_HazardArea_magnitudeOrIntensity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_LevelOrIntensity(id)
   }
-  Relation "NZ_CORE_ObservedEvent_magnitudeOrIntensity" {
+  Relation "NZ_CORE_HazardArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_HazardArea#inspireId"
+    * tableName = "NZ_CORE_HazardArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_ObservedEvent_magnitudeOrIntensity" {
     * profile = "attributes"
     * tableName = "NZ_CORE_ObservedEvent_magnitudeOrIntensity"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEvent(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NZ_CORE_LevelOrIntensity(id)
+  }
+  Relation "NZ_CORE_ObservedEvent_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ObservedEvent#inspireId"
+    * tableName = "NZ_CORE_ObservedEvent_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_ObservedEvent_isMonitoredBy_EnvironmentalMonitoringProgramme" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_ObservedEvent_isMonitoredBy_EnvironmentalMonitoringProgramme"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_RiskZone_source_AbstractHazardArea" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskZone#source_AbstractHazardArea"
+    * tableName = "NZ_CORE_RiskZone_source_AbstractHazardArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_RiskZone_exposedElement_AbstractExposedElement" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_RiskZone_exposedElement_AbstractExposedElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_RiskZone_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskZone#inspireId"
+    * tableName = "NZ_CORE_RiskZone_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_HazardCoverage_source_AbstractObservedEvent" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_HazardCoverage_source_AbstractObservedEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_HazardCoverage_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_HazardCoverage#inspireId"
+    * tableName = "NZ_CORE_HazardCoverage_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_HazardCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_HazardCoverage#domainSet"
+    * tableName = "NZ_CORE_HazardCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_HazardCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_HazardCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_HazardCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_HazardCoverage#coverageFunction_gridFunction"
+    * tableName = "NZ_CORE_HazardCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "NZ_CORE_HazardCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_HazardCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_HazardCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_HazardCoverage#rangeType"
+    * tableName = "NZ_CORE_HazardCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_HazardCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation <<voidable>> "NZ_CORE_RiskCoverage_source_AbstractHazardArea" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskCoverage#source_AbstractHazardArea"
+    * tableName = "NZ_CORE_RiskCoverage_source_AbstractHazardArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_RiskCoverage_exposedElement_AbstractExposedElement" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_RiskCoverage_exposedElement_AbstractExposedElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_RiskCoverage_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskCoverage#inspireId"
+    * tableName = "NZ_CORE_RiskCoverage_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_RiskCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskCoverage#domainSet"
+    * tableName = "NZ_CORE_RiskCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_RiskCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_RiskCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_RiskCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskCoverage#coverageFunction_gridFunction"
+    * tableName = "NZ_CORE_RiskCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "NZ_CORE_RiskCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_RiskCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_RiskCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_RiskCoverage#rangeType"
+    * tableName = "NZ_CORE_RiskCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_RiskCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation "NZ_CORE_ObservedEventCoverage_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ObservedEventCoverage#inspireId"
+    * tableName = "NZ_CORE_ObservedEventCoverage_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "NZ_CORE_ObservedEventCoverage_isMonitoredBy_EnvironmentalMonitoringProgramme" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_ObservedEventCoverage_isMonitoredBy_EnvironmentalMonitoringProgramme"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "NZ_CORE_ObservedEventCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ObservedEventCoverage#domainSet"
+    * tableName = "NZ_CORE_ObservedEventCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_ObservedEventCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_ObservedEventCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_ObservedEventCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ObservedEventCoverage#coverageFunction_gridFunction"
+    * tableName = "NZ_CORE_ObservedEventCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "NZ_CORE_ObservedEventCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "NZ_CORE_ObservedEventCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "NZ_CORE_ObservedEventCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute NZ_CORE_ObservedEventCoverage#rangeType"
+    * tableName = "NZ_CORE_ObservedEventCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES NZ_CORE_ObservedEventCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
   }
 }
 Container <<applicationSchema>> "Base Types 2" {
@@ -438,18 +690,6 @@ Package "EA Model" {
   
 }
 
-Container <<applicationSchema>> "Coverages (Domain and Range)" {
-  * fileName = "Coverages (Domain and Range)"
-  Attributes <<dataType>> "GMLCOV_GridFunction" {
-    * description = "An explicit mapping rule for grid geometries"
-    * identifier = "Coverages (Domain and Range)::GridFunction"
-    * tableName = "GMLCOV_GridFunction"
-    id INTEGER NOT NULL PRIMARY KEY
-    sequenceRule_scanDirection <<missing>>
-    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
-    <<array>> startPoints TEXT
-  }
-}
 Package "Temporal Objects" {
   Class "TM_TopologicalComplex" {
     primitive TM_TopologicalPrimitive [1..*] as ref
@@ -483,6 +723,18 @@ Package "Temporal Objects" {
     geometry TM_Instant [0..1] as ref
     nextEdge TM_Edge [0..*] as ref
     previousEdge TM_Edge [0..*] as ref
+  }
+}
+Container <<applicationSchema>> "Coverages (Domain and Range)" {
+  * fileName = "Coverages (Domain and Range)"
+  Attributes <<dataType>> "GMLCOV_GridFunction" {
+    * description = "An explicit mapping rule for grid geometries"
+    * identifier = "Coverages (Domain and Range)::GridFunction"
+    * tableName = "GMLCOV_GridFunction"
+    id INTEGER NOT NULL PRIMARY KEY
+    sequenceRule_scanDirection <<missing>>
+    sequenceRule_type TEXT CHECK(CIS_CV_SequenceType) DEFAULT 'linear'
+    <<array>> startPoints TEXT
   }
 }
 Container "Units of Measure" {

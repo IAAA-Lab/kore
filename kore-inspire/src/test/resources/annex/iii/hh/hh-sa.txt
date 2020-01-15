@@ -145,6 +145,64 @@ Container <<applicationSchema>> "Safety" {
     * tableName = "HH_SA_EventInformation"
     id INTEGER NOT NULL PRIMARY KEY
   }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_additionalInformation" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_FireOrExplosionRelatedEvent#additionalInformation"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_additionalInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
+  }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_part" {
+    * profile = "features"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_part"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_aggregation" {
+    * profile = "features"
+    * relatedReference = "attribute HH_SA_FireOrExplosionRelatedEvent#aggregation"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_aggregation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_consequence" {
+    * profile = "attributes"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_consequence"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventConsequence(id)
+  }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_FireOrExplosionRelatedEvent#inspireId"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HH_SA_FireOrExplosionRelatedEvent_causeOfEvent" {
+    * profile = "attributes"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_causeOfEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "HH_SA_FireOrExplosionRelatedEvent_eventDescription" {
+    * profile = "attributes"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_eventDescription"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_sourceReference" {
+    * profile = "attributes"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_sourceReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation "HH_SA_FireOrExplosionRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_FireOrExplosionRelatedEvent#locationUnit_administrativeUnit_AdministrativeUnit"
+    * tableName = "HH_SA_FireOrExplosionRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_FireOrExplosionRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "HH_SA_Event_additionalInformation" {
     * profile = "attributes"
     * relatedReference = "attribute HH_SA_Event#additionalInformation"
@@ -166,13 +224,13 @@ Container <<applicationSchema>> "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "HH_SA_Event_causeOfEvent" {
+  Relation <<voidable>> "HH_SA_Event_causeOfEvent" {
     * profile = "attributes"
     * tableName = "HH_SA_Event_causeOfEvent"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "HH_SA_Event_eventDescription" {
+  Relation <<voidable>> "HH_SA_Event_eventDescription" {
     * profile = "attributes"
     * tableName = "HH_SA_Event_eventDescription"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
@@ -191,6 +249,64 @@ Container <<applicationSchema>> "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_Event(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation "HH_SA_NaturalHazardRelatedEvent_additionalInformation" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_NaturalHazardRelatedEvent#additionalInformation"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_additionalInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
+  }
+  Relation "HH_SA_NaturalHazardRelatedEvent_part" {
+    * profile = "features"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_part"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_NaturalHazardRelatedEvent_aggregation" {
+    * profile = "features"
+    * relatedReference = "attribute HH_SA_NaturalHazardRelatedEvent#aggregation"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_aggregation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_NaturalHazardRelatedEvent_consequence" {
+    * profile = "attributes"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_consequence"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventConsequence(id)
+  }
+  Relation "HH_SA_NaturalHazardRelatedEvent_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_NaturalHazardRelatedEvent#inspireId"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HH_SA_NaturalHazardRelatedEvent_causeOfEvent" {
+    * profile = "attributes"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_causeOfEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "HH_SA_NaturalHazardRelatedEvent_eventDescription" {
+    * profile = "attributes"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_eventDescription"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_NaturalHazardRelatedEvent_sourceReference" {
+    * profile = "attributes"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_sourceReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation "HH_SA_NaturalHazardRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_NaturalHazardRelatedEvent#locationUnit_administrativeUnit_AdministrativeUnit"
+    * tableName = "HH_SA_NaturalHazardRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_NaturalHazardRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "HH_SA_EventConsequence_event" {
     * profile = "features"
     * relatedReference = "attribute HH_SA_EventConsequence#event"
@@ -204,37 +320,153 @@ Container <<applicationSchema>> "Safety" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
   }
-  Relation "HH_SA_TrafficRelatedEvent_trafficRelatedEventInformation" {
+  Relation "HH_SA_TrafficRelatedEvent_additionalInformation" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_TrafficRelatedEvent#additionalInformation"
+    * tableName = "HH_SA_TrafficRelatedEvent_additionalInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
+  }
+  Relation "HH_SA_TrafficRelatedEvent_part" {
+    * profile = "features"
+    * tableName = "HH_SA_TrafficRelatedEvent_part"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_TrafficRelatedEvent_aggregation" {
+    * profile = "features"
+    * relatedReference = "attribute HH_SA_TrafficRelatedEvent#aggregation"
+    * tableName = "HH_SA_TrafficRelatedEvent_aggregation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_TrafficRelatedEvent_consequence" {
+    * profile = "attributes"
+    * tableName = "HH_SA_TrafficRelatedEvent_consequence"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventConsequence(id)
+  }
+  Relation <<voidable>> "HH_SA_TrafficRelatedEvent_trafficRelatedEventInformation" {
     * profile = "attributes"
     * tableName = "HH_SA_TrafficRelatedEvent_trafficRelatedEventInformation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "HH_SA_EventInformation_title" {
+  Relation "HH_SA_TrafficRelatedEvent_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_TrafficRelatedEvent#inspireId"
+    * tableName = "HH_SA_TrafficRelatedEvent_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HH_SA_TrafficRelatedEvent_causeOfEvent" {
+    * profile = "attributes"
+    * tableName = "HH_SA_TrafficRelatedEvent_causeOfEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "HH_SA_TrafficRelatedEvent_eventDescription" {
+    * profile = "attributes"
+    * tableName = "HH_SA_TrafficRelatedEvent_eventDescription"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_TrafficRelatedEvent_sourceReference" {
+    * profile = "attributes"
+    * tableName = "HH_SA_TrafficRelatedEvent_sourceReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation "HH_SA_TrafficRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_TrafficRelatedEvent#locationUnit_administrativeUnit_AdministrativeUnit"
+    * tableName = "HH_SA_TrafficRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_TrafficRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_additionalInformation" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_HazardousMaterialRelatedEvent#additionalInformation"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_additionalInformation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventInformation(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_part" {
+    * profile = "features"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_part"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_aggregation" {
+    * profile = "features"
+    * relatedReference = "attribute HH_SA_HazardousMaterialRelatedEvent#aggregation"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_aggregation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_Event(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_consequence" {
+    * profile = "attributes"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_consequence"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_SA_EventConsequence(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_HazardousMaterialRelatedEvent#inspireId"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HH_SA_HazardousMaterialRelatedEvent_causeOfEvent" {
+    * profile = "attributes"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_causeOfEvent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "HH_SA_HazardousMaterialRelatedEvent_eventDescription" {
+    * profile = "attributes"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_eventDescription"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_sourceReference" {
+    * profile = "attributes"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_sourceReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
+  }
+  Relation "HH_SA_HazardousMaterialRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_SA_HazardousMaterialRelatedEvent#locationUnit_administrativeUnit_AdministrativeUnit"
+    * tableName = "HH_SA_HazardousMaterialRelatedEvent_locationUnit_administrativeUnit_AdministrativeUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_HazardousMaterialRelatedEvent(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HH_SA_EventInformation_title" {
     * profile = "attributes"
     * tableName = "HH_SA_EventInformation_title"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "HH_SA_EventInformation_preventionAndPreparedness" {
+  Relation <<voidable>> "HH_SA_EventInformation_preventionAndPreparedness" {
     * profile = "attributes"
     * tableName = "HH_SA_EventInformation_preventionAndPreparedness"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "HH_SA_EventInformation_lessonsLearned" {
+  Relation <<voidable>> "HH_SA_EventInformation_lessonsLearned" {
     * profile = "attributes"
     * tableName = "HH_SA_EventInformation_lessonsLearned"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "HH_SA_EventInformation_eventSequences" {
+  Relation <<voidable>> "HH_SA_EventInformation_eventSequences" {
     * profile = "attributes"
     * tableName = "HH_SA_EventInformation_eventSequences"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "HH_SA_EventInformation_environmentalDamage" {
+  Relation <<voidable>> "HH_SA_EventInformation_environmentalDamage" {
     * profile = "attributes"
     * tableName = "HH_SA_EventInformation_environmentalDamage"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_SA_EventInformation(id)
@@ -269,7 +501,6 @@ Container <<applicationSchema>> "NaturalRiskZones" {
   * fileName = "NaturalRiskZones"
   Constraint Enum <<codeList>> "NZ_CORE_NaturalHazardCategoryValue" {
     * identifier = "NaturalRiskZones::NaturalHazardCategoryValue"
-    obligation = "implementingRule"
   }
 }
 Container <<applicationSchema>> "Network" {
@@ -281,7 +512,7 @@ Container <<applicationSchema>> "Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<version>>, <<reference>> element_NetworkElement INTEGER
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"

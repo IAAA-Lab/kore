@@ -48,30 +48,57 @@ Container <<applicationSchema>> "AdministrativeAndSocialGovernmentalServices" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "US_GOVSERV_GovernmentalService_pointOfContact" {
+  Relation <<voidable>> "US_GOVSERV_GovernmentalService_pointOfContact" {
     * profile = "attributes"
     * tableName = "US_GOVSERV_GovernmentalService_pointOfContact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit" {
+  Relation <<voidable>> "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit" {
     * profile = "attributes"
     * relatedReference = "attribute US_GOVSERV_GovernmentalService#areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit"
     * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByAdministrativeUnit_AdministrativeUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace" {
+  Relation <<voidable>> "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace" {
     * profile = "attributes"
     * relatedReference = "attribute US_GOVSERV_GovernmentalService#areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace"
     * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNamedPlace_NamedPlace"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement" {
+  Relation <<version>> "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute US_GOVSERV_GovernmentalService#areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement"
     * tableName = "US_GOVSERV_GovernmentalService_areaOfResponsibility_areaOfResponsibilityByNetwork_element_NetworkElement"
+    $ea_xref_property = "$XREFPROP=$XID={AEF85E22-5CB2-4b71-BA4D-B3DFD05BF6EF}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={DF135DF8-B0F0-48c9-9B37-526BCBC66ADF};@ENDSTEREO;$DES;$CLT={801D781B-7DB9-43d7-A674-BD61B616B313}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Name --
+    area of responsibility
+  
+    -- Definition --
+    The spatial responsibility of a service instance.
+  
+    -- Description --
+    EXAMPLE 1: An administration is responsible for a municipality;
+    EXEMPLE 2: A specialized hospital is responsible for a region.
+    "
+    duplicates = "0"
+    ea_guid = "{801D781B-7DB9-43d7-A674-BD61B616B313}"
+    ea_localid = "87468"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "AreaOfResponsibilityType"
+    upperBound = "1"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_GOVSERV_GovernmentalService(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
@@ -130,20 +157,20 @@ Container <<applicationSchema>> "Base Types 2" {
     locale TEXT NOT NULL CHECK(BASE2_Locale)
     value TEXT NOT NULL
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
   }
-  Relation "BASE2_Contact_contactInstructions" {
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_contactInstructions"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "BASE2_Contact_hoursOfService" {
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
     * profile = "attributes"
     * tableName = "BASE2_Contact_hoursOfService"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
@@ -160,7 +187,7 @@ Container <<applicationSchema>> "Network" {
     <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"
@@ -195,25 +222,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"

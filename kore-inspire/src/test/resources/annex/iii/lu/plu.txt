@@ -181,13 +181,13 @@ Container <<applicationSchema>> "Planned Land Use" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_SpatialPlan(id)
   }
-  Relation "PLU_SupplementaryRegulation_officialDocument" {
+  Relation <<voidable>> "PLU_SupplementaryRegulation_officialDocument" {
     * profile = "attributes"
     * tableName = "PLU_SupplementaryRegulation_officialDocument"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_OfficialDocumentation(id)
   }
-  Relation "PLU_SupplementaryRegulation_dimensioningIndication" {
+  Relation <<voidable>> "PLU_SupplementaryRegulation_dimensioningIndication" {
     * profile = "attributes"
     * tableName = "PLU_SupplementaryRegulation_dimensioningIndication"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
@@ -200,7 +200,7 @@ Container <<applicationSchema>> "Planned Land Use" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SupplementaryRegulation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PLU_ZoningElement_officialDocument" {
+  Relation <<voidable>> "PLU_ZoningElement_officialDocument" {
     * profile = "attributes"
     * tableName = "PLU_ZoningElement_officialDocument"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
@@ -220,13 +220,13 @@ Container <<applicationSchema>> "Planned Land Use" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PLU_ZoningElement_dimensioningIndication" {
+  Relation <<voidable>> "PLU_ZoningElement_dimensioningIndication" {
     * profile = "attributes"
     * tableName = "PLU_ZoningElement_dimensioningIndication"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_ZoningElement(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PLU_DimensioningIndicationValue(id)
   }
-  Relation "PLU_null_officialDocument" {
+  Relation <<voidable>> "PLU_null_officialDocument" {
     * profile = "attributes"
     * relatedReference = "attribute PLU_OfficialDocumentation#value"
     * tableName = "PLU_null_officialDocument"
@@ -240,7 +240,7 @@ Container <<applicationSchema>> "Planned Land Use" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SpatialPlan(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PLU_SpatialPlan_ordinance" {
+  Relation <<voidable>> "PLU_SpatialPlan_ordinance" {
     * profile = "attributes"
     * tableName = "PLU_SpatialPlan_ordinance"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PLU_SpatialPlan(id)

@@ -8,7 +8,7 @@ Container <<applicationSchema>> "Orthoimagery" {
     * tableName = "OI_AggregatedMosaicElement"
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    inspireId BASE_Identifier [0..1] as ref
+    <<reference>> inspireId INTEGER
   }
   Feature <<featureType>> "OI_OrthoimageCoverage" {
     * description = "Raster image of the Earth surface that has been geometrically corrected ("orthorectified") to remove distortion caused by differences in elevation, sensor tilt and, optionally, by sensor optics.
@@ -23,13 +23,11 @@ Container <<applicationSchema>> "Orthoimagery" {
     beginLifespanVersion_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     endLifespanVersion_anyOther_indeterminatePosition TEXT CHECK(TRS_TM_IndeterminateValue)
     id INTEGER NOT NULL PRIMARY KEY
     interpolationType TEXT NOT NULL CHECK(OI_InterpolationMethodValue) DEFAULT 'nearestneighbor'
-    metadata Any
-    rangeSet Any
-    rangeType RecordType NOT NULL
+    metadata _Any
+    rangeSet _Any
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion_date8601 DATE
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion_dateTime8601 DATETIME
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion_time8601 TEXT
@@ -38,10 +36,12 @@ Container <<applicationSchema>> "Orthoimagery" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion_dateTime8601 DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion_time8601 TEXT
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion_time8601_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
     <<voidable>> footprint MULTISURFACE
     <<reference>> inspireId INTEGER
     <<voidable>> name TEXT
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    <<reference>> rangeType INTEGER
     domainExtent EX_Extent [1..*] as ref
   }
   Attributes <<featureType>> "OI_SingleMosaicElement" {
@@ -53,7 +53,7 @@ Container <<applicationSchema>> "Orthoimagery" {
     geometry MULTISURFACE NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>> imageSourceReference TEXT
-    inspireId BASE_Identifier [0..1] as ref
+    <<reference>> inspireId INTEGER
   }
   Feature <<dataType>> "OI_OrthoimageAggregation" {
     * description = "Geometrical characteristics of the orthoimage aggregation."
@@ -67,8 +67,21 @@ Container <<applicationSchema>> "Orthoimagery" {
     * identifier = "Orthoimagery::InterpolationMethodValue"
   }
   Abstract Class <<featureType>> "MosaicElement" {
-    geometry MULTISURFACE NOT NULL
+    geometry : MULTISURFACE
     inspireId BASE_Identifier [0..1] as ref
+  }
+  Relation "OI_AggregatedMosaicElement_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute OI_AggregatedMosaicElement#inspireId"
+    * tableName = "OI_AggregatedMosaicElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_AggregatedMosaicElement(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "OI_OrthoimageCoverage_mosaicElement_MosaicElement" {
+    * profile = "attributes"
+    * tableName = "OI_OrthoimageCoverage_mosaicElement_MosaicElement"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "OI_OrthoimageCoverage_contributingOrthoimageCoverage" {
     * profile = "features"
@@ -81,6 +94,46 @@ Container <<applicationSchema>> "Orthoimagery" {
     * relatedReference = "attribute OI_OrthoimageCoverage#inspireId"
     * tableName = "OI_OrthoimageCoverage_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "OI_OrthoimageCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute OI_OrthoimageCoverage#domainSet"
+    * tableName = "OI_OrthoimageCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "OI_OrthoimageCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "OI_OrthoimageCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "OI_OrthoimageCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute OI_OrthoimageCoverage#coverageFunction_gridFunction"
+    * tableName = "OI_OrthoimageCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "OI_OrthoimageCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "OI_OrthoimageCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "OI_OrthoimageCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute OI_OrthoimageCoverage#rangeType"
+    * tableName = "OI_OrthoimageCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_OrthoimageCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
+  }
+  Relation "OI_SingleMosaicElement_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute OI_SingleMosaicElement#inspireId"
+    * tableName = "OI_SingleMosaicElement_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES OI_SingleMosaicElement(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
@@ -122,6 +175,56 @@ Container "Data quality information" {
     directExternal
     directInternal
     indirect
+  }
+}
+Container "Records and Class Metadata" {
+  * fileName = "Records and Class Metadata"
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes <<type>>, <<type>> "_Type" {
+    * description = "Type is used here for as a generic concept for any metalanguage description of an object class."
+    * identifier = "Records and Class Metadata::Type"
+    * tableName = "_Type"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    schema Schema [0..*] as ref
+  }
+  Attributes <<type>>, <<type>> "_RecordType" {
+    * description = "A RecordType is a look up mechanism that associates AttributeNames to TypeNames. AttributeNames are locally mapped. TypeNames are most often either primitives, or other types in the same schema as this record. Because the RecordType can control the structure of a set of Records, it is essentially a metaclass for that set of records view as a class.
+  
+    A RecordType is a NameSpace for its included attributeTypes."
+    * identifier = "Records and Class Metadata::RecordType"
+    * tableName = "_RecordType"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    <<reference>> memberType INTEGER
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+  Relation "_RecordType_memberType" {
+    * profile = "attributes"
+    * relatedReference = "attribute _RecordType#memberType"
+    * tableName = "_RecordType_memberType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _RecordType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Type(id)
   }
 }
 Container <<applicationSchema>> "Base Types" {
@@ -166,14 +269,6 @@ Container <<applicationSchema>> "Base Types" {
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
-  Class <<type>>, <<type>> "RecordType" {
-    typeName_aName : TEXT
-    record Record [0..*] as ref
-    schema Schema [0..*] as ref
-  }
-}
 Package "Extent information" {
   Class "EX_Extent" {
     RationalRose$Java:ConstructorIs = "public"
@@ -191,6 +286,7 @@ Package "Extent information" {
     RationalRose$Visual Basic:OptionCompare = "(none)"
     RationalRose$Visual Basic:OptionExplicit = "True"
     description : TEXT [0..1]
+    geographicElement_EX_GeographicExtent BASE_Identifier [0..*] as ref
   }
 }
 Container <<applicationSchema>> "Coverages (Domain and Range)" {

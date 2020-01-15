@@ -109,13 +109,13 @@ Container <<applicationSchema>> "HabitatsAndBiotopes" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HB_HabitatTypeCoverType(id)
   }
-  Relation "HB_Habitat_habitatSpecies" {
+  Relation <<voidable>> "HB_Habitat_habitatSpecies" {
     * profile = "attributes"
     * tableName = "HB_Habitat_habitatSpecies"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HB_HabitatSpeciesType(id)
   }
-  Relation "HB_Habitat_habitatVegetation" {
+  Relation <<voidable>> "HB_Habitat_habitatVegetation" {
     * profile = "attributes"
     * tableName = "HB_Habitat_habitatVegetation"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HB_Habitat(id)

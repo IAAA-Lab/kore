@@ -8,17 +8,17 @@ Container <<applicationSchema>> "Gridded Land Use" {
     coverageFunction_ruleReference TEXT
     extent_description TEXT
     id INTEGER NOT NULL PRIMARY KEY
+    metadata _Any
     name TEXT NOT NULL
+    rangeSet _Any
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
     <<reference>> inspireId INTEGER
+    <<reference>> rangeType INTEGER
     <<voidable>> validFrom DATE
     <<voidable>> validTo DATE
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
-    domainSet _Any as ref
-    metadata _Any [0..*] as ref
-    rangeSet _Any [0..*] as ref
-    rangeType _RecordType as ref
   }
   Relation "GELU_ExistingLandUseGrid_inspireId" {
     * profile = "attributes"
@@ -26,6 +26,39 @@ Container <<applicationSchema>> "Gridded Land Use" {
     * tableName = "GELU_ExistingLandUseGrid_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GELU_ExistingLandUseGrid_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute GELU_ExistingLandUseGrid#domainSet"
+    * tableName = "GELU_ExistingLandUseGrid_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GELU_ExistingLandUseGrid_rangeSet" {
+    * profile = "attributes"
+    * tableName = "GELU_ExistingLandUseGrid_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GELU_ExistingLandUseGrid_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute GELU_ExistingLandUseGrid#coverageFunction_gridFunction"
+    * tableName = "GELU_ExistingLandUseGrid_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "GELU_ExistingLandUseGrid_metadata" {
+    * profile = "attributes"
+    * tableName = "GELU_ExistingLandUseGrid_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "GELU_ExistingLandUseGrid_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute GELU_ExistingLandUseGrid#rangeType"
+    * tableName = "GELU_ExistingLandUseGrid_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GELU_ExistingLandUseGrid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
   }
 }
 Container "Quadrilateral Grid" {

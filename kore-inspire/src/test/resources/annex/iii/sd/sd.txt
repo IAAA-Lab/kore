@@ -200,13 +200,13 @@ Container <<applicationSchema>> "SpeciesDistribution" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SD_SpeciesDistributionUnit_distributionInfo" {
+  Relation <<voidable>> "SD_SpeciesDistributionUnit_distributionInfo" {
     * profile = "attributes"
     * tableName = "SD_SpeciesDistributionUnit_distributionInfo"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SD_SpeciesDistributionUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SD_DistributionInfoType(id)
   }
-  Relation "SD_SpeciesDistributionUnit_spatialObject_AbstractFeature" {
+  Relation <<voidable>> "SD_SpeciesDistributionUnit_spatialObject_AbstractFeature" {
     * profile = "attributes"
     * relatedReference = "attribute SD_SpeciesDistributionUnit#spatialObject_AbstractFeature"
     * tableName = "SD_SpeciesDistributionUnit_spatialObject_AbstractFeature"

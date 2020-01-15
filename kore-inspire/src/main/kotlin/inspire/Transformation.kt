@@ -60,6 +60,7 @@ val transformation = { options: Map<String, Any> ->
             rule(`Enumerations and codelists`, options)
             rule(`Extract primitive array`)
             manipulation(`Convert potential references`)
+            rule(`Replace abstract types in properties by identifier`)
             rule(`Association Roles`)
             rule(Voidable, options)
             rule(Properties)

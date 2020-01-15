@@ -8,10 +8,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     stationCode TEXT NOT NULL
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayElectrification" {
     * description = "Indication whether the railway is provided with an electric system to power vehicles moving along it."
@@ -21,10 +21,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RA_FormOfRailwayNodeValue" {
     * identifier = "Railway Transport Network::FormOfRailwayNodeValue"
@@ -43,24 +43,24 @@ Container <<applicationSchema>> "Railway Transport Network" {
     speed_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayLinkSequence" {
     * description = "A linear spatial object, composed of an ordered collection of railway links, which represents a continuous path in a railway network without any branches. The element has a defined beginning and end and every position on the railway link sequence is identifiable with one single parameter such as length. It describes an element of the railway network, characterized by one or more thematical identifiers and/or properties."
     * identifier = "Railway Transport Network::RailwayLinkSequence"
     * tableName = "TN_RA_RailwayLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayNode" {
     * description = "A point spatial object which represents a significant point along the railway network or defines an intersection of railway tracks used to describe its connectivity."
@@ -70,14 +70,14 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> spokeEnd_Link BASE_Identifier
+    <<voidable>> spokeStart_Link BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
-    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayYardArea" {
     * description = "An area spatial object which is used to represent the topographical limits of a railway yard.
@@ -89,29 +89,36 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayStationNode" {
     * description = "A railway node which represents the location of a railway station along the railway network."
     * identifier = "Railway Transport Network::RailwayStationNode"
     * tableName = "TN_RA_RailwayStationNode"
     geometry POINT NOT NULL
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> numberOfPlatforms INTEGER
+    <<voidable>> spokeEnd_Link BASE_Identifier
+    <<voidable>> spokeStart_Link BASE_Identifier
+    <<voidable>> validFrom DATETIME
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
-    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
+    <<voidable>> validTo DATETIME
   }
   Constraint Enum <<enumeration>> "TN_RA_MinMaxTrackValue" {
     * identifier = "Railway Transport Network::MinMaxTrackValue"
@@ -127,11 +134,11 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayUse" {
     * description = "The current use of the railway."
@@ -141,10 +148,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     use TEXT NOT NULL CHECK(TN_RA_RailwayUseValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayLink" {
     * description = "A linear spatial object that describes the geometry and connectivity of a railway network between two points in the network.
@@ -156,14 +163,14 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> endNode_Node INTEGER
     <<voidable>> fictitious BOOLEAN
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<enumeration>> "TN_RA_TrackGaugeCategoryValue" {
     * identifier = "Railway Transport Network::TrackGaugeCategoryValue"
@@ -180,10 +187,10 @@ Container <<applicationSchema>> "Railway Transport Network" {
     type TEXT NOT NULL CHECK(TN_RA_RailwayTypeValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayLine" {
     * description = "A collection of railway link sequences and or individual railway links that are characterized by one or more thematical identifiers and/or properties.
@@ -192,16 +199,16 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * identifier = "Railway Transport Network::RailwayLine"
     * tableName = "TN_RA_RailwayLine"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> post_MarkerPost BASE_Identifier
     <<voidable>> railwayLineCode TEXT
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RA_RailwayUseValue" {
     * identifier = "Railway Transport Network::RailwayUseValue"
@@ -217,13 +224,13 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> nominalGauge TEXT
     <<voidable>> nominalGaugeCategory TEXT CHECK(TN_RA_TrackGaugeCategoryValue)
     <<voidable>> nominalGauge_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayArea" {
     * description = "Surface occupied by a railway track, including ballast."
@@ -233,11 +240,11 @@ Container <<applicationSchema>> "Railway Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RA_RailwayTypeValue" {
     * identifier = "Railway Transport Network::RailwayTypeValue"
@@ -260,11 +267,11 @@ Container <<applicationSchema>> "Railway Transport Network" {
     numberOfTracks INTEGER NOT NULL
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> minMaxNumberOfTracks TEXT CHECK(TN_RA_MinMaxTrackValue)
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RA_RailwayYardNode" {
     * description = "A railway node which occurs within a railway yard area.
@@ -273,17 +280,427 @@ Container <<applicationSchema>> "Railway Transport Network" {
     * identifier = "Railway Transport Network::RailwayYardNode"
     * tableName = "TN_RA_RailwayYardNode"
     geometry POINT NOT NULL
+    geometry POINT NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> formOfNode TEXT CHECK(TN_RA_FormOfRailwayNodeValue)
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<reference>> inspireId INTEGER
+    <<voidable>> spokeEnd_Link BASE_Identifier
+    <<voidable>> spokeStart_Link BASE_Identifier
+    <<voidable>> validFrom DATETIME
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
-    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
+    <<voidable>> validTo DATETIME
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationCode_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationCode_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationCode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_RailwayStationCode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationCode#inspireId"
+    * tableName = "TN_RA_RailwayStationCode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationCode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayElectrification_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayElectrification_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayElectrification(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_RailwayElectrification_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayElectrification#inspireId"
+    * tableName = "TN_RA_RailwayElectrification_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayElectrification(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_DesignSpeed_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_DesignSpeed_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_DesignSpeed(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_DesignSpeed_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_DesignSpeed#inspireId"
+    * tableName = "TN_RA_DesignSpeed_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_DesignSpeed(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLinkSequence_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLinkSequence#geographicalName"
+    * tableName = "TN_RA_RailwayLinkSequence_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation "TN_RA_RailwayLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLinkSequence#inspireId"
+    * tableName = "TN_RA_RailwayLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayNode#geographicalName"
+    * tableName = "TN_RA_RailwayNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayNode#inspireId"
+    * tableName = "TN_RA_RailwayNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayYardArea#geographicalName"
+    * tableName = "TN_RA_RailwayYardArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayYardArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayYardArea#inspireId"
+    * tableName = "TN_RA_RailwayYardArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationNode#geographicalName"
+    * tableName = "TN_RA_RailwayStationNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayStationNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationNode#inspireId"
+    * tableName = "TN_RA_RailwayStationNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationNode#geographicalName"
+    * tableName = "TN_RA_RailwayStationNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayStationNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationNode#inspireId"
+    * tableName = "TN_RA_RailwayStationNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationArea#geographicalName"
+    * tableName = "TN_RA_RailwayStationArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayStationArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayStationArea#inspireId"
+    * tableName = "TN_RA_RailwayStationArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayStationArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayStationArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayStationArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayUse_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayUse_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayUse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_RailwayUse_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayUse#inspireId"
+    * tableName = "TN_RA_RailwayUse_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayUse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RA_RailwayLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLink#startNode_Node"
+    * tableName = "TN_RA_RailwayLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RA_RailwayLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLink#endNode_Node"
+    * tableName = "TN_RA_RailwayLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLink_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLink#geographicalName"
+    * tableName = "TN_RA_RailwayLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLink#inspireId"
+    * tableName = "TN_RA_RailwayLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayType_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayType_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_RailwayType_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayType#inspireId"
+    * tableName = "TN_RA_RailwayType_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLine_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayLine_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLine(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLine_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLine#geographicalName"
+    * tableName = "TN_RA_RailwayLine_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLine(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayLine_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayLine_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLine(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RA_RailwayLine_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayLine#inspireId"
+    * tableName = "TN_RA_RailwayLine_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLine(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayLine_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayLine_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayLine(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_NominalTrackGauge_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_NominalTrackGauge_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_NominalTrackGauge(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_NominalTrackGauge_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_NominalTrackGauge#inspireId"
+    * tableName = "TN_RA_NominalTrackGauge_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_NominalTrackGauge(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayArea#geographicalName"
+    * tableName = "TN_RA_RailwayArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayArea#inspireId"
+    * tableName = "TN_RA_RailwayArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_NumberOfTracks_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RA_NumberOfTracks_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_NumberOfTracks(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RA_NumberOfTracks_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_NumberOfTracks#inspireId"
+    * tableName = "TN_RA_NumberOfTracks_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_NumberOfTracks(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayYardNode#geographicalName"
+    * tableName = "TN_RA_RailwayYardNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayYardNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayYardNode#inspireId"
+    * tableName = "TN_RA_RailwayYardNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayYardNode#geographicalName"
+    * tableName = "TN_RA_RailwayYardNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RA_RailwayYardNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RA_RailwayYardNode#inspireId"
+    * tableName = "TN_RA_RailwayYardNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RA_RailwayYardNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RA_RailwayYardNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RA_RailwayYardNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container "basicTypes" {
@@ -301,10 +718,8 @@ Container <<applicationSchema>> "Base Types 2" {
     DocumentCitation
     LegislationCitation
   }
-  Attributes <<dataType>> "BASE2_SimpleCitation" {
-    * tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "SimpleCitation" {
     date DATE
-    id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
     link TEXT
     name TEXT NOT NULL
@@ -335,7 +750,7 @@ Container <<applicationSchema>> "Network" {
     <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"
@@ -394,8 +809,8 @@ Container <<applicationSchema>> "Base Types" {
 }
 Package "Location referencing mechanisms" {
   Class "NodeLocationReference" {
-    node_Node BASE_Identifier as ref
-    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
+    node_Node : BASE_Identifier
+    <<voidable>> networkReference : SimpleCitation [0..1]
   }
 }
 Package "EA Model" {

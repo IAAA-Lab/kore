@@ -110,19 +110,19 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     A production facility groups together a single installation, set of installations or production processes (stationary or mobile), which can be defined within a single geographical boundary, organizational unit or production process. A production facility can also be identified as one or more installations located on the same site that are operated by the same natural or legal person and in which production activities are being carried out. Such a facility groups potentially the land, buildings, and equipment used in carrying on an industrial business or other undertaking or service."
     * identifier = "ProductionAndIndustrialFacilities::ProductionFacility"
     * tableName = "PF_ProductionFacility"
+    function ACT_CORE_Function <<check [1..-1]>>
     geometry GEOMETRY NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
     riverBasinDistrict TEXT CHECK(PF_RiverBasinDistrictValue)
+    thematicId BASE2_ThematicIdentifier
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>>, <<reference>> hostingSite INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> name TEXT
     <<voidable>> surfaceGeometry SURFACE
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    function ACT_CORE_Function [1..*] as ref
-    inspireId BASE_Identifier as ref
-    thematicId BASE2_ThematicIdentifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "PF_PollutionAbatementTechniqueValue" {
     * identifier = "ProductionAndIndustrialFacilities::PollutionAbatementTechniqueValue"
@@ -151,7 +151,7 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PF_ProductionInstallationPart_status" {
+  Relation <<voidable>> "PF_ProductionInstallationPart_status" {
     * profile = "attributes"
     * tableName = "PF_ProductionInstallationPart_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallationPart(id)
@@ -163,13 +163,13 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_ProductionFacility(id)
   }
-  Relation "PF_ProductionBuilding_status" {
+  Relation <<voidable>> "PF_ProductionBuilding_status" {
     * profile = "attributes"
     * tableName = "PF_ProductionBuilding_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
-  Relation "PF_ProductionBuilding_building_AbstractBuilding" {
+  Relation <<voidable>> "PF_ProductionBuilding_building_AbstractBuilding" {
     * profile = "attributes"
     * tableName = "PF_ProductionBuilding_building_AbstractBuilding"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionBuilding(id)
@@ -189,7 +189,7 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PF_ProductionInstallation_status" {
+  Relation <<voidable>> "PF_ProductionInstallation_status" {
     * profile = "attributes"
     * tableName = "PF_ProductionInstallation_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionInstallation(id)
@@ -209,13 +209,13 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PF_ProductionSite_sitePlan" {
+  Relation <<voidable>> "PF_ProductionSite_sitePlan" {
     * profile = "attributes"
     * tableName = "PF_ProductionSite_sitePlan"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleCitation(id)
   }
-  Relation "PF_ProductionSite_status" {
+  Relation <<voidable>> "PF_ProductionSite_status" {
     * profile = "attributes"
     * tableName = "PF_ProductionSite_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionSite(id)
@@ -234,17 +234,36 @@ Container <<applicationSchema>> "ProductionAndIndustrialFacilities" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "PF_ProductionPlot_status" {
+  Relation <<voidable>> "PF_ProductionPlot_status" {
     * profile = "attributes"
     * tableName = "PF_ProductionPlot_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionPlot(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
   }
-  Relation "PF_ProductionFacility_status" {
+  Relation <<voidable>> "PF_ProductionFacility_status" {
     * profile = "attributes"
     * tableName = "PF_ProductionFacility_status"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionFacility(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES PF_StatusType(id)
+  }
+  Relation "PF_ProductionFacility_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute PF_ProductionFacility#inspireId"
+    * tableName = "PF_ProductionFacility_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "PF_ProductionFacility_thematicId" {
+    * profile = "attributes"
+    * tableName = "PF_ProductionFacility_thematicId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_ThematicIdentifier(id)
+  }
+  Relation "PF_ProductionFacility_function" {
+    * profile = "attributes"
+    * tableName = "PF_ProductionFacility_function"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES PF_ProductionFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES ACT_CORE_Function(id)
   }
 }
 Container <<applicationSchema>> "Base Types 2" {
@@ -352,7 +371,7 @@ Container <<applicationSchema>> "Activity Complex" {
   Constraint Enum <<codeList>> "ACT_CORE_InputOutputValue" {
     * identifier = "Activity Complex::InputOutputValue"
   }
-  Relation "ACT_CORE_Function_description" {
+  Relation <<voidable>> "ACT_CORE_Function_description" {
     * profile = "attributes"
     * tableName = "ACT_CORE_Function_description"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES ACT_CORE_Function(id)

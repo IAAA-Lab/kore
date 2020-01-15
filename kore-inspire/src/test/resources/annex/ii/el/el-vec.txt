@@ -21,10 +21,10 @@ Container <<applicationSchema>> "ElevationVectorElements" {
     <<voidable>> downRight BOOLEAN
   }
   Abstract Class <<featureType>> "ElevationVectorObject" {
-    localDepthDatum ChartDatum
-    propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    localDepthDatum : ChartDatum [0..1]
+    propertyType : TEXT
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
   }
   Feature <<featureType>> "EL_VEC_VoidArea" {
     * description = "Area of the Earth's surface where the elevation model is unknown because of missing input data. This area shall be excluded from a DEM.
@@ -124,7 +124,7 @@ Container <<applicationSchema>> "ElevationVectorElements" {
     master
     ordinary
   }
-  Relation "EL_VEC_SpotElevation_geographicalName" {
+  Relation <<voidable>> "EL_VEC_SpotElevation_geographicalName" {
     * profile = "attributes"
     * tableName = "EL_VEC_SpotElevation_geographicalName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_VEC_SpotElevation(id)

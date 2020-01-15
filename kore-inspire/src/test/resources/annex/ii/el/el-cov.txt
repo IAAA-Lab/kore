@@ -16,17 +16,17 @@ Container <<applicationSchema>> "ElevationGridCoverage" {
     * tableName = "EL_COV_ElevationGridCoverage"
     coverageFunction_ruleDefinition TEXT
     coverageFunction_ruleReference TEXT
-    domainSet Any NOT NULL
     id INTEGER NOT NULL PRIMARY KEY
-    metadata Any
+    metadata _Any
     propertyType TEXT NOT NULL CHECK(EL_BAS_ElevationPropertyTypeValue)
-    rangeSet Any
-    rangeType RecordType NOT NULL
+    rangeSet _Any
     surfaceType TEXT NOT NULL CHECK(EL_BAS_SurfaceTypeValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> coverageFunction_gridFunction INTEGER
+    <<reference>> domainSet INTEGER
     <<reference>> inspireId INTEGER
-    coverageFunction_gridFunction GMLCOV_GridFunction [0..1] as ref
+    <<reference>> rangeType INTEGER
     domainExtent EX_Extent [1..*] as ref
   }
   Relation "EL_COV_ElevationGridCoverage_contributingElevationGridCoverage" {
@@ -41,6 +41,39 @@ Container <<applicationSchema>> "ElevationGridCoverage" {
     * tableName = "EL_COV_ElevationGridCoverage_inspireId"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_COV_ElevationGridCoverage(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "EL_COV_ElevationGridCoverage_domainSet" {
+    * profile = "attributes"
+    * relatedReference = "attribute EL_COV_ElevationGridCoverage#domainSet"
+    * tableName = "EL_COV_ElevationGridCoverage_domainSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_COV_ElevationGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "EL_COV_ElevationGridCoverage_rangeSet" {
+    * profile = "attributes"
+    * tableName = "EL_COV_ElevationGridCoverage_rangeSet"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_COV_ElevationGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "EL_COV_ElevationGridCoverage_coverageFunction_gridFunction" {
+    * profile = "attributes"
+    * relatedReference = "attribute EL_COV_ElevationGridCoverage#coverageFunction_gridFunction"
+    * tableName = "EL_COV_ElevationGridCoverage_coverageFunction_gridFunction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_COV_ElevationGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMLCOV_GridFunction(id)
+  }
+  Relation "EL_COV_ElevationGridCoverage_metadata" {
+    * profile = "attributes"
+    * tableName = "EL_COV_ElevationGridCoverage_metadata"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_COV_ElevationGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Any(id)
+  }
+  Relation "EL_COV_ElevationGridCoverage_rangeType" {
+    * profile = "attributes"
+    * relatedReference = "attribute EL_COV_ElevationGridCoverage#rangeType"
+    * tableName = "EL_COV_ElevationGridCoverage_rangeType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES EL_COV_ElevationGridCoverage(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _RecordType(id)
   }
 }
 Container <<applicationSchema>> "ElevationBaseTypes" {
@@ -85,6 +118,56 @@ Container "Data quality information" {
     indirect
   }
 }
+Container "Records and Class Metadata" {
+  * fileName = "Records and Class Metadata"
+  Attributes <<type>>, <<type>> "_Any" {
+    * description = "<UsedBy>
+  
+    <NameSpace>ISO 19103 Conceptual Schema Language</NameSpace>
+  
+    <Class>Record</Class>
+  
+    <Package>Records and Class Metadata</Package>
+  
+    <Operation>locate</Operation>
+  
+    <Parameter>Return</Parameter>
+  
+    <Type>Any</Type>
+  
+    <UsedBy>"
+    * identifier = "Records and Class Metadata::Any"
+    * tableName = "_Any"
+    id INTEGER NOT NULL PRIMARY KEY
+  }
+  Attributes <<type>>, <<type>> "_Type" {
+    * description = "Type is used here for as a generic concept for any metalanguage description of an object class."
+    * identifier = "Records and Class Metadata::Type"
+    * tableName = "_Type"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    schema Schema [0..*] as ref
+  }
+  Attributes <<type>>, <<type>> "_RecordType" {
+    * description = "A RecordType is a look up mechanism that associates AttributeNames to TypeNames. AttributeNames are locally mapped. TypeNames are most often either primitives, or other types in the same schema as this record. Because the RecordType can control the structure of a set of Records, it is essentially a metaclass for that set of records view as a class.
+  
+    A RecordType is a NameSpace for its included attributeTypes."
+    * identifier = "Records and Class Metadata::RecordType"
+    * tableName = "_RecordType"
+    id INTEGER NOT NULL PRIMARY KEY
+    typeName_aName TEXT NOT NULL
+    <<reference>> memberType INTEGER
+    record Record [0..*] as ref
+    schema Schema [0..*] as ref
+  }
+  Relation "_RecordType_memberType" {
+    * profile = "attributes"
+    * relatedReference = "attribute _RecordType#memberType"
+    * tableName = "_RecordType_memberType"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES _RecordType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _Type(id)
+  }
+}
 Container <<applicationSchema>> "Base Types" {
   * fileName = "Base Types"
   Attributes <<dataType>> "BASE_Identifier" {
@@ -127,14 +210,6 @@ Container <<applicationSchema>> "Base Types" {
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
-Package "Records and Class Metadata" {
-  Class <<type>>, <<type>> "Any" {}
-  Class <<type>>, <<type>> "RecordType" {
-    typeName_aName : TEXT
-    record Record [0..*] as ref
-    schema Schema [0..*] as ref
-  }
-}
 Package "Extent information" {
   Class "EX_Extent" {
     RationalRose$Java:ConstructorIs = "public"
@@ -152,6 +227,7 @@ Package "Extent information" {
     RationalRose$Visual Basic:OptionCompare = "(none)"
     RationalRose$Visual Basic:OptionExplicit = "True"
     description : TEXT [0..1]
+    geographicElement_EX_GeographicExtent BASE_Identifier [0..*] as ref
   }
 }
 Container <<applicationSchema>> "Coverages (Domain and Range)" {

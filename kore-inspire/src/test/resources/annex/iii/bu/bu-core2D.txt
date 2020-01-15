@@ -11,25 +11,25 @@ Container <<applicationSchema>> "Buildings2D" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<array>> buildingNatures TEXT
+    <<voidable>>, <<reference>> dateOfConstruction INTEGER
+    <<voidable>>, <<reference>> dateOfDemolition INTEGER
+    <<voidable>>, <<reference>> dateOfRenovation INTEGER
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    <<voidable>> currentUse BU_BASE_CurrentUse
+    <<voidable>> elevation BU_BASE_Elevation
+    <<voidable>> externalReference BU_BASE_ExternalReference
     <<voidable>> geometry2D_horizontalGeometryEstimatedAccuracy TEXT
     <<voidable>> geometry2D_horizontalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> geometry2D_verticalGeometryEstimatedAccuracy TEXT
     <<voidable>> geometry2D_verticalGeometryEstimatedAccuracy_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> heightAboveGround BU_BASE_HeightAboveGround
+    <<reference>> inspireId INTEGER
+    <<voidable>> name BASE2_SimpleGeographicalName
     <<voidable>> numberOfBuildingUnits INTEGER
     <<voidable>> numberOfDwellings INTEGER
     <<voidable>> numberOfFloorsAboveGround INTEGER
-    inspireId BASE_Identifier as ref
-    <<voidable>> currentUse BU_BASE_CurrentUse [0..*] as ref
-    <<voidable>> dateOfConstruction BU_BASE_DateOfEvent [0..1] as ref
-    <<voidable>> dateOfDemolition BU_BASE_DateOfEvent [0..1] as ref
-    <<voidable>> dateOfRenovation BU_BASE_DateOfEvent [0..1] as ref
-    <<voidable>> elevation BU_BASE_Elevation [0..*] as ref
-    <<voidable>> externalReference BU_BASE_ExternalReference [0..*] as ref
-    <<voidable>> heightAboveGround BU_BASE_HeightAboveGround [0..*] as ref
-    <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> parts_BuildingPart BASE_Identifier [0..*] as ref
+    <<voidable>> parts_BuildingPart BASE_Identifier
   }
   Attributes <<featureType>> "BU_CORE2D_BuildingPart" {
     * description = "A BuildingPart is a sub-division of a Building that might be considered itself as a building.
@@ -44,20 +44,142 @@ Container <<applicationSchema>> "Buildings2D" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<array>> buildingNatures TEXT
+    <<voidable>>, <<reference>> dateOfConstruction INTEGER
+    <<voidable>>, <<reference>> dateOfDemolition INTEGER
+    <<voidable>>, <<reference>> dateOfRenovation INTEGER
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> conditionOfConstruction TEXT CHECK(BU_BASE_ConditionOfConstructionValue)
+    <<voidable>> currentUse BU_BASE_CurrentUse
+    <<voidable>> elevation BU_BASE_Elevation
+    <<voidable>> externalReference BU_BASE_ExternalReference
+    <<voidable>> heightAboveGround BU_BASE_HeightAboveGround
+    <<reference>> inspireId INTEGER
+    <<voidable>> name BASE2_SimpleGeographicalName
     <<voidable>> numberOfBuildingUnits INTEGER
     <<voidable>> numberOfDwellings INTEGER
     <<voidable>> numberOfFloorsAboveGround INTEGER
-    inspireId BASE_Identifier as ref
-    <<voidable>> currentUse BU_BASE_CurrentUse [0..*] as ref
-    <<voidable>> dateOfConstruction BU_BASE_DateOfEvent [0..1] as ref
-    <<voidable>> dateOfDemolition BU_BASE_DateOfEvent [0..1] as ref
-    <<voidable>> dateOfRenovation BU_BASE_DateOfEvent [0..1] as ref
-    <<voidable>> elevation BU_BASE_Elevation [0..*] as ref
-    <<voidable>> externalReference BU_BASE_ExternalReference [0..*] as ref
-    <<voidable>> heightAboveGround BU_BASE_HeightAboveGround [0..*] as ref
-    <<voidable>> name BASE2_SimpleGeographicalName [0..*] as ref
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_parts_BuildingPart" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_Building_parts_BuildingPart"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_currentUse" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_Building_currentUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_CurrentUse(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_dateOfConstruction" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_Building#dateOfConstruction"
+    * tableName = "BU_CORE2D_Building_dateOfConstruction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_DateOfEvent(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_dateOfDemolition" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_Building#dateOfDemolition"
+    * tableName = "BU_CORE2D_Building_dateOfDemolition"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_DateOfEvent(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_dateOfRenovation" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_Building#dateOfRenovation"
+    * tableName = "BU_CORE2D_Building_dateOfRenovation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_DateOfEvent(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_elevation" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_Building_elevation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_Elevation(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_externalReference" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_Building_externalReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_ExternalReference(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_heightAboveGround" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_Building_heightAboveGround"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_HeightAboveGround(id)
+  }
+  Relation "BU_CORE2D_Building_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_Building#inspireId"
+    * tableName = "BU_CORE2D_Building_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_Building_name" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_Building_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_Building(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_currentUse" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_BuildingPart_currentUse"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_CurrentUse(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_dateOfConstruction" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_BuildingPart#dateOfConstruction"
+    * tableName = "BU_CORE2D_BuildingPart_dateOfConstruction"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_DateOfEvent(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_dateOfDemolition" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_BuildingPart#dateOfDemolition"
+    * tableName = "BU_CORE2D_BuildingPart_dateOfDemolition"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_DateOfEvent(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_dateOfRenovation" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_BuildingPart#dateOfRenovation"
+    * tableName = "BU_CORE2D_BuildingPart_dateOfRenovation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_DateOfEvent(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_elevation" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_BuildingPart_elevation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_Elevation(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_externalReference" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_BuildingPart_externalReference"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_ExternalReference(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_heightAboveGround" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_BuildingPart_heightAboveGround"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BU_BASE_HeightAboveGround(id)
+  }
+  Relation "BU_CORE2D_BuildingPart_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute BU_CORE2D_BuildingPart#inspireId"
+    * tableName = "BU_CORE2D_BuildingPart_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "BU_CORE2D_BuildingPart_name" {
+    * profile = "attributes"
+    * tableName = "BU_CORE2D_BuildingPart_name"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BU_CORE2D_BuildingPart(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
   Relation "BU_CORE2D_BuildingPart_geometry2D" {
     * profile = "features"
@@ -70,23 +192,18 @@ Container <<applicationSchema>> "BuildingsBase" {
   * fileName = "BuildingsBase"
   Constraint Enum <<codeList>> "BU_BASE_ConditionOfConstructionValue" {
     * identifier = "BuildingsBase::ConditionOfConstructionValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_HorizontalGeometryReferenceValue" {
     * identifier = "BuildingsBase::HorizontalGeometryReferenceValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_ElevationReferenceValue" {
     * identifier = "BuildingsBase::ElevationReferenceValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_BuildingNatureValue" {
     * identifier = "BuildingsBase::BuildingNatureValue"
-    obligation = "implementingRule"
   }
   Constraint Enum <<codeList>> "BU_BASE_HeightStatusValue" {
     * identifier = "BuildingsBase::HeightStatusValue"
-    obligation = "implementingRule"
   }
   Attributes <<dataType>> "BU_BASE_Elevation" {
     * description = "This data types includes the elevation value itself  and information on how this elevation was measured."
@@ -100,7 +217,6 @@ Container <<applicationSchema>> "BuildingsBase" {
   Constraint Enum <<codeList>> "BU_BASE_CurrentUseValue" {
     * identifier = "BuildingsBase::CurrentUseValue"
     extensiblity = "narrower"
-    obligation = "implementingRule"
   }
   Attributes <<dataType>> "BU_BASE_DateOfEvent" {
     * description = "This data type includes the different possible ways to define the date of an event."

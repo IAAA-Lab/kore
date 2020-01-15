@@ -65,8 +65,8 @@ Container <<applicationSchema>> "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
+    <<version>>, <<reference>> aggregationUnit_StatisticalUnit INTEGER
     <<voidable>> gender TEXT CHECK(BASE2_GenderValue)
-    <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
   }
   Constraint Enum <<codeList>> "HH_LakeWaterQuality" {
     * identifier = "HumanHealth::LakeWaterQuality"
@@ -88,8 +88,8 @@ Container <<applicationSchema>> "HumanHealth" {
     pathology TEXT CHECK(HH_ICDValue)
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
+    <<version>>, <<reference>> aggregationUnit_StatisticalUnit INTEGER
     <<voidable>> gender TEXT CHECK(BASE2_GenderValue)
-    <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
   }
   Constraint Enum <<codeList>> "HH_RiverWaterQualityComponentTypeValue" {
     * identifier = "HumanHealth::RiverWaterQualityComponentTypeValue"
@@ -171,7 +171,7 @@ Container <<applicationSchema>> "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
-    <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
+    <<version>>, <<reference>> aggregationUnit_StatisticalUnit INTEGER
   }
   Class <<union>> "Age" {
     month : INTEGER
@@ -185,7 +185,7 @@ Container <<applicationSchema>> "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     statisticalMethod TEXT NOT NULL CHECK(HH_StatisticalAggregationMethodValue)
     type TEXT NOT NULL CHECK(HH_EnvHealthDeterminantTypeValue)
-    <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
+    <<version>>, <<reference>> aggregationUnit_StatisticalUnit INTEGER
   }
   Constraint Enum <<codeList>> "HH_StatisticalAggregationMethodValue" {
     * identifier = "HumanHealth::StatisticalAggregationMethodValue"
@@ -241,8 +241,8 @@ Container <<applicationSchema>> "HumanHealth" {
     id INTEGER NOT NULL PRIMARY KEY
     referencePeriod_endDate DATE NOT NULL
     referencePeriod_startDate DATE NOT NULL
+    <<version>>, <<reference>> aggregationUnit_StatisticalUnit INTEGER
     <<reference>> refersTo INTEGER
-    <<version>> aggregationUnit_StatisticalUnit BASE_Identifier as ref
   }
   Attributes <<type>> "HH_Concentration" {
     * description = "A measure of concentration of a specified component in a specified media."
@@ -309,11 +309,46 @@ Container <<applicationSchema>> "HumanHealth" {
     meanAge_week INTEGER
     meanAge_year INTEGER
   }
+  Relation <<version>> "HH_GeneralHealthStatistics_aggregationUnit_StatisticalUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_GeneralHealthStatistics#aggregationUnit_StatisticalUnit"
+    * tableName = "HH_GeneralHealthStatistics_aggregationUnit_StatisticalUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_GeneralHealthStatistics(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "HH_Disease_diseaseMeasure" {
     * profile = "attributes"
     * tableName = "HH_Disease_diseaseMeasure"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_Disease(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HH_DiseaseMeasure(id)
+  }
+  Relation <<version>> "HH_Disease_aggregationUnit_StatisticalUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_Disease#aggregationUnit_StatisticalUnit"
+    * tableName = "HH_Disease_aggregationUnit_StatisticalUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_Disease(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "HH_HealthServicesStatistic_aggregationUnit_StatisticalUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_HealthServicesStatistic#aggregationUnit_StatisticalUnit"
+    * tableName = "HH_HealthServicesStatistic_aggregationUnit_StatisticalUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_HealthServicesStatistic(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "HH_EnvHealthDeterminantStatisticalData_aggregationUnit_StatisticalUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_EnvHealthDeterminantStatisticalData#aggregationUnit_StatisticalUnit"
+    * tableName = "HH_EnvHealthDeterminantStatisticalData_aggregationUnit_StatisticalUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_EnvHealthDeterminantStatisticalData(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<version>> "HH_Biomarker_aggregationUnit_StatisticalUnit" {
+    * profile = "attributes"
+    * relatedReference = "attribute HH_Biomarker#aggregationUnit_StatisticalUnit"
+    * tableName = "HH_Biomarker_aggregationUnit_StatisticalUnit"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HH_Biomarker(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "HH_BiomarkerThematicMetadata_describedBy" {
     * profile = "attributes"

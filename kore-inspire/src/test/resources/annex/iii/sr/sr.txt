@@ -30,13 +30,13 @@ Container <<applicationSchema>> "Sea Regions" {
     extent_geometry MULTISURFACE NOT NULL
     extent_waterLevel TEXT CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
     <<reference>> inspireId INTEGER
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "SR_ShoreTypeClassificationValue" {
     * identifier = "Sea Regions::ShoreTypeClassificationValue"
@@ -80,23 +80,23 @@ Container <<applicationSchema>> "Sea Regions" {
     * identifier = "Sea Regions::SeaArea"
     * tableName = "SR_SeaArea"
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
     <<reference>> inspireId INTEGER
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Attributes <<featureType>> "SR_Shoreline" {
     * description = "Any Boundary between a Sea Area and land."
     * identifier = "Sea Regions::Shoreline"
     * tableName = "SR_Shoreline"
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
     <<voidable>> waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Attributes <<featureType>> "SR_Coastline" {
     * description = "A special case of a shoreline defined as the shoreline at Mean High Water (MHW). Where there is not significant variation in water level, Mean Sea Level (MSL) can be used as a substitute for MHW.
@@ -105,10 +105,10 @@ Container <<applicationSchema>> "Sea Regions" {
     * identifier = "Sea Regions::Coastline"
     * tableName = "SR_Coastline"
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
     <<voidable>> waterLevel TEXT CHECK(HY_P_WaterLevelValue)
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "SR_ShoreStabilityValue" {
     * identifier = "Sea Regions::ShoreStabilityValue"
@@ -122,20 +122,20 @@ Container <<applicationSchema>> "Sea Regions" {
     extent_geometry MULTISURFACE NOT NULL
     extent_waterLevel TEXT CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
+    relatedHydroObject_HydroObject BASE_Identifier
     seaAreaType TEXT CHECK(SR_SeaAreaTypeClassificationValue)
     zoneType TEXT NOT NULL CHECK(SR_ZoneTypeValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
     <<reference>> inspireId INTEGER
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "SR_SeaBedCoverValue" {
     * identifier = "Sea Regions::SeaBedCoverValue"
   }
   Abstract Class <<featureType>> "MarineLayer" {
-    geometry GEOMETRY
+    geometry : GEOMETRY [0..1]
   }
   Constraint Enum <<codeList>> "SR_SeaSurfaceClassificationValue" {
     * identifier = "Sea Regions::SeaSurfaceClassificationValue"
@@ -153,14 +153,14 @@ Container <<applicationSchema>> "Sea Regions" {
     highWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
     id INTEGER NOT NULL PRIMARY KEY
     lowWaterLevel TEXT NOT NULL CHECK(HY_P_WaterLevelValue)
+    relatedHydroObject_HydroObject BASE_Identifier
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> composition TEXT CHECK(HY_P_ShoreTypeValue)
     <<voidable>> delineationKnown BOOLEAN
-    inspireId BASE_Identifier as ref
-    relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
-    <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
+    <<voidable>> geographicalName BASE2_SimpleGeographicalName
+    <<voidable>> hydroId HY_HydroIdentifier
+    <<reference>> inspireId INTEGER
   }
   Feature <<dataType>> "SR_MarineExtent" {
     * description = "The extent of a sea area for a given tidal state
@@ -189,10 +189,65 @@ Container <<applicationSchema>> "Sea Regions" {
   Constraint Enum <<codeList>> "SR_SeaAreaTypeClassificationValue" {
     * identifier = "Sea Regions::SeaAreaTypeClassificationValue"
   }
+  Relation "SR_SeaSurfaceArea_subLayer_MarineLayer" {
+    * profile = "attributes"
+    * tableName = "SR_SeaSurfaceArea_subLayer_MarineLayer"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaSurfaceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_Sea_subArea" {
+    * profile = "attributes"
+    * tableName = "SR_Sea_subArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
+  }
   Relation "SR_Sea_<<missing>>_MaritimeZone" {
     * profile = "attributes"
     * tableName = "SR_Sea_<<missing>>_MaritimeZone"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_Sea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SR_Sea#inspireId"
+    * tableName = "SR_Sea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_Sea_parameterValue" {
+    * profile = "attributes"
+    * tableName = "SR_Sea_parameterValue"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ParameterValuePair(id)
+  }
+  Relation <<voidable>> "SR_Sea_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_Sea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_Sea_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_Sea_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_Sea_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_Sea_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_Sea_extent" {
+    * profile = "features"
+    * tableName = "SR_Sea_extent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Sea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
+  }
+  Relation "SR_SeaBedArea_subLayer_MarineLayer" {
+    * profile = "attributes"
+    * tableName = "SR_SeaBedArea_subLayer_MarineLayer"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaBedArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SR_SeaArea_subArea" {
@@ -214,17 +269,181 @@ Container <<applicationSchema>> "Sea Regions" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ParameterValuePair(id)
   }
+  Relation <<voidable>> "SR_SeaArea_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_SeaArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_SeaArea_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_SeaArea_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_SeaArea_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_SeaArea_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "SR_SeaArea_extent" {
     * profile = "features"
     * tableName = "SR_SeaArea_extent"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_SeaArea(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
   }
+  Relation <<voidable>> "SR_Shoreline_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_Shoreline_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_Shoreline_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_Shoreline_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_Shoreline_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_Shoreline_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "SR_Shoreline_segment" {
     * profile = "features"
     * tableName = "SR_Shoreline_segment"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Shoreline(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ShoreSegment(id)
+  }
+  Relation <<voidable>> "SR_Coastline_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_Coastline_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_Coastline_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_Coastline_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_Coastline_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_Coastline_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SR_Coastline_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_Coastline_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_Coastline_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_Coastline_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_Coastline_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_Coastline_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_Coastline_segment" {
+    * profile = "features"
+    * tableName = "SR_Coastline_segment"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_Coastline(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ShoreSegment(id)
+  }
+  Relation "SR_MarineCirculationZone_subArea" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_subArea"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_SeaArea(id)
+  }
+  Relation "SR_MarineCirculationZone_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SR_MarineCirculationZone#inspireId"
+    * tableName = "SR_MarineCirculationZone_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_MarineCirculationZone_parameterValue" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_parameterValue"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_ParameterValuePair(id)
+  }
+  Relation <<voidable>> "SR_MarineCirculationZone_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_MarineCirculationZone_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_MarineCirculationZone_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SR_MarineCirculationZone_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_MarineCirculationZone_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_MarineCirculationZone_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_MarineCirculationZone_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "SR_MarineCirculationZone_extent" {
+    * profile = "features"
+    * tableName = "SR_MarineCirculationZone_extent"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_MarineCirculationZone(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES SR_MarineExtent(id)
+  }
+  Relation "SR_InterTidalArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute SR_InterTidalArea#inspireId"
+    * tableName = "SR_InterTidalArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_InterTidalArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "SR_InterTidalArea_geographicalName" {
+    * profile = "attributes"
+    * tableName = "SR_InterTidalArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_InterTidalArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "SR_InterTidalArea_hydroId" {
+    * profile = "attributes"
+    * tableName = "SR_InterTidalArea_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_InterTidalArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "SR_InterTidalArea_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "SR_InterTidalArea_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SR_InterTidalArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
   Relation "SR_MarineContour_sourceObservations_ObservationSet" {
     * profile = "attributes"
@@ -346,13 +565,6 @@ Container <<applicationSchema>> "Base Types" {
     * standardUri = "http://www.isotc211.org/2005/gmd"
   }
 }
-Package <<applicationSchema>> "Observable Properties" {
-  Abstract GF_PropertyType <<type>> "AbstractObservableProperty" {
-    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
-    "
-    <<array>> labels : TEXT [0..1]
-  }
-}
 Container <<applicationSchema>> "Base Types 2" {
   * fileName = "Base Types 2"
   Attributes <<dataType>> "BASE2_SimpleGeographicalName" {
@@ -374,6 +586,13 @@ Container <<applicationSchema>> "Hydro - base" {
     id INTEGER NOT NULL PRIMARY KEY
     localId TEXT NOT NULL
     namespace TEXT NOT NULL
+  }
+}
+Package <<applicationSchema>> "Observable Properties" {
+  Abstract GF_PropertyType <<type>> "AbstractObservableProperty" {
+    xmlSchemaType = "#NOTES#Description: If the type has a canonical XML Schema encoding the XML Schema typename corresponding to the data type shall be given as the value (applies to ISO 19136:2007 encoding rule)
+    "
+    <<array>> labels : TEXT [0..1]
   }
 }
 Package "EA Model" {

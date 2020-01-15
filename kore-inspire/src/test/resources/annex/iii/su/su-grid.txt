@@ -59,7 +59,7 @@ Container <<applicationSchema>> "Statistical Units Grid" {
     x INTEGER NOT NULL
     y INTEGER NOT NULL
   }
-  Relation "SU_GRID_StatisticalGrid_lower" {
+  Relation <<voidable>> "SU_GRID_StatisticalGrid_lower" {
     * profile = "attributes"
     * relatedReference = "attribute SU_GRID_StatisticalGrid#lower"
     * tableName = "SU_GRID_StatisticalGrid_lower"
@@ -80,7 +80,7 @@ Container <<applicationSchema>> "Statistical Units Grid" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES SU_GRID_StatisticalGrid(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "SU_GRID_StatisticalGridCell_lowers" {
+  Relation <<voidable>> "SU_GRID_StatisticalGridCell_lowers" {
     * profile = "features"
     * relatedReference = "attribute SU_GRID_StatisticalGridCell#upper"
     * tableName = "SU_GRID_StatisticalGridCell_lowers"

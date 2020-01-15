@@ -11,14 +11,14 @@ Container <<applicationSchema>> "Cable Transport Network" {
     * identifier = "Cable Transport Network::CablewayLinkSequence"
     * tableName = "TN_C_CablewayLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_C_CablewayNode" {
     * description = "A point spatial object that is used to represent connectivity between two consecutive cableway links."
@@ -28,28 +28,28 @@ Container <<applicationSchema>> "Cable Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> spokeEnd_Link BASE_Identifier
+    <<voidable>> spokeStart_Link BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
-    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_C_CablewayLinkSet" {
     * description = "A collection of cableway link sequences and or individual cableway links that has a specific function or significance in a cable transport network."
     * identifier = "Cable Transport Network::CablewayLinkSet"
     * tableName = "TN_C_CablewayLinkSet"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> post_MarkerPost BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_C_CablewayLink" {
     * description = "Linear spatial object that describes the geometry and connectivity of a cable network between two points in a cableway transport network.
@@ -62,14 +62,138 @@ Container <<applicationSchema>> "Cable Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> cablewayType TEXT CHECK(TN_C_CablewayTypeValue)
+    <<reference>> endNode_Node INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
+  }
+  Relation <<voidable>> "TN_C_CablewayLinkSequence_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLinkSequence#geographicalName"
+    * tableName = "TN_C_CablewayLinkSequence_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_C_CablewayLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation "TN_C_CablewayLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLinkSequence#inspireId"
+    * tableName = "TN_C_CablewayLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayNode#geographicalName"
+    * tableName = "TN_C_CablewayNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_C_CablewayNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayNode#inspireId"
+    * tableName = "TN_C_CablewayNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayLinkSet_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayLinkSet_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayLinkSet_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLinkSet#geographicalName"
+    * tableName = "TN_C_CablewayLinkSet_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_C_CablewayLinkSet_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayLinkSet_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_C_CablewayLinkSet_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLinkSet#inspireId"
+    * tableName = "TN_C_CablewayLinkSet_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayLinkSet_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayLinkSet_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLinkSet(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_C_CablewayLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLink#startNode_Node"
+    * tableName = "TN_C_CablewayLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_C_CablewayLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLink#endNode_Node"
+    * tableName = "TN_C_CablewayLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayLink_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLink#geographicalName"
+    * tableName = "TN_C_CablewayLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_C_CablewayLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_C_CablewayLink#inspireId"
+    * tableName = "TN_C_CablewayLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_C_CablewayLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_C_CablewayLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_C_CablewayLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container "basicTypes" {
@@ -87,10 +211,8 @@ Container <<applicationSchema>> "Base Types 2" {
     DocumentCitation
     LegislationCitation
   }
-  Attributes <<dataType>> "BASE2_SimpleCitation" {
-    * tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "SimpleCitation" {
     date DATE
-    id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
     link TEXT
     name TEXT NOT NULL
@@ -165,8 +287,8 @@ Container <<applicationSchema>> "Base Types" {
 }
 Package "Location referencing mechanisms" {
   Class "NodeLocationReference" {
-    node_Node BASE_Identifier as ref
-    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
+    node_Node : BASE_Identifier
+    <<voidable>> networkReference : SimpleCitation [0..1]
   }
 }
 Package "EA Model" {

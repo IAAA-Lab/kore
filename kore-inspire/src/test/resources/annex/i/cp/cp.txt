@@ -104,7 +104,7 @@ Container <<applicationSchema>> "CadastralParcels" {
     id INTEGER NOT NULL PRIMARY KEY
     referencePoint POINT
   }
-  Relation "CP_CadastralZoning_upperLevelUnit" {
+  Relation <<voidable>> "CP_CadastralZoning_upperLevelUnit" {
     * profile = "features"
     * relatedReference = "attribute CP_CadastralZoning#upperLevelUnit"
     * tableName = "CP_CadastralZoning_upperLevelUnit"
@@ -118,19 +118,19 @@ Container <<applicationSchema>> "CadastralParcels" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "CP_CadastralZoning_levelName" {
+  Relation <<voidable>> "CP_CadastralZoning_levelName" {
     * profile = "attributes"
     * tableName = "CP_CadastralZoning_levelName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
-  Relation "CP_CadastralZoning_name" {
+  Relation <<voidable>> "CP_CadastralZoning_name" {
     * profile = "attributes"
     * tableName = "CP_CadastralZoning_name"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralZoning(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "CP_CadastralBoundary_parcel" {
+  Relation <<voidable>> "CP_CadastralBoundary_parcel" {
     * profile = "features"
     * tableName = "CP_CadastralBoundary_parcel"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralBoundary(id)
@@ -143,14 +143,14 @@ Container <<applicationSchema>> "CadastralParcels" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "CP_CadastralParcel_zoning" {
+  Relation <<voidable>> "CP_CadastralParcel_zoning" {
     * profile = "features"
     * relatedReference = "attribute CP_CadastralParcel#zoning"
     * tableName = "CP_CadastralParcel_zoning"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES CP_CadastralZoning(id)
   }
-  Relation "CP_CadastralParcel_basicPropertyUnit" {
+  Relation <<voidable>> "CP_CadastralParcel_basicPropertyUnit" {
     * profile = "attributes"
     * tableName = "CP_CadastralParcel_basicPropertyUnit"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
@@ -163,7 +163,7 @@ Container <<applicationSchema>> "CadastralParcels" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_CadastralParcel(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "CP_CadastralParcel_administrativeUnit_AdministrativeUnit" {
+  Relation <<voidable>> "CP_CadastralParcel_administrativeUnit_AdministrativeUnit" {
     * profile = "attributes"
     * relatedReference = "attribute CP_CadastralParcel#administrativeUnit_AdministrativeUnit"
     * tableName = "CP_CadastralParcel_administrativeUnit_AdministrativeUnit"
@@ -177,7 +177,7 @@ Container <<applicationSchema>> "CadastralParcels" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES CP_BasicPropertyUnit(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "CP_BasicPropertyUnit_administrativeUnit_AdministrativeUnit" {
+  Relation <<voidable>> "CP_BasicPropertyUnit_administrativeUnit_AdministrativeUnit" {
     * profile = "attributes"
     * relatedReference = "attribute CP_BasicPropertyUnit#administrativeUnit_AdministrativeUnit"
     * tableName = "CP_BasicPropertyUnit_administrativeUnit_AdministrativeUnit"

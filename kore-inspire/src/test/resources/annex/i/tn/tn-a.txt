@@ -13,11 +13,11 @@ Container <<applicationSchema>> "Air Transport Network" {
     significantPoint BOOLEAN NOT NULL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -37,10 +37,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_AirRoute" {
@@ -52,17 +52,17 @@ Container <<applicationSchema>> "Air Transport Network" {
     * identifier = "Air Transport Network::AirRoute"
     * tableName = "TN_A_AirRoute"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> airRouteType TEXT CHECK(TN_A_AirRouteTypeValue)
     <<voidable>> designator TEXT
+    <<reference>> inspireId INTEGER
+    <<voidable>> post_MarkerPost BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_LowerAltitudeLimit" {
     * description = "Altitude that defines the lower limit of an air transport network object.
@@ -75,10 +75,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_AirRouteLinkClassValue" {
     * identifier = "Air Transport Network::AirRouteLinkClassValue"
@@ -98,11 +98,11 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_StandardInstrumentArrival" {
@@ -120,13 +120,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_NavaidTypeValue" {
@@ -166,10 +166,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     significantPoint BOOLEAN NOT NULL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -189,12 +189,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     significantPoint BOOLEAN NOT NULL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designatorIATA TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> locationIndicatorICAO TEXT
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -214,13 +214,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_ElementLength" {
@@ -232,18 +232,18 @@ Container <<applicationSchema>> "Air Transport Network" {
     length_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Abstract Class <<featureType>> "AirLink" {
-    centrelineGeometry CURVE NOT NULL
-    fictitious BOOLEAN NOT NULL DEFAULT 'false'
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    centrelineGeometry : CURVE
+    fictitious : BOOLEAN
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     endNode_Node BASE_Identifier [0..1] as ref
     inspireId BASE_Identifier [0..1] as ref
     startNode_Node BASE_Identifier [0..1] as ref
@@ -258,10 +258,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_RunwayArea" {
     * description = "A defined rectangular area on a land aerodrome/heliport prepared for the landing and take-off of aircraft.
@@ -277,12 +277,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> runwayType TEXT CHECK(TN_A_RunwayTypeValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_AirRouteTypeValue" {
@@ -299,10 +299,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_Navaid" {
     * description = "One or more Navaid Equipments providing navigation services.
@@ -321,12 +321,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     significantPoint BOOLEAN NOT NULL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> navaidType TEXT CHECK(TN_A_NavaidTypeValue)
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -340,10 +340,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_InstrumentApproachProcedure" {
     * description = "A series of predetermined manoeuvres by reference to flight instruments with specified protection from obstacles from the initial approach fix, or where applicable, from the beginning of a defined arrival route to a point from which a landing can be completed and thereafter, if a landing is not completed, to a position at which holding or en route obstacle clearance criteria apply.
@@ -362,12 +362,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_AirUseRestrictionValue" {
@@ -386,11 +386,11 @@ Container <<applicationSchema>> "Air Transport Network" {
     significantPoint BOOLEAN NOT NULL
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> designator TEXT
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
     <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
     <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
@@ -418,12 +418,12 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_ApronArea" {
@@ -436,10 +436,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_AerodromeArea" {
@@ -454,10 +454,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_RunwayTypeValue" {
@@ -484,10 +484,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_AerodromeTypeValue" {
     * identifier = "Air Transport Network::AerodromeTypeValue"
@@ -509,13 +509,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> airRouteLinkClass TEXT CHECK(TN_A_AirRouteLinkClassValue)
+    <<reference>> endNode_Node INTEGER
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_UseRestriction" {
@@ -526,10 +526,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     restriction TEXT NOT NULL CHECK(TN_A_AirUseRestrictionValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_ConditionOfAirFacility" {
     * description = "State of an air transport network element with regards to its completion and use."
@@ -539,10 +539,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_PointRoleValue" {
     * identifier = "Air Transport Network::PointRoleValue"
@@ -565,18 +565,18 @@ Container <<applicationSchema>> "Air Transport Network" {
     surfaceComposition TEXT NOT NULL CHECK(TN_A_SurfaceCompositionValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Abstract Class <<featureType>> "AirNode" {
-    geometry POINT NOT NULL
-    significantPoint BOOLEAN NOT NULL
-    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
-    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
-    <<voidable>> validFrom DATETIME
-    <<voidable>> validTo DATETIME
+    geometry : POINT
+    significantPoint : BOOLEAN
+    <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion : DATETIME [0..1]
+    <<lifeCycleInfo>>, <<voidable>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> validFrom : DATETIME [0..1]
+    <<voidable>> validTo : DATETIME [0..1]
     inspireId BASE_Identifier [0..1] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
@@ -595,10 +595,10 @@ Container <<applicationSchema>> "Air Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_A_AirLinkSequence" {
     * description = "A linear spatial object, composed of an ordered collection of air links, which represents a continuous path in the air network without any branches.
@@ -609,13 +609,13 @@ Container <<applicationSchema>> "Air Transport Network" {
     * identifier = "Air Transport Network::AirLinkSequence"
     * tableName = "TN_A_AirLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
     <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_A_AirspaceAreaTypeValue" {
@@ -629,6 +629,624 @@ Container <<applicationSchema>> "Air Transport Network" {
     R
     TMA
     UIR
+  }
+  Relation <<voidable>> "TN_A_DesignatedPoint_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_DesignatedPoint_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_DesignatedPoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_DesignatedPoint_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_DesignatedPoint_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_DesignatedPoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_DesignatedPoint_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_DesignatedPoint#geographicalName"
+    * tableName = "TN_A_DesignatedPoint_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_DesignatedPoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_DesignatedPoint_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_DesignatedPoint#inspireId"
+    * tableName = "TN_A_DesignatedPoint_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_DesignatedPoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_DesignatedPoint_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_DesignatedPoint_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_DesignatedPoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirspaceArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirspaceArea#geographicalName"
+    * tableName = "TN_A_AirspaceArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirspaceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_AirspaceArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirspaceArea#inspireId"
+    * tableName = "TN_A_AirspaceArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirspaceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirspaceArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirspaceArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirspaceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirRoute_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirRoute_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRoute(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirRoute_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirRoute#geographicalName"
+    * tableName = "TN_A_AirRoute_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRoute(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_AirRoute_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirRoute_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRoute(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_AirRoute_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirRoute#inspireId"
+    * tableName = "TN_A_AirRoute_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRoute(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirRoute_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirRoute_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRoute(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_LowerAltitudeLimit_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_LowerAltitudeLimit_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_LowerAltitudeLimit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_LowerAltitudeLimit_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_LowerAltitudeLimit#inspireId"
+    * tableName = "TN_A_LowerAltitudeLimit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_LowerAltitudeLimit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_TaxiwayArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_TaxiwayArea#geographicalName"
+    * tableName = "TN_A_TaxiwayArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TaxiwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_TaxiwayArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_TaxiwayArea#inspireId"
+    * tableName = "TN_A_TaxiwayArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TaxiwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_TaxiwayArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_TaxiwayArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TaxiwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_StandardInstrumentArrival_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentArrival#startNode_Node"
+    * tableName = "TN_A_StandardInstrumentArrival_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentArrival(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_StandardInstrumentArrival_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentArrival#endNode_Node"
+    * tableName = "TN_A_StandardInstrumentArrival_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentArrival(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_StandardInstrumentArrival_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentArrival#geographicalName"
+    * tableName = "TN_A_StandardInstrumentArrival_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentArrival(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_StandardInstrumentArrival_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentArrival#inspireId"
+    * tableName = "TN_A_StandardInstrumentArrival_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentArrival(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_StandardInstrumentArrival_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_StandardInstrumentArrival_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentArrival(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_RunwayCentrelinePoint_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_RunwayCentrelinePoint_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayCentrelinePoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_RunwayCentrelinePoint_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_RunwayCentrelinePoint_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayCentrelinePoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_RunwayCentrelinePoint_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_RunwayCentrelinePoint#geographicalName"
+    * tableName = "TN_A_RunwayCentrelinePoint_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayCentrelinePoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_RunwayCentrelinePoint_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_RunwayCentrelinePoint#inspireId"
+    * tableName = "TN_A_RunwayCentrelinePoint_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayCentrelinePoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_RunwayCentrelinePoint_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_RunwayCentrelinePoint_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayCentrelinePoint(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_AerodromeNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_AerodromeNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AerodromeNode#geographicalName"
+    * tableName = "TN_A_AerodromeNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_AerodromeNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AerodromeNode#inspireId"
+    * tableName = "TN_A_AerodromeNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_AerodromeNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_StandardInstrumentDeparture_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentDeparture#startNode_Node"
+    * tableName = "TN_A_StandardInstrumentDeparture_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentDeparture(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_StandardInstrumentDeparture_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentDeparture#endNode_Node"
+    * tableName = "TN_A_StandardInstrumentDeparture_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentDeparture(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_StandardInstrumentDeparture_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentDeparture#geographicalName"
+    * tableName = "TN_A_StandardInstrumentDeparture_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentDeparture(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_StandardInstrumentDeparture_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_StandardInstrumentDeparture#inspireId"
+    * tableName = "TN_A_StandardInstrumentDeparture_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentDeparture(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_StandardInstrumentDeparture_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_StandardInstrumentDeparture_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_StandardInstrumentDeparture(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ElementLength_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_ElementLength_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ElementLength(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_ElementLength_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ElementLength#inspireId"
+    * tableName = "TN_A_ElementLength_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ElementLength(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeCategory_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_AerodromeCategory_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeCategory(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_AerodromeCategory_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AerodromeCategory#inspireId"
+    * tableName = "TN_A_AerodromeCategory_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeCategory(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_RunwayArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_RunwayArea#geographicalName"
+    * tableName = "TN_A_RunwayArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_RunwayArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_RunwayArea#inspireId"
+    * tableName = "TN_A_RunwayArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_RunwayArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_RunwayArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_RunwayArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_UpperAltitudeLimit_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_UpperAltitudeLimit_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_UpperAltitudeLimit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_UpperAltitudeLimit_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_UpperAltitudeLimit#inspireId"
+    * tableName = "TN_A_UpperAltitudeLimit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_UpperAltitudeLimit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_Navaid_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_Navaid_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_Navaid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_Navaid_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_Navaid_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_Navaid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_Navaid_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_Navaid#geographicalName"
+    * tableName = "TN_A_Navaid_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_Navaid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_Navaid_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_Navaid#inspireId"
+    * tableName = "TN_A_Navaid_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_Navaid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_Navaid_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_Navaid_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_Navaid(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ElementWidth_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_ElementWidth_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ElementWidth(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_ElementWidth_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ElementWidth#inspireId"
+    * tableName = "TN_A_ElementWidth_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ElementWidth(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_InstrumentApproachProcedure_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_InstrumentApproachProcedure#startNode_Node"
+    * tableName = "TN_A_InstrumentApproachProcedure_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_InstrumentApproachProcedure(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_InstrumentApproachProcedure_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_InstrumentApproachProcedure#endNode_Node"
+    * tableName = "TN_A_InstrumentApproachProcedure_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_InstrumentApproachProcedure(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_InstrumentApproachProcedure_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_InstrumentApproachProcedure#geographicalName"
+    * tableName = "TN_A_InstrumentApproachProcedure_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_InstrumentApproachProcedure(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_InstrumentApproachProcedure_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_InstrumentApproachProcedure#inspireId"
+    * tableName = "TN_A_InstrumentApproachProcedure_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_InstrumentApproachProcedure(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_InstrumentApproachProcedure_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_InstrumentApproachProcedure_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_InstrumentApproachProcedure(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_TouchDownLiftOff_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_TouchDownLiftOff_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TouchDownLiftOff(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_TouchDownLiftOff_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_A_TouchDownLiftOff_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TouchDownLiftOff(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_TouchDownLiftOff_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_TouchDownLiftOff#geographicalName"
+    * tableName = "TN_A_TouchDownLiftOff_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TouchDownLiftOff(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_TouchDownLiftOff_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_TouchDownLiftOff#inspireId"
+    * tableName = "TN_A_TouchDownLiftOff_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TouchDownLiftOff(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_TouchDownLiftOff_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_TouchDownLiftOff_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_TouchDownLiftOff(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_ProcedureLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ProcedureLink#startNode_Node"
+    * tableName = "TN_A_ProcedureLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ProcedureLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_ProcedureLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ProcedureLink#endNode_Node"
+    * tableName = "TN_A_ProcedureLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ProcedureLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ProcedureLink_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ProcedureLink#geographicalName"
+    * tableName = "TN_A_ProcedureLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ProcedureLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_ProcedureLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ProcedureLink#inspireId"
+    * tableName = "TN_A_ProcedureLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ProcedureLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ProcedureLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_ProcedureLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ProcedureLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ApronArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ApronArea#geographicalName"
+    * tableName = "TN_A_ApronArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ApronArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_ApronArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ApronArea#inspireId"
+    * tableName = "TN_A_ApronArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ApronArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ApronArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_ApronArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ApronArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AerodromeArea#geographicalName"
+    * tableName = "TN_A_AerodromeArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_AerodromeArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AerodromeArea#inspireId"
+    * tableName = "TN_A_AerodromeArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_AerodromeArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_FieldElevation_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_FieldElevation_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_FieldElevation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_FieldElevation_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_FieldElevation#inspireId"
+    * tableName = "TN_A_FieldElevation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_FieldElevation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_AirRouteLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirRouteLink#startNode_Node"
+    * tableName = "TN_A_AirRouteLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRouteLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_A_AirRouteLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirRouteLink#endNode_Node"
+    * tableName = "TN_A_AirRouteLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRouteLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirRouteLink_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirRouteLink#geographicalName"
+    * tableName = "TN_A_AirRouteLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRouteLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_AirRouteLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirRouteLink#inspireId"
+    * tableName = "TN_A_AirRouteLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRouteLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirRouteLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirRouteLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirRouteLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_UseRestriction_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_UseRestriction_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_UseRestriction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_UseRestriction_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_UseRestriction#inspireId"
+    * tableName = "TN_A_UseRestriction_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_UseRestriction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_ConditionOfAirFacility_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_ConditionOfAirFacility_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ConditionOfAirFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_ConditionOfAirFacility_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_ConditionOfAirFacility#inspireId"
+    * tableName = "TN_A_ConditionOfAirFacility_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_ConditionOfAirFacility(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_SurfaceComposition_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_SurfaceComposition_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_SurfaceComposition(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_SurfaceComposition_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_SurfaceComposition#inspireId"
+    * tableName = "TN_A_SurfaceComposition_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_SurfaceComposition(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AerodromeType_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_A_AerodromeType_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_A_AerodromeType_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AerodromeType#inspireId"
+    * tableName = "TN_A_AerodromeType_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AerodromeType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirLinkSequence_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirLinkSequence#geographicalName"
+    * tableName = "TN_A_AirLinkSequence_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_A_AirLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation "TN_A_AirLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_A_AirLinkSequence#inspireId"
+    * tableName = "TN_A_AirLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_A_AirLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_A_AirLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_A_AirLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container "basicTypes" {
@@ -730,7 +1348,7 @@ Container <<applicationSchema>> "Network" {
     <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"

@@ -1,27 +1,27 @@
 Container <<applicationSchema>> "Geophysics" {
   * fileName = "Geophysics"
   Abstract Class <<featureType>> "GeophObject" {
-    citation_date DATE
-    citation_level LegislationLevelValue
-    citation_link TEXT
-    citation_name TEXT NOT NULL
-    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
-    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
-    distributionInfo_distributorContact_individualName TEXT
-    distributionInfo_distributorContact_organisationName TEXT
-    distributionInfo_distributorContact_positionName TEXT
-    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-    lineage LI_Lineage
+    citation_date : DATE [0..1]
+    citation_level : LegislationLevelValue [0..1]
+    citation_link : TEXT [0..1]
+    citation_name : TEXT
+    citation_type : TEXT
+    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
+    distributionInfo_distributorContact_individualName : TEXT [0..1]
+    distributionInfo_distributorContact_organisationName : TEXT [0..1]
+    distributionInfo_distributorContact_positionName : TEXT [0..1]
+    distributionInfo_distributorContact_role : TEXT
+    lineage : LI_Lineage [0..1]
     positionalAccuracy DQ_PositionalAccuracy
-    verticalExtent_maximumValue REAL NOT NULL
-    verticalExtent_minimumValue REAL NOT NULL
+    verticalExtent_maximumValue : REAL
+    verticalExtent_minimumValue : REAL
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -39,29 +39,29 @@ Container <<applicationSchema>> "Geophysics" {
     * identifier = "Geophysics::StationTypeValue"
   }
   Abstract Class <<featureType>> "GeophMeasurement" {
-    citation_date DATE
-    citation_level LegislationLevelValue
-    citation_link TEXT
-    citation_name TEXT NOT NULL
-    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
-    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
-    distributionInfo_distributorContact_individualName TEXT
-    distributionInfo_distributorContact_organisationName TEXT
-    distributionInfo_distributorContact_positionName TEXT
-    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-    lineage LI_Lineage
-    platformType TEXT NOT NULL CHECK(GE_GP_PlatformTypeValue)
+    citation_date : DATE [0..1]
+    citation_level : LegislationLevelValue [0..1]
+    citation_link : TEXT [0..1]
+    citation_name : TEXT
+    citation_type : TEXT
+    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
+    distributionInfo_distributorContact_individualName : TEXT [0..1]
+    distributionInfo_distributorContact_organisationName : TEXT [0..1]
+    distributionInfo_distributorContact_positionName : TEXT [0..1]
+    distributionInfo_distributorContact_role : TEXT
+    lineage : LI_Lineage [0..1]
+    platformType : TEXT
     positionalAccuracy DQ_PositionalAccuracy
-    verticalExtent_maximumValue REAL NOT NULL
-    verticalExtent_minimumValue REAL NOT NULL
-    <<voidable>>, <<array>> relatedNetworks TEXT
+    verticalExtent_maximumValue : REAL
+    verticalExtent_minimumValue : REAL
+    <<voidable>>, <<array>> relatedNetworks : TEXT [0..1]
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -111,41 +111,42 @@ Container <<applicationSchema>> "Geophysics" {
     verticalExtent_minimumValue REAL NOT NULL
     <<voidable>>, <<reference>> client INTEGER
     <<voidable>>, <<reference>> contractor INTEGER
-    distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
-    distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
+    <<reference>> distributionInfo_distributorContact_contactInfo_address INTEGER
+    <<reference>> distributionInfo_distributorContact_contactInfo_phone INTEGER
+    <<reference>> inspireId INTEGER
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
-    inspireId BASE_Identifier as ref
     parameter _NamedValue [0..*] as ref
     projectedGeometry GEOMETRY [1..*] as ref
     propertyValueProvider OM_Observation [0..*] as ref
     relatedObservation_OM_Observation BASE_Identifier [0..*] as ref
     relatedSamplingFeature_SF_SamplingFeature BASE_Identifier [0..*] as ref
+    sampledFeature GFI_DomainFeature [1..*] as ref
     sampledFeature_GFI_Feature BASE_Identifier [1..*] as ref
     shape GEOMETRY [0..*] as ref
     <<voidable>> largerWork BASE_Identifier [0..*] as ref
   }
   Class <<featureType>> "GeophObjectSet" {
-    citation_date DATE
-    citation_level LegislationLevelValue
-    citation_link TEXT
-    citation_name TEXT NOT NULL
-    citation_type TEXT NOT NULL CHECK(BASE2_SimpleCitationType)
-    distributionInfo_distributorContact_contactInfo_contactInstructions TEXT
-    distributionInfo_distributorContact_contactInfo_hoursOfService TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_description TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_function TEXT CHECK(GMD_CI_OnLineFunctionCode)
-    distributionInfo_distributorContact_contactInfo_onlineResource_linkage TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_name TEXT
-    distributionInfo_distributorContact_contactInfo_onlineResource_protocol TEXT
-    distributionInfo_distributorContact_individualName TEXT
-    distributionInfo_distributorContact_organisationName TEXT
-    distributionInfo_distributorContact_positionName TEXT
-    distributionInfo_distributorContact_role TEXT NOT NULL CHECK(GMD_CI_RoleCode)
-    lineage LI_Lineage
+    citation_date : DATE [0..1]
+    citation_level : LegislationLevelValue [0..1]
+    citation_link : TEXT [0..1]
+    citation_name : TEXT
+    citation_type : TEXT
+    distributionInfo_distributorContact_contactInfo_contactInstructions : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_hoursOfService : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_applicationProfile : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_description : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_function : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_linkage : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_name : TEXT [0..1]
+    distributionInfo_distributorContact_contactInfo_onlineResource_protocol : TEXT [0..1]
+    distributionInfo_distributorContact_individualName : TEXT [0..1]
+    distributionInfo_distributorContact_organisationName : TEXT [0..1]
+    distributionInfo_distributorContact_positionName : TEXT [0..1]
+    distributionInfo_distributorContact_role : TEXT
+    lineage : LI_Lineage [0..1]
     positionalAccuracy DQ_PositionalAccuracy
-    verticalExtent_maximumValue REAL NOT NULL
-    verticalExtent_minimumValue REAL NOT NULL
+    verticalExtent_maximumValue : REAL
+    verticalExtent_minimumValue : REAL
     distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
     distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
@@ -193,15 +194,16 @@ Container <<applicationSchema>> "Geophysics" {
     verticalExtent_minimumValue REAL NOT NULL
     <<voidable>>, <<array>> relatedNetworks TEXT
     <<voidable>>, <<array>> stationRanks TEXT
-    distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
-    distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
+    <<reference>> distributionInfo_distributorContact_contactInfo_address INTEGER
+    <<reference>> distributionInfo_distributorContact_contactInfo_phone INTEGER
+    <<reference>> inspireId INTEGER
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
-    inspireId BASE_Identifier as ref
     parameter _NamedValue [0..*] as ref
     projectedGeometry GEOMETRY [1..*] as ref
     propertyValueProvider OM_Observation [0..*] as ref
     relatedObservation_OM_Observation BASE_Identifier [0..*] as ref
     relatedSamplingFeature_SF_SamplingFeature BASE_Identifier [0..*] as ref
+    sampledFeature GFI_DomainFeature [1..*] as ref
     sampledFeature_GFI_Feature BASE_Identifier [1..*] as ref
     shape GEOMETRY [0..*] as ref
     <<voidable>> largerWork BASE_Identifier [0..*] as ref
@@ -243,15 +245,16 @@ Container <<applicationSchema>> "Geophysics" {
     verticalExtent_maximumValue REAL NOT NULL
     verticalExtent_minimumValue REAL NOT NULL
     <<voidable>>, <<array>> relatedNetworks TEXT
-    distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
-    distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
+    <<reference>> distributionInfo_distributorContact_contactInfo_address INTEGER
+    <<reference>> distributionInfo_distributorContact_contactInfo_phone INTEGER
+    <<reference>> inspireId INTEGER
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
-    inspireId BASE_Identifier as ref
     parameter _NamedValue [0..*] as ref
     projectedGeometry GEOMETRY [1..*] as ref
     propertyValueProvider OM_Observation [0..*] as ref
     relatedObservation_OM_Observation BASE_Identifier [0..*] as ref
     relatedSamplingFeature_SF_SamplingFeature BASE_Identifier [0..*] as ref
+    sampledFeature GFI_DomainFeature [1..*] as ref
     sampledFeature_GFI_Feature BASE_Identifier [1..*] as ref
     shape GEOMETRY [0..*] as ref
     <<voidable>> largerWork BASE_Identifier [0..*] as ref
@@ -296,15 +299,16 @@ Container <<applicationSchema>> "Geophysics" {
     verticalExtent_maximumValue REAL NOT NULL
     verticalExtent_minimumValue REAL NOT NULL
     <<voidable>>, <<array>> relatedNetworks TEXT
-    distributionInfo_distributorContact_contactInfo_address GMD_CI_Address [0..1] as ref
-    distributionInfo_distributorContact_contactInfo_phone GMD_CI_Telephone [0..1] as ref
+    <<reference>> distributionInfo_distributorContact_contactInfo_address INTEGER
+    <<reference>> distributionInfo_distributorContact_contactInfo_phone INTEGER
+    <<reference>> inspireId INTEGER
     hostedProcedure_OM_Process BASE_Identifier [0..*] as ref
-    inspireId BASE_Identifier as ref
     parameter _NamedValue [0..*] as ref
     projectedGeometry GEOMETRY [1..*] as ref
     propertyValueProvider OM_Observation [0..*] as ref
     relatedObservation_OM_Observation BASE_Identifier [0..*] as ref
     relatedSamplingFeature_SF_SamplingFeature BASE_Identifier [0..*] as ref
+    sampledFeature GFI_DomainFeature [1..*] as ref
     sampledFeature_GFI_Feature BASE_Identifier [1..*] as ref
     shape GEOMETRY [0..*] as ref
     <<voidable>> largerWork BASE_Identifier [0..*] as ref
@@ -319,19 +323,727 @@ Container <<applicationSchema>> "Geophysics" {
   Constraint Enum <<codeList>> "GE_GP_PlatformTypeValue" {
     * identifier = "Geophysics::PlatformTypeValue"
   }
-  Relation "GE_GP_Campaign_client" {
+  Relation <<voidable>> "GE_GP_Campaign_client" {
     * profile = "attributes"
     * relatedReference = "attribute GE_GP_Campaign#client"
     * tableName = "GE_GP_Campaign_client"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
   }
-  Relation "GE_GP_Campaign_contractor" {
+  Relation <<voidable>> "GE_GP_Campaign_contractor" {
     * profile = "attributes"
     * relatedReference = "attribute GE_GP_Campaign#contractor"
     * tableName = "GE_GP_Campaign_contractor"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_RelatedParty(id)
+  }
+  Relation "GE_GP_Campaign_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_Campaign#inspireId"
+    * tableName = "GE_GP_Campaign_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_Campaign_distributionInfo_distributorContact_contactInfo_phone" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_Campaign#distributionInfo_distributorContact_contactInfo_phone"
+    * tableName = "GE_GP_Campaign_distributionInfo_distributorContact_contactInfo_phone"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={FC9E7CAA-45EE-4d14-B2E8-7B05E96FE74C}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={F334369D-A173-47be-B397-1838A4BA4358}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide access to data or information on a survey. Links to the access points, description of ordering procedures, fees can be added in distributionInfo that is an ISO MD_Distributor record.
+    "
+    duplicates = "0"
+    ea_guid = "{F334369D-A173-47be-B397-1838A4BA4358}"
+    ea_localid = "85276"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GE_GP_Campaign_distributionInfo_distributorContact_contactInfo_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_Campaign#distributionInfo_distributorContact_contactInfo_address"
+    * tableName = "GE_GP_Campaign_distributionInfo_distributorContact_contactInfo_address"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={FC9E7CAA-45EE-4d14-B2E8-7B05E96FE74C}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={F334369D-A173-47be-B397-1838A4BA4358}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide access to data or information on a survey. Links to the access points, description of ordering procedures, fees can be added in distributionInfo that is an ISO MD_Distributor record.
+    "
+    duplicates = "0"
+    ea_guid = "{F334369D-A173-47be-B397-1838A4BA4358}"
+    ea_localid = "85276"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
+  Relation <<voidable>> "GE_GP_Campaign_largerWork" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_largerWork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_Campaign_hostedProcedure_OM_Process" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_hostedProcedure_OM_Process"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_Campaign_parameter" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_parameter"
+    sequenceNumber = "5"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
+  }
+  Relation "GE_GP_Campaign_relatedObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_relatedObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_Campaign_relatedSamplingFeature_SF_SamplingFeature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_relatedSamplingFeature_SF_SamplingFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_Campaign_sampledFeature_GFI_Feature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_sampledFeature_GFI_Feature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_Campaign_positionalAccuracy_DQ_PositionalAccuracy" {
+    * profile = "attributes"
+    * tableName = "GE_GP_Campaign_positionalAccuracy_DQ_PositionalAccuracy"
+    sequenceNumber = "3"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_Campaign(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "GE_GP_GeophStation_relatedModel" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_relatedModel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophStation#inspireId"
+    * tableName = "GE_GP_GeophStation_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_distributionInfo_distributorContact_contactInfo_phone" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophStation#distributionInfo_distributorContact_contactInfo_phone"
+    * tableName = "GE_GP_GeophStation_distributionInfo_distributorContact_contactInfo_phone"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={14CBE7CA-E305-4288-9C3B-C13BCD499037}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={300F2292-9061-45cc-B1A4-84B49232F173}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide information on a geophysical measurement. Links to the access points, description of ordering procedures or external services can be added in distributionInfo, that is an ISO MD_Distributor record. 
+  
+    "
+    duplicates = "0"
+    ea_guid = "{300F2292-9061-45cc-B1A4-84B49232F173}"
+    ea_localid = "85264"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "4"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GE_GP_GeophStation_distributionInfo_distributorContact_contactInfo_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophStation#distributionInfo_distributorContact_contactInfo_address"
+    * tableName = "GE_GP_GeophStation_distributionInfo_distributorContact_contactInfo_address"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={14CBE7CA-E305-4288-9C3B-C13BCD499037}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={300F2292-9061-45cc-B1A4-84B49232F173}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide information on a geophysical measurement. Links to the access points, description of ordering procedures or external services can be added in distributionInfo, that is an ISO MD_Distributor record. 
+  
+    "
+    duplicates = "0"
+    ea_guid = "{300F2292-9061-45cc-B1A4-84B49232F173}"
+    ea_localid = "85264"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "4"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
+  Relation <<voidable>> "GE_GP_GeophStation_largerWork" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_largerWork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_hostedProcedure_OM_Process" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_hostedProcedure_OM_Process"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_parameter" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_parameter"
+    sequenceNumber = "5"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
+  }
+  Relation "GE_GP_GeophStation_relatedObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_relatedObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_relatedSamplingFeature_SF_SamplingFeature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_relatedSamplingFeature_SF_SamplingFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_sampledFeature_GFI_Feature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_sampledFeature_GFI_Feature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophStation_positionalAccuracy_DQ_PositionalAccuracy" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophStation_positionalAccuracy_DQ_PositionalAccuracy"
+    sequenceNumber = "3"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophStation(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "GE_GP_GeophSwath_relatedModel" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_relatedModel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophSwath#inspireId"
+    * tableName = "GE_GP_GeophSwath_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_distributionInfo_distributorContact_contactInfo_phone" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophSwath#distributionInfo_distributorContact_contactInfo_phone"
+    * tableName = "GE_GP_GeophSwath_distributionInfo_distributorContact_contactInfo_phone"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={14CBE7CA-E305-4288-9C3B-C13BCD499037}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={300F2292-9061-45cc-B1A4-84B49232F173}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide information on a geophysical measurement. Links to the access points, description of ordering procedures or external services can be added in distributionInfo, that is an ISO MD_Distributor record. 
+  
+    "
+    duplicates = "0"
+    ea_guid = "{300F2292-9061-45cc-B1A4-84B49232F173}"
+    ea_localid = "85264"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "4"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GE_GP_GeophSwath_distributionInfo_distributorContact_contactInfo_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophSwath#distributionInfo_distributorContact_contactInfo_address"
+    * tableName = "GE_GP_GeophSwath_distributionInfo_distributorContact_contactInfo_address"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={14CBE7CA-E305-4288-9C3B-C13BCD499037}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={300F2292-9061-45cc-B1A4-84B49232F173}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide information on a geophysical measurement. Links to the access points, description of ordering procedures or external services can be added in distributionInfo, that is an ISO MD_Distributor record. 
+  
+    "
+    duplicates = "0"
+    ea_guid = "{300F2292-9061-45cc-B1A4-84B49232F173}"
+    ea_localid = "85264"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "4"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
+  Relation <<voidable>> "GE_GP_GeophSwath_largerWork" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_largerWork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_hostedProcedure_OM_Process" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_hostedProcedure_OM_Process"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_parameter" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_parameter"
+    sequenceNumber = "5"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
+  }
+  Relation "GE_GP_GeophSwath_relatedObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_relatedObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_relatedSamplingFeature_SF_SamplingFeature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_relatedSamplingFeature_SF_SamplingFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_sampledFeature_GFI_Feature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_sampledFeature_GFI_Feature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophSwath_positionalAccuracy_DQ_PositionalAccuracy" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophSwath_positionalAccuracy_DQ_PositionalAccuracy"
+    sequenceNumber = "3"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophSwath(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "GE_GP_GeophProfile_relatedModel" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_relatedModel"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophProfile#inspireId"
+    * tableName = "GE_GP_GeophProfile_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_distributionInfo_distributorContact_contactInfo_phone" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophProfile#distributionInfo_distributorContact_contactInfo_phone"
+    * tableName = "GE_GP_GeophProfile_distributionInfo_distributorContact_contactInfo_phone"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={14CBE7CA-E305-4288-9C3B-C13BCD499037}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={300F2292-9061-45cc-B1A4-84B49232F173}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide information on a geophysical measurement. Links to the access points, description of ordering procedures or external services can be added in distributionInfo, that is an ISO MD_Distributor record. 
+  
+    "
+    duplicates = "0"
+    ea_guid = "{300F2292-9061-45cc-B1A4-84B49232F173}"
+    ea_localid = "85264"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "4"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
+  }
+  Relation "GE_GP_GeophProfile_distributionInfo_distributorContact_contactInfo_address" {
+    * profile = "attributes"
+    * relatedReference = "attribute GE_GP_GeophProfile#distributionInfo_distributorContact_contactInfo_address"
+    * tableName = "GE_GP_GeophProfile_distributionInfo_distributorContact_contactInfo_address"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
+    collection = "false"
+    derived = "0"
+    description = "Party from whom the dataset may be obtained"
+    ea_guid = "{961DFC01-F792-45f0-9F01-3C965CD31385}"
+    ea_localid = "81995"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "0"
+    precision = "0"
+    scale = "0"
+    type = "CI_ResponsibleParty"
+    upperBound = "1"
+    $ea_xref_property = "$XREFPROP=$XID={14CBE7CA-E305-4288-9C3B-C13BCD499037}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=voidable;GUID={5EFED6CF-7E1D-4436-9D82-1D38A5530510};@ENDSTEREO;$DES;$CLT={300F2292-9061-45cc-B1A4-84B49232F173}$CLT;$SUP=<none>$SUP;$ENDXREF;"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "-- Definition --
+    Distribution metadata
+  
+    -- Description --
+    Data providers may use external services to provide information on a geophysical measurement. Links to the access points, description of ordering procedures or external services can be added in distributionInfo, that is an ISO MD_Distributor record. 
+  
+    "
+    duplicates = "0"
+    ea_guid = "{300F2292-9061-45cc-B1A4-84B49232F173}"
+    ea_localid = "85264"
+    length = "0"
+    lowerBound = "1"
+    ordered = "0"
+    position = "4"
+    precision = "0"
+    scale = "0"
+    stereotype = "voidable"
+    styleex = "IsLiteral=0;volatile=0;"
+    type = "MD_Distributor"
+    upperBound = "1"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
+  }
+  Relation <<voidable>> "GE_GP_GeophProfile_largerWork" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_largerWork"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_hostedProcedure_OM_Process" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_hostedProcedure_OM_Process"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_parameter" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_parameter"
+    sequenceNumber = "5"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES _NamedValue(id)
+  }
+  Relation "GE_GP_GeophProfile_relatedObservation_OM_Observation" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_relatedObservation_OM_Observation"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_relatedSamplingFeature_SF_SamplingFeature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_relatedSamplingFeature_SF_SamplingFeature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_sampledFeature_GFI_Feature" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_sampledFeature_GFI_Feature"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "GE_GP_GeophProfile_positionalAccuracy_DQ_PositionalAccuracy" {
+    * profile = "attributes"
+    * tableName = "GE_GP_GeophProfile_positionalAccuracy_DQ_PositionalAccuracy"
+    sequenceNumber = "3"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GE_GP_GeophProfile(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container <<applicationSchema>> "Base Types 2" {
@@ -380,19 +1092,56 @@ Container <<applicationSchema>> "Base Types 2" {
     language TEXT
     spelling_text TEXT NOT NULL
   }
-  Relation "BASE2_RelatedParty_contact" {
+  Constraint Enum <<codeList>> "BASE2_Locale" {}
+  Attributes <<type>> "BASE2_SimpleLocalisedCharacterString" {
+    * tableName = "BASE2_SimpleLocalisedCharacterString"
+    id INTEGER NOT NULL PRIMARY KEY
+    locale TEXT NOT NULL CHECK(BASE2_Locale)
+    value TEXT NOT NULL
+  }
+  Relation <<voidable>> "BASE2_RelatedParty_individualName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_individualName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "BASE2_RelatedParty_organisationName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_organisationName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "BASE2_RelatedParty_positionName" {
+    * profile = "attributes"
+    * tableName = "BASE2_RelatedParty_positionName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "BASE2_RelatedParty_contact" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_RelatedParty#contact"
     * tableName = "BASE2_RelatedParty_contact"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_RelatedParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_Contact(id)
   }
-  Relation "BASE2_Contact_address" {
+  Relation <<voidable>> "BASE2_Contact_address" {
     * profile = "attributes"
     * relatedReference = "attribute BASE2_Contact#address"
     * tableName = "BASE2_Contact_address"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES AD_AddressRepresentation(id)
+  }
+  Relation <<voidable>> "BASE2_Contact_contactInstructions" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_contactInstructions"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
+  }
+  Relation <<voidable>> "BASE2_Contact_hoursOfService" {
+    * profile = "attributes"
+    * tableName = "BASE2_Contact_hoursOfService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES BASE2_Contact(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleLocalisedCharacterString(id)
   }
 }
 Container "Citation and responsible party information" {
@@ -463,6 +1212,23 @@ Container "Citation and responsible party information" {
     * profile = "attributes"
     * relatedReference = "attribute GMD_CI_ResponsibleParty#contactInfo_phone"
     * tableName = "GMD_CI_ResponsibleParty_contactInfo_phone"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Telephone(id)
   }
@@ -470,6 +1236,23 @@ Container "Citation and responsible party information" {
     * profile = "attributes"
     * relatedReference = "attribute GMD_CI_ResponsibleParty#contactInfo_address"
     * tableName = "GMD_CI_ResponsibleParty_contactInfo_address"
+    collection = "false"
+    containment = "Not Specified"
+    derived = "0"
+    description = "Address of the responsible party
+    "
+    duplicates = "0"
+    ea_guid = "{168D6927-7389-4050-B4AF-0944BCA21B46}"
+    ea_localid = "82059"
+    length = "0"
+    lowerBound = "0"
+    ordered = "0"
+    position = "3"
+    precision = "0"
+    scale = "0"
+    styleex = "volatile=0;IsLiteral=0;"
+    type = "CI_Contact"
+    upperBound = "1"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES GMD_CI_ResponsibleParty(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES GMD_CI_Address(id)
   }
@@ -524,25 +1307,25 @@ Container <<applicationSchema>> "Addresses" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressArea" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressArea" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_addressArea"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_postName" {
+  Relation <<voidable>> "AD_AddressRepresentation_postName" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_postName"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_thoroughfare" {
+  Relation <<voidable>> "AD_AddressRepresentation_thoroughfare" {
     * profile = "attributes"
     * tableName = "AD_AddressRepresentation_thoroughfare"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES AD_AddressRepresentation(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
   }
-  Relation "AD_AddressRepresentation_addressFeature_Address" {
+  Relation <<voidable>> "AD_AddressRepresentation_addressFeature_Address" {
     * profile = "attributes"
     * relatedReference = "attribute AD_AddressRepresentation#addressFeature_Address"
     * tableName = "AD_AddressRepresentation_addressFeature_Address"

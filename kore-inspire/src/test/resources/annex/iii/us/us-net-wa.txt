@@ -5,11 +5,18 @@ Container <<applicationSchema>> "Water Network" {
     * identifier = "Water Network::WaterPipe"
     * tableName = "US_NET_WA_WaterPipe"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> governmentalServiceReference_GovernmentalService INTEGER
+    <<voidable>>, <<reference>> utilityFacilityReference_ActivityComplex INTEGER
+    <<voidable>> cables_Cable BASE_Identifier
     <<voidable>> currentStatus TEXT CHECK(BASE_ConditionOfFacilityValue)
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> pipeDiameter TEXT
     <<voidable>> pipeDiameter_uom TEXT CHECK(GML_UomIdentifier)
+    <<voidable>> pipes_Pipe BASE_Identifier
     <<voidable>> pressure TEXT
     <<voidable>> pressure_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> utilityDeliveryType TEXT CHECK(US_NET_COMMON_UtilityDeliveryTypeValue)
@@ -18,13 +25,6 @@ Container <<applicationSchema>> "Water Network" {
     <<voidable>> verticalPosition TEXT CHECK(BASE_VerticalPositionValue)
     <<voidable>> warningType TEXT CHECK(US_NET_COMMON_WarningTypeValue)
     <<voidable>> waterType TEXT CHECK(US_NET_WA_WaterTypeValue)
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> cables_Cable BASE_Identifier [0..*] as ref
-    <<voidable>> governmentalServiceReference_GovernmentalService BASE_Identifier [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> pipes_Pipe BASE_Identifier [0..*] as ref
-    <<voidable>> utilityFacilityReference_ActivityComplex BASE_Identifier [0..1] as ref
   }
   Constraint Enum <<codeList>> "US_NET_WA_WaterAppurtenanceTypeValue" {
     * identifier = "Water Network::WaterAppurtenanceTypeValue"
@@ -64,6 +64,51 @@ Container <<applicationSchema>> "Water Network" {
     raw
     salt
     treated
+  }
+  Relation <<voidable>> "US_NET_WA_WaterPipe_pipes_Pipe" {
+    * profile = "attributes"
+    * tableName = "US_NET_WA_WaterPipe_pipes_Pipe"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_WA_WaterPipe_cables_Cable" {
+    * profile = "attributes"
+    * tableName = "US_NET_WA_WaterPipe_cables_Cable"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_WA_WaterPipe_utilityFacilityReference_ActivityComplex" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_WA_WaterPipe#utilityFacilityReference_ActivityComplex"
+    * tableName = "US_NET_WA_WaterPipe_utilityFacilityReference_ActivityComplex"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_WA_WaterPipe_governmentalServiceReference_GovernmentalService" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_WA_WaterPipe#governmentalServiceReference_GovernmentalService"
+    * tableName = "US_NET_WA_WaterPipe_governmentalServiceReference_GovernmentalService"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_WA_WaterPipe_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "US_NET_WA_WaterPipe_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "US_NET_WA_WaterPipe_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute US_NET_WA_WaterPipe#inspireId"
+    * tableName = "US_NET_WA_WaterPipe_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "US_NET_WA_WaterPipe_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "US_NET_WA_WaterPipe_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES US_NET_WA_WaterPipe(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container <<applicationSchema>> "Base Types" {

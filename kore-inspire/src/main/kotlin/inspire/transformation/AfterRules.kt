@@ -101,7 +101,11 @@ val `remove unused tags`: Transform = { _, _ ->
             "vocabulary", "extendableByMS", "asDictionary", "codeList", "gmlProfileSchema", "xmlns", "xsdDocument",
             "targetNamespace", "xsdEncodingRule", "byValuePropertyType", "isCollection", "noPropertyType",
             "xsdEncodingRule", "extensibility", "inspireConcept", "codeSpace", "dictionaryIdentifier",
-            "memberIdentifierStem", "object_style", "gmlMixin", "isnamespace", "modeldocument"
+            "memberIdentifierStem", "object_style", "gmlMixin", "isnamespace", "modeldocument", "duplicates",
+            "containment", "collection", "derived", "length", "lowerBound", "ordered", "position", "precision",
+            "scale", "styleex", "type", "upperBound", "destStereotype", "deststyle", "inlineOrByReference",
+            "Version identifier", "Local identifier", "description", "sourcestyle", "sourceStereotype",
+            "genoption", "obligation"
         )
     )
 }

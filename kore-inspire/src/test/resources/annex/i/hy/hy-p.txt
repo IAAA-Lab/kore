@@ -30,12 +30,12 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     upper_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
   }
   Abstract Class <<featureType>> "HydroPointOfInterest" {
-    levelOfDetail_distance TEXT
-    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
-    levelOfDetail_equivalentScale_denominator INTEGER
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> geometry GEOMETRY
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -55,8 +55,8 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
+    <<reference>> inspireId INTEGER
     <<voidable>> type TEXT CHECK(HY_P_CrossingTypeValue)
-    inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -75,7 +75,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -98,26 +98,25 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Abstract Class <<featureType>> "SurfaceWater" {
-    geometry GEOMETRY NOT NULL
-    levelOfDetail_distance TEXT
-    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
-    levelOfDetail_equivalentScale_denominator INTEGER
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> localType TEXT
-    <<voidable>> localType_locale TEXT CHECK(BASE2_Locale)
-    <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
-    <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
-    <<voidable>> tidal BOOLEAN
+    geometry : GEOMETRY
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> localType : TEXT [0..1]
+    <<voidable>> localType_locale : TEXT [0..1]
+    <<voidable>> origin : TEXT [0..1]
+    <<voidable>> persistence : TEXT [0..1]
+    <<voidable>> tidal : BOOLEAN [0..1]
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
@@ -159,6 +158,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> delineationKnown BOOLEAN
+    <<reference>> inspireId INTEGER
     <<voidable>> length TEXT
     <<voidable>> length_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> level TEXT CHECK(BASE_VerticalPositionValue)
@@ -167,9 +167,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>> origin TEXT CHECK(HY_P_OriginValue)
     <<voidable>> persistence TEXT CHECK(HY_P_HydrologicalPersistenceValue)
     <<voidable>> tidal BOOLEAN
-    inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
@@ -204,7 +202,6 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
-    <<voidable>> outlet SurfaceWater [0..*] as ref
   }
   Feature <<featureType>> "HY_P_Wetland" {
     * description = "A poorly drained or periodically flooded area where the soil is saturated with water, and vegetation is supported.
@@ -242,7 +239,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -261,31 +258,31 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Abstract Class <<featureType>> "FluvialPoint" {
-    levelOfDetail_distance TEXT
-    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
-    levelOfDetail_equivalentScale_denominator INTEGER
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> geometry GEOMETRY
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
   Abstract Class <<featureType>> "ManMadeObject" {
-    levelOfDetail_distance TEXT
-    levelOfDetail_distance_uom TEXT CHECK(GML_UomIdentifier)
-    levelOfDetail_equivalentScale_denominator INTEGER
-    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
-    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
-    <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
-    <<voidable>> geometry GEOMETRY
+    levelOfDetail_distance : TEXT [0..1]
+    levelOfDetail_distance_uom : TEXT [0..1]
+    levelOfDetail_equivalentScale_denominator : INTEGER [0..1]
+    <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion : DATETIME [0..1]
+    <<voidable>>, <<lifeCycleInfo>> endLifespanVersion : DATETIME [0..1]
+    <<voidable>> condition : TEXT [0..1]
+    <<voidable>> geometry : GEOMETRY [0..1]
     inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
@@ -309,7 +306,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -327,7 +324,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -361,6 +358,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> elevation TEXT
     <<voidable>> elevation_uom TEXT CHECK(GML_UomIdentifier)
+    <<reference>> inspireId INTEGER
     <<voidable>> localType TEXT
     <<voidable>> localType_locale TEXT CHECK(BASE2_Locale)
     <<voidable>> meanDepth TEXT
@@ -370,9 +368,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>> surfaceArea TEXT
     <<voidable>> surfaceArea_uom TEXT CHECK(GML_UomIdentifier)
     <<voidable>> tidal BOOLEAN
-    inspireId BASE_Identifier as ref
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
-    <<voidable>> drainsBasin HY_P_DrainageBasin [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
   }
@@ -433,7 +429,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>> geometry GEOMETRY
     <<voidable>> height TEXT
     <<voidable>> height_uom TEXT CHECK(GML_UomIdentifier)
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -452,7 +448,7 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> condition TEXT CHECK(BASE_ConditionOfFacilityValue)
     <<voidable>> geometry GEOMETRY
-    inspireId BASE_Identifier as ref
+    <<reference>> inspireId INTEGER
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
@@ -492,7 +488,6 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     relatedHydroObject_HydroObject BASE_Identifier [0..*] as ref
     <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..*] as ref
     <<voidable>> hydroId HY_HydroIdentifier [0..*] as ref
-    <<voidable>> outlet SurfaceWater [0..*] as ref
   }
   Constraint Enum <<codeList>> "HY_P_HydrologicalPersistenceValue" {
     * identifier = "Hydro - Physical Waters::HydrologicalPersistenceValue"
@@ -508,6 +503,99 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Shore(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
+  Relation <<voidable>> "HY_P_Shore_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Shore_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Shore(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Shore_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Shore_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Shore(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Shore_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Shore_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Shore(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Crossing_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Crossing#inspireId"
+    * tableName = "HY_P_Crossing_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Crossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Crossing_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Crossing_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Crossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Crossing_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Crossing_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Crossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Crossing_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Crossing_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Crossing(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Lock_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Lock#inspireId"
+    * tableName = "HY_P_Lock_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Lock(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Lock_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Lock_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Lock(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Lock_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Lock_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Lock(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Lock_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Lock_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Lock(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_ShorelineConstruction_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_ShorelineConstruction#inspireId"
+    * tableName = "HY_P_ShorelineConstruction_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_ShorelineConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_ShorelineConstruction_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_ShorelineConstruction_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_ShorelineConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_ShorelineConstruction_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_ShorelineConstruction_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_ShorelineConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_ShorelineConstruction_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_ShorelineConstruction_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_ShorelineConstruction(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
   Relation "HY_P_LandWaterBoundary_inspireId" {
     * profile = "attributes"
     * relatedReference = "attribute HY_P_LandWaterBoundary#inspireId"
@@ -515,7 +603,311 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_LandWaterBoundary(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "HY_P_DrainageBasin_containsBasin" {
+  Relation <<voidable>> "HY_P_Watercourse_bank" {
+    * profile = "features"
+    * tableName = "HY_P_Watercourse_bank"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_Shore(id)
+  }
+  Relation <<voidable>> "HY_P_Watercourse_neighbour_SurfaceWater" {
+    * profile = "attributes"
+    * tableName = "HY_P_Watercourse_neighbour_SurfaceWater"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Watercourse_drainsBasin" {
+    * profile = "features"
+    * tableName = "HY_P_Watercourse_drainsBasin"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
+  }
+  Relation "HY_P_Watercourse_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Watercourse#inspireId"
+    * tableName = "HY_P_Watercourse_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Watercourse_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Watercourse_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Watercourse_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Watercourse_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Watercourse_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Watercourse_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Watercourse(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_RiverBasin_outlet_SurfaceWater" {
+    * profile = "attributes"
+    * tableName = "HY_P_RiverBasin_outlet_SurfaceWater"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_RiverBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_RiverBasin_containsBasin" {
+    * profile = "features"
+    * tableName = "HY_P_RiverBasin_containsBasin"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_RiverBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
+  }
+  Relation "HY_P_RiverBasin_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_RiverBasin#inspireId"
+    * tableName = "HY_P_RiverBasin_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_RiverBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_RiverBasin_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_RiverBasin_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_RiverBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_RiverBasin_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_RiverBasin_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_RiverBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_RiverBasin_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_RiverBasin_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_RiverBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Wetland_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Wetland#inspireId"
+    * tableName = "HY_P_Wetland_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Wetland_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Wetland_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Wetland_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Wetland_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Wetland_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Wetland_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Sluice_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Sluice#inspireId"
+    * tableName = "HY_P_Sluice_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Sluice(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Sluice_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Sluice_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Sluice(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Sluice_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Sluice_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Sluice(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Sluice_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Sluice_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Sluice(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Ford_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Ford#inspireId"
+    * tableName = "HY_P_Ford_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Ford(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Ford_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Ford_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Ford(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Ford_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Ford_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Ford(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Ford_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Ford_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Ford(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Embankment_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Embankment#inspireId"
+    * tableName = "HY_P_Embankment_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Embankment(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Embankment_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Embankment_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Embankment(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Embankment_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Embankment_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Embankment(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Embankment_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Embankment_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Embankment(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Rapids_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Rapids#inspireId"
+    * tableName = "HY_P_Rapids_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Rapids(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Rapids_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Rapids_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Rapids(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Rapids_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Rapids_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Rapids(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Rapids_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Rapids_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Rapids(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_StandingWater_bank" {
+    * profile = "features"
+    * tableName = "HY_P_StandingWater_bank"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_Shore(id)
+  }
+  Relation <<voidable>> "HY_P_StandingWater_neighbour_SurfaceWater" {
+    * profile = "attributes"
+    * tableName = "HY_P_StandingWater_neighbour_SurfaceWater"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_StandingWater_drainsBasin" {
+    * profile = "features"
+    * tableName = "HY_P_StandingWater_drainsBasin"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_P_DrainageBasin(id)
+  }
+  Relation "HY_P_StandingWater_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_StandingWater#inspireId"
+    * tableName = "HY_P_StandingWater_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_StandingWater_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_StandingWater_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_StandingWater_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_StandingWater_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_StandingWater_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_StandingWater_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_StandingWater(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_Falls_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_Falls#inspireId"
+    * tableName = "HY_P_Falls_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Falls(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_Falls_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_Falls_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Falls(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_Falls_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_Falls_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Falls(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_Falls_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_Falls_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Falls(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "HY_P_DamOrWeir_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute HY_P_DamOrWeir#inspireId"
+    * tableName = "HY_P_DamOrWeir_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DamOrWeir(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_DamOrWeir_geographicalName" {
+    * profile = "attributes"
+    * tableName = "HY_P_DamOrWeir_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DamOrWeir(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_DamOrWeir_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_DamOrWeir_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DamOrWeir(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_DamOrWeir_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_DamOrWeir_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DamOrWeir(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_drainsBasin_outlet_SurfaceWater" {
+    * profile = "attributes"
+    * tableName = "HY_P_drainsBasin_outlet_SurfaceWater"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "HY_P_DrainageBasin_containsBasin" {
     * profile = "features"
     * tableName = "HY_P_DrainageBasin_containsBasin"
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
@@ -528,11 +920,22 @@ Container <<applicationSchema>> "Hydro - Physical Waters" {
     base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
-  Relation "HY_P_Wetland_inspireId" {
+  Relation <<voidable>> "HY_P_DrainageBasin_geographicalName" {
     * profile = "attributes"
-    * relatedReference = "attribute HY_P_Wetland#inspireId"
-    * tableName = "HY_P_Wetland_inspireId"
-    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_Wetland(id)
+    * tableName = "HY_P_DrainageBasin_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation <<voidable>> "HY_P_DrainageBasin_hydroId" {
+    * profile = "attributes"
+    * tableName = "HY_P_DrainageBasin_hydroId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES HY_HydroIdentifier(id)
+  }
+  Relation "HY_P_DrainageBasin_relatedHydroObject_HydroObject" {
+    * profile = "attributes"
+    * tableName = "HY_P_DrainageBasin_relatedHydroObject_HydroObject"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES HY_P_DrainageBasin(id)
     related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }

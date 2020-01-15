@@ -26,11 +26,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_RoadNode" {
     * description = "A point spatial object that is used to either represent connectivity between two road links or to represent a significant spatial object such as a services station or  roundabout."
@@ -40,14 +40,14 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> formOfRoadNode TEXT CHECK(TN_RO_FormOfRoadNodeValue)
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> spokeEnd_Link BASE_Identifier
+    <<voidable>> spokeStart_Link BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> spokeEnd_Link BASE_Identifier [0..*] as ref
-    <<voidable>> spokeStart_Link BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_RoadServiceType" {
     * description = "Description of the type of road service area and the available facilities."
@@ -58,10 +58,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<array>> availableFacilities TEXT
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RO_ServiceFacilityValue" {
     * identifier = "Road Transport Network::ServiceFacilityValue"
@@ -116,11 +116,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> direction TEXT CHECK(NET_LinkDirectionValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> minMaxNumberOfLanes TEXT CHECK(TN_RO_MinMaxLaneValue)
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_FormOfWay" {
     * description = "A classification based on the physical properties of the Road Link.
@@ -132,10 +132,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Constraint Enum <<enumeration>> "TN_RO_FunctionalRoadClassValue" {
     * identifier = "Road Transport Network::FunctionalRoadClassValue"
@@ -186,11 +186,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<enumeration>> "TN_RO_MinMaxLaneValue" {
     * identifier = "Road Transport Network::MinMaxLaneValue"
@@ -208,10 +208,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     surfaceCategory TEXT NOT NULL CHECK(TN_RO_RoadSurfaceCategoryValue)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_RoadLink" {
     * description = "A linear spatial object that describes the geometry and connectivity of a road network between two points in the network.
@@ -224,27 +224,27 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<reference>> endNode_Node INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<reference>> startNode_Node INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    endNode_Node BASE_Identifier [0..1] as ref
-    inspireId BASE_Identifier [0..1] as ref
-    startNode_Node BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_RoadLinkSequence" {
     * description = "A linear spatial object, composed of an ordered collection of road links, which represents a continuous path in a road network without any branches. The element has a defined beginning and end and every position on the road link sequence is identifiable with one single parameter such as length. It describes an element of the road network, characterized by one or more thematic identifiers and/or properties."
     * identifier = "Road Transport Network::RoadLinkSequence"
     * tableName = "TN_RO_RoadLinkSequence"
     id INTEGER NOT NULL PRIMARY KEY
+    link NET_DirectedLink <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link NET_DirectedLink [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RO_FormOfRoadNodeValue" {
     * identifier = "Road Transport Network::FormOfRoadNodeValue"
@@ -266,10 +266,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     name_spelling_text TEXT NOT NULL
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_VehicleTrafficArea" {
     * description = "Surface that represents the part of a road which is used for the normal traffic of vehicles."
@@ -279,11 +279,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RO_SpeedLimitSourceValue" {
     * identifier = "Road Transport Network::SpeedLimitSourceValue"
@@ -305,17 +305,17 @@ Container <<applicationSchema>> "Road Transport Network" {
     * identifier = "Road Transport Network::Road"
     * tableName = "TN_RO_Road"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
     <<voidable>> localRoadCode TEXT
     <<voidable>> nationalRoadCode TEXT
+    <<voidable>> post_MarkerPost BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
   }
   Constraint Enum <<codeList>> "TN_RO_RoadPartValue" {
     * identifier = "Road Transport Network::RoadPartValue"
@@ -337,10 +337,10 @@ Container <<applicationSchema>> "Road Transport Network" {
     id INTEGER NOT NULL PRIMARY KEY
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_SpeedLimit" {
     * description = "Limit for the speed of a vehicle on a road..
@@ -356,15 +356,15 @@ Container <<applicationSchema>> "Road Transport Network" {
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
     <<voidable>> areaCondition TEXT CHECK(TN_RO_AreaConditionValue)
     <<voidable>> direction TEXT CHECK(NET_LinkDirectionValue)
+    <<reference>> inspireId INTEGER
     <<voidable>> laneExtension INTEGER
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> speedLimitSource TEXT CHECK(TN_RO_SpeedLimitSourceValue)
     <<voidable>> startLane INTEGER
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
     <<voidable>> vehicleType TEXT CHECK(TN_RO_VehicleTypeValue)
     <<voidable>> weatherCondition TEXT CHECK(TN_RO_WeatherConditionValue)
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_RoadWidth" {
     * description = "The width of the road, measured as an average value.
@@ -377,11 +377,11 @@ Container <<applicationSchema>> "Road Transport Network" {
     width_uom TEXT NOT NULL CHECK(GML_UomIdentifier)
     <<voidable>>, <<lifeCycleInfo>> beginLifespanVersion DATETIME
     <<voidable>>, <<lifeCycleInfo>> endLifespanVersion DATETIME
+    <<reference>> inspireId INTEGER
     <<voidable>> measuredRoadPart TEXT CHECK(TN_RO_RoadPartValue)
+    <<voidable>> networkRef NET_NetworkReference
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    <<voidable>> networkRef NET_NetworkReference [0..*] as ref
   }
   Attributes <<featureType>> "TN_RO_ERoad" {
     * description = "A collection of road link sequences and or individual road links that represents a route that is part of the international E-road network, characterized by its European route number.
@@ -390,16 +390,336 @@ Container <<applicationSchema>> "Road Transport Network" {
     * identifier = "Road Transport Network::ERoad"
     * tableName = "TN_RO_ERoad"
     id INTEGER NOT NULL PRIMARY KEY
+    link_GeneralisedLink BASE_Identifier <<check [1..-1]>>
     <<lifeCycleInfo>>, <<voidable>> beginLifespanVersion DATETIME
     <<lifeCycleInfo>>, <<voidable>> endLifespanVersion DATETIME
+    <<voidable>>, <<reference>> geographicalName INTEGER
     <<voidable>> europeanRouteNumber TEXT
+    <<voidable>> inNetwork_Network BASE_Identifier
+    <<reference>> inspireId INTEGER
+    <<voidable>> post_MarkerPost BASE_Identifier
     <<voidable>> validFrom DATETIME
     <<voidable>> validTo DATETIME
-    inspireId BASE_Identifier [0..1] as ref
-    link_GeneralisedLink BASE_Identifier [1..*] as ref
-    <<voidable>> geographicalName BASE2_SimpleGeographicalName [0..1] as ref
-    <<voidable>> inNetwork_Network BASE_Identifier [0..*] as ref
-    <<voidable>> post_MarkerPost BASE_Identifier [0..*] as ref
+  }
+  Relation <<voidable>> "TN_RO_RoadServiceArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadServiceArea#geographicalName"
+    * tableName = "TN_RO_RoadServiceArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadServiceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_RoadServiceArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadServiceArea#inspireId"
+    * tableName = "TN_RO_RoadServiceArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadServiceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadServiceArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadServiceArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadServiceArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadNode_spokeStart_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadNode_spokeStart_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadNode_spokeEnd_Link" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadNode_spokeEnd_Link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadNode_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadNode#geographicalName"
+    * tableName = "TN_RO_RoadNode_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_RoadNode_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadNode#inspireId"
+    * tableName = "TN_RO_RoadNode_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadNode_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadNode_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadNode(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadServiceType_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadServiceType_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadServiceType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_RoadServiceType_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadServiceType#inspireId"
+    * tableName = "TN_RO_RoadServiceType_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadServiceType(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_NumberOfLanes_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_NumberOfLanes_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_NumberOfLanes(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_NumberOfLanes_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_NumberOfLanes#inspireId"
+    * tableName = "TN_RO_NumberOfLanes_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_NumberOfLanes(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_FormOfWay_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_FormOfWay_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_FormOfWay(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_FormOfWay_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_FormOfWay#inspireId"
+    * tableName = "TN_RO_FormOfWay_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_FormOfWay(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadArea#geographicalName"
+    * tableName = "TN_RO_RoadArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_RoadArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadArea#inspireId"
+    * tableName = "TN_RO_RoadArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadSurfaceCategory_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadSurfaceCategory_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadSurfaceCategory(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_RoadSurfaceCategory_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadSurfaceCategory#inspireId"
+    * tableName = "TN_RO_RoadSurfaceCategory_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadSurfaceCategory(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RO_RoadLink_startNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadLink#startNode_Node"
+    * tableName = "TN_RO_RoadLink_startNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RO_RoadLink_endNode_Node" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadLink#endNode_Node"
+    * tableName = "TN_RO_RoadLink_endNode_Node"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadLink_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadLink#geographicalName"
+    * tableName = "TN_RO_RoadLink_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_RoadLink_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadLink#inspireId"
+    * tableName = "TN_RO_RoadLink_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadLink_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadLink_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLink(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadLinkSequence_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadLinkSequence#geographicalName"
+    * tableName = "TN_RO_RoadLinkSequence_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_RoadLinkSequence_link" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadLinkSequence_link"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_DirectedLink(id)
+  }
+  Relation "TN_RO_RoadLinkSequence_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadLinkSequence#inspireId"
+    * tableName = "TN_RO_RoadLinkSequence_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadLinkSequence_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadLinkSequence_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadLinkSequence(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadName_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadName_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_RoadName_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadName#inspireId"
+    * tableName = "TN_RO_RoadName_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadName(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_VehicleTrafficArea_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_VehicleTrafficArea#geographicalName"
+    * tableName = "TN_RO_VehicleTrafficArea_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_VehicleTrafficArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_VehicleTrafficArea_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_VehicleTrafficArea#inspireId"
+    * tableName = "TN_RO_VehicleTrafficArea_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_VehicleTrafficArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_VehicleTrafficArea_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_VehicleTrafficArea_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_VehicleTrafficArea(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_Road_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_RO_Road_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_Road(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_Road_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_Road#geographicalName"
+    * tableName = "TN_RO_Road_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_Road(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_Road_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_RO_Road_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_Road(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RO_Road_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_Road#inspireId"
+    * tableName = "TN_RO_Road_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_Road(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_Road_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_Road_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_Road(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_FunctionalRoadClass_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_FunctionalRoadClass_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_FunctionalRoadClass(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_FunctionalRoadClass_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_FunctionalRoadClass#inspireId"
+    * tableName = "TN_RO_FunctionalRoadClass_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_FunctionalRoadClass(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_SpeedLimit_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_SpeedLimit_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_SpeedLimit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_SpeedLimit_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_SpeedLimit#inspireId"
+    * tableName = "TN_RO_SpeedLimit_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_SpeedLimit(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_RoadWidth_networkRef" {
+    * profile = "attributes"
+    * tableName = "TN_RO_RoadWidth_networkRef"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadWidth(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES NET_NetworkReference(id)
+  }
+  Relation "TN_RO_RoadWidth_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_RoadWidth#inspireId"
+    * tableName = "TN_RO_RoadWidth_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_RoadWidth(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_ERoad_post_MarkerPost" {
+    * profile = "attributes"
+    * tableName = "TN_RO_ERoad_post_MarkerPost"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_ERoad(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_ERoad_geographicalName" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_ERoad#geographicalName"
+    * tableName = "TN_RO_ERoad_geographicalName"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_ERoad(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE2_SimpleGeographicalName(id)
+  }
+  Relation "TN_RO_ERoad_link_GeneralisedLink" {
+    * profile = "attributes"
+    * tableName = "TN_RO_ERoad_link_GeneralisedLink"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_ERoad(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation "TN_RO_ERoad_inspireId" {
+    * profile = "attributes"
+    * relatedReference = "attribute TN_RO_ERoad#inspireId"
+    * tableName = "TN_RO_ERoad_inspireId"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_ERoad(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
+  }
+  Relation <<voidable>> "TN_RO_ERoad_inNetwork_Network" {
+    * profile = "attributes"
+    * tableName = "TN_RO_ERoad_inNetwork_Network"
+    base_id INTEGER NOT NULL FOREIGN KEY (base_id) REFERENCES TN_RO_ERoad(id)
+    related_id INTEGER NOT NULL FOREIGN KEY (related_id) REFERENCES BASE_Identifier(id)
   }
 }
 Container "basicTypes" {
@@ -417,10 +737,8 @@ Container <<applicationSchema>> "Base Types 2" {
     DocumentCitation
     LegislationCitation
   }
-  Attributes <<dataType>> "BASE2_SimpleCitation" {
-    * tableName = "BASE2_SimpleCitation"
+  Attributes <<dataType>> "SimpleCitation" {
     date DATE
-    id INTEGER NOT NULL PRIMARY KEY
     level LegislationLevelValue
     link TEXT
     name TEXT NOT NULL
@@ -457,7 +775,7 @@ Container <<applicationSchema>> "Network" {
     <<version>>, <<reference>> element_NetworkElement INTEGER
     involves TrafficRelatedEvent [0..*] as ref
   }
-  Relation "NET_NetworkReference_element_NetworkElement" {
+  Relation <<version>> "NET_NetworkReference_element_NetworkElement" {
     * profile = "attributes"
     * relatedReference = "attribute NET_NetworkReference#element_NetworkElement"
     * tableName = "NET_NetworkReference_element_NetworkElement"
@@ -516,8 +834,8 @@ Container <<applicationSchema>> "Base Types" {
 }
 Package "Location referencing mechanisms" {
   Class "NodeLocationReference" {
-    node_Node BASE_Identifier as ref
-    <<voidable>> networkReference BASE2_SimpleCitation [0..1] as ref
+    node_Node : BASE_Identifier
+    <<voidable>> networkReference : SimpleCitation [0..1]
   }
 }
 Package "EA Model" {
