@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * Copyright 2019-2020 Francisco J Lopez-Pellicer
+ *
+ * Licensed under the  EUPL-1.2-or-later
+ */
 package inspire
 
 import es.iaaa.kore.KoreObject
@@ -12,14 +18,15 @@ fun main() {
         sql = true
     )
     mapOf(
-        "au" to "AdministrativeUnits",
+        // "au" to "AdministrativeUnits",
         // "mu" to "MaritimeUnits",
-        "gn" to "Geographical Names"
+        // "gn" to "Geographical Names"
         // "am" to "Controlled Activities",
         // "hy" to "Hydro - Physical Waters",
         // "lc" to "LandCoverVector"
         // "lu" to "Existing Land Use"
-        // "tn" to "Road Transport Network"
+        // "tn" to "Road Transport Network",
+        "ge" to "Geology"
     ).map {
         configuration(it.value, it.key, config).convert()
     }

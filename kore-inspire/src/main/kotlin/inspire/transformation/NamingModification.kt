@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * Copyright 2019-2020 Francisco J Lopez-Pellicer
+ *
+ * Licensed under the  EUPL-1.2-or-later
+ */
 @file:Suppress("ObjectPropertyName")
 
 package inspire.transformation
@@ -70,6 +76,7 @@ private fun KoreClass.assignPrefix(): String = when (container?.name) {
     "Geometric primitive" -> ""
     "Segmented Curve" -> "SC_"
     "Coverage Core" -> "CC_"
+    "Coordinate Operations" -> "CO_"
     "ISO 19145 Registry GPL representations" -> "" // ISO 19145 Registry GPL representations
     "ISO 19135:2005 Procedures for Registration" -> "" // ISO 19135:2005 Procedures for Registration
     "Image Knowledge Base" -> "" // ISO 19101-2:2008 Imagery Reference

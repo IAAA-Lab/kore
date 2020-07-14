@@ -2,3 +2,4 @@
 .idea
 build
 kore-inspire/templates
+*.hprof
