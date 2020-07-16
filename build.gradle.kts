@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.Calendar.*
+import java.util.Calendar.YEAR
+import java.util.Calendar.getInstance
 
 plugins {
     base
@@ -9,7 +10,7 @@ plugins {
 
 allprojects {
     group = "es.iaaa.kore"
-    version = "1.0-SNAPSHOT"
+    version = "0.9-SNAPSHOT"
     apply(plugin = "com.github.hierynomus.license")
     repositories {
         jcenter()

@@ -71,7 +71,10 @@ class ContainerManagerTest {
         }
         ContainerManager.create(sut)
         val geoPackage = ContainerManager.open(sut) ?: fail("Failed to open database")
-        assertFalse(geoPackage.extensionsDao.queryByExtension(GeometryExtensions.getExtensionName(mil.nga.sf.GeometryType.CURVEPOLYGON)).isEmpty())
+        assertFalse(
+            geoPackage.extensionsDao.queryByExtension(GeometryExtensions.getExtensionName(mil.nga.sf.GeometryType.CURVEPOLYGON))
+                .isEmpty()
+        )
         geoPackage.close()
     }
 

@@ -19,7 +19,7 @@ internal class FlattenTypes(
     val predicate: (KoreNamedElement) -> Boolean,
     val postFlatten: (KoreTypedElement, KoreTypedElement) -> Unit,
     val debugPredicate: (KoreNamedElement) -> String,
-    val global: Boolean,
+    private val global: Boolean,
     private val maxIterations: Int = 4
 ) : Transformation {
 
@@ -39,7 +39,8 @@ internal class FlattenTypes(
                             }
                             predicate(type)
                         } == true
-                        val typeAttributesMultiplicity = (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
+                        val typeAttributesMultiplicity =
+                            (type as? KoreClass)?.allAttributes()?.all { att -> att.upperBound == 1 } == true
 
                         if (withinLimits && typeFulfillsPredicate && !typeAttributesMultiplicity) {
                             logger.debug { "Debug predicate:\nisClass=${(type as? KoreClass) != null}" }
@@ -47,8 +48,8 @@ internal class FlattenTypes(
                             (type as? KoreClass)?.allAttributes()?.filter { att -> att.upperBound != 1 }
                                 ?.joinToString { "${it.name}:${it.upperBound}" }
                                 ?.let {
-                                logger.debug { "Debug predicate:\noffendingAttributes=$it"}
-                            }
+                                    logger.debug { "Debug predicate:\noffendingAttributes=$it" }
+                                }
                         }
                         withinLimits && typeFulfillsPredicate && typeAttributesMultiplicity
                     }

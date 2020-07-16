@@ -51,7 +51,7 @@ Run it with `docker-compose -f stack.yml up`. We can check the access to the ins
 docker exec -ti auevaluation_db_1 sh
 ```
 
-And test it works:
+Test if it works:
 
 ```bash
 psql -h localhost -U postgres

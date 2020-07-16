@@ -149,8 +149,9 @@ class ConstraintsTest {
             }
         }
         val candidate = container.allContents().filterIsInstance<KoreAttribute>()
-            .filter { it.findGeoPackageSpec()?.any { Constraint.isInstance(it) } == true }.toList().getOrElse(0) { fail() }
-        val constraint = candidate.geoPackageSpec().first {Constraint.isInstance(it) } as? KoreClass ?: fail()
+            .filter { it.findGeoPackageSpec()?.any { spec -> Constraint.isInstance(spec) } == true }.toList()
+            .getOrElse(0) { fail() }
+        val constraint = candidate.geoPackageSpec().first { Constraint.isInstance(it) } as? KoreClass ?: fail()
         assertTrue(Constraint.isInstance(constraint))
     }
 

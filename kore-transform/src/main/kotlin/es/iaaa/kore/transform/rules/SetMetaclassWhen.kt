@@ -7,7 +7,6 @@
 package es.iaaa.kore.transform.rules
 
 import es.iaaa.kore.KoreClass
-import es.iaaa.kore.KoreNamedElement
 import es.iaaa.kore.KoreObject
 import es.iaaa.kore.transform.Model
 import es.iaaa.kore.transform.Transformation
@@ -16,7 +15,7 @@ import es.iaaa.kore.transform.Transformations
 internal class SetMetaclassWhen(
     val predicate: (KoreObject) -> Boolean,
     val metaClass: KoreClass,
-    val onlyRoots: Boolean
+    private val onlyRoots: Boolean
 ) : Transformation {
 
     override fun process(target: Model) {

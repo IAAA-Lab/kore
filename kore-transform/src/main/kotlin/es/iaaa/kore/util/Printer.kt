@@ -116,7 +116,7 @@ fun KoreClass.toClassBody(relevantList: List<KoreObject>): String =
 fun KoreClass.prettyPrintNamedStructuralFeatures(relevantList: List<KoreObject>): String {
     val sorted =
         allAttributes().sortedWith(StructuralFeatureComparator) + allReferences().sortedWith(StructuralFeatureComparator)
-    return sorted.filter { !it.name.isNullOrBlank()} .map { feature ->
+    return sorted.filter { !it.name.isNullOrBlank() }.map { feature ->
         when (feature) {
             is KoreReference -> feature.toPrettyString(relevantList)
             is KoreAttribute -> feature.toPrettyString(relevantList)
@@ -146,7 +146,7 @@ fun KoreObject.prettyPrintMetaStructuralFeatures(relevantList: List<KoreObject>)
                         }
                     } else null
                 }
-            }.map { "* $it" }.joinToString(separator = "\n")
+            }.joinToString(separator = "\n") { "* $it" }
     } else ""
 }
 
@@ -176,7 +176,10 @@ fun KoreDataType.toPrettyString(): String =
         toString()
     }
 
-fun KoreNamedElement.metaToStringOrDefault(relevantList: List<KoreObject> = emptyList(), vararg strings: String?): String {
+fun KoreNamedElement.metaToStringOrDefault(
+    relevantList: List<KoreObject> = emptyList(),
+    vararg strings: String?
+): String {
     val base = metaClass?.toString?.let {
         val prefix = prettyPrintStereotypes(relevantList)
         val suffix = it(this)

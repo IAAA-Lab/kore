@@ -33,7 +33,7 @@ fun main() {
 }
 
 fun configuration(schema: String, output: String, config: Configuration): Conversion {
-    val options = mapOf<String, Any>(
+    val options = mapOf(
         "description" to config.description,
         "name" to output,
         "sql" to config.sql,

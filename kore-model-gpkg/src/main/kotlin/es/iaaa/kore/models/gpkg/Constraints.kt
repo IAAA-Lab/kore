@@ -27,7 +27,6 @@ object RangeConstraint : KoreClass by koreClass({
 })
 
 
-
 /**
  * A short hand factory function with container addition.
  */

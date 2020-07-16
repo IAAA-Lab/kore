@@ -411,7 +411,7 @@ class DryRunTest {
         checkSchema("Observable Properties", "base-models/om/omop")
     }
 
-    fun checkSchema(schema: String, route: String) {
+    private fun checkSchema(schema: String, route: String) {
         val config = Configuration(
             file = "src/main/resources/$INSPIRE_CONSOLIDATED_UML_MODEL",
             description = false,

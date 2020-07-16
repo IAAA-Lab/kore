@@ -7,7 +7,6 @@
 package es.iaaa.kore.transform.impl
 
 import es.iaaa.kore.KoreClassifier
-import es.iaaa.kore.KoreModelElement
 import es.iaaa.kore.KorePackage
 import es.iaaa.kore.impl.Violations
 import es.iaaa.kore.transform.Model

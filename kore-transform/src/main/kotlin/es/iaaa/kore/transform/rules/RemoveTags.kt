@@ -13,7 +13,7 @@ import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
 
 internal class RemoveTags(
-    val tags: List<String>,
+    private val tags: List<String>,
     val source: String?
 ) : Transformation {
 

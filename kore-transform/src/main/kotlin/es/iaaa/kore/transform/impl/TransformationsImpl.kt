@@ -15,7 +15,7 @@ class TransformationsImpl(
     val transformations: MutableList<Transformation> = mutableListOf(),
     val parent: Conversion
 ) : Transformations, List<Transformation> by transformations {
-    val shouldTrack: MutableList<KoreClass> = mutableListOf()
+    private val shouldTrack: MutableList<KoreClass> = mutableListOf()
     override fun add(transformation: Transformation) {
         transformations.add(transformation)
     }

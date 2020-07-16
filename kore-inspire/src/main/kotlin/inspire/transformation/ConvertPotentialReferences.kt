@@ -8,9 +8,12 @@
 
 package inspire.transformation
 
-import es.iaaa.kore.*
+import es.iaaa.kore.KoreAttribute
+import es.iaaa.kore.KoreClass
+import es.iaaa.kore.copy
 import es.iaaa.kore.models.gpkg.AttributesTable
 import es.iaaa.kore.models.gpkg.FeaturesTable
+import es.iaaa.kore.toReference
 import es.iaaa.kore.transform.Transform
 import es.iaaa.kore.transform.rules.patch
 

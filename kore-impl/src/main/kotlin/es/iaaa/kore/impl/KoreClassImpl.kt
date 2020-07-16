@@ -22,11 +22,15 @@ open class KoreClassImpl : KoreClassifierImpl(), KoreClass {
     }
 
     override val structuralFeatures: List<KoreStructuralFeature> get() = internalStructuralFeatures.toList()
-    override val attributes: List<KoreAttribute> get() = internalStructuralFeatures.filterIsInstance<KoreAttribute>().toList()
+    override val attributes: List<KoreAttribute>
+        get() = internalStructuralFeatures.filterIsInstance<KoreAttribute>().toList()
+
     override fun allAttributes(): List<KoreAttribute> =
         allStructuralFeatures().filterIsInstance<KoreAttribute>().toList()
 
-    override val references: List<KoreReference> get() = internalStructuralFeatures.filterIsInstance<KoreReference>().toList()
+    override val references: List<KoreReference>
+        get() = internalStructuralFeatures.filterIsInstance<KoreReference>().toList()
+
     override fun allReferences(): List<KoreReference> =
         allStructuralFeatures().filterIsInstance<KoreReference>().toList()
 

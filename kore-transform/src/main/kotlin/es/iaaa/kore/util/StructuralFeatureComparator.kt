@@ -22,7 +22,7 @@ object StructuralFeatureComparator : Comparator<KoreStructuralFeature> {
         }
     }
 
-    fun compareNames(n1: String?, n2: String?): Int =
+    private fun compareNames(n1: String?, n2: String?): Int =
         when {
             n1 != null && n2 != null -> n1.compareTo(n2)
             n2 == null -> -1

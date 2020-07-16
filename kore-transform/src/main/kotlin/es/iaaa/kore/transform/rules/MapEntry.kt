@@ -36,5 +36,10 @@ fun Transformations.mapEntry(
     postset: (KoreTypedElement) -> Unit = {},
     targetType: KoreClassifier
 ) {
-    add(MapEntry(targetType, type?.let { { e: KoreTypedElement -> e.type?.name == it} } ?: typePredicate, preset, postset))
+    add(
+        MapEntry(
+            targetType,
+            type?.let { { e: KoreTypedElement -> e.type?.name == it } } ?: typePredicate,
+            preset,
+            postset))
 }

@@ -41,7 +41,7 @@ fun koreClass(block: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().
 fun koreClass(meta: KoreClass, block: KoreClass.() -> Unit): KoreClass = KoreModel.createClass().apply {
     metaClass = meta
     block()
-    verify(metaClass == meta) { "The metaclass property has muted within the block"}
+    verify(metaClass == meta) { "The metaclass property has muted within the block" }
 }
 
 fun koreDataType(block: KoreDataType.() -> Unit): KoreDataType = KoreModel.createDataType().apply(block)
@@ -51,19 +51,19 @@ fun koreAttribute(block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.cr
 fun koreAttribute(meta: KoreClass, block: KoreAttribute.() -> Unit): KoreAttribute = KoreModel.createAttribute().apply {
     metaClass = meta
     block()
-    verify(metaClass == meta) { "The metaclass property has muted within the block"}
+    verify(metaClass == meta) { "The metaclass property has muted within the block" }
 }
 
 fun KoreClass.attribute(init: KoreAttribute.() -> Unit) = koreAttribute {
     containingClass = this@attribute
     init()
-    verify( containingClass == this@attribute) { "The containing class has muted within the block"}
+    verify(containingClass == this@attribute) { "The containing class has muted within the block" }
 }
 
 fun korePackage(meta: KoreClass, block: KorePackage.() -> Unit) = KoreModel.createPackage().apply {
     metaClass = meta
     block()
-    verify(metaClass == meta) { "The metaclass property has muted within the block"}
+    verify(metaClass == meta) { "The metaclass property has muted within the block" }
 }
 
 fun koreReference(block: KoreReference.() -> Unit): KoreReference = KoreModel.createReference().apply(block)
@@ -71,35 +71,36 @@ fun koreReference(block: KoreReference.() -> Unit): KoreReference = KoreModel.cr
 fun koreReference(meta: KoreClass, block: KoreReference.() -> Unit) = KoreModel.createReference().apply {
     metaClass = meta
     block()
-    verify(metaClass == meta) { "The metaclass property has muted within the block"}
+    verify(metaClass == meta) { "The metaclass property has muted within the block" }
 }
 
-fun KoreModelElement.koreAnnotation(block: KoreAnnotation.() -> Unit): KoreAnnotation = KoreModel.createAnnotation().apply {
-    modelElement = this@koreAnnotation
-    block()
-    verify(modelElement == this@koreAnnotation) { "The modelElement property has muted within the block"}
-}
-
-    fun copyFromTo(
-        other: KoreStructuralFeature,
-        target: KoreClass?,
-        remove: Boolean = false
-    ): KoreStructuralFeature.() -> Unit = {
-        metaClass = other.metaClass
-        isChangeable = other.isChangeable
-        isUnsettable = other.isUnsettable
-        defaultValueLiteral = other.defaultValueLiteral
-        ordered = other.ordered
-        lowerBound = other.lowerBound
-        upperBound = other.upperBound
-        type = other.type
-        name = other.name
-        other.annotations.map { ann -> ann.copy(this) }
-        if (remove) {
-            other.containingClass = null
-        }
-        containingClass = target
+fun KoreModelElement.koreAnnotation(block: KoreAnnotation.() -> Unit): KoreAnnotation =
+    KoreModel.createAnnotation().apply {
+        modelElement = this@koreAnnotation
+        block()
+        verify(modelElement == this@koreAnnotation) { "The modelElement property has muted within the block" }
     }
+
+fun copyFromTo(
+    other: KoreStructuralFeature,
+    target: KoreClass?,
+    remove: Boolean = false
+): KoreStructuralFeature.() -> Unit = {
+    metaClass = other.metaClass
+    isChangeable = other.isChangeable
+    isUnsettable = other.isUnsettable
+    defaultValueLiteral = other.defaultValueLiteral
+    ordered = other.ordered
+    lowerBound = other.lowerBound
+    upperBound = other.upperBound
+    type = other.type
+    name = other.name
+    other.annotations.map { ann -> ann.copy(this) }
+    if (remove) {
+        other.containingClass = null
+    }
+    containingClass = target
+}
 
 fun KoreModelElement.stereotype(stereotype: String) {
     if (!references(stereotype)) {

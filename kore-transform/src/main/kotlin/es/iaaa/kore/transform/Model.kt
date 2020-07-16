@@ -62,7 +62,9 @@ fun Set<KoreObject>.typeClosure(boundary: (KoreObject, KoreObject) -> Boolean = 
         filterIsInstance<KoreClass>().flatMap { src -> src.allAttributes().map { Pair(src, it) } }
 
     fun List<KoreObject>.references(): List<Pair<KoreObject, KoreObject>> =
-        filterIsInstance<KoreClass>().flatMap { src -> src.allReferences().filter { it.isNavigable }.map { Pair(src, it) } }
+        filterIsInstance<KoreClass>().flatMap { src ->
+            src.allReferences().filter { it.isNavigable }.map { Pair(src, it) }
+        }
 
     fun Pair<KoreObject, KoreObject>.types(): List<Pair<KoreObject, KoreObject>> {
         val second = this.second
@@ -75,17 +77,19 @@ fun Set<KoreObject>.typeClosure(boundary: (KoreObject, KoreObject) -> Boolean = 
             }
         } else {
             listOf(this)
-         }
+        }
     }
 
     tailrec fun expand(candidates: Set<KoreObject>, sources: List<KoreObject>): Set<KoreObject> {
         val reachablesWithProvenance = with(sources) { attributes() + references() }
             .flatMap { it.types() }.filterNot { it.second in candidates }
-        val reachablesWithoutProvenance = with(sources) { annotations() + refinements() + metas() }.filterNot { it in candidates }
+        val reachablesWithoutProvenance =
+            with(sources) { annotations() + refinements() + metas() }.filterNot { it in candidates }
         val reachables = reachablesWithProvenance.map { it.second } + reachablesWithoutProvenance
         return if (reachables.isEmpty()) candidates else expand(
             candidates = candidates + reachables,
-            sources = reachablesWithProvenance.filter { boundary(it.first, it.second) }.map { it.second } + reachablesWithoutProvenance
+            sources = reachablesWithProvenance.filter { boundary(it.first, it.second) }
+                .map { it.second } + reachablesWithoutProvenance
         )
     }
     return expand(this, toList())

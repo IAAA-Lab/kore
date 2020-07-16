@@ -13,7 +13,7 @@ import es.iaaa.kore.transform.OutputWriter
 import java.nio.file.Paths
 
 class GeoPackageWriter(
-    var open: Boolean = false,
+    private var open: Boolean = false,
     var overwrite: Boolean = false,
     var base: String = "."
 ) : OutputWriter {

@@ -6,12 +6,7 @@
  */
 package inspire
 
-import es.iaaa.kore.KoreModelElement
-import es.iaaa.kore.KoreNamedElement
-import es.iaaa.kore.KoreObject
-import es.iaaa.kore.findTaggedValue
 import es.iaaa.kore.resource.ResourceFactory
-import es.iaaa.kore.resource.ResourceHelper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

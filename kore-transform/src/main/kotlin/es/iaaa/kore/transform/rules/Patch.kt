@@ -11,9 +11,9 @@ import es.iaaa.kore.transform.Transformation
 import es.iaaa.kore.transform.Transformations
 
 class Patch<T>(
-    val klass: Class<T>,
+    private val klass: Class<T>,
     val predicate: T.() -> Boolean = { true },
-    val global: Boolean = false,
+    private val global: Boolean = false,
     val block: T.() -> Unit
 ) : Transformation {
 

@@ -39,7 +39,7 @@ open class Violations internal constructor(
  * @property [level] The level of the violation.
  */
 class Violation(
-    val message: String? = null,
+    private val message: String? = null,
     val level: ViolationLevel = CRITICAL
 ) : Violations()
 
@@ -73,10 +73,12 @@ enum class ViolationLevel {
      * The system must halt; the error cannot be fixed at runtime.
      */
     CRITICAL,
+
     /**
      * This is an error that can be fixed at runtime.
      */
     ERROR,
+
     /**
      * This is a potential problem.
      */

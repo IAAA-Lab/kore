@@ -7,7 +7,6 @@
 package es.iaaa.kore.models.gpkg
 
 import es.iaaa.kore.*
-import es.iaaa.kore.impl.KoreStorage
 
 /**
  * A representation of the model object SQLite Container.
