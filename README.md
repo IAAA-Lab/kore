@@ -1,6 +1,6 @@
 # KORE: UML-2-GeoPackage toolkit
 
-[![EUPL 1.2][eupl-12-shield]][eupl-12] ![Version][version-shield]
+[![EUPL 1.2][eupl-12-shield]][eupl-12] [![Version][version-shield]](#)
 
 GeoPackage may serve as an alternative or additional encoding for complex and large INSPIRE data sets.
 This Repository contains a prototype for easing the implementation [UML-to-GeoPackage encoding rule](https://github.com/IAAA-Lab/U2G/blob/master/GeoPackage/geopackage-encoding-rule.md) 
